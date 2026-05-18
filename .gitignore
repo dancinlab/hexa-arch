@@ -1,4 +1,4 @@
-# hexa-arch — scaffold stage
+# Demiurge — scaffold stage (cockpit/ Swift artifacts ignored locally — see cockpit/.gitignore)
 .DS_Store
 *.tmp
 *.log

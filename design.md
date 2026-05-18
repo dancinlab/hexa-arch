@@ -944,3 +944,49 @@ drift 즉시-검출 어려움, 별도 origin/AGENTS.tape/design.md/README
   brand 가 아닌 Demiurge 의 *cockpit* (즉 Demiurge 의 일부). 별도
   repo 분리 시 외부 reader 가 "Demiurge-cockpit 이 또 다른 brand
   인가?" 라는 의문 발생; monorepo 가 이를 disambiguate.
+
+### Decision 28 — Cockpit bootstrap = SwiftPM `Package.swift` only (no .xcodeproj)
+
+**picked**: cockpit 의 부트스트랩 형식 = **SwiftPM `Package.swift`
+only**. `.xcodeproj` 는 생성하지 않음. 4-파일 스캐폴드 적용:
+`cockpit/Package.swift` (tools-version 5.9, `.macOS(.v13)`, single
+`executableTarget("CockpitApp", path: "Sources/CockpitApp")`) +
+`cockpit/Sources/CockpitApp/CockpitApp.swift` (16 lines, 순수
+SwiftUI: `@main struct CockpitApp: App` + `WindowGroup` +
+`ContentView` 가 "DRAFT — scaffold v0" 텍스트 표시) +
+`cockpit/.gitignore` (5 lines: `.build/` · `.swiftpm/` ·
+`DerivedData/` · `*.xcodeproj/xcuserdata/` · `*.xcworkspace/
+xcuserdata/`) + `cockpit/README.md` (build/run + 4-invariant
+boundary + g_swift_native + cross-refs). 참고 자산
+`cockpit/references/quiver-overview.png` 는 D27 commit `476d0e1`
+에 이미 인-place. **빌드 검증은 g3 정직: 이 세션에서 미수행** —
+wilson-pool 이 `swift build` 를 Linux ubu-2 호스트로 잘못
+라우팅 + ubu-2 SSH banner timeout 으로 실행 실패. SwiftUI 는
+macOS-only 라 Linux 빌드 자체 불가; 사용자가 로컬 macOS 에서
+`cd cockpit && swift build` 로 검증 필요. (Rejected: `.xcodeproj`
+only — `.pbxproj` XML 의 merge-hostile, Apple 자체 sample 도
+SwiftPM 이동 추세.) (Rejected: 둘 다 — dual SoT 동기 부담,
+cockpit 초기 단계엔 과잉조직.)
+
+**rationale**:
+- user-explicit picked authority — 2026-05-19 user 가 SwiftPM
+  picked; 권고 A 와 일치, 빠른 컨버지.
+- Apple-canonical 의 modern 해석 — Xcode 15+ 가 `Package.swift` 를
+  native open 으로 처리 (Previews / Instruments / debug / scheme
+  모두 작동). Apple 자체 sample (Swift Concurrency, SwiftUI Apple
+  Tutorials) 도 점차 SwiftPM 으로 이동. D26 `g_swift_native` 의
+  "canonical first" 와 정합.
+- git-friendly text manifest — `Package.swift` 가 Swift 코드라서
+  PR diff 가 의미 있게 읽힘; `.pbxproj` XML 의 merge conflict
+  지옥 회피. monorepo (D27) 의 schema-drift 즉시-검출 장점이
+  manifest 변경에도 적용.
+- minimum-new-structure (andrej-karpathy) — 4-파일 스캐폴드
+  (manifest + 1 `.swift` + `.gitignore` + README) 가 동작하는
+  최소 SwiftUI App. signing / notarization 필요해지면 SwiftPM
+  위에 schemes 추가만으로 P5 대응 — 지금은 D28 scope 밖.
+- g3 정직 — 스캐폴드는 작성됐으나 **빌드 자체는 이 세션에서
+  측정-미검증**. pool routing 실패 + ubu-2 unreachable.
+  16-line 순수 SwiftUI 라 문법적 신뢰는 있으나 "compiles green"
+  주장은 안 함; 측정 부재를 명시 (사용자 macOS 로컬 검증 또는
+  follow-on 세션). 빌드 미검증 상태에서 "scaffold works" 주장은
+  `@F f2` 위반이라 회피.

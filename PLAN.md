@@ -812,3 +812,38 @@
   (D22 OOS), yosys §4 모듈 (D19, hexa-lang 세션), chip §B
   full-curve (P-④), seam records (rfc_007/008 v0). 이름만 바뀌었고,
   설계 내용은 동일.
+- 2026-05-19 — **D27 lock + cockpit 첫 산물**: Swift cockpit 위치 =
+  `cockpit/` subdir of demiurge (monorepo). 사용자가 권고 A
+  (separate sibling repo `demiurge-cockpit`) 가 아닌 **B (monorepo)**
+  picked — 권고와 다름을 audit trail 에 honest 하게 명시. rfc_009 §5
+  governance boundary 는 **logical (consumption-direction + no-import
+  + `.gitignore`)** 로 재해석되어 physical repo 경계가 아닌
+  4-invariant (a/b/c/d) 로 enforce. AGENTS.tape 에 새 `@D
+  g_cockpit_isolation` (required d=2026-05-19) 등록. cockpit 첫
+  산물 = `cockpit/references/quiver-overview.png` (Palantir Foundry
+  Quiver "Overview Analysis" GUI capture, 사용자 제공 2026-05-19
+  02:40 KST — rfc_009 §4 honesty-as-feature UI 의 reference
+  인스피레이션, md5 `d4800652...`). commit `476d0e1` pushed.
+- 2026-05-19 — **D28 lock + SwiftPM 스캐폴드 4 파일 (빌드 미검증)**:
+  cockpit 부트스트랩 = **SwiftPM `Package.swift` only**, `.xcodeproj`
+  생성 안 함. 스캐폴드: (1) `cockpit/Package.swift` — tools-version
+  5.9 / `.macOS(.v13)` / single executableTarget; (2) `cockpit/
+  Sources/CockpitApp/CockpitApp.swift` — 16 lines 순수 SwiftUI
+  (`@main App` + `WindowGroup` + `ContentView`, "DRAFT — scaffold v0"
+  표시); (3) `cockpit/.gitignore` — 5 lines (`.build/` ·
+  `.swiftpm/` · `DerivedData/` · `*.xcodeproj/xcuserdata/` ·
+  `*.xcworkspace/xcuserdata/`) per `@D g_cockpit_isolation` (c);
+  (4) `cockpit/README.md` — build/run + 4-invariant boundary +
+  `g_swift_native` cross-ref + reference 자산 (`quiver-overview.png`)
+  안내. 또한 top-level `.gitignore` 의 leftover `# hexa-arch` 코멘트
+  → `# Demiurge` 1줄 정정 (sed mass-replace 가 `.gitignore` 확장자
+  미매치로 놓친 잔여 — 발견 즉시 fix). **g3 정직: 빌드 미수행** —
+  wilson-pool 이 `swift build` 를 Linux ubu-2 호스트로 잘못 라우팅
+  + ubu-2 SSH banner timeout. SwiftUI 는 macOS-only 라 Linux 빌드
+  자체 불가 (라우팅 휴리스틱 오류). 16-line 순수 SwiftUI 라
+  문법-수준 신뢰는 있으나 "compiles green" 주장은 안 함 (`@F f2`
+  회피). 검증은 사용자 로컬 macOS 에서 `cd cockpit && swift build`
+  로, 또는 다음 세션에서. swift toolchain 6.3.1 / macosx26.0 사용
+  가능 확인됨 (host 측). **다음 = D29 gate (first feature slice —
+  rfc_009 §4 honesty-as-feature 최소 단위, e.g. F1F2 record 1개
+  read + provenance/gate banner 렌더).** 새 RFC 0, 새 도메인맵 0.

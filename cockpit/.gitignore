@@ -1,0 +1,6 @@
+# Demiurge cockpit — Swift build artifacts (per @D g_cockpit_isolation (c))
+.build/
+.swiftpm/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
