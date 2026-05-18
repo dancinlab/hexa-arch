@@ -27,8 +27,8 @@
   },
 
   "router_cost": {
-    "port_area_norm": 1.50,
-    "port_energy_norm": 1.50,
+    "port_area_norm": 1.516,
+    "port_energy_norm": 1.516,
     "iq_pipeline": {
       "routing_delay": 0,
       "vc_alloc_delay": 1,
@@ -42,7 +42,8 @@
     "source_citations": [
       "@x_dally_towles_2004_ppin",
       "@x_jiang_ispass13_booksim2",
-      "@x_t1a_analytical_section_2"
+      "@x_t1a_analytical_section_2",
+      "@x_comb_handoff_section_4"
     ]
   },
 

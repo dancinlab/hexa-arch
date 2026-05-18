@@ -19,7 +19,7 @@
   "differing": {
     "topology_degree": [4, 6],
     "topology_kind": ["mesh_2d", "hex_axial"],
-    "router_port_area_norm": [1.00, 1.50]
+    "router_port_area_norm": [1.00, 1.516]
   },
 
   "headline_metrics": {
