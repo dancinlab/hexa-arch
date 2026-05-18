@@ -576,3 +576,16 @@
   not a hexa-arch ownership claim — audit entries D12/D13/D14/rfc_005
   preserved (record what was done + the conflict find), D17
   supersedes going forward. hexa-arch never over-claimed ownership.
+- 2026-05-18 — **Phase 2 시작: `proposals/rfc_006_yosys_absorption.md`**
+  (design only). Yosys = SYNTHESIZE-verb 도구, EDA flow상 NoC-sim
+  다음. Parity 타깃이 *이미 존재* (g3): comb T3 산출 router_d{4,6}.v
+  + yosys netlist + 측정 area d4 61,762.99 / d6 93,608.53 µm²
+  (1.5156× = §5 게이트 목표). 모듈 7개 (rtlil·read_verilog·passes·
+  liberty·abc_map·write_verilog·dispatcher) → `hexa-lang/stdlib/
+  yosys/` (D15); rfc 는 hexa-arch 설계 산출. 정직 플래그: ABC
+  tech-mapping 재도출은 거대 → **D18 (open)**: (7a) bounded-
+  subprocess(rfc_048/D14 선례, 권장) vs (7b) 전면 재도출. RFC =
+  설계만 — 모듈 미작성, 합성 미실행, "Yosys absorbed" 주장 0 (g3);
+  clean-room 모듈은 후속 rate-limit-safe scoped 작업(rfc_003 패턴),
+  §5 게이트로 검증. rfc_005=hexa-matter(D17 superseded)라 rfc_006
+  부터 comb-stack.
