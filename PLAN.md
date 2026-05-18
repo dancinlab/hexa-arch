@@ -493,3 +493,17 @@
   GitHub rename → ⑥ local delete — ⑤⑥ GATED, explicit per-step go
   required (confirmed #3); NOT done. hexa-matter origin protected
   (15 commits pushed).
+- 2026-05-18 — **D16 = product surface is a native macOS Swift app**
+  (rfc_004 §6; user accepts macOS lock-in, recommendation WEB
+  overridden). Local design cockpit = pure consumer of
+  `exports/**.{json,hxc}` (rfc_002 schema → Swift `Codable`), zero
+  server/auth/DB, hexa-native core untouched (Swift outside the g5
+  boundary). Key reframe: the public honest-audit surface is
+  **already** the public GitHub repo (committed records / design.md /
+  GATE state) → GitHub = public audit, Swift app = local cockpit
+  (complementary, not competing); WEB's only edge already covered, so
+  Swift is the more coherent fit here (eliminates the infra/ops +
+  no-sync-gap pain that dominated this session). **Design decision
+  only — building it is downstream** (rfc_004 §6; D10-rescinded
+  permits it but it is not started). rfc_004 §6 RESOLVED banner +
+  design.md D16 recorded.

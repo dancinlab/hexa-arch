@@ -146,8 +146,16 @@ caveat (rfc_003 finding) → execution gated (D10).
 
 ## 6. Product surface — SaaS / Web / GUI (design of, not build of)
 
-"sass 라고 하나?? WEB 이던 GUI 이던" — yes, the natural delivery is a
-**SaaS / web app**. Under D10 hexa-arch ships the *design* of that
+> **RESOLVED 2026-05-18 — D16 = native macOS Swift app** (user
+> accepts macOS lock-in). Local design cockpit, pure consumer of
+> `exports/**.{json,hxc}`; zero server/auth/DB; hexa-native core
+> untouched. The public honest-audit surface is **already** the
+> public GitHub repo (committed records / design.md / GATE state) —
+> so GitHub = public audit, Swift app = local cockpit
+> (complementary). WEB's sole edge already covered → Swift is the
+> more coherent choice here (ops-free, no sync-gap). Build = still
+> downstream. See `design.md` Decision 16. The SaaS/web framing
+> below is retained as the rejected alternative for the audit trail.
 surface; building/hosting it is a gated downstream (same class as fab).
 
 ```

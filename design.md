@@ -470,3 +470,38 @@ working tree.)
 - Safe/incremental — hexa-lang commit unpushed (user review);
   hexa-arch `git rm stdlib/` is reversible via history; g3 honored
   by re-verifying self-tests in the new tree.
+
+### Decision 16 — product surface = macOS Swift GUI (rfc_004 §6)
+
+**picked**: the hexa-arch product surface (rfc_004 §6) is a **native
+macOS Swift app** — user accepts macOS lock-in ("macos 락인은 무방").
+Local design cockpit: a pure consumer of the typed exports
+(`exports/**.{json,hxc}` via `Codable`), zero server/auth/DB; the
+hexa-native core is untouched (Swift sits outside the governance
+boundary, g5 unpressured). Design decision only — building it is
+downstream (rfc_004 §6). (Rejected: WEB static-first — my original
+recommendation; B/defer.) Key reframe that makes this *more*
+coherent than WEB here: the **public-audit value I had attributed
+only to WEB is already delivered by the public GitHub repo**
+(`dancinlab/hexa-arch` — records, design.md, GATE state are publicly
+committed/auditable). So GitHub = the public honest-audit surface,
+the Swift app = the local cockpit — complementary, not competing;
+WEB's sole advantage is already covered.
+
+**rationale**:
+- ops elimination — ~80% of this session's pain was infrastructure
+  (host thrash, unreachable pool, rate-limits, the no-sync gap that
+  broke OpenROAD/T3). A native local app has zero hosting/auth/DB/
+  deploy surface. hexa-first / minimal.
+- minimal coupling + no sync gap — reads the typed records straight
+  off local disk (rfc_002 schema → Swift structs 1:1); SSOT/exports/
+  domains/ already live on this macOS box; Read/Write are LOCAL in
+  the pool model, so a local GUI is the native fit.
+- public audit already solved by GitHub — the one real WEB-only
+  benefit (shareable, auditable honesty/GATE state) is already a
+  property of the public repo; the GUI need not carry it. Honest
+  reframe, not over-sell (g3): the residual loss is non-macOS user
+  reach, which the user explicitly accepted.
+- core integrity preserved — Swift front is a decoupled consumer
+  (D2 pattern); no embedded web stack pressuring the hexa-native
+  boundary (g5).
