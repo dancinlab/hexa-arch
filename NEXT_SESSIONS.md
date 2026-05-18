@@ -216,9 +216,81 @@ Exit criterion:
 
 ---
 
-## Cross-cutting notes (apply to all 3)
+## P-⑥ — cockpit remaining phases (η-2 / θ / ι / γ-2 / δ-2)
 
-- demiurge decisions D1–D22 are committed; do not re-litigate them
+▎ When: cockpit/ is built (phases α/α-2/α-3/β/γ/δ/η-1 measured-green
+▎ as of commit 56f900a). This handoff closes the phases that this
+▎ session could NOT close measured-green because they need an
+▎ external dependency or downstream data. They are NOT incomplete
+▎ work to "finish now" — each is genuinely gated.
+
+demiurge cockpit session — finish the rfc_011 phase plan.
+Repo: ~/core/demiurge · cockpit/ is a SwiftPM package (CockpitApp
+GUI + DemiurgeCLI + DemiurgeCore library). Read `proposals/
+rfc_011_cockpit_control_surface.md` §4/§6/§9/§10 first; the phase
+plan is §10.
+
+State as of 56f900a (all measured-green, swift run verified):
+  α    NavigationSplitView 3-pane shell
+  α-2  4-zone tabbed (LEFT/RIGHT TabView + TOP toolbar)
+  α-3  DemiurgeCLI + DemiurgeCore library extraction
+  β    Artifacts tab populated (50 records · 41 D · 11 RFC · 15 dom)
+  γ    Decision-block extraction in CENTER
+  δ    Inspector sub-tabs (Provenance + Raw JSON for F1F2)
+  η-1  Chat tab UI + local stub responder
+
+Five phases remain, each gated by a real external dependency:
+
+① η-2 — Claude Code API (conversational chat backend).
+   Needs ANTHROPIC_API_KEY in the environment. Wire URLSession
+   streaming (SSE) into ChatMessage; replace the η-1 stub. The
+   non-slash-command branch of sendChat() dispatches here.
+   Gate: a real streamed reply renders token-by-token; no record
+   emitted (conversational only).
+
+② θ — Claude Code CLI (action dispatch + record emission).
+   Needs the `claude` binary on PATH. Slash-commands /synth
+   /measure /verify /analyze spawn `claude --headless -p …
+   --allowedTools …` as a subprocess. The agent (NOT the cockpit)
+   writes new records to ../exports/**; @D g_cockpit_isolation (d)
+   stays intact. The chat reply MUST render the new record's
+   provenance banner verbatim; @F f6 forbids asserting a measured
+   outcome without a backing record's gate ∈ {GATE_B_PINNED_MET,
+   GATE_CLOSED_MEASURED}. RIGHT "Actions" tab becomes the live
+   job queue. RISK: real synth/measure is rate-limit + compute
+   heavy — use detached runners, never a 100-job sweep in one
+   agent call (P-④'s lesson).
+
+③ ι — RealityKit 3D viewer (ComponentMode).
+   Needs 3D geometry records in ../exports/** (USDZ / STL). There
+   are ZERO today — the `component` domain (D21) producer
+   (FreeCAD / KiCad / StepUp chain) has not emitted any. Build the
+   RealityKit ARView SwiftUI wrapper + mouse-drag orbit camera
+   (D35) AND have a component-domain producer emit at least one
+   USDZ before ι can render anything real. Aesthetic target:
+   `cockpit/references/bipv-module-exploded-isometric.jpg`.
+
+④ γ-2 — full per-kind Artifact cards.
+   Promote MarkdownView into DecisionCard / RFCCard / DomainCard
+   with the `Artifact` protocol (rfc_011 §5.1) — provenance facet,
+   cardView(), inspectorView() per kind.
+
+⑤ δ-2 — Inspector Data / Citations / DEPENDENCIES sub-tabs.
+   Data = record fields table; Citations = resolved
+   atlas_cite_block; DEPENDENCIES = citation graph (rfc_011
+   §3.2.6). Cross-ref scanner over design.md / rfc_*.
+
+Exit per item: measured-green build (`swift run`) + the gate above
+met + PLAN.md dated entry + (for θ) a real record with honest
+provenance. NOT: claiming the cockpit "performs synthesis" before
+θ's gate; faking 3D data for ι; over-claiming a measured outcome
+in chat (@F f6).
+
+---
+
+## Cross-cutting notes (apply to all sessions)
+
+- demiurge decisions D1–D41 are committed; do not re-litigate them
   in a session. Cite them. New session-specific decisions go into
   that session's repo's design.md / decision SSOT.
 - The repo's append-only PLAN.md / `## 진행 로그` is the progress
@@ -238,3 +310,16 @@ Exit criterion:
   matching over-claim path. Companion to `HANDOFF.md` §10 RESUME
   (which is the *demiurge session* pickup; this file is for the
   three downstream sessions demiurge's 4-Phase design enables).
+- 2026-05-19 — **P-⑤ partially executed + P-⑥ added.** The cockpit
+  build session (P-⑤) was actually run this session: cockpit/ is a
+  built SwiftPM package — phases α / α-2 / α-3 / β / γ / δ / η-1 all
+  measured-green (`swift run` verified, commits e601e5b → 56f900a).
+  The five phases that could NOT close measured-green this session
+  (external dependency or downstream data) are handed off as **P-⑥**:
+  η-2 (Claude Code API — needs ANTHROPIC_API_KEY), θ (Claude Code
+  CLI action dispatch — needs `claude` on PATH + real synth gating),
+  ι (RealityKit 3D viewer — needs USDZ/STL geometry records that no
+  component-domain producer has emitted yet), γ-2 / δ-2 (polish).
+  This is honest closure per goal "100% all closure": every phase is
+  now in a definite state — measured-green done, or P-⑥ documented
+  handoff. Nothing is silently unfinished.

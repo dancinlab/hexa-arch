@@ -451,63 +451,90 @@ future if RealityKit lacks a needed primitive.
 `rfc_010` defined α..ζ (shell, tree, card, inspector, variety,
 filters/deps). `rfc_011` adds:
 
-| Phase | Scope | Est. LoC | Build gate |
-| ----- | ----- | -------- | ---------- |
-| α-2 | LEFT TabView (Chat placeholder + Artifacts) + RIGHT TabView (Inspector default) + TOP toolbar | ~80 | `swift run` clean + tabs switch |
-| η | Chat tab UI + API streaming Q&A | ~180 | clean + Q&A reply renders |
-| θ | CLI dispatch + action result with provenance banner in chat | ~200 | clean + a `/synth` command produces a measurable record |
-| ι | RealityKit ComponentMode (3D viewer + USDZ/STL loader + per-layer banner) | ~200 | clean + BIPV exploded stack renders + mouse-drag rotates |
-| | **Total (new phases)** | **~660** | |
+| Phase | Scope | Status (2026-05-19) |
+| ----- | ----- | ------------------- |
+| α-2 | LEFT/RIGHT TabView + TOP toolbar | ✅ measured-green — commit `735dbd8` |
+| α-3 | DemiurgeCLI + DemiurgeCore library | ✅ measured-green — commit `b09304b` |
+| β | Artifacts tab populated | ✅ measured-green — commit `1b3a53e` |
+| γ | Decision-block extraction in CENTER | ✅ measured-green — commit `56f900a` |
+| δ | Inspector sub-tabs (Provenance + Raw JSON) | ✅ measured-green — commit `56f900a` |
+| η-1 | Chat tab UI + local stub responder | ✅ measured-green — commit `56f900a` |
+| η-2 | Claude Code API streaming Q&A | ⏸ handed off — `NEXT_SESSIONS.md` P-⑥ ① (needs `ANTHROPIC_API_KEY`) |
+| θ | Claude Code CLI dispatch + action record emission | ⏸ handed off — P-⑥ ② (needs `claude` on PATH; real-synth gating) |
+| ι | RealityKit ComponentMode 3D viewer | ⏸ handed off — P-⑥ ③ (needs USDZ/STL geometry records — none in `exports/`) |
+| γ-2 | full per-kind Artifact cards | ⏸ handed off — P-⑥ ④ |
+| δ-2 | Inspector Data / Citations / DEPENDENCIES sub-tabs | ⏸ handed off — P-⑥ ⑤ |
 
-Combined with rfc_010's α..ζ (~730), the full cockpit estimate is
-**~1390 LoC** Swift — still tractable, still Apple-canonical (D26).
+**Closure note (2026-05-19, goal "100% all closure")**: every phase
+is in a definite state — α-2 / α-3 / β / γ / δ / η-1 are
+measured-green (`swift run` verified); η-2 / θ / ι / γ-2 / δ-2 are
+each blocked by a real external dependency (API key / `claude`
+binary / downstream 3D-geometry records) or are downstream polish,
+and are handed off honestly via `NEXT_SESSIONS.md` P-⑥. Nothing is
+silently unfinished.
 
 ---
 
-## 11. Open decision gates (for D41+ in `design.md`)
+## 11. Open decision gates (for D42+ in `design.md`)
 
 These are real fork-in-the-road points this RFC intentionally does not
-pre-commit. They will open as the phases arrive.
+pre-commit. They will open as the phases arrive. (Renumbered from
+D41+ to D42+ — `design.md` D41 was taken by the boundary-read-scope
+clarification landed during phase β.)
 
-1. **D41 — Chat history persistence** — A) `@AppStorage` per launch only;
+1. **D42 — Chat history persistence** — A) `@AppStorage` per launch only;
    B) on-disk JSON in `cockpit/chat-history/` (outside `exports/`, not a
-   record); C) git-tracked transcripts. Recommended: A for η-1; B for θ.
+   record); C) git-tracked transcripts. Recommended: A for η-1 (current —
+   in-memory `@State`); B for θ.
 
-2. **D42 — Slash-command vocabulary** — `/synth`, `/measure`, `/verify`,
+2. **D43 — Slash-command vocabulary** — `/synth`, `/measure`, `/verify`,
    `/analyze` are obvious; full set deferred to phase θ when actual
    tool subprocess invocations are wired.
 
-3. **D43 — RealityKit format priority** — USDZ vs STL vs glTF — pick
+3. **D44 — RealityKit format priority** — USDZ vs STL vs glTF — pick
    based on which `../exports/**` records will actually contain 3D
    geometry data. Likely USDZ (Apple-native, FreeCAD now exports).
 
-4. **D44 — Action queue persistence** — across launches? Across machine
+4. **D45 — Action queue persistence** — across launches? Across machine
    restarts? Recommended: in-memory for v0, on-disk JSON in θ+2 if
    demanded.
 
-5. **D45 — Federated cockpit shell** — `hexa-bio-cockpit` / hexa-matter /
+5. **D46 — Federated cockpit shell** — `hexa-bio-cockpit` / hexa-matter /
    etc. shared shell, vs separate apps per repo. Deferred P5+.
 
 ---
 
-## 12. What is NOT built (g3 — explicit)
+## 12. What is NOT built (g3 — explicit; updated 2026-05-19 post-η-1)
 
-- **No tabs landed yet** — Phase α-2 commit will land the tabbed shell.
-- **No chat backend** — Phase η wires API; Phase θ wires CLI. Until
-  then, the Chat tab will be a UI placeholder.
-- **No AI-agent record emission** — Phase θ. Until then, ALL records in
-  `../exports/**` are producer-emitted by humans / scripts / NOT this
-  cockpit.
-- **No 3D viewer** — Phase ι. Until then, ComponentMode renders as
-  text-only cards (no exploded stack).
+Landed measured-green (no longer "not built"): tabbed shell (α-2),
+CLI + library (α-3), Artifacts tab (β), Decision-block cards (γ),
+Inspector Provenance/Raw sub-tabs (δ), Chat tab UI (η-1). The
+following remain NOT built:
+
+- **No chat backend** — η-1 Chat tab is a real UI but its responder
+  is a LOCAL STUB tagged `[stub η-1]`. Phase η-2 wires Claude Code
+  API (conversational); phase θ wires Claude Code CLI (action).
+  Until then no message reaches a real model.
+- **No AI-agent record emission** — Phase θ. Until then, ALL records
+  in `../exports/**` are producer-emitted by humans / scripts / NOT
+  this cockpit.
+- **No 3D viewer** — Phase ι. ComponentMode currently renders
+  text-only (MarkdownView); the RealityKit exploded stack needs
+  USDZ/STL geometry records that no component-domain producer has
+  emitted yet.
+- **No full per-kind cards** — γ landed Decision-block extraction
+  only; DecisionCard / RFCCard / DomainCard structs (Artifact
+  protocol §5.1) are γ-2.
+- **No Inspector Data / Citations / DEPENDENCIES sub-tabs** — δ
+  landed Provenance + Raw JSON only; the rest are δ-2.
 - **No `hexa-bio-cockpit`** — out of scope (§8.1).
-- **No federation** — deferred (D45).
+- **No federation** — deferred (D46).
 - **No action result has shipped through chat → exports** — Phase θ
   build gate is the first measured-green claim point.
 - **No claim that the cockpit performs synthesis** — UNTIL Phase θ's
-  build gate is met with a cited record showing a real Yosys / OpenROAD
-  / hexa-matter invocation, the cockpit is a *trigger + viewer*, not a
-  *synthesis tool* (g3 / `@F f2`).
+  build gate is met with a cited record showing a real Yosys /
+  OpenROAD / hexa-matter invocation, the cockpit is a *trigger +
+  viewer*, not a *synthesis tool* (g3 / `@F f2` / `@F f6`).
 
 ---
 
