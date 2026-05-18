@@ -719,3 +719,21 @@
   없음, 새 RFC 없음 — *문서 정합* 만. PLAN/design.md/AGENTS.tape
   은 손대지 않음(이미 정합). 외부 cold reader 가 받는 정체상이
   결정 SSOT 와 일치.
+- 2026-05-19 — **README + AGENTS.tape + GOAL.md 잔여 정합 패스**
+  (정합 패스 part 2, 새 결정 0): ⓐ `README.md` `Status: SCAFFOLD`
+  → `4-Phase design-complete (g3)` + family(D17 정합) + Concept
+  ASCII 에 메타-컨덕터 체인(matter→chip→component, rfc_007/008) +
+  component(D21) + 13 cohort + macOS cockpit(D16/D22) 추가 +
+  "First domain=chip(scaffold)" → "Current state (RFC 9 · D22 ·
+  inbox handoff)". ⓑ `AGENTS.tape` `decisions = D1..D14` →
+  **D1..D22** (D15..D22 한줄 요지 + 정합 일자); `g_hexa_native`
+  rule 에 D18 bounded-subprocess 선례 추가(D14 hexa-matter shim 은
+  D17으로 무효, 명시). `@N ssot` 에 `goal = GOAL.md` 추가. ⓒ
+  `GOAL.md` "현재 정직한 위치" 섹션을 D17 시점 → post-D22 로 갱신
+  (north-star 한 문장 + NOT/IS/수단-트리 불변 — 시간-bound 섹션만):
+  새 fact(RFC 9 · D1–D22 · 15 도메인맵 · debt ① 상환 · inbox 적재
+  · `inbox_sync` 통과) 추가, 갭 정정(코드 0 · seam records 0 v0
+  의도빈 · Yosys §4 미구현 · `d5a63a82` 미push만 — 61866308 은
+  push됨 g3정정). 새 결정 없음, 새 RFC 없음 — *cold-reader 정직성*
+  닫음. 이로써 **외부 노출 표면(README) · 거버넌스 SSOT
+  (AGENTS.tape) · north-star(GOAL) 전부 D22 정합**.

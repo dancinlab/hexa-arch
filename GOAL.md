@@ -48,23 +48,34 @@
 
 ## 현재 정직한 위치 (g3 — over-claim 금지)
 
-**메타프레임워크 design-baseline 완결, GUI 미완·체인 미배선.** north-star
-불변. 측정된 거리:
+**4-Phase 설계 design-complete, 코드·앱·wired·absorbed 모두 0.**
+north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
 
-- ✅ 7-verb spine cited (9 라이프사이클) · 14 도메인 공개면 맵 ·
-  rfc_001..005 · AGENTS.tape 거버넌스 · D1–D16 감사추적 · comb archive
-- ✅ **hexa-matter measured-parity 검증됨 (단, hexa-lang 소유 — D17)**:
-  rfc_005 §4 selftest **38/38** · parity **29/29** · verify 4/4 ·
-  36/36 spec 는 실측 사실이나, ④ 조사로 그것이 **hexa-lang 의 이미
-  완료된 흡수**임이 드러남. D17 = hexa-lang SSOT · hexa-arch 는
-  소비-포인터 (`domains/matter/` 중복 사본 git-rm, pointer 化;
-  rfc_005 tombstone CANCELLED). over-claim 0 — hexa-arch 는 흡수
-  소유 주장 안 함.
-- 🟡 chip §B = **GATE_B_PINNED_MET** — pinned 기준 PASS(모델 단순화
-  하에) 이나 full-curve parity·§D 미입증; `absorbed=false` 유지 (g3).
-- 🕳️ **GUI 미완** (D16 = macOS Swift, *설계 결정만*; 빌드 downstream) ·
-  chain seams 미배선 · hexa-matter tombstone ⑤⑥ GATED · hexa-lang
-  booksim 커밋 미push.
+- ✅ **설계 골격 완결**: 7-verb spine cited (9 라이프사이클·D5) ·
+  **15 도메인 공개면 맵** (13 Cohort cited + `component.md` cited
+  this session per D21 + `matter/` D17 pointer) · **RFC 9건**
+  (rfc_001/002/003 booksim+F1F2·rfc_004 e2e·rfc_005 SUPERSEDED D17·
+  rfc_006 Yosys 설계+D18/D19·rfc_007/008 두 seam v0·rfc_009 macOS
+  Swift cockpit spec) · **design.md D1–D22 감사추적** ·
+  AGENTS.tape 거버넌스 (D22 정합) · CHARTER+HANDOFF reconciled.
+- ✅ **hexa-matter measured-parity 검증됨 (단 hexa-lang 소유 — D17)**:
+  selftest **38/38** · parity **29/29** 는 실측 사실이나 **hexa-lang
+  의 이미 완료된 흡수** (D17 = hexa-lang SSOT · hexa-arch =
+  소비-포인터; `domains/matter/` pointer 化, rfc_005 tombstone
+  CANCELLED). hexa-arch 는 흡수 소유 주장 안 함.
+- ✅ **inbox handoff 적재 완료**: `hexa-lang/inbox/notes/2026-05-19-
+  hexa-arch-rfc006-yosys-handoff.md` + `PATCHES.yaml` +2 (booksim
+  `d5a63a82`=pending·comb `61866308`=applied), `inbox_sync` 통과.
+- ✅ **component cited-research debt 상환** (debt ①): KiCad·Elmer·
+  openEMS 등 10 OSS + ANSYS Icepak·COMSOL 등 4 상용 검증, 출처
+  15건 §5 등재, 13맵과 동급 provenance.
+- 🟡 **chip §B = `GATE_B_PINNED_MET`** — pinned PASS(모델 단순화),
+  full-curve parity·§D 미입증; `absorbed=false` 유지.
+- 🕳️ **코드·앱 0** (Swift 빌드 = D22 downstream OOS) · **seam records
+  0** (rfc_007/008 v0, `records/` 의도적 빈칸 = g3 위조 0) ·
+  **Yosys §4 모듈 미구현** (hexa-lang 세션, D19) · **`d5a63a82`
+  미push** (hexa-lang 세션 ahead 18) · 어떤 도메인도 `absorbed=true`
+  아님.
 
 > GOAL 한 줄(north-star)은 불변 — 달성 주장 아님, 측정 거리 명시.
 
@@ -86,3 +97,10 @@
   canonical 한 문장 = north-star, 불변. 현 정직 위치: design-baseline
   완결 · hexa-matter measured-parity 흡수 ✅ · chip §B GATE_B_PINNED_MET ·
   GUI(D16) 설계만·미빌드. 진척 SSOT = PLAN.md/design.md, 본 파일 = "왜".
+- 2026-05-19 — "현재 정직한 위치" 섹션을 post-D22 로 갱신 (north-star
+  불변, 섹션만 갱신). 새 측정 fact 추가: 4-Phase 설계 design-complete ·
+  RFC 9건 · D1–D22 · 15 도메인맵 · component cited-research debt ①
+  상환 · inbox handoff 적재 · `inbox_sync` 통과. 갭은 더 정확히: 코드·앱
+  0 · seam records 0 (v0 의도적 빈칸) · Yosys §4 미구현 (hexa-lang
+  세션) · `d5a63a82` 미push만 (g3 정정: 61866308 은 이미 push됨). 새
+  결정 없음 — position-section 정합만.

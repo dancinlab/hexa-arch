@@ -29,7 +29,7 @@
   rule = "Per absorbed tool/repo: one proposals/rfc_0NN_*.md (rfc_047/048 mirror). Clean-room, measured gate, tombstone (archive_ rename + local delete) ONLY after measured-GREEN + dependents + explicit per-step go. Anti-data-loss: push origin before any delete."
 
 @D g_hexa_native := "hexa-native-only (g5)" :: governance [d=2026-05-18 active]
-  rule = "Absorb into hexa intrinsics, never shell out — EXCEPT the rfc_048-precedented bounded exception: verbatim-preserved foreign substrate invoked as a documented subprocess, fail-loud (D14 hybrid). Re-derivation to hexa-native is the scheduled follow-on."
+  rule = "Absorb into hexa intrinsics, never shell out — EXCEPT the rfc_048-precedented bounded exception: verbatim-preserved foreign substrate invoked as a documented subprocess, fail-loud. Re-derivation to hexa-native is the scheduled follow-on. Precedents (cited): D14 (hexa-matter python shim, now moot per D17), D18 (Yosys flow re-derived hexa-native + ABC tech-mapping invoked as bounded subprocess; rfc_006 §7)."
 
 @F forbidden := "hard denies" :: governance [required d=2026-05-18 active]
   f1 = "creating/extending a `stdlib/` tree under hexa-arch (g_stdlib_ownership)"
@@ -38,9 +38,10 @@
   f4 = "silent skip / SKIP-mode regression (g3)"
   f5 = "tombstone (repo rename / local delete) before measured-GREEN + dependents + explicit go"
 
-@N ssot := "where governance + decisions live" :: note [d=2026-05-18 active]
+@N ssot := "where governance + decisions live" :: note [d=2026-05-19 active]
   governance = "this AGENTS.tape (enforced rules + @F denies)"
-  decisions = "design.md D1..D14 (gated decision audit trail)"
-  arch_why = "CHARTER.md + HANDOFF.md"
+  decisions = "design.md D1..D22 (gated decision audit trail; D15 stdlib ownership, D16 macOS Swift surface, D17 hexa-matter SSOT=hexa-lang, D18 Yosys ABC bounded-subprocess, D19 yosys impl belongs to hexa-lang session, D20 materials→chip seam rfc_007, D21 component = new top-level domain, D22 Phase-4 cockpit spec rfc_009 — build OOS)"
+  arch_why = "CHARTER.md + HANDOFF.md (reconciled to D22 on 2026-05-19)"
+  goal = "GOAL.md (한 문장 north-star + 정직한 현 위치)"
   progress = "PLAN.md (append-only log)"
   index = "ARCH.tape"
