@@ -337,3 +337,53 @@ is the *plan*; building/execution stays gated.
   absorption-RFC; the program grows per-domain, never big-bang;
   re-opening B later would still be possible but is explicitly not
   chosen.
+
+### Decision 12 — governance transition: D10 rescinded · D2/D11 rescinded-for-hexa-matter · g3 RETAINED
+
+Triggered by user directives ("design only 규율 아님.. 제거" · "hexa-matter
+완전 흡수 후 archive_hexa-matter 리네임 + 로컬 삭제" · "comb 들고와
+hexa-arch/archive 보관") + confirmations (1·2·3 ok).
+
+**picked**:
+- **D10 RESCINDED** — design-only scope lifted (user directive). hexa-arch
+  resumes full scope incl. execution/absorption. Legitimate scope reversal
+  (user owns scope); no integrity impact.
+- **D2 / D11 RESCINDED *for hexa-matter only*** — hexa-matter moves from
+  typed-interface-consumed to **full-absorb-then-tombstone** (rfc_005,
+  rfc_047/048 pattern). D2/D11 OTHERWISE STAND: hexa-bio stays
+  typed-interface-consumed; comb stays the decoupled consumer; the
+  meta-conductor framing (D11) is unchanged except hexa-matter becomes an
+  *absorbed in-tree domain* instead of a consumed sibling.
+- **g3 (no-over-claim) RETAINED** — the user's g3-removal request was
+  **declined** (removing it would sanction asserting unmeasured/over-stated
+  results = fabricated progress; it is the project's honesty floor and is
+  inherited from the user's own identity SSOT). User confirmed #2: g3
+  stays. Consequence: "완전 흡수" is recorded as a *measured absorption
+  program* (rfc_005, with a selftest/parity GREEN gate), NOT an instant
+  "흡수 완료".
+- **comb = archive snapshot only** — frozen non-SSOT mirror at
+  `hexa-arch/archive/comb/` (incl. failed work, "실패한거라도"). D2
+  substance preserved: comb's live SSOT remains `~/core/hexa-lang/comb`
+  (rfc043-hexa-torch); no ownership/absorb, no edits there.
+
+**sequencing (confirmed #3 — irreversible/outward steps GATED)**:
+absorb → verify (hexa-matter selftest GREEN under hexa-arch tree) →
+push hexa-arch → dependents check → GitHub `hexa-matter →
+archive_hexa-matter` rename → THEN delete `~/core/hexa-matter`.
+hexa-matter origin already protected (15 unpushed commits pushed
+2026-05-18). Rename + local delete are NOT done now; gated on rfc_005
+program completion + verification.
+
+**rationale**:
+- Scope (D10) and sibling-ownership (D2/D11-for-hexa-matter) are the
+  user's calls — reversed deliberately and recorded, not silently, so the
+  audit trail never self-contradicts (g3-adjacent integrity).
+- g3 is not negotiable — it is the anti-fabrication floor; "absorbed"
+  without measured parity is exactly what it forbids. Declining its
+  removal while complying with the legitimate scope/ownership reversals
+  is the correct split.
+- Irreversible/outward actions (public-repo rename, local delete of a
+  9755-file sibling) require the verify+push+dependents preconditions —
+  confirmed by the user (#3); enforced by rfc_005's gated sequence.
+- comb-as-archive-snapshot satisfies "보관" without violating D2 (no SSOT
+  move) — the honest minimal interpretation.

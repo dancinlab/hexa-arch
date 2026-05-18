@@ -408,3 +408,29 @@
   RESOLVED, CHARTER Mission (meta-conductor sentence). Next concrete
   design work per rfc_004 §7 Phase 2 (comb-stack absorption *designs*
   rfc_005..012) — all design-only, awaiting user direction.
+- 2026-05-18 — **D12 governance transition** (user directives +
+  1·2·3 ok): **D10 RESCINDED** (design-only lifted — full scope incl.
+  execution); **D2/D11 RESCINDED for hexa-matter only** → full-absorb
+  +tombstone program (D2/D11 otherwise stand: hexa-bio + comb stay
+  decoupled); **g3 RETAINED** — user's g3-removal request DECLINED
+  (would sanction fabricated/over-stated results = honesty floor;
+  inherited from user identity SSOT); user confirmed g3 stays, so
+  "완전 흡수" = a *measured absorption program*, never instant
+  "완료". **comb = archive snapshot only** at
+  `hexa-arch/archive/comb/` (71 files / 3.3M, incl. failed work; D2
+  substance preserved — live SSOT remains hexa-lang/comb
+  rfc043-hexa-torch; ARCHIVE_NOTE.md states non-SSOT).
+  Anti-data-loss: **hexa-matter 15 unpushed commits PUSHED to
+  origin/main** (precondition for the eventual delete; confirmed #3).
+- 2026-05-18 — **`proposals/rfc_005_hexa_matter_absorption.md`** —
+  hexa-matter absorption+tombstone *program* (rfc_047/048 pattern).
+  Scope measured from the real repo (210 MB / 9755 files / 36-verb /
+  16+ DB bridges / selftest 32-32 / 2356 .py). Honest tensions
+  flagged: §5 hexa-native-only (g5) vs 2356 Python files → D14 open
+  (verbatim+shim per rfc_048 vs full re-derivation); §3 placement →
+  D13 open (`domains/matter/` recommended). g3 gate §4 = selftest
+  32/32 + 29 parity gates GREEN *under the hexa-arch tree* before any
+  "absorbed" claim. Tombstone (rename+delete) gated steps ⑤⑥ —
+  NOT done; explicit per-step go required (confirmed #3). RFC = the
+  program design only; the 9755-file move / selftest-rerun / rename /
+  delete are explicitly NOT done (g3 honesty §8).
