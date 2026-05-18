@@ -1038,3 +1038,55 @@
   사용자 macOS 로컬 `swift run` 으로 4-zone tabbed 시각 검증 가능
   (LEFT 의 Chat/Artifacts 토글 + RIGHT 의 Inspector/Actions 토글 +
   TOP 의 3 버튼 visible).
+- 2026-05-19 — 🎉 **Phase α-3 LANDED + measured-green end-to-end (CLI
+  scaffold + library extraction)**. 사용자 directive: "cli 도 일저에
+  올려놔". rfc_011 §10 phase α-3 build gate 충족 — 단일 GUI 가 아닌
+  **GUI + CLI 듀얼 executable** 이 한 SwiftPM package 안에 lands.
+  변경 요약:
+  · **Package.swift** = 1 library + 2 executable targets:
+    `DemiurgeCore` (library, Foundation only — 공유 typed-interface
+    consumer), `CockpitApp` (SwiftUI GUI, depends on Core), `DemiurgeCLI`
+    (Foundation-only headless, depends on Core). 3 products exposed.
+  · **파일 재배치 (`git mv`)** — `Sources/CockpitApp/Models/F1F2Record.swift`
+    → `Sources/DemiurgeCore/Models/F1F2Record.swift` · `Sources/
+    CockpitApp/Loaders/RecordLoader.swift` → `Sources/DemiurgeCore/
+    Loaders/RecordLoader.swift`. git history 보존, cross-module
+    visibility 위해 모든 type/member `public` 화 (F1F2Record · Topology
+    · Verdict · Provenance · MeasurementGate enum · RecordLoaderError ·
+    RecordLoader + load helpers + exportsRoot / f1f2RecordsRoot static).
+  · **새 파일** `Sources/DemiurgeCLI/main.swift` (~155 LoC). argv
+    parser + 4 subcommand: `--version` · `--help` · `list-records` ·
+    `show <path>`. 모두 read-only. action subcommands (synth/measure/
+    verify/analyze) 는 phase θ 의 Claude Code CLI dispatch 로 lands
+    (g_ai_agent_action_surface). 에러 시 stderr 출력 + exit code (0
+    OK, 2 user error). FileHandle.standardError 로 정직한 error
+    surface. `RecordLoaderError.pathOutsideExports` 가 invariant (a)
+    runtime 검증, GUI 와 동일 패턴.
+  · **GUI 측 import** — `CockpitApp.swift` + `RecordView.swift` +
+    `ProvenanceBanner.swift` 모두 `import DemiurgeCore` 1줄 추가.
+    내부 로직 무변경 — public 화 된 type 들이 같은 이름으로 그대로
+    사용 가능.
+  · **`cockpit/README.md`** 전면 갱신 — SwiftPM layout 트리 + GUI/CLI
+    동시 build + CLI subcommand 표 + Phase θ NOT-built 명시 + 3
+    references list + 모든 cross-ref.
+  · **빌드 measured-green** (사용자 Mini, swift 6.3.1, macosx26.0):
+    `swift run CockpitApp` → Compile DemiurgeCore (2 sources) + CockpitApp
+    (3 sources) + Link → 3.00s wall. `swift run DemiurgeCLI --version`
+    → Link DemiurgeCLI 1.38s → stdout "demiurge 0.0.1 (phase α-3,
+    read-only — rfc_011 §10)" → exit 0. `swift run DemiurgeCLI
+    list-records` → **F1F2 records (50) at /Users/ghost/core/demiurge/
+    exports/chip/noc/f1f2/records** → 50 .json 파일명 정렬 출력 →
+    exit 0. `swift run DemiurgeCLI show ../exports/.../d8_king_1ghz.json`
+    → record_id / interface / schema / topology / verdict + 풀
+    `provenance.*` (gate / absorbed / engine / commit / consumer /
+    atlas / 5 scope_caveats) verbatim 출력 → exit 0. **모든 검증 GREEN**,
+    0 warnings 모든 target. 사용자 ↔ AI agent 가 같은 CLI 표면 사용
+    가능 — 사람: 터미널에서 직접 입력 / agent (Claude Code) : subprocess
+    spawn (phase θ).
+  · **g3 정직**: phase α-3 가 measured-green 인 것은 confirmed. 단
+    action surface 가 작동한다는 주장 안 함 — `synth`/`measure`/
+    `verify`/`analyze` 어느 것도 아직 미구현, Phase θ 까지 spec only.
+    `provenance.absorbed` 어떤 record 도 flip 안 됨, `@F f2` 회피.
+  · 새 RFC 0, 새 design.md decision 0 (phase = rfc_011 §10 의
+    execution이지 새 결정 아님), 새 governance 0 (rfc_011 commit 의
+    g_ai_agent_* 이미 등록). 도메인맵 0.

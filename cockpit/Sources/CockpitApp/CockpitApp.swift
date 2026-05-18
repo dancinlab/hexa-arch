@@ -29,6 +29,7 @@
 import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
+import DemiurgeCore
 
 @main
 struct CockpitApp: App {

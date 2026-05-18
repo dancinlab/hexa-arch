@@ -15,6 +15,7 @@
 // `LabeledContent` / `GroupBox`, system fonts. No custom Color literals.
 
 import SwiftUI
+import DemiurgeCore
 
 struct ProvenanceBanner: View {
     let provenance: F1F2Record.Provenance

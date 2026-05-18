@@ -8,6 +8,7 @@
 //      on the analyst's behalf; @F f4 mirror in app form)
 
 import SwiftUI
+import DemiurgeCore
 
 struct RecordView: View {
     let result: Result<F1F2Record, RecordLoaderError>
