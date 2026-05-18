@@ -2,7 +2,13 @@
 
 > Cohorts 1+2 (named, `design.md` Decisions 3 and 6): chip is the **deep**
 > domain (mapped in `HANDOFF.md` §5 + `proposals/rfc_001_*`); these 13
-> are **shallow** public-surface maps — breadth over depth.
+> are **shallow** public-surface maps — breadth over depth. **Plus a
+> 14th, `component.md`** — added later by `design.md` Decision 21 as the
+> meta-conductor chain's 3rd-pass domain (rfc_008 seam), **not** part of
+> the original 13-domain Agent-3/4 breadth survey (distinct provenance:
+> cited research this session — see its own §5). The "13-domain"
+> synthesis figures below (e.g. 8/13) are the *historical survey* and
+> are deliberately left un-recounted (g3 — `component` was not in it).
 > Boundary: public-surface clean-room (`design.md` Decision 1). Pipeline =
 > 7-verb spine (`HANDOFF.md` §4 · `design.md` Decision 5). Source:
 > Agent-3 (Cohort 1) + Agent-4 (Cohort 2), cited per file.
@@ -25,6 +31,15 @@
 - [`bot.md`](bot.md) — robot platform (URDF + control stack)
 - [`grid.md`](grid.md) — datacenter / network fabric
 - [`aura.md`](aura.md) — post-aural wearable BCI (non-implantable)
+
+## Files — chain-stage domain (`design.md` Decision 21)
+
+- [`component.md`](component.md) — part / package / system design
+  (FEM/EM/thermal/SI-PI). The meta-conductor chain's 3rd 7-verb pass,
+  fed by the `chip→component` typed seam (rfc_008). Provenance: cited
+  public-surface web research (this session), parity with the
+  Agent-cited maps — **not** part of the original Cohort 1/2 breadth
+  survey above.
 
 ## Cross-domain synthesis (Agent-3 output, condensed)
 

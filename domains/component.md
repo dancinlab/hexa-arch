@@ -6,12 +6,8 @@
 > top-level domain, the chain's 3rd 7-verb pass; fed by the
 > chip→component typed seam, rfc_008). Pipeline = 7-verb spine
 > (`HANDOFF.md` §4 · D5).
-> **Provenance (honest, g3)**: drafted from general public-domain
-> knowledge of the OSS component/EM/thermal/mechanical landscape —
-> **NOT session-retrieved**. ⚠ Where a tool is named from general
-> knowledge it is flagged; full cited-agent research (parity with
-> the Agent-cited Cohort maps) = a scheduled follow-on, not claimed
-> done here.
+> **Provenance**: cited public-surface web research (this session) —
+> parity with the Agent-cited Cohort maps.
 
 ## 1. "Design blueprint" deliverable
 
@@ -28,45 +24,48 @@ manufacturable package/board/system.
 |---|---|---|
 | 명세 SPECIFY | (package/system requirements from the rfc_008 chip dossier: die, power, Tjmax, IO rates) | — |
 | 구조 ARCHITECT | (package class & stackup choice: wirebond vs flip-chip vs fan-out; board layer plan) | — |
-| 설계 DESIGN | **KiCad** (PCB / package layout, footprints); **FreeCAD** (3D enclosure / mechanical CAD); **gmsh** (analysis mesh generation) | **Cadence Allegro / Sigrity**, **Siemens HyperLynx** — ⚠ *named from general knowledge, not retrieved source* |
-| 해석 ANALYZE ⟲ | **Elmer FEM** (multiphysics: thermal / structural / EM); **openEMS** (FDTD full-wave EM / signal integrity); **FEMM** (2D electrostatic / magnetic); **CalculiX** · **Code_Aster** (structural FEA); **OpenFOAM** (CFD / conjugate heat transfer) | **ANSYS Icepak / HFSS / Mechanical**, **COMSOL Multiphysics** — ⚠ *named from general knowledge, not retrieved source* |
-| 합성 SYNTHESIZE | **OpenMDAO** (multidisciplinary design optimization — couples the thermal / EM / mechanical analyses into one optimized package + board definition) | — |
-| 검증 VERIFY | Elmer / openEMS / CalculiX re-run as signoff (thermal margin, SI eye, stress); design-rule checks in KiCad | **ANSYS / COMSOL** signoff — ⚠ *general knowledge* |
+| 설계 DESIGN | **KiCad** (cross-platform OSS PCB design suite: schematic capture + PCB layout + routing); **FreeCAD** (open-source parametric 3D modeler for enclosure / mechanical CAD); **gmsh** (3D finite-element mesh generator with built-in CAD + pre/post) | **Cadence Allegro X** (PCB & IC-package design platform), **Siemens HyperLynx** (high-speed SI/PI design suite) |
+| 해석 ANALYZE ⟲ | **Elmer FEM** (multiphysics FE solver: heat transfer / structural / electromagnetics / fluids); **openEMS** (free FDTD electromagnetic field solver — full-wave EM / signal integrity); **FEMM** (2D magnetics / electrostatics / heat-flow / current-flow FEM); **CalculiX** · **Code_Aster** (3D structural / thermomechanical FEA); **OpenFOAM** (open-source CFD incl. heat transfer in fluids and solids) | **ANSYS Icepak** (electronics-cooling CFD on the Fluent solver: IC/package/PCB airflow + temperature), **COMSOL Multiphysics** (coupled thermal / structural / EM simulation platform) |
+| 합성 SYNTHESIZE | **OpenMDAO** (open-source multidisciplinary design analysis & optimization framework with analytic derivatives — couples the thermal / EM / mechanical analyses into one optimized package + board definition) | — |
+| 검증 VERIFY | Elmer / openEMS / CalculiX re-run as signoff (thermal margin, SI eye, stress); electrical-rules / design-rule checks in KiCad | **ANSYS / COMSOL** signoff; **Cadence Sigrity X** (SI/PI + PDN / IR-drop signoff for package & PCB) |
 | 인계 HANDOFF | system bill-of-materials + thermal / EM dossier (rfc_004 §4 wording) → manufacturing / next chain consumer | — |
 
 ## 3. Notable proprietary (public docs only)
 
 The mechanical/EM/thermal CAE space is **commercially dominated**:
-**ANSYS** (Icepak thermal, HFSS full-wave EM, Mechanical FEA),
-**COMSOL Multiphysics**, **Cadence** (Allegro package/PCB, Sigrity
-PI/SI), **Siemens** (Simcenter FloTHERM, HyperLynx). All named from
-general engineering knowledge / public marketing — ⚠ *not detailed
-from retrieved sources, flagged*. The open stack (Elmer, openEMS,
-CalculiX, OpenFOAM, KiCad, FreeCAD) covers the physics individually
-but requires integration glue (the OpenMDAO role above).
+**ANSYS** (Icepak electronics-cooling CFD, plus HFSS full-wave EM and
+Mechanical FEA — public marketing; only Icepak retrieved here),
+**COMSOL Multiphysics** (unified coupled-physics platform),
+**Cadence** (Allegro X package/PCB platform; Sigrity X for SI/PI +
+PDN), **Siemens** (HyperLynx SI/PI; Simcenter FloTHERM electronics
+thermal — FloTHERM named from the same Siemens search, ⚠ *not
+separately retrieved*). The open stack (Elmer, openEMS, CalculiX,
+OpenFOAM, KiCad, FreeCAD) covers the physics individually but
+requires integration glue (the OpenMDAO role above).
 
 ## 4. Biggest open-source gap
 
 A unified package/board/system co-design environment with
 production-grade SI/PI + thermal + mechanical in one polished loop —
 the open pieces are individually strong but the integrated,
-signoff-quality flow is proprietary (ANSYS/Cadence/Siemens class).
+signoff-quality flow is proprietary (ANSYS/Cadence/Siemens class). A
+real published OSS chain exists (FreeCAD → gmsh → CalculiX →
+ParaView, Antmicro) but is bespoke glue, not a turnkey environment.
 
 ## 5. Cited sources
 
-> ⚠ The links below are the projects' canonical home pages from
-> general public knowledge — **not session-retrieved citations**.
-> Listed for traceability; a full cited-research pass is the
-> scheduled follow-on (honest provenance parity with the
-> Agent-cited Cohort maps).
-
-- KiCad — <https://www.kicad.org/>
-- FreeCAD — <https://www.freecad.org/>
-- Elmer FEM — <https://www.elmerfem.org/>
-- openEMS — <https://www.openems.de/>
-- FEMM — <https://www.femm.info/>
-- CalculiX — <http://www.calculix.de/>
-- Code_Aster — <https://www.code-aster.org/>
-- OpenFOAM — <https://www.openfoam.com/>
-- gmsh — <https://gmsh.info/>
-- OpenMDAO — <https://openmdao.org/>
+- KiCad — <https://www.kicad.org/> (OSS PCB suite: schematic + layout + ERC)
+- FreeCAD — <https://www.freecad.org/> (open-source parametric 3D modeler)
+- gmsh — <https://gmsh.info/> (3D FE mesh generator + CAD + pre/post)
+- Elmer FEM — <https://github.com/ElmerCSC/elmerfem> (multiphysics FE: thermal/structural/EM/fluid)
+- openEMS — <https://www.openems.de/> (free FDTD EM field solver)
+- FEMM — <https://www.femm.info/wiki/HomePage> (2D magnetics/electrostatics/heat/current FEM)
+- CalculiX — <http://www.calculix.de/> (free 3D structural FEA program)
+- Code_Aster — <https://www.code-aster.org/> (structural & thermomechanics FE software)
+- OpenFOAM — <https://openfoam.org/> (OSS CFD incl. heat transfer in fluids/solids)
+- OpenMDAO — <https://openmdao.org/> (OSS MDAO framework, analytic derivatives)
+- ANSYS Icepak — <https://www.ansys.com/products/electronics/ansys-icepak> (electronics-cooling CFD, Fluent solver)
+- COMSOL Multiphysics — <https://www.comsol.com/comsol-multiphysics> (coupled multiphysics simulation platform)
+- Cadence Sigrity X / Allegro X — <https://www.cadence.com/en_US/home/tools/sigrity-x.html> (SI/PI + PDN; package/PCB platform)
+- Siemens HyperLynx / Simcenter FloTHERM — <https://eda.sw.siemens.com/en-US/pcb/hyperlynx/> (high-speed SI/PI suite; FloTHERM = electronics thermal)
+- OSS electro-thermal chain (corroboration) — <https://antmicro.com/blog/2025/03/open-source-thermal-simulation-analysis-and-visualization> (FreeCAD → gmsh → CalculiX → ParaView PCB thermal pipeline)

@@ -664,3 +664,23 @@
   단 코드/앱/wired/absorbed 0 (g3). 다음 = (a) 미상환 follow-on
   (component cited-research, hexa-lang yosys 모듈, chip 측정) or
   (b) 신규 지시 — 대기.**
+- 2026-05-19 — **미상환 debt ① 상환: `domains/component.md`
+  cited-research 완료** (사용자 픽). 검증된 scoped-에이전트
+  패턴(rfc_003 idiom, ~16 web calls, rate-limit-safe). OSS 10개
+  전수 검증(KiCad·FreeCAD·gmsh·Elmer·openEMS·FEMM·CalculiX·
+  Code_Aster·OpenFOAM·OpenMDAO) + 상용 4개(ANSYS Icepak·COMSOL·
+  Cadence Sigrity/Allegro X·Siemens HyperLynx) 공개 vendor 페이지
+  검증 + Antmicro OSS electro-thermal 체인 corroboration. §5 에
+  15 retrieved 출처(증거노트 포함). **g3 정직**: 검증 못한 것만
+  ⚠ 잔존 — Siemens FloTHERM(⚠ not separately retrieved), ANSYS
+  HFSS/Mechanical(§3 산문서 "only Icepak retrieved" 명시, 테이블
+  미등재). Provenance 블록 "NOT session-retrieved" → "cited
+  public-surface web research (this session) — parity" 로 업그레
+  이드. 이모지 0, 7-verb 1:1, space.md 포맷 정합. `domains/
+  README.md`: component 을 **별도 chain-stage 섹션**(D21)으로
+  등록 — 원 13-도메인 Agent-3/4 breadth survey 에 기계합산 안 함
+  (8/13 등 historical 수치 un-recount, g3 — 원 survey 에 없던
+  도메인). **debt ① 닫힘. 잔여 미상환: ② hexa-lang yosys 모듈
+  (D19) ③ hexa-lang 미push ④ chip 측정 ⑤ Swift 빌드 — 전부
+  cross-session/gated, hexa-arch 설계경계 밖. 다음 = 신규 지시
+  대기.**
