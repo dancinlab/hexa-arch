@@ -434,3 +434,20 @@
   NOT done; explicit per-step go required (confirmed #3). RFC = the
   program design only; the 9755-file move / selftest-rerun / rename /
   delete are explicitly NOT done (g3 honesty §8).
+- 2026-05-18 — **D13 = `domains/matter/`** · **D14 = hybrid**
+  (git-tracked verbatim + hexa-native shim NOW; per-verb re-derive
+  rfc_006+ follow-on). rfc_005 step ② executed: hexa-matter absorbed
+  into `domains/matter/`. **Faithful-set correction (g3, surfaced)**:
+  naive verbatim was 195 MB / 9728 files but 185 MB = hexa-matter
+  local agent scratch (`.claude/worktrees/` ×27 + `state/`) =
+  gitignored local state, NOT the toolkit → re-done as the
+  **git-tracked tree only = 469 files / 8.0 MB** (169 md · 98 py ·
+  61 json · 57 tape · 42 hexa; 63 material-domain subdirs).
+  + `domains/matter/ABSORB_NOTE.md` + `matter.hexa.stub` (shim plan).
+  hexa-arch repo total now ~15 MB (sane). **g3: NOT "absorbed"** —
+  copy ≠ parity; flips only at rfc_005 §4 gate (selftest 32/32 + 29
+  parity GREEN under this tree). Tombstone ⑤⑥ (GitHub rename +
+  ~/core/hexa-matter delete) GATED — not done; hexa-matter origin
+  protected (15 commits pushed). Next: ③ run hexa-matter selftest
+  under the hexa-arch tree (g3 gate) → then ④ dependents → ⑤⑥ with
+  explicit go.

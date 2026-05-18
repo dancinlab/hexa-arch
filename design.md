@@ -387,3 +387,57 @@ program completion + verification.
   confirmed by the user (#3); enforced by rfc_005's gated sequence.
 - comb-as-archive-snapshot satisfies "보관" without violating D2 (no SSOT
   move) — the honest minimal interpretation.
+
+### Decision 13 — hexa-matter placement = `domains/matter/`
+
+**picked**: absorbed hexa-matter lands at `hexa-arch/domains/matter/`
+— the materials-synthesis stage of the meta-conductor chain (rfc_004
+§4 / D11: `domains/matter/` HANDOFF → chip SPECIFY seam). User did not
+veto the recommendation. (Rejected: `stdlib/matter/` — it is a chain
+*domain*, not a language stdlib module; verbatim-untyped-tree — needs
+the `domains/` placement to participate in the chain.)
+
+**rationale**: consistent with the 14 existing Cohort domain maps +
+rfc_004 §4 chain seam; minimal new structure; reversible (a move).
+
+### Decision 14 — hexa-matter absorption = hybrid (git-tracked verbatim + shim, progressive re-derive)
+
+**picked**: (hybrid) — the **git-tracked toolkit tree** is preserved
+verbatim NOW under `domains/matter/` + a hexa-native dispatcher shim
+(rfc_048_xeno pattern; python invoked as a documented
+absorbed-substrate subprocess, fail-loud — a bounded g5 exception
+with rfc_048 precedent). Per-verb hexa-native re-derivation is the
+progressive follow-on (rfc_006+). (Rejected: (5a) full re-derive now
+— ~10× rfc_003 scale, months, rate-limit-prone; (5b) pure
+verbatim+shim with no re-derive roadmap — leaves g5 debt unscheduled.
+Hybrid = (5b) executed now + (5a) scheduled.)
+
+**Faithful-set correction (g3 — surfaced, not papered)**: the naive
+"verbatim everything" copy was 195 MB / 9728 files, but **185 MB of
+that was hexa-matter's local agent scratch**
+(`.claude/worktrees/` × 27 throwaway clones) + `state/` 2.2 MB —
+hexa-matter's own gitignored local state, the analog of `.git`, NOT
+the toolkit. Re-done as the **git-tracked tree only = 469 files /
+8.0 MB** (169 md · 98 py · 61 json · 57 tape · 42 hexa · …). This is
+the honest reading of "verbatim" (the project as its repo defines
+it). Recorded because "look before you absorb; if what you find
+contradicts the description, surface it".
+
+**g3 status**: a verbatim copy is **NOT** an "absorbed" claim.
+`absorbed` flips only at the rfc_005 §4 gate (hexa-matter selftest
+32/32 + 29 parity gates GREEN *under the hexa-arch tree*, filed in
+PLAN with cited numbers). Current state = **program-in-progress, not
+absorbed**. Tombstone (GitHub rename + `~/core/hexa-matter` delete) =
+rfc_005 §6 ⑤⑥, GATED on ③ selftest-GREEN + ④ dependents + explicit
+per-step go (confirmed #3). hexa-matter origin already protected
+(15 commits pushed).
+
+**rationale**:
+- Delivers the user's "완전 흡수 후 tombstone" path on the rfc_048
+  precedent (fast, loss-free) while scheduling the g5 debt instead of
+  hiding it.
+- Faithful-set correction keeps the absorption honest + the repo
+  sane (8 MB toolkit, not 195 MB of transient worktree duplicates) —
+  g3 / no-fake-progress.
+- Tombstone stays gated — irreversible/outward steps need measured
+  verification first (g3 + confirmed #3); nothing destructive done.
