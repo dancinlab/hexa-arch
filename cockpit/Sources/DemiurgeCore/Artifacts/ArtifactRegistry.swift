@@ -149,6 +149,30 @@ public enum ArtifactRegistry {
         return out.sorted { $0.id.key < $1.id.key }
     }
 
+    // MARK: — Decision block extraction (phase γ)
+
+    /// Extract a single `### Decision N — …` block from design.md — the
+    /// heading line through the line before the next `### Decision` heading
+    /// (or EOF). Returns nil if the decision number is absent. Used by the
+    /// CENTER card (phase γ) so selecting `$D29` shows ONLY D29, not the
+    /// whole design.md file.
+    public static func decisionBlock(number: String) -> String? {
+        let url = projectRoot.appendingPathComponent("design.md").standardizedFileURL
+        guard let content = try? String(contentsOf: url, encoding: .utf8) else { return nil }
+        var out: [String] = []
+        var capturing = false
+        for line in content.components(separatedBy: "\n") {
+            if line.hasPrefix("### Decision ") {
+                if capturing { break }                       // next decision → stop
+                let rest = line.dropFirst("### Decision ".count)
+                let num  = String(rest.prefix { $0.isNumber })
+                capturing = (num == number)
+            }
+            if capturing { out.append(line) }
+        }
+        return out.isEmpty ? nil : out.joined(separator: "\n")
+    }
+
     // MARK: — helpers
 
     /// The project root, derived as the parent of `RecordLoader.exportsRoot`.

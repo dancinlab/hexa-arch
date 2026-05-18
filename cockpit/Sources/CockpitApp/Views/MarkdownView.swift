@@ -74,6 +74,14 @@ struct MarkdownView: View {
         loaded = false
         loadError = nil
         raw = ""
+        // phase γ: a Decision selection shows ONLY its `### Decision N`
+        // block, not the whole design.md file.
+        if stub.id.kind == .decision,
+           let block = ArtifactRegistry.decisionBlock(number: stub.id.key) {
+            raw = block
+            loaded = true
+            return
+        }
         do {
             raw = try String(contentsOfFile: stub.path, encoding: .utf8)
             loaded = true

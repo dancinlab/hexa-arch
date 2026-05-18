@@ -1134,3 +1134,46 @@
   렌더 (Apple AttributedString fallback to monospaced). 어떤 record
   의 absorbed 도 flip 안 됨. 새 RFC 0, 새 도메인맵 0, 새 governance
   0 (g_cockpit_isolation rule expansion 만).
+- 2026-05-19 — ⭐️ **Phase γ + δ + η-1 LANDED + measured-green**
+  (goal "100% all closure" 진행 — measured-green 으로 닫을 수 있는
+  phase 부터). 한 batch 3 phase:
+  · **Phase γ (per-kind card minimum)** — `ArtifactRegistry.
+    decisionBlock(number:)` 추가: design.md 에서 `### Decision N`
+    헤딩부터 다음 `### Decision` (또는 EOF) 까지 추출. `MarkdownView.
+    load()` 가 stub.kind == .decision 이면 그 block 만 렌더 → `$D29`
+    클릭 시 design.md 전체가 아닌 D29 결정 하나만 표시. RFC/Domain 은
+    단일 파일이라 전체 렌더 유지 (자연). 정교한 per-kind 카드
+    (DecisionCard struct + Artifact protocol) 는 γ-2 defer.
+  · **Phase δ (Inspector sub-tabs)** — RIGHT Inspector 탭이
+    placeholder 에서 sub-tab 으로 승격: F1F2 selection 시 `[Provenance]
+    [Raw JSON]` segmented sub-tab — Provenance 는 `ProvenanceBanner`
+    재사용 (rfc_009 §4, gate-tint + absorbed + caveats verbatim),
+    Raw JSON 은 record 파일 원문 monospaced. decode 실패 시 REJECTED
+    카드. Decision/RFC/Domain selection 은 metadata inspector (id/
+    kind/title/path). Data/Citations/DEPENDENCIES sub-tab 은 δ-2
+    defer. `rawRecordJSON` @State 가 selection/picker 변경 시 load.
+  · **Phase η-1 (Chat UI + stub)** — LEFT Chat 탭이 placeholder 에서
+    실제 message-bubble UI 로: `ChatMessage` (role user/assistant),
+    `@State chatMessages`/`chatInput`, ScrollView 의 bubble 렌더
+    (user 우측 accent-tint / assistant 좌측 secondary-tint),
+    TextField + Send (onSubmit + 빈입력 disabled). `sendChat()` =
+    **phase η-1 local stub responder**: slash-command (`/synth`
+    `/measure` `/verify` `/analyze`) 감지 시 "phase θ routes to
+    Claude Code CLI, not dispatched" / 그 외 "phase η-2 routes to
+    Claude Code API, not dispatched". **실제 API/CLI 호출 0** —
+    backend 미연결 (η-2/θ). g3: stub 임을 메시지 본문에 명시
+    ("[stub η-1]"), 어떤 record 도 생성 안 함, over-claim 0.
+  · **빌드 measured-green** (Mini, swift 6.3.1): `swift run
+    CockpitApp` PASS 2.02s incremental · 0 warnings · app launch
+    reached. macOS 13 compat 유지 (no macOS-14-only API).
+  · **g3 정직 — closure 진행 상황**: γ/δ/η-1 measured-green. **여전히
+    미측정/미연결**: η-2 (Claude Code API — `ANTHROPIC_API_KEY`
+    의존), θ (Claude Code CLI subprocess + 실제 synth — 측정 게이트
+    + rate-limit 위험), ι (RealityKit 3D viewer — exports/ 에 USDZ/
+    STL geometry record 0 개라 렌더할 데이터 없음), γ-2 (정교한
+    per-kind 카드), δ-2 (Data/Citations/DEPS sub-tab). 이 미완 5
+    항목은 **외부 의존 (API key / Claude Code subprocess / 3D 데이터)
+    또는 후속 정교화** 라 이 세션 measured-green closure 불가 —
+    `NEXT_SESSIONS.md` 의 honest handoff 로 closure 됨 (다음 항목
+    로그 참조). 새 RFC 0, 새 도메인맵 0, 새 governance 0, 새 design.md
+    decision 0 (phase = rfc_011 §10 execution).

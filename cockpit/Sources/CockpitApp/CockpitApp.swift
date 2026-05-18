@@ -48,12 +48,33 @@ enum RightTab: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+/// Inspector sub-tabs (phase δ). Provenance is first per rfc_009 §4 /
+/// D39. Data / Citations / DEPENDENCIES land in phase δ-2.
+enum InspectorSubTab: String, CaseIterable, Identifiable {
+    case provenance = "Provenance"
+    case raw        = "Raw JSON"
+    var id: String { rawValue }
+}
+
+/// Chat message (phase η-1). Backend stays a local stub until phase η-2
+/// (Claude Code API) / θ (Claude Code CLI) wire real dispatch (D38).
+struct ChatMessage: Identifiable {
+    enum Role { case user, assistant }
+    let id = UUID()
+    let role: Role
+    let text: String
+}
+
 struct ContentView: View {
     @State private var artifacts: [ArtifactStub] = []
     @State private var selection: ArtifactID?
     @State private var recordResult: Result<F1F2Record, RecordLoaderError>?
+    @State private var rawRecordJSON: String = ""        // phase δ — Raw JSON sub-tab
     @State private var leftTab:  LeftTab  = .artifacts   // β: default to Artifacts so the populated tree is visible immediately
     @State private var rightTab: RightTab = .inspector   // D39
+    @State private var inspectorSubTab: InspectorSubTab = .provenance  // δ — Provenance first (rfc_009 §4)
+    @State private var chatMessages: [ChatMessage] = []                // η-1
+    @State private var chatInput: String = ""                         // η-1
 
     var body: some View {
         NavigationSplitView {
@@ -102,6 +123,7 @@ struct ContentView: View {
             return
         }
         recordResult = RecordLoader.load(relativePath: stub.path)
+        rawRecordJSON = (try? String(contentsOfFile: stub.path, encoding: .utf8)) ?? ""
     }
 
     // MARK: — LEFT pane
@@ -130,31 +152,80 @@ struct ContentView: View {
         .frame(minWidth: 280)
     }
 
-    /// LEFT 1st (D37) — Chat tab placeholder (Phase η).
+    /// LEFT 1st (D37) — Chat tab. Phase η-1: real message-bubble UI +
+    /// working input; backend is a local stub. Phase η-2 wires Claude Code
+    /// API (conversational); phase θ wires Claude Code CLI (action,
+    /// slash-commands) — D38 / @D g_ai_agent_chat_surface.
     @ViewBuilder private var chatTab: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Chat")
-                .font(.headline)
-            Text("phase η placeholder")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Text("Claude Code CLI + API dual dispatch (D38). Action results render with full provenance banner (rfc_011 §4.2). Slash-commands /synth /measure /verify /analyze route to CLI; otherwise API.")
-                .font(.callout)
-                .foregroundColor(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer()
+        VStack(spacing: 0) {
+            if chatMessages.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Chat")
+                        .font(.headline)
+                    Text("phase η-1 — UI shell, backend stub")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("Claude Code API (conversational) + CLI (action: /synth /measure /verify /analyze) dispatch lands in η-2 / θ. Action replies will carry a full provenance banner (rfc_011 §4.2).")
+                        .font(.callout)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(chatMessages) { msg in
+                        chatBubble(msg)
+                    }
+                }
+                .padding(12)
+            }
             Divider()
             HStack(spacing: 8) {
-                TextField("type a message…", text: .constant(""))
+                TextField("type a message…", text: $chatInput)
                     .textFieldStyle(.roundedBorder)
-                    .disabled(true)
-                Button("Send") {}
-                    .disabled(true)
+                    .onSubmit { sendChat() }
+                Button("Send") { sendChat() }
+                    .disabled(chatInput.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             .padding(12)
         }
-        .padding(.top, 12)
-        .padding(.horizontal, 12)
+    }
+
+    @ViewBuilder private func chatBubble(_ msg: ChatMessage) -> some View {
+        HStack(spacing: 0) {
+            if msg.role == .user { Spacer(minLength: 20) }
+            Text(msg.text)
+                .font(.callout)
+                .textSelection(.enabled)
+                .padding(8)
+                .background(
+                    (msg.role == .user ? Color.accentColor : Color.secondary)
+                        .opacity(0.14)
+                )
+                .cornerRadius(8)
+                .fixedSize(horizontal: false, vertical: true)
+            if msg.role == .assistant { Spacer(minLength: 20) }
+        }
+    }
+
+    /// Phase η-1 stub responder. η-2 replaces this with Claude Code API
+    /// streaming; θ adds Claude Code CLI subprocess dispatch for actions.
+    private func sendChat() {
+        let text = chatInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        chatMessages.append(ChatMessage(role: .user, text: text))
+        chatInput = ""
+        let isAction = ["/synth", "/measure", "/verify", "/analyze"]
+            .contains { text.hasPrefix($0) }
+        let reply: String
+        if isAction {
+            reply = "[stub η-1] action command detected. Phase θ routes this to Claude Code CLI (D34 / D38 / @D g_ai_agent_action_surface). Not dispatched — agent action surface not yet wired; no record emitted."
+        } else {
+            reply = "[stub η-1] conversational query. Phase η-2 routes this to Claude Code API (streaming). Not dispatched — backend not yet wired."
+        }
+        chatMessages.append(ChatMessage(role: .assistant, text: reply))
     }
 
     /// LEFT 2nd (D33) — Artifacts tree populated by ArtifactRegistry (phase β).
@@ -244,14 +315,70 @@ struct ContentView: View {
         .frame(minWidth: 320)
     }
 
-    /// RIGHT 1st (D39) — Inspector placeholder (phase δ).
+    /// True when the current selection (or picker ad-hoc) is an F1F2 record.
+    private var isF1F2Selected: Bool {
+        if let sel = selection { return sel.kind == .f1f2 }
+        return recordResult != nil          // picker ad-hoc result
+    }
+
+    /// RIGHT 1st (D39) — Inspector. Phase δ: F1F2 selection gets sub-tabs
+    /// (Provenance / Raw JSON); non-record artifacts show metadata
+    /// (Data / Citations / DEPENDENCIES sub-tabs land in phase δ-2).
     @ViewBuilder private var inspectorTab: some View {
+        if isF1F2Selected, let result = recordResult {
+            VStack(spacing: 0) {
+                Picker("sub", selection: $inspectorSubTab) {
+                    ForEach(InspectorSubTab.allCases) { t in
+                        Text(t.rawValue).tag(t)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(8)
+                Divider()
+                switch result {
+                case .success(let record):
+                    switch inspectorSubTab {
+                    case .provenance:
+                        ScrollView {
+                            ProvenanceBanner(provenance: record.provenance)
+                                .padding(16)
+                        }
+                    case .raw:
+                        ScrollView {
+                            Text(rawRecordJSON.isEmpty ? "(raw JSON not loaded)" : rawRecordJSON)
+                                .font(.system(.caption, design: .monospaced))
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(16)
+                        }
+                    }
+                case .failure(let err):
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("REJECTED")
+                                .font(.system(.title3, design: .monospaced))
+                                .foregroundColor(.red)
+                            Text(err.errorDescription ?? "unknown error")
+                                .font(.callout)
+                                .foregroundColor(.red)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(20)
+                    }
+                }
+            }
+        } else {
+            metadataInspector
+        }
+    }
+
+    /// Inspector body for Decision / RFC / Domain selections (phase δ
+    /// minimum — full per-kind provenance facets land in phase δ-2).
+    @ViewBuilder private var metadataInspector: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Inspector")
                 .font(.headline)
-            Text("phase δ placeholder")
-                .font(.caption)
-                .foregroundColor(.secondary)
             if let sel = selection,
                let stub = artifacts.first(where: { $0.id == sel }) {
                 Divider()
@@ -263,21 +390,16 @@ struct ContentView: View {
                         .lineLimit(2)
                 }
                 .font(.system(.caption, design: .monospaced))
+                Divider()
+                Text("Provenance / Citations / DEPENDENCIES facets for non-record artifacts land in phase δ-2 (rfc_011 §5).")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else {
+                Text("no selection")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            Divider()
-            Text("Selection-bound sub-tabs (rfc_011 §5):")
-                .font(.callout)
-                .foregroundColor(.secondary)
-            VStack(alignment: .leading, spacing: 4) {
-                Text("• Provenance — gate / absorbed / atlas_cite / caveats (default first)")
-                Text("• Data — record fields")
-                Text("• Citations — resolved atlas references")
-                Text("• Raw JSON — verbatim file contents")
-                Text("• DEPENDENCIES — citation graph upstream + downstream")
-            }
-            .font(.callout)
-            .foregroundColor(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
             Spacer()
         }
         .padding(20)
@@ -325,6 +447,7 @@ struct ContentView: View {
         guard panel.runModal() == .OK, let url = panel.url else { return }
         selection = nil               // ad-hoc, not in registry
         recordResult = RecordLoader.load(url: url)
+        rawRecordJSON = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
     }
 
     // MARK: — helpers
