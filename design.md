@@ -1064,3 +1064,89 @@ cockpit-as-typed-consumer 철학 미증명.)
   `cd cockpit && swift run` 으로 검증; UI 가 d8_king 1GHz record
   의 ProvenanceBanner 를 orange (GATE_OPEN) + absorbed=false +
   5개 scope_caveats verbatim 으로 렌더하면 D29 성공.
+  **(supersede-forward 2026-05-19)**: `swift run` 로컬-머무름 +
+  17.21s build PASS + data-flow verbatim verify 완료 — PLAN 로그
+  `D28/D29 BUILD VERIFIED` 참조. 이제 measured-green.
+
+### Decision 30 — File picker = NSOpenPanel pinned to `RecordLoader.f1f2RecordsRoot` + Loader runtime invariant (a)
+
+**picked**: cockpit 에 "Open Record…" 툴바 액션 추가 — **AppKit
+NSOpenPanel** 사용, `directoryURL = RecordLoader.f1f2RecordsRoot`
+(`../exports/chip/noc/f1f2/records`), `allowedContentTypes = [.json]`,
+`canChooseDirectories = false`. 동시에 `RecordLoader.load(url:)`
+에 **runtime 경계 검증** 추가 — `url.standardizedFileURL.path` 이
+`RecordLoader.exportsRoot.path` (`../exports/` 표준화된 절대경로)
+의 prefix 가 아니면 새 에러 `pathOutsideExports` 반환. UI 측에서는
+RecordView 의 REJECTED 카드가 자동 동일 패턴으로 표시 — 사용자가
+picker 로 outside-of-exports 파일을 선택하면 시각적 거부됨. 또한
+ContentView 의 `currentDisplayPath` 가 좌측 navigation 툴바 슬롯에
+표시되어 현재 보고있는 record 의 출처를 항상 visible. (Rejected:
+SwiftUI `.fileImporter` only — initial directory 지정 API 부재,
+canonical-first 의 directory-pinning 요구 미만족. Rejected: 좌측
+트리 navigation 만 + picker 없음 — 그건 phase β 영역, D30 은 그
+전의 즉시-가능 UX 잠금해제.)
+
+**rationale**:
+- user-explicit 직접 안 picked 했으나 D29 의 hardcoded path 가
+  UX 잠금이라 zhen 다음 자연 단계로 권고 후 "next go" 받은 흐름.
+  audit trail 에 그 픽 경로 honest 기록.
+- `@D g_cockpit_isolation (a)` 의 코드-레벨 강화 — invariant 가
+  governance 문서에만 있을 때와 runtime 가 검증할 때는 보장
+  수준이 다름. NSOpenPanel 의 `directoryURL` 디폴트 + Loader 의
+  `pathOutsideExports` 가 defense-in-depth.
+- `@D g_swift_native` canonical 정합 — AppKit `NSOpenPanel` 은
+  macOS 의 *the* canonical 파일 선택 API; SwiftUI `.fileImporter`
+  는 sandbox 환경에서 더 적합하나 directory-pinning 미지원 →
+  AppKit 가 더 알맞음 (g_swift_native rule 의 SwiftUI/Foundation/
+  **AppKit** native idiom 정합).
+- minimum-new-structure — 새 파일 0; `CockpitApp.swift` 의
+  ContentView 에 `presentPicker()` 한 함수 + 툴바 2 item 추가, +
+  Loader 에 `exportsRoot` / `f1f2RecordsRoot` static 2개 + 새 에러
+  case 1개. 총 ~30 lines diff.
+- build measured-green — `swift run` (pool 우회 verb) 로 2.63s
+  incremental rebuild PASS, 0 warnings, app launch까지 도달.
+  이번 결정은 *unmeasured-claim* 단계 없이 처음부터 measured-fact.
+
+### Decision 31 — `proposals/rfc_010_cockpit_architecture.md` = Quiver-mirror cockpit spec (Phase α..ζ 로드맵)
+
+**picked**: Palantir Foundry Quiver "Overview Analysis" 의 캡쳐
+(`cockpit/references/quiver-overview.png`, D27 commit) 를 reference
+로 한 **Quiver-mirror 3-pane cockpit architecture** 를 새 RFC
+`rfc_010_cockpit_architecture.md` 로 정합. rfc_009 가 §3 에서
+"7-verb information architecture" 골격만 그렸다면 (그리고 §5 에서
+경계 + g5 만 명시), **rfc_010 은 그 §3 의 구체적 카드-시스템
+설계 + Phase α..ζ 실행 계획 + open decision 게이트 식별**. 핵심
+contribution: (a) 3-pane SplitView 정보 아키텍처 (Quiver-mirror) ·
+(b) Artifact protocol + card type 다양성 (Record/Decision/RFC/
+Domain/Chart/Table) · (c) `$<id>` artifact 토큰 시스템 · (d)
+honesty-mode 차별점 (gate chip 카드-헤더 강제 · inspector 첫 탭이
+Provenance · REJECTED 카드 mode) · (e) 6 phase α..ζ 점진 슬라이스
+계획 (~730 LoC 추정). **빌드는 phase 별로 진행** — rfc_010 자체는
+설계만 (D22/D19 idiom). (Rejected: 단일 거대 D31 결정 — 카드 시스템
++ 정보 아키 + phase plan 을 한 결정에 묶으면 다음 phase 마다 미세
+결정이 필요할 때 audit trail 어색. rfc 가 spec 본가 + design.md 가
+gate 인 분할이 정합.) (Rejected: rfc_009 안에 §3.x 로 추가 — 이미
+PUBLISHED RFC 의 in-place 확장은 시간 흐름 흐림; 새 rfc_010 이
+타임라인 명확.)
+
+**rationale**:
+- "참고 PNG 분석 + 레이아웃 + 기능구현 어떻게" 가 즉시 디자인
+  레벨 작업 (사용자 directive 2026-05-19). 디자인 산출 = RFC 가
+  관례 (rfc_001..009 pattern); coding 들어가기 전 명세화가 g3
+  과 minimum-new-structure 양쪽 정합.
+- Quiver-mirror 는 *형태* 만 빌림, *honesty-mode* 는 demiurge
+  고유 — gate chip / 강제 provenance / REJECTED 카드 / cross-ref
+  dependency 자동 추적 = rfc_009 §4 의 자연 visual 확장. Quiver
+  를 그대로 베끼지 않음을 RFC §3 에서 명시 (디자인-자체-차별점,
+  G3 의 메타).
+- Phase α..ζ 가 점진 commit 가능한 단위 — α (shell 50 LoC) /
+  β (tree 150) / γ (card 80) / δ (inspector 100) / ε (variety 200)
+  / ζ (filter+deps 150). 각 phase commit 별 build verify 가능, big
+  bang 회피 (`@D g_scope.no_bigbang`).
+- open decision 게이트 식별이 RFC 본문의 가장 큰 가치 — D32+
+  으로 분기 가능 결정들 (예: artifact id 토큰 형식, persistence,
+  search syntax, dependency graph rendering 등) 을 spec 안에서
+  미리 flag 해두면 phase 진행시 zhuyao 결정-순서 충돌 안 남.
+- 빌드 미시작 (rfc_010 자체는 spec) — D22/D19 idiom 재사용, "RFC
+  설계 ≠ 빌드된 cockpit" 분리. phase α 부터 가 실행, 별도 commit
+  시퀀스.
