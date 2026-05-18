@@ -847,3 +847,40 @@
   가능 확인됨 (host 측). **다음 = D29 gate (first feature slice —
   rfc_009 §4 honesty-as-feature 최소 단위, e.g. F1F2 record 1개
   read + provenance/gate banner 렌더).** 새 RFC 0, 새 도메인맵 0.
+- 2026-05-19 — **D29 lock + 첫 feature slice 5-file implementation
+  (build 미검증)**: cockpit 의 첫 feature = F1F2 record viewer +
+  ProvenanceBanner (rfc_009 §4 honesty-as-feature 의 유일 차별점
+  증명). 5 파일 landed: (1) `cockpit/Sources/CockpitApp/Models/
+  F1F2Record.swift` — Codable mirror of rfc_002 v1.0 schema
+  (Top-level + nested `Topology`/`Verdict`/`Provenance` +
+  `MeasurementGate` enum ↔ `GATE_*` rawValues). `JSONDecoder.
+  keyDecodingStrategy = .convertFromSnakeCase`. (2) `Loaders/
+  RecordLoader.swift` — `Result`-based file IO + JSON decode,
+  `fileNotFound`/`readFailed`/`decodeFailed` 3 에러 케이스;
+  `@D g_cockpit_isolation (a)` 정합 (relative `../exports/**` only).
+  (3) `Views/ProvenanceBanner.swift` — measurementGate 에서 직접
+  파생되는 tint (`.orange` OPEN · `.blue` B_PINNED_MET · `.green`
+  CLOSED · `.red` FAILED); absorbed + gate failures + scope caveats
+  verbatim 렌더; SwiftUI `GroupBox` + `LabeledContent` canonical.
+  (4) `Views/RecordView.swift` — record header + topology + verdict
+  + ProvenanceBanner; 에러 시 **REJECTED card** (rfc_009 §4
+  missing-provenance contract, `@F f4` 미러). (5) `CockpitApp.swift`
+  ContentView 업데이트 — 하드코드 first-slice record path
+  `../exports/chip/noc/f1f2/records/2026-05-18_d8_king_tornado_
+  7nm_1ghz.json`, `@State` + `.onAppear` 로 Loader 호출.
+  **`@D g_cockpit_isolation` 4 invariant 모두 정합**: (a) reads
+  only `../exports/**` ✓ · (b) `import Foundation` + `import
+  SwiftUI` only ✓ · (c) D28 `.gitignore` 가 build artifacts 격리 ✓
+  · (d) Loader read-only, write 0 ✓. **`@D g_swift_native`
+  canonical-first 정합**: 서드파티 dep 0, SwiftUI native
+  (`@main App` · `WindowGroup` · `GroupBox` · `LabeledContent` ·
+  `ScrollView` · `Color.*` semantic) + Foundation (`JSONDecoder` ·
+  `FileManager` · `URL` · `Data`) only. **g3 정직 (D28 동일)**:
+  5-file slice 의 build verification 이 세션 미수행 (pool routing
+  + ubu-2 unreachable 이슈 잔존). 코드 syntactic 신뢰도 높으나
+  "compiles + renders green" 주장 안 함; 사용자 macOS 로컬
+  `cd cockpit && swift run` 으로 검증, UI 가 d8_king 1GHz record
+  의 ProvenanceBanner 를 orange (GATE_OPEN) + absorbed=false +
+  5개 scope_caveats verbatim 으로 렌더하면 D29 성공. 새 RFC 0,
+  새 도메인맵 0, 새 governance 0 — 이미 등록된 g_cockpit_isolation
+  / g_swift_native 안에서 작업.

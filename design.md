@@ -990,3 +990,77 @@ cockpit 초기 단계엔 과잉조직.)
   주장은 안 함; 측정 부재를 명시 (사용자 macOS 로컬 검증 또는
   follow-on 세션). 빌드 미검증 상태에서 "scaffold works" 주장은
   `@F f2` 위반이라 회피.
+
+### Decision 29 — First feature slice = F1F2 record viewer + ProvenanceBanner (rfc_009 §4 honesty-as-feature minimum)
+
+**picked**: cockpit 의 첫 feature slice = **F1F2 record viewer +
+ProvenanceBanner**. 5-file 구현 landed:
+(1) `cockpit/Sources/CockpitApp/Models/F1F2Record.swift` — Codable
+mirror of rfc_002 v1.0 schema (top-level + nested `Topology` /
+`Verdict` / `Provenance` + `MeasurementGate` enum
+`{open|bPinnedMet|closedMeasured|failed}` ↔ `GATE_*` rawValues).
+`JSONDecoder.keyDecodingStrategy = .convertFromSnakeCase` 로 JSON
+snake_case 자동 매핑; rfc_002 §6 unknown-key idiom 은 Swift
+Codable default 가 그대로 만족 (extra keys ignored).
+(2) `Loaders/RecordLoader.swift` — Foundation `URL` + `Data` +
+`JSONDecoder`, `Result<F1F2Record, RecordLoaderError>` API,
+`fileNotFound` / `readFailed` / `decodeFailed` 세 에러 케이스.
+`@D g_cockpit_isolation (a)` 정합: read-only from `../exports/**`.
+(3) `Views/ProvenanceBanner.swift` — **rfc_009 §4 honesty-as-feature
+의 유일한 visual contract**. `measurementGate` 에서 직접 파생되는
+tint color (`.orange` GATE_OPEN · `.blue` GATE_B_PINNED_MET ·
+`.green` GATE_CLOSED_MEASURED · `.red` GATE_FAILED) — 앱이 *선택*
+하지 않음, 측정-사실을 *반영* 만; `absorbed` flag verbatim
+(green if true, secondary if false); gate failures + scope
+caveats list verbatim. SwiftUI canonical: `GroupBox` +
+`LabeledContent` + system fonts + `Color.*` semantic tokens.
+(4) `Views/RecordView.swift` — record header (recordId / interface /
+schemaVersion / producedAtUtc) + topology summary + verdict +
+ProvenanceBanner 조합. 에러 경로 = **REJECTED card** (rfc_009 §4
+"missing provenance → REJECTED card", `@F f4` 미러 — 정직성이
+happy path 뿐 아니라 fail path 에서도 visible).
+(5) `CockpitApp.swift` ContentView 업데이트 — 하드코드 first-slice
+record path `../exports/chip/noc/f1f2/records/2026-05-18_d8_king_
+tornado_7nm_1ghz.json` (file picker = next slice). `@State` +
+`.onAppear` 로 Loader 호출 → `Result` 분기 → `RecordView`.
+
+`@D g_cockpit_isolation` 4 invariant 모두 정합: (a) reads only
+`../exports/**` ✓ — Loader 가 relative path only · (b) only
+`import Foundation` + `import SwiftUI` ✓ — no demiurge/hexa-lang
+imports · (c) build artifacts `.gitignore`'d ✓ — D28 에서 처리
+· (d) one-way read ✓ — Loader 는 read 만, write 0. `@D
+g_swift_native` canonical-first 정합: 서드파티 dep 0, SwiftUI
+native (`@main App`, `WindowGroup`, `GroupBox`, `LabeledContent`,
+`ScrollView`, `LazyVStack` 부재 — 첫 slice 는 단일 record 라
+plain `VStack`) + Foundation (`JSONDecoder`, `FileManager`,
+`URL`, `Data`) only. (Rejected: B Domain picker — honesty-as-
+feature 미증명, cockpit 의 유일 차별점 다음으로 미룸.)
+(Rejected: C 7-verb spine 정적 페이지 — 데이터 binding 없음,
+cockpit-as-typed-consumer 철학 미증명.)
+
+**rationale**:
+- user-explicit picked authority — 2026-05-19 user 가 A picked,
+  권고와 일치.
+- rfc_009 §4 honesty-as-feature 는 cockpit 의 *유일한 차별점* —
+  가장 작은 단위에서 즉시 증명하는 것이 minimum-viable. 만약
+  ProvenanceBanner 가 첫 slice 에서 빠진다면 cockpit 은 generic
+  JSON viewer 와 구분 불가. 차별점 first.
+- monorepo (D27) schema-drift 즉시-검출 장점이 곧장 작동 —
+  rfc_002 v1.0 schema 변경 시 `F1F2Record.swift` 의 Codable struct
+  변경이 같은 PR / 같은 commit 에서 일어남. cross-repo 였으면
+  friction 발생 + drift window. monorepo trade-off 가 첫 slice
+  부터 가치 만들어냄.
+- minimum-new-structure (andrej-karpathy) — 5 파일 모두 SRP 명확
+  (Model / Loader / Banner / RecordView / App entry); 추가 추상화
+  층 없음. file picker / 다중 record 지원 / 다른 record 타입
+  (rfc_007/008 seam records) 는 후속 slice 에서 같은 패턴 반복.
+- rejected card (rfc_009 §4) 도 같은 slice 에 포함 — 정직성이
+  happy path 뿐 아니라 fail path 에서도 visible. `@F f4`
+  (silent-skip) 의 product-surface 미러; missing provenance =
+  앱이 분석가 대신 claim 못 함.
+- g3 정직 (D28 동일): 5-file slice 의 build verification 이 세션
+  미수행 (pool routing 이슈 잔존). 코드 syntactic 신뢰도 높으나
+  "compiles + renders green" 주장 안 함. 사용자 macOS 로컬
+  `cd cockpit && swift run` 으로 검증; UI 가 d8_king 1GHz record
+  의 ProvenanceBanner 를 orange (GATE_OPEN) + absorbed=false +
+  5개 scope_caveats verbatim 으로 렌더하면 D29 성공.
