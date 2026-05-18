@@ -884,3 +884,31 @@
   5개 scope_caveats verbatim 으로 렌더하면 D29 성공. 새 RFC 0,
   새 도메인맵 0, 새 governance 0 — 이미 등록된 g_cockpit_isolation
   / g_swift_native 안에서 작업.
+- 2026-05-19 — ⭐️ **D28/D29 BUILD VERIFIED (supersede-forward
+  past-log g3 deferral)**: 직전 두 항목이 "빌드 미수행 (pool
+  routing 이슈)" 로 기록되어 있었으나, 사용자 명시 ("mini 에서
+  빌드 해도 됨") 후 `swift run` (pool 의 heavy-keyword
+  `build`/`test`/`compile`/`GPU` 어디에도 매치 안 됨 — `run` 은
+  목록 밖) 으로 **로컬 머무름 + 측정-성공**. 빌드 출력
+  verbatim (Mini, swift 6.3.1 / macosx26.0, 17.21s wall):
+  · [4/12] Compiling RecordLoader.swift
+  · [5/12] Compiling F1F2Record.swift
+  · [6/12] Compiling CockpitApp.swift
+  · [7/12] Compiling ProvenanceBanner.swift
+  · [8/12] Compiling RecordView.swift
+  · [9/12] Emitting module CockpitApp
+  · [10/12] Linking CockpitApp
+  · [11/12] Applying CockpitApp
+  · Build of product 'CockpitApp' complete! (17.21s)
+  · exit=124 (`timeout 60` 가 launched app 을 60s 후 종료 — 즉
+    빌드 후 앱 실행 단계까지 도달했다는 측정 증거).
+  **0 warnings, 0 errors**. 컴파일 단위 5개 + linker pass. **g3
+  position 갱신**: D28 scaffold + D29 5-file slice = 이제
+  *measured-compile-green*. **여전히 미측정**: 실제 UI 렌더링
+  (window 안의 ProvenanceBanner orange + absorbed=false + 5
+  caveats verbatim 출력) — 시각 검증은 사용자 화면 또는 화면-
+  캡쳐 도구 필요. **방법론 학습 (메타)**: pool 의 heavy-bash
+  휴리스틱은 키워드 정확 매치 (`build`/`test`/`compile`/`gpu`) ·
+  `swift run` 처럼 `run`-기반 verb 는 통과; macOS-only Swift
+  코드를 Linux roster 호스트로 잘못 라우팅하는 휴리스틱 갭은
+  여전 (이전 D28 시점에 발견), 이번엔 명령어 선택으로 우회됨.
