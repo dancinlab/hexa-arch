@@ -1150,3 +1150,236 @@ PUBLISHED RFC 의 in-place 확장은 시간 흐름 흐림; 새 rfc_010 이
 - 빌드 미시작 (rfc_010 자체는 spec) — D22/D19 idiom 재사용, "RFC
   설계 ≠ 빌드된 cockpit" 분리. phase α 부터 가 실행, 별도 commit
   시퀀스.
+
+### Decision 32 — Artifact `$<id>` token format = sequential per type (`$R<n>` / `$D<n>` / `$RFC<n>` / `$DOM:<name>`)
+
+**picked**: cockpit 가 사용하는 artifact 식별 토큰 = **type-prefixed
+sequential** — `$R1` `$R2` … (Records), `$D29` `$D30` … (Decisions —
+번호는 design.md 의 D-번호 따라감), `$RFC9` `$RFC10` … (RFCs —
+proposals/rfc_NNN_*.md 의 NNN), `$DOM:chip` `$DOM:component` …
+(Domains — name-keyed). 토큰은 `ArtifactRegistry` 가 load 시 할당,
+session 내 stable, 다음 load 에서 record 추가/제거 시 재할당
+허용. (Rejected: B path-derived — verbose, dependency-list 공간
+차지; C stable hash — opaque, debug 어려움.) rfc_010 §7 의 D32
+slot 채움.
+
+**rationale**:
+- Quiver-mirror 정합 — `$G` `$AR` `$AK` 토큰 패턴이 그대로 mirror,
+  외부 reader (이미 Quiver 경험 있는 사용자) 가 즉시 인지.
+- 짧음 + 타이핑 쉬움 — chat 안에서 "show $R1 caveats" 같은 명령이
+  자연스럽고 입력 부담 적음. token-economy 측면에서 path 형보다
+  cheap.
+- type-namespace 분리 — `$R` `$D` `$RFC` `$DOM:` 가 자동으로 artifact
+  type 을 시각적으로 disambiguate; cross-ref 가 명확.
+- load-order 재할당 가능성 = trade-off — Decisions/RFCs 는 design.md
+  의 D-번호 / proposals 의 rfc-번호 그대로 따라가 stable, Records 만
+  load-order-bound (수용 가능; record_id 가 별도 stable identifier
+  로 항상 있음).
+
+### Decision 33 — LEFT tree grouping = by type (Records / Decisions / RFCs / Domains / Parameters)
+
+**picked**: cockpit LEFT 의 `Artifacts` 탭 (D37 의 sibling tab) 의
+트리 그룹핑 = **by artifact type**: Records / Decisions / RFCs /
+Domains / Parameters 5 sections. Phase α 의 placeholder 5 sections
+가 그대로 production grouping. (Rejected: B by-domain — chip 편향
+risk, 14+ 도메인 모두 모이면 chip 외 도메인 records 0 으로 빈
+section 다수; C by-7-verb — record 가 어느 verb 에 속하는지 추가
+modelling 필요, phase β 범위 초과.) rfc_010 §7 의 D33 slot 채움.
+
+**rationale**:
+- 가장 단순 + 가장 직접 — rfc_010 §4 의 LEFT 레이아웃 그대로,
+  phase β filesystem walk 가 그대로 각 section 채움. 새 modelling
+  비용 0.
+- artifact type 이 사용자 mental model 의 1차 분류 — "F1F2 record
+  어디 봤지?" → Records 클릭이 즉답. "그때 그 결정?" → Decisions.
+- 도메인 / 7-verb 그룹핑은 *향후 secondary filter* 로 추가 가능 —
+  D37 의 Parameters 섹션 (필터 바인딩) 이 이를 cover, exclusive
+  grouping 으로 lock 할 필요 없음.
+
+### Decision 34 — Control surface mutation scope = split (cockpit GUI 직접 사용 + CLI = AI-agent surface)
+
+**picked**: cockpit 의 mutation scope 는 **둘로 분리** — (1) **cockpit
+GUI** = 사용자가 직접 사용 (browsing + viewing + LEFT Chat tab 에서
+대화 + RIGHT Inspector 에서 detail 확인). GUI 자체는 read-only on
+`../exports/**`, 단 LEFT Chat tab 에서 AI agent 호출 가능 (이는
+*directly mutating* 아님; agent 가 작업하고 records 생성). (2) **demiurge
+CLI** = AI agent 의 invocation surface — `claude --headless -p …`
+같은 헤드리스 호출이 CLI 명령으로 들어와 작업 실행. **인간이 GUI
+없이 CLI 만으로 작업 가능 (스크립트화) + AI agent 가 CLI 로 자기를
+호출 가능** (recursive / 자동화). `@D g_cockpit_isolation` (d)
+edit-direction one-way 유지 (cockpit/CLI 직접 exports/ write X). 새
+`@D g_ai_agent_action_surface` 가 AGENTS.tape 에 등록되어 enforce.
+(Rejected: A stay read-only — 사용자의 "작업도 가능하게" 요구
+미충족; B 양쪽 다 mutating — 거버넌스 부담 + agent 우회 가능성;
+D direct mutation — invariant (d) 명시적 폐기 + g3 위반 risk.)
+
+**rationale**:
+- user-explicit picked authority — 2026-05-19 user 가 "유저가 cockpit
+  직접사용 & ai agent 용 cli" 로 직접 picked.
+- invariant (d) 유지 + D7 producer-owned exports 유지 — AI agent 가
+  producer, cockpit/CLI 는 trigger. 기존 governance 무변경, 새 @D
+  추가만으로 cover.
+- 분리의 가치 — GUI 는 사람-시간 비싸 보이는 visual 작업에 최적,
+  CLI 는 agent-시간 cheap 한 자동화에 최적. 두 표면이 다른 사용
+  패턴을 자연 분담.
+- 향후 federation 가능성 보존 — 다른 hexa-* repo 들도 자체 CLI 를
+  가지면 federated agent 환경 가능 (D45 deferred).
+
+### Decision 35 — 3D viewer framework = RealityKit (mouse-drag rotate only)
+
+**picked**: cockpit 의 3D 모델 viewer 구현 = **RealityKit** (macOS 13+,
+Apple-canonical modern). interaction = **마우스 클릭 + 드래그 회전만**
+(orbit camera), **자동 애니메이션 / 키프레임 / ambient camera path
+0**. 로드 포맷: USDZ (Apple-native, 1순위) · STL (FreeCAD/KiCad export,
+2순위) · glTF (RealityKit bridge 가능 시). ComponentMode (rfc_011 §7)
+의 BIPV-style exploded-isometric 렌더링이 1차 use case. (Rejected:
+SceneKit — `allowsCameraControl = true` 한 줄로 같은 효과 + LoC
+적지만 SceneKit 가 Apple 의 maintenance focus 가 약화된 framework,
+RealityKit 가 visionOS 까지 미래 보장; SwiftUI 3D + Metal direct —
+LoC 폭증, canonical 보너스 없음.)
+
+**rationale**:
+- D26 `g_swift_native` canonical-first 의 modern 해석 — Apple 이
+  지금 투자하는 framework 가 canonical. SceneKit 가 더 짧지만 future-
+  proof 측면에서 RealityKit.
+- mouse-drag rotate only 가 user-explicit picked — 자동 애니메이션은
+  *attention 분산*, manual orbit 은 *focus 유지*. honesty-as-feature
+  의 시각 표현 (gate chip 변하지 않음, scope_caveats 가 안 사라짐)
+  과 정합.
+- USDZ 우선 — FreeCAD 가 최근 USDZ export 추가, KiCad 가 STEP → USDZ
+  변환 가능 (StepUp + FreeCAD chain). exports/ 가 USDZ 직접 들고
+  있을 수 있는 미래 보장.
+- ~30 LoC orbit-camera setup — D26 minimum-new-structure 정합.
+
+### Decision 36 — hexa-bio cockpit treatment = A (sibling repo, seam record consumer view only)
+
+**picked**: `hexa-bio` 는 demiurge 의 sibling repo 임 (`@D g_decouple`
+D2, 매터 처럼 typed-interface-consumed; D17 패턴과 동형). cockpit 은
+**hexa-bio 의 내부 데이터** (분자 3D / sequence / binding) 를 **직접
+렌더하지 않음** — 오직 `seams/bio_to_chip/` 와 `seams/bio_to_component/`
+records 가 emit 됐을 때 `SeamConsumerMode` (rfc_011 §7) 의 카드로만
+표시. (Rejected: B "demiurge cockpit owns BioMode" — D2/D11/D17
+sibling 패턴 위반; C federated cockpit shell — P5+ 범위, 거버넌스
+미정 deferred D45.)
+
+**rationale**:
+- D2/D11/D17 일관 — `hexa-matter` 가 D17 후 hexa-lang absorbed,
+  demiurge 는 pointer 만. `hexa-bio` 는 absorb 안 됨 (D2 raw 그대로),
+  demiurge 는 typed-consumer. cockpit 가 절대 *흡수* 안 함.
+- 미래의 `hexa-bio-cockpit` sibling repo 여지 보존 — Phanes ⇄
+  Demiurge 의 sibling 패턴이 hexa-bio 측에도 적용 가능, 그 결정은
+  hexa-bio 측 자체 SSOT.
+- minimum-new-structure — bio-native rendering 코드 0; `SeamConsumerMode`
+  하나가 모든 seam 타입 (matter→chip, chip→component, bio→chip, …) 의
+  consumer view 통합.
+
+### Decision 37 — Chat panel location = LEFT 1st tab (LEFT TabView 의 첫 탭)
+
+**picked**: cockpit 의 LLM 대화 UI 가 살 곳 = **LEFT sidebar 의 첫
+번째 탭 `Chat`**. LEFT sidebar 가 *single-list* 가 아니라 *TabView*
+가 되어 [Chat][Artifacts][History][Search] 같은 multi-tab 구조 (Xcode
+navigator pattern). Chat 이 항상 1st tab (default). Artifacts (rfc_010
+§4 의 트리) 가 2nd tab — 사용자 picks 흐름이 chat-first 임을 우선.
+(Rejected: BOTTOM drawer — 좁아짐; 4th column — 4-column 가독성
+trade-off; inspector 5번째 탭 — chat 이 selection-bound 이 아니라
+session-wide 인데 inspector 안에 두면 selection 변경 시 chat history
+혼동; overlay — 항상-on 가 아니라 sporadic, "작업도 가능하게" 의
+실시간 chat 요구 미충족.)
+
+**rationale**:
+- user-explicit picked authority — "좌측탭에 채팅" + "좌측탭은 채팅이
+  첫번째 탭".
+- 항상 visible — chat 이 핵심 control surface 이 되려면 (D34) 항상
+  접근 가능해야 함. tab 의 active state 가 유지되므로 toggle 없이
+  바로 입력 가능.
+- LEFT 의 폭이 좁지만 충분 — Slack DM panel, Xcode console panel 등
+  220-320px 너비가 chat 에 적절. 긴 응답은 message-bubble 내 scroll
+  + canvas 의 새 record card 와 hyperlink 로 detail expand.
+- Xcode-pattern 정합 — Apple 사용자는 navigator tab bar (project /
+  source-control / issues / tests / debug …) 패턴에 익숙. demiurge
+  의 LEFT TabView 가 같은 idiom.
+
+### Decision 38 — AI agent backend = Claude Code CLI + Claude Code API (dual dispatch)
+
+**picked**: cockpit Chat tab 의 backend = **Claude Code CLI + Claude
+Code API 동시 사용**. dispatcher 가 사용자 입력 의도를 분류하여
+적절한 backend 로 라우팅 — (A) **conversational** (Q&A, 해설, 검색)
+→ **Claude Code API** (streaming, low-latency); (B) **action-bearing**
+(synth / measure / analyze / verify, file I/O 동반) → **Claude Code
+CLI** (`claude --headless -p "<prompt>" --allowedTools …` subprocess,
+tool use 가능, long-running). v0 dispatcher = slash-command 휴리스틱
+(`/synth` `/measure` `/verify` 등 → CLI; 그 외 → API). 향후 LLM 기반
+classifier 가능. (Rejected: API only — action 못 함; CLI only —
+대화 latency 큼; OpenAI / Gemini / 기타 LLM — D26 g_swift_native
+정신의 사용자 own toolchain 우선 (Claude Code 는 사용자가 이미 채택
+한 agent), 또한 demiurge 의 honesty contract 와 Claude Code 의 tool-
+use audit 가 정합.)
+
+**rationale**:
+- user-explicit picked authority — "claude code cli & claude code api".
+- 두 modal 정합 — API 는 사용자가 "이 caveats 의미?" 같은 Q&A 에
+  즉답, CLI 는 "synth 돌려" 같은 actual work 에 적합. *같은 agent
+  family* 두 호출 modal.
+- Claude Code 의 tool use audit = honesty-as-feature 와 정합 — Claude
+  Code CLI 가 어떤 tool 호출했는지 (e.g., `Bash("yosys -p '…'")`,
+  `Write("exports/.../record.json")`) 모두 log; 그게 chat reply 의
+  provenance banner 출처. agent 의 action 이 측정-게이트로 link
+  가능.
+- 사용자 own toolchain 우선 — wilson 등 다른 agent 도 향후 plug-in
+  가능 (D45 federation 와 연결); 1st-class backend 는 Claude Code 로
+  fix.
+
+### Decision 39 — RIGHT 1st tab = Inspector / Provenance verbatim
+
+**picked**: cockpit RIGHT pane 의 first tab = **Inspector / Provenance
+verbatim**. RIGHT 역시 LEFT 처럼 TabView 가 되어 [Inspector][Action
+queue][7-verb][Chain][Atlas] 5 탭, Inspector 가 default. Inspector
+내부에 sub-tabs (Provenance / Data / Citations / Raw JSON /
+DEPENDENCIES) — Provenance 가 sub-tab 의 1st (rfc_009 §4 thesis).
+selection-bound: canvas 에서 카드 클릭 or LEFT Artifacts tree row
+클릭 → Inspector 에 그 artifact 의 full detail. (Rejected: Action
+queue 1st — useful 하나 product thesis 가 honesty 라 verbatim
+provenance 가 먼저; 7-verb tracker 1st — workflow visible 좋으나 매
+artifact 마다 보고 싶은 게 아님; Chain mini-map 1st — context 적은
+artifact 에는 noise.)
+
+**rationale**:
+- user-explicit picked authority — RIGHT 1st 후보 4 중 A picked.
+- product thesis 와 정합 — demiurge 의 차별점이 honesty-as-feature
+  이고, RIGHT pane 의 1st 가 그걸 verbatim 으로 펼치는 것이
+  자연스러운 product 메시지.
+- chat (LEFT) 와 honesty (RIGHT) 의 대칭 — 두 가장 중요 tab 이
+  side mirror 처럼 양측에 배치. chat 이 trigger surface, inspector
+  가 verification surface — 같은 product DNA 의 2 면.
+- Quiver 와의 *차별점 강조* — Quiver Inspector default = `Data`,
+  demiurge default = `Provenance`. 같은 패턴, 다른 첫 화면. mirror
+  + override.
+
+### Decision 40 — Layout shape = 4-zone tabbed (TOP toolbar + LEFT TabView + CENTER canvas + RIGHT TabView)
+
+**picked**: cockpit 의 최종 레이아웃 shape = **4-zone tabbed** —
+(1) TOP toolbar (file/help, `+Synthesize` `+Measure` `Open` 등
+action buttons, search field), (2) LEFT TabView (D37 Chat 1st +
+D33 Artifacts 2nd + History/Search 향후), (3) CENTER canvas (record
+cards · 3D viewer per ComponentMode · chain canvas · latency curves
+— rfc_011 §7 canvas modes), (4) RIGHT TabView (D39 Inspector 1st +
+Action queue / 7-verb / Chain / Atlas 향후). rfc_010 의 3-pane
+`NavigationSplitView` 는 base shell 유지, LEFT/RIGHT 가 각각 `TabView`
+로 wrap. (Rejected: rfc_010 의 plain 3-pane 그대로 — chat 자리 없음;
+single-window without toolbar — `+Synth` 같은 session-wide action
+의 home 없음; floating panels — Apple-canonical Mac app idiom
+아님.)
+
+**rationale**:
+- user-explicit picked authority — "좌측 영역도 탭 전환 가능 / 우측도
+  탭전환가능" + "좌측탭은 채팅이 첫번째 탭".
+- Xcode-canonical idiom — Xcode 의 navigator (LEFT tab bar) + inspector
+  (RIGHT tab bar) + editor (CENTER) + toolbar (TOP) 와 정확히 동형;
+  Mac 사용자 mental model 즉시 정합. D26 `g_swift_native` 가 의도하는
+  "Apple-canonical first" 의 layout level.
+- 3-pane → 4-zone 의 cost 작음 — `NavigationSplitView` 의 sidebar /
+  detail slot 안에 `TabView` 넣는 것은 SwiftUI 1-step composition.
+  rfc_010 Phase α 의 shell 이 변하지 않음 — slot 만 채워짐.
+- 미래 확장 여유 — TabView 라 새 탭 추가가 layout 깨지 않음 (History,
+  Search, Action queue, 7-verb tracker 모두 점진 lands). Phase
+  α-2 → η → θ → ι 의 점진 addition 가 그대로.

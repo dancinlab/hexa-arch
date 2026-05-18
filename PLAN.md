@@ -964,3 +964,42 @@
   card variety 미구현 · DEPS 미파싱 · 필터 미존재) — Phase α 는
   *shell* 만 lands, phase β..ζ 가 점진 채움. 새 도메인맵 0, 새
   governance 0, 새 RFC 0.
+- 2026-05-19 — **D32..D40 9-decision batch + rfc_011 cockpit control
+  surface spec + cockpit/references/README.md index** (design-only,
+  big catch-up commit). Phase α 사용자-사이드 validation 직후 user 가
+  순차로 던진 directive 들을 한 RFC 로 정리: (a) AI agent 통한 실제
+  작업 가능 ("실제 합성 등 여기서 진행할수 있는거야???? / cli 도 함께
+  만들자, ai agent 이용해서, 작업도 가능하게, AGENTS.tape 에도 기록"),
+  (b) 3D modeling for synthesis ("합성에 대해 3D 모델링도 필요한데 /
+  기존것에서 벗어난") + interaction = "마우스로 클릭후 긁으면 회전
+  기능만", (c) in-cockpit chat ("레이아웃 안에 AI 대화형 진행도
+  가능해야해 / LLM 대화형"), (d) hexa-bio sibling 정정 ("bio 는
+  hexa-bio 이야기 하는거" — D2/D11/D17 sibling pattern 그대로,
+  internal mode 아님), (e) layout shape ("좌 채팅, 중앙 메인, 상단바,
+  우측은 또 다른 젤 중요한탭" + "좌측 영역도 탭 전환 가능 / 우측도
+  탭전환가능" + "좌측탭은 채팅이 첫번째 탭"). 정리 결과 9 decisions:
+  D32 artifact token = `$R<n>/$D<n>/$RFC<n>/$DOM:<name>` sequential ·
+  D33 LEFT tree grouping = by type · D34 control surface = split
+  (cockpit GUI 직접 + CLI = AI-agent surface) · D35 3D viewer =
+  RealityKit (mouse-drag rotate only) · D36 hexa-bio = sibling repo
+  seam consumer view only · D37 Chat = LEFT 1st tab · D38 AI agent
+  backend = Claude Code CLI + API dual dispatch · D39 RIGHT 1st tab =
+  Inspector / Provenance verbatim · D40 4-zone tabbed layout (TOP
+  toolbar + LEFT TabView + CENTER canvas + RIGHT TabView). 새 RFC:
+  `proposals/rfc_011_cockpit_control_surface.md` (~13 §, ~470 LoC
+  spec) — rfc_010 (3-pane info-arch) 위에 control surface + chat +
+  agent + canvas modes + 3D + sibling boundary clarification 얹음;
+  Phase α-2/η/θ/ι 추가 (~660 LoC 추정). 새 governance: AGENTS.tape
+  `@D g_ai_agent_action_surface` (D34) + `@D g_ai_agent_chat_surface`
+  (D37+D38) + `@F f6` (chat 안 over-claim 금지). 새 reference 자산:
+  `cockpit/references/bipv-module-exploded-isometric.jpg` (BIPV
+  exploded-isometric, ComponentMode 시각 목표) + 인덱스 README. 새 web
+  research 인용: rfc_010/011 외부 prior art § 들 — AiEDA / AutoEDA /
+  The Dawn of Agentic EDA / MosChip Agentic Coder / MCP4EDA / Tattvam
+  AI / Cognichip / Phyz / DiffTaichi / GDSFactory / KLayout / 3D GDSII
+  Viewer / TinyTapeout / ArtistIC / KiCad + FreeCAD + StepUp /
+  Synopsys-Ansys / Siemens Innovator3D IC. 빌드는 미시작 (rfc_011 =
+  spec only, D22/D19/D31 idiom 재사용). 사용자가 macOS 로컬에서
+  swift run 검증 가능한 다음 phase = α-2 (4-zone tabbed shell). g3
+  position: D27..D31 + Phase α measured-green 그대로, D32..D40 은
+  spec only (코드 0, 빌드 0 — 빌드 미주장).
