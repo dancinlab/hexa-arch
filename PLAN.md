@@ -192,3 +192,22 @@
   nudge to route to the pool. Resume = ubu-2 back on roster → installer
   → build → `openroad -version` → T3. comb coordination (HANDOFF §5):
   openroad landed on Linux = NO.
+- 2026-05-18 — consumer back-pointer (NOT a transfer; Decision 2 keeps
+  comb↔hexa-arch decoupled): comb consumed the `hexa-arch:chip:noc:F1F2`
+  typed interface (rfc_002 v1.0) and **DELIVERED its T3 design-only**
+  milestone — comb commit `2abe76c4`, doc `comb/T3_DESIGN_FINAL.md`
+  (comb SSOT; stays comb-side, NOT ingested into hexa-arch). Part D
+  (NoC architectural design) = COMPLETE via rfc_001 §8 baseline + §9
+  46-record sweep; Part E (routed GDS) = comb-side execution gate.
+  Substantive cross-check: comb's standalone N=7 cycle-accurate fabric
+  had F1 *FALSIFIED* (d4 mesh wins, single-issue 1-cycle LL sink),
+  while hexa-arch's N=64 IQ-iSLIP §9 sweep shows d6 LEAN-PASS
+  (lat+thr, clock-robust). comb reconciles these as **orthogonal
+  effects** (small-N + weak-router center-concentration vs N=64 VC +
+  input-speedup relieving it) — comb's pre-registered reversal caveat
+  empirically vindicated. **No contradiction with hexa-arch records**:
+  both sides stay INCONCLUSIVE · GATE_OPEN · absorbed=false (g3
+  no-over-claim intact); this is an independent characterization
+  cross-check, not a regime claim. Synth-area oracle also mutually
+  consistent (comb yosys d6/d4 = 1.5156x ≡ hexa-arch records'
+  router_port_area_norm 1.516).
