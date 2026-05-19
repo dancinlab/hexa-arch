@@ -2180,3 +2180,63 @@ SigSpec · Process · Memory 까지 같은 세션에 강행 — 1-2주 ⭐⭐⭐
   ③ router_d{4,6}.v 합성 후 §5 ±5% area-oracle parity. 본 D68 는 ①
   중 module-1 의 *시작점* — 어떤 게이트도 CLOSED_MEASURED 주장 안 함.
 - κ-45 사용 — κ-40~κ-44 는 다른 병렬 세션 점유 (D67 의 동일 관찰).
+
+### Decision 69 — `fusion + analyze` producer = plasmapy derived params + hexa-native Stage 2 port (κ-46)
+
+**picked**: `fusion + analyze` 셀을 demiurge 의 8번째 측정-가능 셀로
+wire 한다. ① **Stage 1 substrate** = `~/core/hexa-lang/stdlib/fusion/
+plasma_metrics.py` (plasmapy 2026.2.0 — ITER core reference 운전점의
+ω_pe / ω_pi / λ_D / ω_ce / ω_ci / v_th / v_A / r_L derived 파라미터).
+② **Stage 2 hexa-native port** = `~/core/hexa-lang/stdlib/fusion/
+plasma_metrics.hexa` (clean-room — plasmapy 코드 0, Bohm·Debye·Lorentz·
+Alfvén 대수만 CODATA 2022 상수로 재유도) + `plasma_metrics_test.hexa`
+Stage 3 parity 9/9 PASS. ③ demiurge 측 = `FusionAnalyzeProducer.swift`
+(Process spawn 래퍼) + `FusionRecord.swift` (typed sidecar) +
+`ActionDispatch` case — D61 birth-compliant, `cockpit/scripts/` 0.
+`measurement_gate = GATE_OPEN 영구 / absorbed = false 영구`. (Rejected:
+demiurge 안에 script — D61 위반; OpenFOAM CFD 즉시 흡수 — ABSORPTION.md
+§"무거운 후보" 의 1-2주 ⭐⭐⭐⭐⭐ 작업, 본 phase scope 밖, fusion+verify
+별도 셀.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "ubu-1/ubu-2/mini 자원활용" → pool 실측
+  → "hexa-native 작성 .hexa" 명시 지시. `/goal "완료시까지 진행"`
+  autonomy mode 하에서 record-and-proceed.
+- ABSORPTION.md §"hexa 포팅 단계" Stage 1→2→3 사다리를 fusion 이 처음
+  으로 *한 세션에* Stage 3 까지 통과 — substrate (plasmapy) + hexa-
+  native port (clean-room) + parity test 9/9. matter (D17) 외 두 번째
+  hexa-native 측정 사례, 단 fusion 은 inputs 가 textbook 이라
+  absorbed=false 유지 (matter 는 inputs 도 측정값).
+- g3 정직: derived 파라미터는 수학적 사실 (Maxwell-Boltzmann + Lorentz
+  대수) 이나 입력 운전점 (n_e=1e20 · T_e=10 keV · B=5.3 T) 은 textbook
+  ITER reference — device 측정 아님. Stage 4 absorbed=true 는 실제
+  토카막 (JET/TFTR/KSTAR/SPARC/ITER) 의 Thomson-scattering /
+  interferometry / magnetic-probe 측정이 producer 에 연결돼야.
+- Stage 3 parity 발견 (g3): ω_pe / λ_D / ω_ce / v_th / r_Li 는 plasmapy
+  와 ≤1e-6~1e-4 상대오차로 일치. 두 가지 정직한 갭 — (a) r_Le 는
+  plasmapy 가 T_e=10 keV 에서 상대론 보정 (γ≈1.020) 을 적용 → hexa-
+  native classical 값과 ~2% 차이, parity test 가 1–3% 범위로 *기대된
+  갭* 을 bound. (b) v_A 는 plasmapy 가 Alfvén 속도에 ω_ci 와 다른
+  ion-mass convention 사용 → ~1.4e-4 잔차, test tolerance 1e-3 +
+  문서화.
+- D61 준수: 모든 compute SSOT = hexa-lang/stdlib/fusion/. demiurge 측
+  Swift 는 spawn 래퍼 + typed record + dispatch case 만.
+- pool 자원 활용 (사용자 지시): ubu-2 (linux, python 3.12.3) 에
+  plasmapy 2026.2.0 `pip --user --break-system-packages` 설치 후
+  plasma_metrics.py 실행 — mac local (python 3.14.4) 과 15-digit
+  byte-identical (ω_pe / λ_D / v_A). cross-host drift 0 측정 확증.
+- κ-46 사용 — κ-40~κ-45 는 병렬 세션 점유 (D67/D68 의 동일 관찰).
+
+**측정**:
+- `swift run DemiurgeCLI action analyze fusion`: exit 0 · rows=1 ·
+  plasmapy 2026.2.0 · ITER_core_reference (n_e=1e20 · T_e=T_i=10 keV ·
+  B=5.3 T · D+) · ω_pe=5.641e+11 rad/s · λ_D=7.434e-05 m ·
+  v_A=8.175e+06 m/s · artifacts csv+meta · `exports/fusion/plasma/
+  <stamp>/fusion_plasma_<stamp>.json` 1건 emit. swift build green
+  (pre-existing warning 만).
+- `hexa run plasma_metrics_test.hexa`: **9/9 PASS** — hexa-native
+  clean-room 값이 plasmapy 2026.2.0 와 parity (ω_pe/λ_D/ω_ce/v_th_e
+  ≤1e-6 rel · ω_ci/v_th_i/v_A/r_Li ≤1e-3 rel · r_Le classical-vs-
+  relativistic 갭 1–3% bounded).
+- **cross-host parity** (ubu-2, python 3.12.3 vs darwin 3.14.4):
+  plasma_metrics.py 출력 ω_pe / λ_D / v_A 15-digit byte-identical.

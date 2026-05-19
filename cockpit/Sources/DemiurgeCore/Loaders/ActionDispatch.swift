@@ -276,7 +276,7 @@ public enum ActionDispatch {
             engineToolSucceeded: r.ok)
     }
 
-    /// `fusion + analyze` engine tool (κ-42 / D67) — spawn plasmapy
+    /// `fusion + analyze` engine tool (κ-46 / D69) — spawn plasmapy
     /// derived-parameter producer via
     /// `~/core/hexa-lang/stdlib/fusion/plasma_metrics.py` and persist a
     /// typed `FusionRecord` under `exports/fusion/plasma/<stamp>/`.

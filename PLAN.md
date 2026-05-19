@@ -3083,3 +3083,125 @@
     측정값으로 textbook 상수 교체. ④~⑤ (mesh convergence sweep +
     ANSYS/Code_Aster cross-check) 는 κ-44 본 entry 의 "다음 pickup"
     과 동일.
+
+- 2026-05-20 — **phase κ-46 — `fusion + analyze` cell wiring + Stage 2
+  hexa-native port (plasmapy → plasma_metrics.hexa)** (`design.md`
+  D69 · 사용자 게이트 "ubu-1/ubu-2/mini 자원활용" → pool 실측 →
+  "hexa-native 작성 .hexa" 명시 · `/goal "완료시까지 진행"` autonomy
+  mode · g3 · ABSORPTION.md 4-stage 표 기준 fusion 의 첫 Stage 1→3
+  관통). demiurge 의 8번째 측정-가능 셀이자 첫 plasma-physics 셀.
+  - **landed artifacts** (전부 D61 birth-compliant):
+    (a) `~/core/hexa-lang/stdlib/fusion/plasma_metrics.py` 헤더 갱신
+    — stale D64/κ-42 → D69/κ-46, cross-host parity fact 추가.
+    (Stage 1 substrate — plasmapy 2026.2.0, 기존 파일.)
+    (b) `~/core/hexa-lang/stdlib/fusion/plasma_metrics.hexa` (신규,
+    ~210 lines) — clean-room hexa-native re-derivation. plasmapy
+    코드 0 · Bohm·Debye·Lorentz·Alfvén 대수만 CODATA 2022 SI 상수로.
+    `omega_pe` / `omega_pi_deuteron` / `lambda_d` / `omega_ce` /
+    `omega_ci_deuteron` / `v_thermal_e` / `v_thermal_deuteron` /
+    `v_alfven_deuteron` / `gyroradius_e` / `gyroradius_deuteron` +
+    `iter_core_*` 시나리오 aggregator. `use stdlib/core/math/float`
+    (sqrt) 만 의존.
+    (c) `~/core/hexa-lang/stdlib/fusion/plasma_metrics_test.hexa`
+    (신규) — Stage 3 parity 9 check. hexa-native 값 vs plasmapy
+    2026.2.0 실측 reference.
+    (d) demiurge `cockpit/Sources/DemiurgeCore/Models/FusionRecord
+    .swift` (신규) — typed sidecar (FusionProvenance / FusionScenario
+    / FusionMeasurements / FusionRecord).
+    (e) demiurge `cockpit/Sources/DemiurgeCore/Loaders/
+    FusionAnalyzeProducer.swift` (신규) — Process spawn 래퍼,
+    antimatter 패턴 미러.
+    (f) `ActionDispatch.swift` — `(.analyze, "fusion")` case +
+    `runFusionAnalyze()`.
+  - **측정**:
+    - `swift run DemiurgeCLI action analyze fusion`: exit 0 · rows=1 ·
+      plasmapy 2026.2.0 · ITER_core_reference · ω_pe=5.641e+11 rad/s ·
+      λ_D=7.434e-05 m · v_A=8.175e+06 m/s · `exports/fusion/plasma/
+      <stamp>/fusion_plasma_<stamp>.json` 1건 emit. swift build green.
+    - `hexa run plasma_metrics_test.hexa`: **9/9 PASS** — clean-room
+      hexa-native 값이 plasmapy 와 parity (ω_pe/λ_D/ω_ce/v_th_e
+      ≤1e-6 rel · ω_ci/v_th_i/v_A/r_Li ≤1e-3 rel).
+    - **cross-host parity**: ubu-2 (linux, python 3.12.3) plasmapy
+      실행값이 mac local (python 3.14.4) 과 ω_pe/λ_D/v_A 15-digit
+      byte-identical. pool 자원 활용 (사용자 지시) — ubu-2 에
+      plasmapy 2026.2.0 `pip --user --break-system-packages` 설치.
+  - **g3 정직 (Stage 3 ✓ · Stage 4 미부여)**:
+    - `provenance.absorbed = false` *영구* — derived 파라미터는
+      수학적 사실이나 입력 운전점 (n_e=1e20·T_e=10keV·B=5.3T) 은
+      textbook ITER reference, device 측정 아님.
+    - `measurement_gate = GATE_OPEN` *영구* — Stage 4 진입은 실제
+      토카막 (JET/TFTR/KSTAR/SPARC/ITER) 의 Thomson-scattering /
+      interferometry / magnetic-probe 측정이 producer 에 연결돼야.
+    - **Stage 3 parity 정직 갭 2건**: (a) r_Le — plasmapy 가 T_e=
+      10keV 에서 상대론 보정 (γ≈1.020) 적용 → classical hexa 값과
+      ~2% 차이, test 가 1–3% 범위로 *기대된 갭* bound. (b) v_A —
+      plasmapy 가 Alfvén 속도에 ω_ci 와 다른 ion-mass convention
+      사용 → ~1.4e-4 잔차, test tolerance 1e-3 + 문서화.
+  - **다음 pickup**: ① **fusion+verify 셀** = OpenFOAM/CFD 또는
+    FreeGS equilibrium (ABSORPTION.md "무거운 후보" 1-2주 ⭐⭐⭐⭐⭐,
+    별도 세션). ② **D-T ion mix** — 현 producer 는 D+ majority 1종,
+    real ITER 50:50 D-T 의 T+ contribution 후속 record. ③ **real
+    device shot** — Stage 4 absorbed=true 의 전제, 측정 데이터 ingest.
+
+- 2026-05-20 — **phase κ-45 — Yosys rfc_006 §4 module-1 (`rtlil`)
+  hexa-native body landing** (D68 · 사용자 게이트 "hexa 포팅" +
+  "hexa upstream 필요시도 이 세션에서 진행" + `/goal "완료시까지
+  진행"` autonomy)
+  - **배경**: rfc_006 §4 의 7 모듈 (`rtlil` · `read_verilog` ·
+    `passes` · `liberty` · `abc_map` · `write_verilog` · `yosys`
+    dispatcher) 은 2026-05-19 hexa-lang 세션에 scaffold (`.hexa.stub`
+    7개, raw-91) 만 land 됨 (`stdlib-yosys-rfc006-scaffold` PATCHES
+    entry, phase plan = rtlil→read_verilog→…). 본 κ-45 가 그 phase
+    plan 의 **첫 body** — module-1 `rtlil`.
+  - **신규 (hexa-lang SSOT — D15/D61)**: `~/core/hexa-lang/stdlib/
+    yosys/rtlil.hexa` (280 lines, clean-room). Wire+Module+Design
+    최소 데이터 모델 + 10 free fn (`design_new` · `design_add_module`
+    · `design_get_module_idx` → -1|idx · `design_has_module` ·
+    `design_module_count` · `module_new` · `module_add_wire` ·
+    `module_get_wire_idx` · `module_has_wire` · `module_wire_count`).
+    `PORT_NONE/INPUT/OUTPUT/INOUT` int-tagged (rfc_003 — enum-eq
+    broken). immutable array `xs.push(x)` (booksim 컨벤션).
+  - **측정 fact (재현 가능 — 이 worktree, mac local, hexa
+    `~/.hx/bin/hexa`)**: `cd ~/core/hexa-lang && hexa run stdlib/
+    yosys/rtlil.hexa` → `rtlil selftest: 16/16 PASS — Wire+Module+
+    Design minimum data model (rfc_006 §4 module-1 — Cell/SigSpec/
+    Process/Memory TBD)`. 16 invariant: empty-design 쿼리 · lookup-
+    miss sentinel(-1) · add-module roundtrip · has_module hit/miss ·
+    3-wire(clk/rst/q) add+lookup · port 분류 3종 · Design⇄Module
+    composability.
+  - **hexa-lang commit (branch `rfc006-yosys-rtlil-skeleton`,
+    t4-emt-calc HEAD `0626febc` 기반)**: `ec8a51fc` (rtlil.hexa
+    body) + `06ccb656` (inbox handoff note + PATCHES entry
+    `stdlib-yosys-rtlil-body`, status=pending). push 보류 — 사용자
+    결정. 최종 PR target = `rfc043-hexa-torch` (booksim absorb
+    sibling, 2026-05-19 handoff 명시).
+  - **demiurge 측 (D61 — pointer-only)**: `.swift` 0줄 수정. chip+
+    synthesize 셀은 이미 κ-31/D53 에 wired (`ActionDispatch.
+    runChipSynthesize()` 가 `hexa run yosys.hexa` dispatcher 를
+    spawn). 본 κ-45 의 demiurge 측 산출 = audit trail 만: `design.md`
+    D68 · `ABSORPTION.md` 178행 "진행" 마킹 · 본 PLAN entry.
+  - **g3 정직 거리**: `absorbed=true` 까지 = ① 6 모듈 body land
+    (read_verilog·passes·liberty·abc_map·write_verilog + dispatcher
+    `use` 배선) · ② ABC bounded-subprocess (rfc_006 D18) + SKY130
+    `sky130_fd_sc_hd` lib 연결 · ③ router_d{4,6}.v 합성 후 §5
+    area-oracle ±5% parity (d4≈61,763 / d6≈93,609 µm² · 1.516×).
+    본 κ-45 = ① 중 module-1 의 시작점 — rfc_006 §5 게이트 OPEN
+    유지, 어떤 yosys measurement_gate 도 CLOSED_MEASURED 주장 0,
+    `absorbed=false`. "1/7 모듈 body landed ≠ Yosys absorbed".
+  - **pool 자원 (D63)**: wilson-pool roster = ubu-2 단독 (mini
+    192.168.50.39 DOWN — ping 0/2 · ubu-1 demiurge mirror -2커밋
+    stale + hexa-lang/stdlib/yosys 디렉터리 누락). 본 κ-45 의 hexa
+    selftest 는 로컬 mac 실행 (`hexa run` 은 wilson-pool heavy
+    classifier 패턴 미매치 → 로컬). pool.json 의 mini·ubu-1 제거는
+    protected-state 파일이라 사용자 슬래시 (`/wilson-pool:pool rm
+    mini` · `rm ubu-1`) 필요 — pending.
+  - **다음 pickup**: ① **module-2 `read_verilog`** — Verilog-2005
+    synth-subset frontend (ABSORPTION.md §109 ⭐⭐⭐⭐ 의 본체, 7
+    모듈 중 최대). `rtlil.Design` 을 produce. 이 과정에서 Cell +
+    SigSpec 가 필요해질 것 → rtlil.hexa 의 follow-up commit 으로
+    Cell/SigSpec 추가. acceptance = `archive/comb/rtl/router_d{4,6}
+    .v` end-to-end 파싱 + module/wire 토폴로지 assert. ② module-3~7
+    (passes·liberty·abc_map·write_verilog·dispatcher) 순차. ③ §5
+    area-oracle 게이트 close. 인계 노트 = `hexa-lang/inbox/notes/
+    2026-05-20-demiurge-rfc006-yosys-rtlil-handoff.md`.
+

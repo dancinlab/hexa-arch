@@ -97,6 +97,13 @@ Stage 4   absorbed=true            gate=CLOSED_MEASURED + absorbed=true
 |                             | antimatter / cern / chip-verify(booksim) |
 |                             | chip-synth(yosys substrate) |
 
+**Stage 2→3 진입 (hexa-native port + parity 측정, 단 Stage 4 미부여)**:
+`fusion+analyze` (κ-46 — `plasma_metrics.hexa`, parity 9/9) ·
+`component+verify` (κ-44 addendum — `heat_conduction.hexa`, thermal
+parity 4 %) · `sscb` (κ-41 — `wolfspeed.hexa` parser). 셋 다 clean-room
+hexa-native 재유도 + substrate parity 는 통과했으나 입력이 textbook/
+synthetic 이라 `absorbed=false` 유지 — Stage 4 는 측정된 입력 필요.
+
 **hexa 포팅 난이도 (참고)**:
 
 | producer            | hexa 포팅 작업량                            |
@@ -158,6 +165,18 @@ dormant.
 | component | verify     | gmsh 4.15.2 + scikit-fem 12.0.1 FEM | ①+④ | GATE_OPEN                       | false    |
 | sscb      | analyze    | ngspice 46 transient           | ①+④   | GATE_OPEN                         | false    |
 | cern      | verify     | particle + Bethe-Bloch analytic | ①+④  | GATE_OPEN                         | false    |
+| fusion    | analyze    | plasmapy 2026.2.0 derived params | ①+④  | GATE_OPEN                         | false ✦  |
+
+✦ **Stage 3 parity 통과, 단 absorbed=false (g3)** — fusion+analyze 는
+substrate (`plasma_metrics.py`, plasmapy) **와** clean-room hexa-native
+port (`plasma_metrics.hexa`, plasmapy 코드 0) 를 둘 다 갖고, Stage 3
+parity test 9/9 PASS (κ-46 / D69). 그러나 `absorbed=false` *영구* —
+입력 운전점 (n_e=1e20·T_e=10keV·B=5.3T) 이 textbook ITER reference 일
+뿐 실제 토카막 측정이 아니기 때문. Stage 4 absorbed=true 는 real
+device shot (Thomson-scattering / interferometry) 가 producer 에
+연결돼야. matter (D17) 와 대비: matter 는 입력도 측정값이라 Stage 4,
+fusion 은 hexa-native 재유도는 됐으나 입력이 textbook → Stage 3 에서
+정직하게 멈춤.
 
 ✱ **substrate vs absorbed 구분 (g3)** — Yosys §5 는 *외부 yosys
 binary + SKY130* 로 측정해서 cited oracle ±5 % 안에 들었으나, hexa-
