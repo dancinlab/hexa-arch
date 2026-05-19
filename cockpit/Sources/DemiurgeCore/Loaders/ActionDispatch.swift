@@ -13,6 +13,12 @@
 //
 // κ-30 (this commit, D53): adds `matter + analyze` → MatterAnalyzer.
 // κ-34 (D55): adds `sscb + analyze` → SSCBProducer (ngspice 46 transient).
+// κ-41 (D63): adds `mobility + analyze` → MobilityAnalyzeProducer
+//             (osmnx road-graph topology — synthetic 10x10 Manhattan
+//             grid, 5th cohort producer, FIRST autonomous-driving cell;
+//             FIRST D61-compliant-from-birth producer — script SSOT in
+//             ~/core/hexa-lang/stdlib/mobility/road_network.py, never
+//             in cockpit/scripts/).
 //
 // Currently wired:
 //   • component + synthesize → ComponentEmitter.emitBundled
@@ -34,6 +40,18 @@
 //                              measuring-producer threshold; real
 //                              numbers, plausible-not-absorbed circuit,
 //                              GATE_OPEN永구 / absorbed=false ALWAYS)
+//   • mobility  + analyze    → osmnx road-graph topology producer
+//                              (κ-41 / D63 — 5th cohort domain, FIRST
+//                              autonomous-driving cell AND FIRST D61-
+//                              compliant-from-birth producer (script
+//                              SSOT lives in ~/core/hexa-lang/stdlib/
+//                              mobility/, never in cockpit/scripts/);
+//                              real graph algorithm output (osmnx.
+//                              basic_stats + networkx.diameter) but
+//                              synthetic 10x10 Manhattan grid topology
+//                              fixture, no real OSM data, no traffic
+//                              simulation → GATE_OPEN永구 / absorbed=
+//                              false ALWAYS)
 //
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
@@ -115,6 +133,8 @@ public enum ActionDispatch {
             return runMatterAnalyze()
         case (.analyze, "sscb"):
             return runSSCBAnalyze()
+        case (.analyze, "mobility"):
+            return runMobilityAnalyze()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -170,6 +190,29 @@ public enum ActionDispatch {
     /// turn into real producers, narrow scope is honest g3.
     private static func runSSCBAnalyze() -> ActionResult {
         let r = SSCBProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `mobility + analyze` engine tool (κ-41 / D63) — spawn osmnx via
+    /// `~/core/hexa-lang/stdlib/mobility/road_network.py` to build a
+    /// synthetic 10x10 Manhattan grid topology fixture and compute
+    /// standard road-graph statistics (osmnx.basic_stats +
+    /// networkx.diameter), then persist a typed `MobilityRecord` under
+    /// `exports/mobility/road/<stamp>/`. Producer = `osmnx@<v>` — the
+    /// library is the instrument, but the graph is a *synthetic
+    /// fixture* (not real OSM data, no traffic simulation) so
+    /// measurement_gate stays GATE_OPEN AND absorbed is permanently
+    /// false (g3 — see MobilityAnalyzeProducer scope_caveats). FIFTH
+    /// cohort domain crossing the measuring-producer threshold and
+    /// the FIRST autonomous-driving cell. Also the FIRST producer
+    /// shipping D61-compliant-from-birth — script SSOT in hexa-lang/
+    /// stdlib/mobility/, never in cockpit/scripts/.
+    private static func runMobilityAnalyze() -> ActionResult {
+        let r = MobilityAnalyzeProducer.runAnalyze()
         return ActionResult(
             text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],

@@ -2484,3 +2484,104 @@
     하여 단일 SSOT. ④ cockpit GUI Component 탭이 STEP 파일을 직접
     렌더 (현재는 USDA only) — RealityKit STEP 미지원 → Open Cascade
     Cascade.js 같은 web 뷰 또는 STL 폴백.
+
+- 2026-05-20 — **phase κ-41 — P-⑧ 5번째 cohort producer = `mobility +
+  analyze` (osmnx road-graph topology, D61-compliant-from-birth)**
+  (D63 · D53 measurable-only mapping · D61 g_demiurge_pointer_only ·
+  g3). 13 cohort 도메인 중 sscb (κ-34, ngspice) 다음 5번째 picks.
+  **`mobility + analyze` cell** 이 6번째 측정 가능 매핑 셀로 wired
+  (기존 5: component+synthesize, chip+verify, chip+synthesize, matter+
+  analyze, sscb+analyze) — D53 "5+ 셀 임계점" 통과, 다음 라운드
+  ActionAdapter 프로토콜 리팩토링 압박 더 커짐. FIRST autonomous-
+  driving cell AND FIRST D61-compliant-from-birth producer (`cockpit/
+  scripts/*.py` 0개 추가; SSOT script 가 hexa-lang/stdlib/ 부터 정확).
+  - **점수표 위치** (κ-41, D55 의 cohort 점수표 위에 5번째 칸 추가):
+    | 후보 | 도구 | 설치 | 점수 | 결과 |
+    |---|---|---|---|---|
+    | **mobility + analyze** | osmnx 2.1.0 | pip install (~30 MB; networkx/shapely/pyproj/pyogrio/geopandas 합산) | 8/10 | **picked (κ-41)** |
+    | (참고) sscb + analyze | ngspice 46 | brew | 10/10 | picked (κ-34) |
+  - **신규 SSOT (hexa-lang, D61 준수)**: `~/core/hexa-lang/stdlib/
+    mobility/road_network.py` — Python sidecar (~210 lines).
+    결정론적 10x10 Manhattan grid (100 intersections, 360 directed
+    edges, 100 m block spacing, Midtown Manhattan 좌표 anchor) 을
+    `networkx.MultiDiGraph` 로 합성하고 `osmnx.basic_stats(G)` 와
+    `networkx.diameter(undirected)` 호출. 산출물 2종: `<id>.edges.csv`
+    (360 rows × u/v/length_m) + `<id>.meta.json` (place·topology·
+    measurements·artifacts·error). **`cockpit/scripts/*.py` 0개 추가
+    — D61 g_demiurge_pointer_only 위반 0 (이전 cohort producer 와
+    달리 birth-violation 목록에 추가 안 됨).**
+  - **신규 (demiurge)**: `DemiurgeCore/Models/MobilityRecord.swift`
+    — typed sidecar (interface `"demiurge:mobility:road-network-
+    record"`, schema 1.0). `MobilityProvenance` + `MobilityPlace` +
+    `MobilityTopology` + `MobilityMeasurements` 4개 sub-struct.
+    `SSCBRecord` / `ComponentRecord` 의 sibling 패턴.
+  - **신규 (demiurge)**: `DemiurgeCore/Loaders/MobilityAnalyzeProducer.
+    swift` — Swift spawner (~330 lines). `roadRecordsRoot =
+    exports/mobility/road/`. `locateScript()` 가 **`~/core/hexa-lang/
+    stdlib/mobility/road_network.py`** 만 탐색 (D61 — `cockpit/scripts/`
+    fallback 없음, 의도적). `locatePython3()` 가 `/opt/homebrew/bin/
+    python3` 우선 (brew python 에 osmnx + networkx 설치됨; Xcode-
+    bundled python3 fallback 막아 silent ModuleNotFoundError 방지,
+    g3). 매 호출마다 timestamped subdir `<ISO>/` 생성. `python3
+    road_network.py <runDir>` spawn, merged stdout/stderr 에서
+    `MOBILITY_ROAD_NETWORK_RESULT <json>` 라인 파싱 + meta.json
+    재독해서 typed record 작성 (산출물 2종 + record .json 3번째
+    파일). 2종 모두 디스크 존재 + non-zero size 검증 (defence-in-
+    depth, @F f6).
+  - **확장 (demiurge)**: `DemiurgeCore/Loaders/ActionDispatch.swift` —
+    `runEngineTool` 의 switch 에 `case (.analyze, "mobility"):` 추가
+    (6번째 측정 가능 셀). 새 private `runMobilityAnalyze()` 가
+    MobilityAnalyzeProducer 호출. 헤더 doc-comment 갱신 (κ-41 라인 +
+    mobility 셀 설명 + D61 compliance 강조).
+  - **g3 정직 갭 (제일 중요)**: ① numbers ARE real (osmnx.basic_stats
+    + networkx.diameter — Newman 2010 등 표준 그래프 알고리즘 출력)
+    — `node_count = 100`, `edge_count = 360`, `intersection_count =
+    100`, `k_avg = 7.2`, `edge_length_total_m = 36000.0`,
+    `streets_per_node_counts = {2:4 corner, 3:32 edge, 4:64 interior}`,
+    `connected_components = 1`, `diameter_undirected = 18` hops
+    (= 2 × 9, 10×10 grid Manhattan distance — 분석적 기대값과 정확
+    히 일치). ② BUT **그래프 자체가 합성 10x10 Manhattan grid
+    topology fixture** — 실제 OSM extract 가 아님, Overpass 네트워크
+    호출 없음, traffic flow / travel time / vehicle simulation 0.
+    `measurement_gate = GATE_OPEN 영구 / absorbed = false 영구`.
+    ③ ISO 26262 / ISO 21448 SOTIF / UN R157 ALKS 안전 인증은 별도
+    게이트 (`domains/mobility.md` §1), osmnx ≠ 인증. ④ real-OSM
+    fetch (`graph_from_place` / `graph_from_bbox` via Overpass) 는
+    **의도적으로 우회** — (a) 도달 가능한 Overpass 서버 필요,
+    (b) 시간 변동 결과 (같은 query 도 다른 시각엔 다른 graph) 가
+    demiurge cross-host record drift 원칙을 깨므로. 후속 phase 가
+    snapshot-pinned OSM PBF (GeoFabrik 월간) + traffic demand
+    calibration 들이면 흡수 후보. ⑤ Linux/Windows host 에서 osmnx
+    + brew-class python3 가 있으면 동작; 없으면 honest gap (조용한
+    fallback 없음 — silent success 금지 g3).
+  - **D61 compliance from birth**: 이 producer 는 D61 위반 0 —
+    `cockpit/scripts/*.py` 에 새 파일 0개. 이전 cohort producer 5종
+    (bipv_freecad · sscb_ngspice · grid_networkx · bot_urdf ·
+    energy_pvlib · space_skyfield) 와 달리 birth-violation 목록에
+    추가 안 됨. 본 phase 가 D61 compliance-from-birth 의 **첫 사례**
+    이고, 후속 cohort producer 의 reference.
+  - **측정 (이 worktree, mac local, swift 6.3.1, osmnx 2.1.0, networkx
+    3.6.1, python 3.14.4)**: `swift run DemiurgeCLI action analyze
+    mobility` →
+    `python3 = /opt/homebrew/bin/python3` ·
+    `python3 road_network.py — exit 0, nodes=100, edges=360` ·
+    `osmnx version: 2.1.0` · `artifacts: edges_csv, meta` ·
+    `📸 mobility road record → exports/mobility/road/<stamp>/
+    mobility_road_<stamp>.json` ·
+    `nodes=100 · edges=360 · k_avg=7.20 · diameter=18 · producer =
+    osmnx@2.1.0` · `⏳ GATE_OPEN · absorbed=false`. 파일 크기:
+    `.edges.csv` ~4 KB (360 rows × 3 cols) · `.meta.json` ~750 B ·
+    record `.json` ~2.4 KB. 빌드 green (pre-existing RealityKit
+    MainActor warning 만, 새 warning 0 · 새 error 0).
+  - **다음 pickup**: ① **D61 마이그레이션 batch (이전 violation
+    5종)** — `cockpit/scripts/{bipv_freecad,sscb_ngspice,grid_networkx,
+    bot_urdf,energy_pvlib,space_skyfield}.py` 를 `~/core/hexa-lang/
+    stdlib/<domain>/` 로 일괄 이동, demiurge Producer.swift 의
+    spawn path 만 갱신 (본 phase 의 mobility 가 target 패턴의 reference).
+    ② **ActionAdapter 프로토콜 리팩토링** — 6 셀 매핑 → switch/case
+    가 한계, protocol + registry 패턴 자연. ③ **real-OSM extract
+    + SUMO traffic 흡수 라운드** — snapshot-pinned PBF + demand
+    calibration + SUMO micro-sim → 본 record 의 GATE_OPEN →
+    CLOSED_MEASURED 후보 (별도 phase). ④ **brain (MNE) / scope
+    (POPPY) / space (skyfield) 등 7개 cohort 셀** — battery (PyBaMM)
+    / grid (NetworkX 단독) 도 pickup notes 에서 대기.

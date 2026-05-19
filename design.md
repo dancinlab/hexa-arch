@@ -1701,3 +1701,83 @@ export.)
   버튼 + DemiurgeCLI `emit-component` + DemiurgeCLI `action
   synthesize component` 셋의 단일 진입점 그대로. 셋 다 동일 record
   emit.
+
+### Decision 63 — `mobility + analyze` producer = osmnx road-graph topology (P-⑧ 5th cohort, κ-41, D61-compliant-from-birth)
+
+**picked**: cohort domain producer 발굴 라운드 (D55) 의 5번째 picks =
+**`mobility + analyze` = osmnx road-graph topology (synthetic Manhattan
+grid)**. SSOT script 는 **`~/core/hexa-lang/stdlib/mobility/
+road_network.py`** (D61 `g_demiurge_pointer_only` 준수 — `cockpit/
+scripts/*.py` 금지). demiurge 측은 `MobilityAnalyzeProducer.swift`
+`Process` spawn wrapper + typed `MobilityRecord` 디코더만 보유.
+producer 는 결정론적 10x10 Manhattan grid (100 intersections, 360
+directed edges, 100 m block spacing, Midtown Manhattan 좌표 anchor) 을
+`networkx.MultiDiGraph` 로 합성하고 `osmnx.basic_stats(G)` 와
+`networkx.diameter(undirected)` 를 호출하여 `node_count` /
+`edge_count` / `intersection_count` / `k_avg` / `edge_length_total_m` /
+`streets_per_node_counts` / `connected_components` /
+`diameter_undirected` 를 typed `MobilityRecord` 로 영구화 →
+`exports/mobility/road/<stamp>/`. producer = `osmnx@<version>` (예:
+`osmnx@2.1.0`) 으로 핀, **measurement_gate = GATE_OPEN 영구 /
+absorbed = false 영구** — osmnx.basic_stats + networkx.diameter 는
+표준 그래프 알고리즘이지만 분석 대상이 *합성 grid* 이지 실제 OSM
+extract 가 아님, traffic flow / travel time / vehicle simulation 0
+이므로 *graph topology only*. (Rejected: ① SUMO (eclipse-sumo) 우선 —
+무거운 brew install + traffic 시나리오 calibration 1회 record 로
+환원되기 어려움. ② osmnx.graph_from_bbox via Overpass 실제 OSM fetch —
+인터넷 + Overpass 가용성 의존 + 같은 query 가 시각마다 다른 graph
+→ cross-host drift 원칙 위반. ③ CARLA scenario regression — 무거운
+Unreal Engine + 별도 GPU. ④ ROS 2 perception eval — 무거운 conda
+install + dataset.)
+
+**rationale**:
+- D55 cohort 점수표의 다음 단계 — sscb (κ-34, 10/10) 다음으로
+  osmnx 는 pure-Python pip install (networkx + shapely + pyproj +
+  pyogrio + geopandas, 합산 ~30 MB), 결정론적 synthetic graph 1
+  set 만으로 record emit 가능. 도구 접근성 점수 약 8/10 (energy
+  pvlib 와 동격, NetworkX 9/10 아래).
+- g3: osmnx.basic_stats 와 networkx.diameter 는 **표준 그래프
+  알고리즘** (Newman 2010 등에서 정의된 표준 측정량) → algorithm
+  output 자체는 진짜. 그러나 **분석 대상이 합성 10x10 Manhattan
+  grid topology fixture** 이지 실제 도시 도로망이 아님 (no real OSM
+  extract, no Overpass call, no traffic data) → **GATE_OPEN** 영구 /
+  **absorbed=false** 영구. record 의 4종 scope_caveats 가 이 격차를
+  박제 (synthetic-grid · topology-only · GATE_OPEN-rationale ·
+  intentional-OSM-bypass).
+- 측정값 (이 worktree, mac local, swift 6.3.1, osmnx 2.1.0,
+  networkx 3.6.1, python 3.14.4): `node_count = 100`, `edge_count =
+  360`, `intersection_count = 100`, `k_avg = 7.2` (각 노드 평균 7.2
+  in+out edges), `edge_length_total_m = 36000.0` (= 360 × 100 m),
+  `streets_per_node_counts = {2:4 corner, 3:32 edge, 4:64 interior}`,
+  `connected_components = 1`, `diameter_undirected = 18` hops (= 2 ×
+  (N-1) = 2×9 for 10×10 grid Manhattan distance — 정확히 합성 격자
+  의 분석적 기대값).
+- **D61 compliant from birth (자명)** — `cockpit/scripts/*.py` 0개
+  추가, SSOT script 위치 `~/core/hexa-lang/stdlib/mobility/
+  road_network.py` 부터 정확. demiurge 측 `MobilityAnalyzeProducer.
+  swift` 는 spawn wrapper 만 보유 (compute logic 0). 이전 cohort
+  producer (bipv_freecad/sscb_ngspice/energy_pvlib) 의 birth-violation
+  은 D61 batch migration round 의 책임; 본 phase 는 새 위반 0.
+- D53 "measurable-only" 와 정합 — `(.analyze, "mobility")` 셀이
+  다음 측정 가능 매핑 셀. 본 worktree 의 이전 매핑은 4개 (component+
+  synthesize, chip+verify, chip+synthesize, matter+analyze) +
+  sscb+analyze = 5. mobility 까지 6 셀. D53 의 "5+ 셀 ActionAdapter
+  리팩토링" 임계점 통과, protocol+registry 리팩토링 압박 더 커짐
+  (다음 라운드 위임).
+- absorbed=true 절대 금지 (g3 / @F f6) — real OSM extract (또는
+  HD map) + calibrated origin-destination demand matrix + SUMO/
+  CARLA micro-simulation validated against measured travel times
+  3종이 들어와야 흡수. ISO 26262 / ISO 21448 SOTIF / UN R157 ALKS
+  safety case (`domains/mobility.md` §1) 는 별도 게이트 — osmnx 의
+  topology 출력 ≠ 안전 인증.
+- intentional OSM bypass — `osmnx.graph_from_place` 와
+  `graph_from_bbox` 는 Overpass 서버 호출 → (a) 네트워크 필요,
+  (b) 같은 query 도 시각마다 다른 graph (OSM 가 계속 편집됨), 두 가지
+  모두 demiurge 의 cross-host record drift 원칙 (D50 g_ssot_single_
+  source 의 reproducibility 외연) 을 깨므로. 후속 phase 가 snapshot-
+  pinned OSM PBF extract (예: GeoFabrik 월간 extract) + traffic
+  demand calibration 을 들이면 흡수 후보 — 본 phase scope 밖.
+- pickup 우회 — battery (PyBaMM Li-ion DFN), brain (MNE EEG),
+  scope (POPPY PSF), space (skyfield orbit) 등 7개 cohort 셀 후순위.
+  본 phase 는 cohort breadth-coverage 5번째 도장 (sscb · ? · ? · ? ·
+  mobility) 단일점.
