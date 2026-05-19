@@ -1485,3 +1485,23 @@
   records 참고열람 (D47 reference view) · chat backend = 기존
   `claude -p` read-only stub. 다음 = κ-2 (manifest persistence
   + 재료선반 동작).
+- 2026-05-19 — **phase κ-2 — project manifest 영속화 빌드 green**
+  (rfc_012 §7 · D45 구현). κ-1 의 in-memory Project 를 디스크
+  영속화: 신규 `DemiurgeCore/Loaders/ProjectStore.swift` —
+  `save` / `loadAll` / `delete`, 저장 위치 `~/Library/Application
+  Support/lab.dancin.demiurge/projects/<uuid>/manifest.json`
+  (D45 의 경로; 디렉토리는 `<name>` 대신 **uuid** — 사용자
+  입력 이름의 충돌·경로금지문자 회피, manifest.json 이 표시
+  이름 보유). `@D g_cockpit_isolation` 절 (e) 그대로 — manifest
+  는 cockpit app-state, `exports/` 밖, record 아님. CockpitApp.swift:
+  앱 시작 `onAppear` 에 `ProjectStore.loadAll()` 복원 (가장 최근
+  프로젝트 활성화) · `+` 생성 시 `ProjectStore.save` · ④ 프로젝트
+  menu 에 삭제 추가 (`.confirmationDialog` 확인 — "exports/
+  측정 기록은 영향 없음" 명시, `ProjectStore.delete` 는 uuid
+  디렉토리만 제거). 측정: `swift run CockpitApp` 로컬 빌드 —
+  15/15 Compiling · `Build of product 'CockpitApp' complete!`
+  (9.57s) · 에러 0 · 경고 0. **g3 정직**: manifest CRUD 는
+  완결 — 단 verb 진행 UI 0 (생성·삭제만 persist; verb 진행 →
+  re-save 는 κ-3+) · 재료선반 여전히 placeholder · signal-light
+  ↔ measurement_gate 미바인딩 (θ-2). 다음 = κ-3 (재료선반
+  동작 + verb 진행 → manifest re-save).

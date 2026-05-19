@@ -52,6 +52,7 @@ struct WorkbenchView: View {
     @State private var projects: [Project] = []
     @State private var activeProjectID: Project.ID?
     @State private var showNewProject = false
+    @State private var showDeleteConfirm = false
 
     // ④ display toggles.
     @State private var colorScheme: ColorScheme = .light   // light default
@@ -85,12 +86,30 @@ struct WorkbenchView: View {
         .preferredColorScheme(colorScheme)
         .sheet(isPresented: $showNewProject) {
             NewProjectSheet { project in
+                try? ProjectStore.save(project)          // D45 — App Support manifest
                 projects.append(project)
                 activeProjectID = project.id
                 seedChat(for: project)
             }
         }
-        .onAppear { artifacts = ArtifactRegistry.loadAll() }
+        .confirmationDialog(
+            "이 프로젝트를 삭제할까요?",
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("삭제", role: .destructive) { deleteActiveProject() }
+            Button("취소", role: .cancel) {}
+        } message: {
+            if let project = activeProject {
+                Text("\"\(project.name)\" 의 manifest 가 삭제됩니다. "
+                     + "exports/ 의 측정 기록은 영향받지 않습니다.")
+            }
+        }
+        .onAppear {
+            artifacts = ArtifactRegistry.loadAll()
+            projects = ProjectStore.loadAll()            // D45 — restore manifests
+            if activeProjectID == nil { activeProjectID = projects.last?.id }
+        }
         .onChange(of: refSelection) { _, newValue in
             handleRefSelection(newValue)
         }
@@ -146,10 +165,28 @@ struct WorkbenchView: View {
                     }
                 }
             }
+            if let active = activeProject {
+                Divider()
+                Button(role: .destructive) {
+                    showDeleteConfirm = true
+                } label: {
+                    Label("\"\(active.name)\" 삭제", systemImage: "trash")
+                }
+            }
         } label: {
             Text(activeProject?.name ?? "프로젝트 선택")
         }
-        .help("프로젝트 전환")
+        .help("프로젝트 전환 / 삭제")
+    }
+
+    /// Delete the active project's manifest (D45) and drop it from the
+    /// in-memory list; exports/ records are never touched (rfc_012 §7).
+    private func deleteActiveProject() {
+        guard let project = activeProject else { return }
+        try? ProjectStore.delete(project)
+        projects.removeAll { $0.id == project.id }
+        activeProjectID = projects.last?.id
+        chatMessages = []
     }
 
     /// ④ 7-step progress bar — the verb spine, current verb highlighted.
