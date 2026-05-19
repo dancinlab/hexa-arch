@@ -3205,3 +3205,49 @@
     area-oracle 게이트 close. 인계 노트 = `hexa-lang/inbox/notes/
     2026-05-20-demiurge-rfc006-yosys-rtlil-handoff.md`.
 
+
+- 2026-05-20 — **phase κ-42 addendum — `cern + verify` Stage 2 hexa-
+  native port + Stage 3 parity GREEN** (D65 · ABSORPTION.md §"hexa
+  포팅 단계" Stage 2→3 · g3). κ-42 본체는 Stage 1 substrate
+  (`bethe_bloch_stopping.py`) 였고, 사용자 지시 "hexa-native 작성 ·
+  .hexa · 완료시까지 진행" 으로 Stage 2 hexa-native 포팅 + Stage 3
+  parity 측정까지 본 addendum 에서 완결.
+  - **신규 (hexa-lang SSOT — D15/D61)**: `~/core/hexa-lang/stdlib/
+    cern/bethe_bloch_stopping.hexa` (~290 lines). Stage 1 Python
+    substrate 의 hexa-native 재유도. `use stdlib/core/math/float`
+    (libm `sqrt`/`log`) 만 import — antiproton 938.27208816 MeV/c²
+    + electron 0.51099895 MeV/c² + K_BB 0.307075 를 compile-time
+    상수로 fold, run-time `particle` 의존 0. `evaluate()` =
+    Bethe-Bloch PDG eq. 34.5 폐쇄형, `sweep_table()` = 4 재료 × 7
+    KE = 28 rows, `emit_csv()`, `selftest()` = Stage 3 게이트.
+  - **신규**: `bethe_bloch_stopping.hexa.stub` 는 booksim `*.hexa` +
+    `*.hexa.stub` 관례대로 보존; `.hexa` 가 live. `stdlib/cern/
+    README.md` Stage 3 결과표 갱신.
+  - **측정 (Stage 3 parity, mac local, `hexa run`)**: `hexa run
+    stdlib/cern/bethe_bloch_stopping.hexa` → 28-row sweep →
+    `/tmp/cern_g4_stopping_hexa.csv` + selftest **4/4 PASS**:
+    Al@1MeV relerr 7.8e-11 · Al@1GeV 2.7e-10 · Pb@100MeV 9.6e-11 ·
+    Pb@1GeV 4.1e-10 (tolerance 1e-6 — 4 자릿수 여유). `STAGE-3
+    PARITY: GREEN`. ~1e-10 floor 는 CPython `math.log` vs hexa
+    runtime libm shim 의 spread — 10 유효숫자 일치. Stage 3 parity
+    는 numeric (hexa `str()` ≠ Python `%.10g` 라 byte-parity 아님).
+  - **g3 정직 (제일 중요)**: **Stage 3 GREEN ≠ absorbed=true**.
+    hexa 포트가 substrate 를 재현한다는 것은 *공식*이 hexa-owned
+    임을 증명할 뿐, *물리*가 흡수됐다는 뜻 아님 — substrate 와
+    포트가 동일한 4종 Geant4-MC 보정 (shell · density-effect ·
+    straggling · nuclear) 을 똑같이 누락. `measurement_gate =
+    GATE_OPEN / absorbed = false` 그대로. absorbed=true 는 Stage 4
+    Geant4-MC parity 라운드 필요 (별도 세션 ⭐⭐⭐⭐⭐). Stage 3 가
+    획득한 것 = "producer 가 Python `particle` 없이 hexa-native 로
+    돈다" — hexa-first 원칙의 실측 진전.
+  - **커밋**: hexa-lang `094d6789` on `rfc006-yosys-rtlil-skeleton`
+    (`bethe_bloch_stopping.hexa` + README, 358+/25-). Stage 1
+    substrate 는 hexa-lang `ff395cd2`. demiurge 측 = 본 PLAN
+    addendum (D61 — `.swift` 0줄, `cern + verify` 셀은 이미
+    `ActionDispatch` 에 wired; producer 는 아직 Stage 1 `.py` spawn).
+  - **다음 pickup**: ① **demiurge CernVerifyProducer 의 hexa
+    마이그레이션** — `hexa-arch cern stopping --emit <dir>`
+    dispatcher 배선 후 Swift spawn 을 `.py` → `hexa run` 으로 전환.
+    ② **Stage 4 Geant4-MC parity** — ubu-1 에 Geant4 11.x 설치,
+    G4hIonisation 출력 vs Bethe-Bloch hexa 비교. ③ **density-effect
+    δ** — Sternheimer parameterization, high-γ regime 보강.
