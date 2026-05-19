@@ -1,0 +1,66 @@
+{
+  "artifacts": {
+    "meta": "space_orbit.meta.json",
+    "tle": "space_orbit.tle",
+    "tracks": [
+      "space_orbit_25544.ndjson",
+      "space_orbit_20580.ndjson"
+    ]
+  },
+  "geometry_id": "space_orbit_v1",
+  "interface": "demiurge:space:orbit-record",
+  "observer": {
+    "elev_m": 38.0,
+    "lat_deg": 37.5665,
+    "lon_deg": 126.978,
+    "name": "Seoul (fixed prototype observer)"
+  },
+  "ok": true,
+  "run_at_utc": "2026-05-19T17:08:49.683710Z",
+  "satellites": [
+    {
+      "aggregates": {
+        "max_alt_deg": 49.3798,
+        "max_pass_minutes": 6.0,
+        "mean_alt_deg_visible": 21.267,
+        "sample_count": 1440,
+        "visibility_ratio": 0.0194,
+        "visible_count": 28,
+        "visible_window_count": 5
+      },
+      "name": "ISS (ZARYA)",
+      "norad_id": 25544,
+      "tle_age_days": 18.214,
+      "tle_epoch_utc": "2026-05-01T12:00:00Z",
+      "track_file": "space_orbit_25544.ndjson"
+    },
+    {
+      "aggregates": {
+        "max_alt_deg": 22.2904,
+        "max_pass_minutes": 6.0,
+        "mean_alt_deg_visible": 15.8928,
+        "sample_count": 1440,
+        "visibility_ratio": 0.0111,
+        "visible_count": 16,
+        "visible_window_count": 3
+      },
+      "name": "HST",
+      "norad_id": 20580,
+      "tle_age_days": 18.214,
+      "tle_epoch_utc": "2026-05-01T12:00:00Z",
+      "track_file": "space_orbit_20580.ndjson"
+    }
+  ],
+  "sgp4_version": "2.25",
+  "skyfield_version": "1.54",
+  "tle_count": 2,
+  "tle_sha256_16": "728b84d7713729f2",
+  "window": {
+    "hours": 24,
+    "sample_count_per_sat": 1440,
+    "step_s": 60,
+    "t0_utc": "2026-05-01T12:00:00Z",
+    "visibility_alt_deg": 10.0
+  },
+  "worst_tle_age_days": 18.214
+}
