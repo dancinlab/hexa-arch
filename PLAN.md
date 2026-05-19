@@ -1992,3 +1992,25 @@
   ("d5a63a82 완료" 때와 동일 패턴 — 낙관 보고를 실측 정정,
   거짓 ✅ 금지.) demiurge 측 추가 작업 0; hexa-lang 컴파일러
   patch 대기 (inbox 큐 등록 완료).
+- 2026-05-19 — **enum blocker RESOLVED (병렬 세션 착지) — 종결,
+  belt-and-suspenders 재측정 안 함** (사용자 공유). hexa-lang
+  rfc043-hexa-torch HEAD `70c7ab9d fix(codegen_c2): enum-variant
+  access emits #define, not field-access` — 설계가 제 제안
+  Shape-A 와 동일(`_is_enum_name` + Field-arm guard +
+  `<Enum>_<VARIANT>` #define). inbox patch status = `resolved-ssot`
+  (tracked·clean). 측정 입증: 병렬 세션 `stdlib/booksim/
+  leighton.hexa` 런타임 **10/10 PASS** (d4/d6 oracle) +
+  enum_smoke BEFORE(undeclared ×3)→AFTER(rc 0). **g3 정합**:
+  제 직전 로컬 실측("leighton 실패")은 *배포 bootstrap binary
+  stale* (source fix 이전) — patch 의 `verify-PENDING (stale
+  binary, promote out-of-scope)` 와 정확히 일치; 병렬 세션은
+  재빌드 드라이버로 10/10 → 두 관측이 서로 확증 (source
+  resolved · local binary promote 대기, 모순 아님). **재측정
+  안 함**: 공유 dir regen = shared-branch hazard + 이미 10/10
+  입증된 것의 3번째 중복 (방금 memory 에 남긴 중복-작업
+  안티패턴). enum 전제 닫힘 → demiurge chip §B 측정 경로의
+  enum blocker 해제. 단 booksim `cmd_measure` body (F1F2
+  producer, rfc_001 §8) 는 여전히 별개 미구현(gate 90) —
+  "absorbed/chip §B closed" 아님; enum 해제로 *B2(booksim
+  sweep/measure body)가 비로소 가능*해진 것. demiurge 코드
+  0 추가 — 확인·기록만.
