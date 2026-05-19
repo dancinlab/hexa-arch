@@ -14,6 +14,36 @@
 
 ---
 
+## Tracks (2026-05-19) — every branch the project can pursue
+
+User-requested record of all six tracks the post-workbench session
+identified, kept here so none are lost.
+
+🟢 **demiurge-internal** (this repo)
+  - **A.** 문서 정합 — NEXT_SESSIONS / GOAL.md / `@N` reconciled to
+    the latest κ phases. *done* (live progress in PLAN.md, decisions
+    in design.md).
+  - **B.** hexa-\* sibling 인식 — workbench + CLI surface
+    `~/core/hexa-<domain>` existence (`Domain.siblingRepoPath` /
+    `siblingRepoExists`; NewProjectSheet confirm step;
+    `cli show-project` `sibling_repo:` line). *done*.
+  - **C.** P-⑧ "기본 라이브러리" 정의 — provisional working
+    definition landed under P-⑧ below. *awaiting user confirm
+    / adjust*.
+
+🟡 **cross-repo** (separate repo session required)
+  - **D.** P-②③ — hexa-lang Yosys modules + `d5a63a82` push.
+    Repo: `~/core/hexa-lang`. *open*.
+  - **E.** P-④ — chip §B full-curve measurement. Needs engine tool
+    + ubu pool + rate-limit discipline. *open*.
+  - **F.** ι-2 — 3D real USDZ. A component-domain producer must
+    emit one first (`exports/**` holds zero geometry today). *open*.
+
+The ζ dependency-graph half is **deferred** (not in this matrix —
+workbench value vs UI cost unclear; reopen on a concrete use).
+
+---
+
 ## P-②③ — hexa-lang session (Yosys modules + booksim push)
 
 **Use this when:** you open `~/core/hexa-lang` to do the D19 work +
@@ -424,6 +454,10 @@ measurement record + gate exists — this depends on an engine tool
   repos under `~/core/hexa-*` (cross-repo, like hexa-lang). `hexa-ufo`
   TBD resolved (sibling repo, no demiurge domain map yet). One TBD
   remains: the exact form of "기본 라이브러리".
+- 2026-05-19 — **Tracks matrix added** (user "갈래 모두 기록"). All
+  six tracks A/B/C/D/E/F catalogued under "Tracks" at the top of
+  this file, classified 🟢 demiurge-internal vs 🟡 cross-repo, with
+  current state per track.
 - 2026-05-19 — **P-⑦ all closed** (κ-11..κ-16). Open follow-ups
   marked ✅; the ζ dependency-graph half stays deferred (workbench
   value unclear). sibling-repo awareness added as κ-16 —
