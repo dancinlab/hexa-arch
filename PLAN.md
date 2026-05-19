@@ -1937,3 +1937,23 @@
   "booksim absorbed" 아님, F1F2 record 0, rfc_001 §8 gate
   미충족 그대로. 다음 = track 1 (rfc_006 §4 Yosys hexa 모듈 —
   yosys dispatcher 동형 패턴부터, enum 회피 int/struct).
+- 2026-05-19 — **phase κ-25 — yosys dispatcher 구현 (track 1,
+  cross-repo)** (booksim 동형). `hexa-lang/stdlib/yosys/
+  yosys.hexa.stub` → `yosys.hexa` (hexa-lang commit `522c8192`,
+  origin/rfc043-hexa-torch push ✅). CLEAN-ROOM CLI surface only
+  (Yosys kernel/yosys.cc + script.cc 공개면, ISC, no copy;
+  rfc_048 raw-91 idiom): 라우팅 + help + version + selftest
+  (dispatcher-routing scope) · read-verilog/write-verilog =
+  정직 exit 91 (모듈 body TBD, silent-skip 아님 @F f4) · synth
+  = exit 90 (rfc_006 §5 SKY130 area-oracle d4≈61,763·d6≈93,609
+  µm²·1.516× OPEN — hexa-native flow 미재현, absorbed 금지 g3).
+  모듈 미import (read_verilog/passes/abc_map/write_verilog
+  skeleton — enum 버그 회피). 측정: `hexa run stdlib/yosys/
+  yosys.hexa` → **dispatcher selftest 8/8 PASS** exit 0
+  (version/help/no-sub/unknown=1/selftest=0/synth=90/read=91/
+  write=91). **g3 정직**: dispatcher *라우팅* measured-green —
+  "Yosys absorbed" 아님, netlist 0, rfc_006 §5 gate OPEN 그대로.
+  D19 §4 모듈 body (read_verilog/passes/abc_map/write_verilog) =
+  다음 (각 enum 회피 int/struct · §5 gate 까지 거대). track 1·2
+  의 *dispatcher 층* 둘 다 measured-green; 측정(absorbed) 은
+  모듈 body 들 + comb oracle 대조가 남음.
