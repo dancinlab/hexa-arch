@@ -6,6 +6,25 @@
 @V := "tape" :: spec [active]
   version = "1.2"
 
+## INDEX (curated pointer table — keep in sync if you add or remove a top-level entry)
+# @D g_stdlib_ownership       — stdlib/ namespace belongs EXCLUSIVELY to hexa-lang; demiurge is consumer only   (D15)
+# @D g3_no_over_claim         — never assert unmeasured/unproven results; SKIP-mode regression banned           (D12)
+# @D g_clean_room             — prior art absorbed from public surface only; no closed-binary RE / DRM bypass   (D1)
+# @D g_decouple               — hexa-bio + comb + hexa-matter all typed-interface-consumed (decoupled)          (D2+D11)
+# @D g_scope                  — design-only rescinded; full scope incl. execution/absorption, no-big-bang       (D10+D12)
+# @D g_absorption             — per absorbed tool: one rfc_0NN, clean-room, measured gate, guarded tombstone    (-)
+# @D g_hexa_native            — absorb into hexa intrinsics, never shell out (bounded rfc_048 exception)        (D14+D18)
+# @D g_swift_native           — Swift work prefers SwiftUI/Foundation/AppKit + Apple-canonical patterns first   (D26)
+# @D g_cockpit_isolation      — cockpit/ logically outside governance boundary; reads exports/docs one-way only (D27+D41)
+# @D g_ai_agent_action_surface — cockpit/CLI may invoke AI agent as mutation intermediary; agent writes exports (D34)
+# @D g_ai_agent_chat_surface  — LEFT Chat tab routes to Claude Code API/CLI; honesty-banner on action replies   (D37+D38)
+# @D g_cockpit_reinstall      — on cockpit/ source change, re-run demiurge install so installed app stays sync  (-)
+# @D g_ssot_single_source     — one fact / one logic lives in one canonical home; derived docs are pointers     (D50)
+# @F forbidden                — hard denies f1..f6 (stdlib tree, over-claim, RE, silent-skip, early-tombstone, chat-claim)
+# @N ssot                     — pointer map: where governance + decisions + arch + progress live
+# @N n_cockpit_ar_target      — cockpit 3D viewer uses RealityKit to port to AR / visionOS spatial rendering    (D35)
+# the entries themselves are SSOT; this index is a derived pointer table per @D g_ssot_single_source / D50.
+
 @D g_stdlib_ownership := "stdlib ⊂ hexa-lang ONLY" :: governance [required d=2026-05-18 active]
   rule = "The `stdlib/` namespace belongs EXCLUSIVELY to hexa-lang. demiurge is a *consumer* of hexa-lang stdlib — it MUST NOT own or carry a `stdlib/` tree."
   demiurge_role = "가져다 쓰는 쪽 (consumer). Absorbed/re-derived reusable hexa-native modules belong in hexa-lang/stdlib/ (rfc_047/048 precedent), referenced from demiurge."
