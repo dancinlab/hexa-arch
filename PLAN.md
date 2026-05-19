@@ -3616,3 +3616,22 @@
   origin/main 으로 checkout) 까지 demiurge 측 빈-셀 producer
   (sscb·scope·cern·component 측정 라운드) 대기. demiurge 세션이
   강제로 정렬하지 않음 (동시 세션 uncommitted 작업 보존, 요약 #5).
+- 2026-05-20 — **phase κ-46 — firmware 새 도메인 (16번째) + 7-verb
+  합성→검증 seam 매핑 박제 (D73)**. 사용자 게이트 "펌웨어 완벽제작
+  → 검증 단계까지의 과정을 7verb 적절한 곳에 넣어달라" → firmware
+  를 16번째 도메인으로 추가. `domains/firmware.md` 작성 — §1
+  deliverable (signed `.elf` + SBOM + 검증 report) · §2 7-verb 1:1
+  표 (명세 IETF/AUTOSAR → 구조 Zephyr/FreeRTOS → 설계 GCC/west →
+  해석 clang-tidy/Frama-C/KLEE → 합성 arm-none-eabi-gcc + MCUboot
+  서명 → 검증 QEMU/Renode/Unity → 인계 TUF/SBOM/IEC 61508) ·
+  §5 cited sources 25건 · §7 D72 매핑 honest (adapter-only 도메인,
+  수학 kernel 없음). ABSORPTION.md ② DOMAIN_MAP "15 도메인" → "16
+  도메인" 갱신. design.md D73 audit-trail 등록 — rationale 5
+  bullets, Rejected 2개 (firmware-as-chip-subdomain · end-to-end-
+  meta-chain). reference QEMU target `qemu-system-arm -machine
+  mps2-an385` (Cortex-M3, hardware 의존 0) — 모든 7-verb cell 이
+  측정 가능 (cohort 진입 장벽 최저). g3 — design baseline 작업,
+  측정 record 0; cockpit ActionDispatch wiring 은 후속 (빈-셀 라운드
+  완료 후 통합). 빈-셀 라운드 (κ-46 동시 진행 중) 8 agent 중 3
+  rate-limited (component analyze · cern synth · rtsc analyze) — retry
+  대기, 5 알림 대기.

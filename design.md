@@ -2783,3 +2783,47 @@ hexa-lang 작업). `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md`
 에 정확한 blocker + 확보된 인프라 (SKY130/ABC) + 다음 작업 범위가
 scoped handoff 됨. 임시 측정 driver 삭제 · 메인 repo stdlib/yosys/
 checkout 원복 완료 — 측정 흔적 0.
+
+### Decision 73 — firmware 새 도메인 + 7-verb 합성→검증 seam 정의
+
+**picked**: 16 번째 도메인 `domains/firmware.md` 추가. **펌웨어
+완벽제작 → 검증** workflow 가 7-verb 의 어디에 매핑되는지 명시적으로
+박는다 — 합성(SYNTHESIZE) deliverable = signed firmware image
+(`.elf` / `.bin` + MCUboot 헤더 + SBOM); 검증(VERIFY) deliverable =
+QEMU / Renode pass list + 커버리지 + HIL report. 앞 5 verb (명세 →
+구조 → 설계 → 해석 → 인계) 도 모두 typed Record 산출물 정의
+(`requirements.json` / `arch.json` / source/ / `analysis.json` /
+`release.tar.gz`) — firmware.md §2 표 + §1 deliverable 흐름이 SSOT.
+Reference QEMU target `qemu-system-arm -machine mps2-an385` (Cortex-M3,
+hardware 의존 0). (Rejected: firmware-as-cells-of-chip-domain — chip
+은 silicon RTL/netlist 추상화, firmware 는 그 위 SW 층, 갈래 다름.
+Rejected: end-to-end-chain-as-domain-meta — 한 도메인 내 7-verb 가
+이미 chain 이므로 메타 레벨 불필요.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "지금 검증단계 말고도 펌웨어 완벽제작
+  → 검증 단계까지 과정으로 넣자 · 7verb 적절한 곳에 넣어달라".
+  firmware = 7-verb 의 *대표적 end-to-end deliverable* 사례 (산출물
+  = 실제 실행 가능한 binary, 추상 record 아님).
+- 7-verb 합성→검증 seam 이 D5 부터 추상으로만 정의됐는데, firmware
+  가 **가장 구체적** 매핑을 제공 — "make 가능한 완성품" 이라는 점이
+  firmware 에서 가장 명확. 다른 도메인 (sscb · scope · cern …) 도
+  같은 seam 패턴 follow 가능.
+- QEMU mps2-an385 reference target 으로 **모든 7-verb cell 이 측정
+  가능** — hardware 의존 0, cockpit 즉시 실행. cohort 의 rtsc(Linux-
+  pool 필요) · mobility(CARLA macOS 차단) 보다 진입 장벽 낮음.
+- D72 적용: firmware 는 build/run orchestration + signing + emulation
+  으로 수학 kernel 없음 → **adapter-only 도메인** (D72 가 "kernel
+  없는 도메인" 도 OK — 새 kernel 은 정말 새 수학일 때만).
+- chip 도메인과 직교: chip = silicon RTL/netlist (yosys/booksim),
+  firmware = 그 위 SW 층 (Zephyr/FreeRTOS/QEMU). 두 도메인이 합성→
+  검증 seam 의 두 추상 레이어 — 사용자가 firmware 를 *명시* 한 것은
+  chip-only 한계를 명시적으로 깬다는 신호.
+
+**적용**: `domains/firmware.md` 추가 완료 (16 도메인, 7-verb 1:1 표
++ §1 deliverable 흐름 + §5 cited sources + §7 D72 kernel 매핑
+honest). ABSORPTION.md ② DOMAIN_MAP "15 도메인" → "16 도메인
+(firmware added)" 갱신 완료. 새 RFC 불요 (D5 spine 이 이미 7-verb
+정의). cockpit project type `firmware` 옵션 + ActionDispatch wiring
+은 후속 라운드 (PLAN κ entry 로 인계). 측정 record 0 (도메인 추가
+자체는 design baseline 작업, 빈-셀 measurement 라운드와 독립).

@@ -80,7 +80,9 @@ N×M 폭발을 막기 위해 **2-layer** — 같은 FEM·MC·graph 커널을 도
 - **무엇이 들어가나**: §1 deliverable · §2 도구맵 · §5 인용 자료 ·
   §6 workbench shelf 옵션
 - **예**: `chip.md` · `component.md` · `brain.md` · `sscb.md` ·
-  `energy.md` ·  …(15 도메인)
+  `energy.md` · `firmware.md` ·  …(16 도메인, 2026-05-20 firmware
+  added — 7-verb 합성→검증 seam = signed firmware image →
+  QEMU/Renode/HIL 측정)
 - **누가 만드나**: domain expert + AI 합작, cited research 동반.
 
 ### ③ RECORD — typed interface
