@@ -1319,3 +1319,48 @@
     `open /Applications/demiurge.app`). 새 RFC 0, 새 design.md
     decision 0, 새 governance 0 (실행 작업 — 사용자 directive 가
     spec).
+- 2026-05-19 — **macOS 26 native 갱신: Liquid Glass + icon rail +
+  light/dark 토글 + reinstall governance**. 사용자 directive 묶음:
+  "가장 최근 macOS native 컴포넌트로 작성" / "일단 라이트 모드" /
+  "라이트·다크 변환 가능" / "가장 좌측 아이콘 only 한 줄" /
+  "수정완료시 hx install 재설치 => AGENTS.tape 등록". web search
+  (3-query) 로 macOS Tahoe 26 의 **Liquid Glass** 디자인 언어 확인
+  — `.glassEffect()` / `GlassEffectContainer` / `.glassEffectID()`
+  (WWDC25). 적용:
+  · **Package.swift** — `swift-tools-version` 5.9 → 6.2 (`.macOS
+    (.v26)` 가 PackageDescription 6.2+ 필요), platform `.v13` →
+    `.v26`. 사용자 Mini = macOS 26 (Darwin 25.5, SDK MacOSX26.4)
+    이라 최신 API 사용 가능.
+  · **Liquid Glass** — `ProvenanceBanner` 의 background+overlay 를
+    `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 8))`
+    로 — honesty-banner 가 translucent lensing material 로 렌더
+    (rfc_009 §4 의 시각 차별점이 macOS 26 native material 로).
+  · **icon rail** (5-zone layout) — body 를 `HStack { iconRail ;
+    NavigationSplitView{...} }` 로 재구성. 최좌측 52pt icon-only
+    rail (SF Symbols: `bubble.left.and.bubble.right` Chat ·
+    `list.bullet.rectangle` Artifacts · 하단 light/dark 토글).
+    rail 이 LEFT pane mode 전환 — LEFT 의 기존 segmented Picker
+    제거 (rail 이 대체). Electron 뉴스앱 스크린샷의 narrow icon
+    rail 패턴 미러.
+  · **light/dark 토글** — `@State colorScheme: ColorScheme = .light`
+    (사용자 "일단 라이트"), rail 하단 버튼이 `.light ↔ .dark`
+    swap, `.preferredColorScheme(colorScheme)`. moon/sun.max
+    아이콘 토글.
+  · **`.onChange` 최신화** — macOS 26 target 이라 macOS-13 호환용
+    single-param closure (deprecated macOS 14) → two-param form
+    `{ _, newValue in }` 으로 — deprecation warning 0.
+  · **AGENTS.tape `@D g_cockpit_reinstall`** (required d=2026-05-19)
+    — cockpit/Sources/** · Package.swift · install.sh · AppIcon/*
+    수정이 commit 될 때마다 `demiurge install` (release build →
+    .app 재조립 → /Applications/demiurge.app) 재실행, agent 가
+    cockpit-touching change set 의 last step 으로. 이유: 설치된
+    .app 이 copied release binary 라 reinstall 없으면 stale.
+  · **빌드 measured-green**: `swift run CockpitApp` PASS 3.10s ·
+    0 warnings (이전 deprecation warning 해소). Liquid Glass +
+    icon rail + light/dark 토글 모두 컴파일. `g_cockpit_reinstall`
+    준수 — 본 변경 후 `bash cockpit/install.sh` 재실행으로
+    `/Applications/demiurge.app` 갱신.
+  · **g3**: macOS 26 native 갱신 measured-green (compile). 실제
+    Liquid Glass 렌더 / icon rail UX / light↔dark 전환은 사용자
+    macOS 26 GUI 검증. 새 RFC 0, 새 design.md decision 0, 새
+    governance @D 1개 (`g_cockpit_reinstall`, 사용자 directive).

@@ -55,7 +55,7 @@ struct ProvenanceBanner: View {
                 .font(.headline)
                 .foregroundColor(.secondary)
         }
-        .background(tint.opacity(0.06))
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 8))
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(tint, lineWidth: 1)

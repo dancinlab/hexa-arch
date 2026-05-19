@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 // Demiurge cockpit + CLI — rfc_009 / rfc_010 / rfc_011 product surface.
 // design.md D22 (spec) · D27 (monorepo) · D28 (SwiftPM only) ·
 // D34 (control surface = split, GUI 직접 + CLI = AI-agent surface) ·
@@ -37,7 +37,7 @@ import PackageDescription
 let package = Package(
     name: "Demiurge",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v26)
     ],
     products: [
         .library(

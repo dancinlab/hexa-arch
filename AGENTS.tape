@@ -59,6 +59,12 @@
   dispatch = "v0: slash-command heuristic (/synth /measure /verify /analyze -> CLI; otherwise -> API). Phase ι: LLM-based intent classifier with explicit dispatch reasoning logged in chat."
   decision_ref = "design.md D37 (location) · D38 (backend) · D39 (RIGHT inspector for verbatim provenance display)"
 
+@D g_cockpit_reinstall := "cockpit edit → hx-install reinstall" :: governance [required d=2026-05-19 active]
+  rule = "Whenever cockpit/ source changes land (commit), re-run the install — `demiurge install` (= `bash cockpit/install.sh`: release build → app-icon → .app reassembly → /Applications/demiurge.app) — so the installed app stays in sync with the repo. The agent runs this as the last step of any cockpit-touching change set, before reporting done."
+  reason = "The cockpit is hx-installed as /Applications/demiurge.app (a copied release binary, NOT a live `swift run`). Without a reinstall, the installed app silently lags the repo — the user would be running stale code. Re-running install keeps measured-green build == what is installed."
+  applies_to = "any commit that modifies cockpit/Sources/** or cockpit/Package.swift or cockpit/install.sh or cockpit/AppIcon/*"
+  user_directive = "2026-05-19 — '수정완료시 에는 항상 hx install 통해서 재설치를 해줘 <= AGENTS.tape 등록'"
+
 @F forbidden := "hard denies" :: governance [required d=2026-05-18 active]
   f1 = "creating/extending a `stdlib/` tree under demiurge (g_stdlib_ownership)"
   f2 = "over-claim — asserting unmeasured 'absorbed/parity/resolved' (g3)"
