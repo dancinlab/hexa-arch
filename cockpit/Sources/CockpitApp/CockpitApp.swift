@@ -37,14 +37,8 @@ struct CockpitApp: App {
     }
 }
 
-/// Chat message (phase η-1). Backend = Claude Code CLI subprocess.
-/// `.rejected` = an over-claim REJECTED banner (rfc_011 §4.2 / @F f6).
-struct ChatMessage: Identifiable {
-    enum Role { case user, assistant, rejected }
-    let id = UUID()
-    let role: Role
-    let text: String
-}
+// ChatMessage moved to DemiurgeCore (κ-22 — shared with ChatStore;
+// @D g_ssot_single_source / D50).
 
 /// ② work-zone result view tab (κ-7) — the domain-aware canvas mode
 /// vs the exports/ reference browser (rfc_012 §7 reference view).
@@ -133,9 +127,24 @@ struct WorkbenchView: View {
             projects = ProjectStore.loadAll()            // D45 — restore manifests
             if activeProjectID == nil { activeProjectID = projects.last?.id }
             loadRecordGates()                            // κ-14 — cache for filter
+            if let active = activeProject {              // κ-22 — restore chat
+                chatMessages = ChatStore.load(for: active)
+                reflagChat()
+            }
         }
         .onChange(of: refSelection) { _, newValue in
             handleRefSelection(newValue)
+        }
+        .onChange(of: activeProjectID) { _, _ in         // κ-22 — swap chat
+            if let active = activeProject {
+                chatMessages = ChatStore.load(for: active)
+                reflagChat()
+            } else {
+                chatMessages = []
+            }
+        }
+        .onChange(of: chatMessages) { _, _ in            // κ-22 — persist
+            persistChat()
         }
     }
 
@@ -335,13 +344,36 @@ struct WorkbenchView: View {
     /// Append a red REJECTED banner right after an over-claiming reply
     /// (rfc_011 §4.2). The reply itself stays visible — the banner
     /// marks it as not-trustworthy, it does not hide it.
+    static let rejectionBannerText =
+        "이 응답은 측정·parity·흡수를 주장하지만 그것을 뒷받침하는 "
+        + "exports/ record 가 없습니다. 측정 없이는 ✅ 로 인정되지 "
+        + "않습니다 (g3 / @F f6)."
+
     private func flagIfOverclaim(_ reply: String) {
         guard Self.overclaims(reply) else { return }
-        chatMessages.append(ChatMessage(
-            role: .rejected,
-            text: "이 응답은 측정·parity·흡수를 주장하지만 그것을 뒷받침하는 "
-                + "exports/ record 가 없습니다. 측정 없이는 ✅ 로 인정되지 "
-                + "않습니다 (g3 / @F f6)."))
+        chatMessages.append(ChatMessage(role: .rejected, text: Self.rejectionBannerText))
+    }
+
+    /// After a disk load, regenerate REJECTED banners from the live
+    /// guard (κ-22) — banners are never persisted (ChatStore drops
+    /// `.rejected`), so the honesty marker always reflects the
+    /// current guard, not a stale copy (g3).
+    private func reflagChat() {
+        var rebuilt: [ChatMessage] = []
+        for msg in chatMessages where msg.role != .rejected {
+            rebuilt.append(msg)
+            if msg.role == .assistant, Self.overclaims(msg.text) {
+                rebuilt.append(ChatMessage(role: .rejected, text: Self.rejectionBannerText))
+            }
+        }
+        chatMessages = rebuilt
+    }
+
+    /// Persist the active project's chat (κ-22). `.rejected` banners
+    /// are filtered out by ChatStore — only user/assistant round-trip.
+    private func persistChat() {
+        guard let active = activeProject else { return }
+        try? ChatStore.save(chatMessages, for: active)
     }
 
     /// Async wrapper around the shared `ActionDispatch.askClaude`

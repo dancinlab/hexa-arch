@@ -58,7 +58,7 @@ public struct F1F2Record: Codable, Identifiable {
     }
 
     /// rfc_002 §4 measurement_gate enum.
-    public enum MeasurementGate: String, Codable {
+    public enum MeasurementGate: String, Codable, CaseIterable {
         case open               = "GATE_OPEN"
         case bPinnedMet         = "GATE_B_PINNED_MET"
         case closedMeasured     = "GATE_CLOSED_MEASURED"

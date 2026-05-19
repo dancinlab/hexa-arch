@@ -15,6 +15,9 @@
 //   demiurge list-shelf <domain>      Show a domain's §6 shelf options
 //   demiurge action <verb>            θ-2 action — dispatch a 7-verb
 //                                     stage to claude (rfc_011 §6, κ-5/κ-15)
+//   demiurge list-gates               F1F2 records grouped by gate
+//   demiurge verify <path|id>         provenance / claim-gate consistency
+//   demiurge gate-summary             one-screen gate + absorbed totals
 //
 // Project subcommands read the SAME manifests the cockpit writes
 // (~/Library/Application Support/lab.dancin.demiurge/projects/, D45)
@@ -56,6 +59,10 @@ func usage() {
                                         synthesize/synth/verify/measure/
                                         handoff; 한글 명세/구조/설계/해석/
                                         합성/검증/인계 also accepted)
+      demiurge list-gates              F1F2 records grouped by gate
+      demiurge verify <path|id>        provenance / claim-gate check
+                                       (exit 0 consistent · 1 not)
+      demiurge gate-summary            gate + absorbed totals
       demiurge --version | -v          Print version
       demiurge --help    | -h          This help
 
@@ -237,6 +244,99 @@ func cliAction(_ verbStr: String) -> Int32 {
     return 0
 }
 
+/// Resolve a CLI arg to a record — try it as a relative exports/ path
+/// first, then as a recordId via ArtifactRegistry (same DemiurgeCore
+/// loaders the cockpit uses — @D g_ssot_single_source).
+func resolveRecord(_ arg: String) -> Result<F1F2Record, RecordLoaderError> {
+    let byPath = RecordLoader.load(relativePath: arg)
+    if case .success = byPath { return byPath }
+    for stub in ArtifactRegistry.loadF1F2() {
+        let r = RecordLoader.load(relativePath: stub.path)
+        if case .success(let rec) = r, rec.recordId == arg { return r }
+    }
+    return byPath
+}
+
+/// `list-gates` — every F1F2 record grouped by measurement_gate.
+func listGates() -> Int32 {
+    var byGate: [F1F2Record.MeasurementGate: [(String, Bool, String)]] = [:]
+    for stub in ArtifactRegistry.loadF1F2() {
+        guard case .success(let r) = RecordLoader.load(relativePath: stub.path) else { continue }
+        byGate[r.provenance.measurementGate, default: []]
+            .append((r.recordId, r.provenance.absorbed, stub.title))
+    }
+    for gate in F1F2Record.MeasurementGate.allCases {
+        let rows = byGate[gate] ?? []
+        print("\(gate.displayLabel) (\(rows.count)):")
+        for (rid, absorbed, title) in rows {
+            print("  \(rid)  absorbed=\(absorbed)  \(title)")
+        }
+    }
+    return 0
+}
+
+/// `gate-summary` — one-screen gate + absorbed totals.
+func gateSummary() -> Int32 {
+    var counts: [F1F2Record.MeasurementGate: Int] = [:]
+    var total = 0, absorbedTrue = 0, absorbedFalse = 0
+    for stub in ArtifactRegistry.loadF1F2() {
+        guard case .success(let r) = RecordLoader.load(relativePath: stub.path) else { continue }
+        total += 1
+        counts[r.provenance.measurementGate, default: 0] += 1
+        if r.provenance.absorbed { absorbedTrue += 1 } else { absorbedFalse += 1 }
+    }
+    print("total records: \(total)")
+    for gate in F1F2Record.MeasurementGate.allCases {
+        let n = counts[gate] ?? 0
+        let pct = total > 0 ? Double(n) / Double(total) * 100 : 0
+        let label = gate.displayLabel
+        let pad = String(repeating: " ", count: max(0, 22 - label.count))
+        print("  \(label)\(pad)\(n)  (\(String(format: "%.1f", pct))%)")
+    }
+    print("absorbed=true:  \(absorbedTrue)")
+    print("absorbed=false: \(absorbedFalse)")
+    return 0
+}
+
+/// `verify <path|id>` — provenance completeness + claim/gate
+/// consistency (rfc_002 §4 + rfc_011 §4.2). exit 0 = consistent.
+func verifyRecord(_ arg: String) -> Int32 {
+    let result = resolveRecord(arg)
+    guard case .success(let r) = result else {
+        if case .failure(let e) = result {
+            FileHandle.standardError.write(
+                Data("verify: \(e.errorDescription ?? "load failed")\n".utf8))
+        }
+        return 1
+    }
+    var ok = true
+    func check(_ name: String, _ pass: Bool, _ detail: String = "") {
+        let tag = pass ? "[OK]  " : "[FAIL]"
+        print("\(tag) \(name)\(detail.isEmpty ? "" : " — \(detail)")")
+        if !pass { ok = false }
+    }
+    let p = r.provenance
+    check("recordId", !r.recordId.isEmpty)
+    check("provenance.simEngine non-empty", !p.simEngine.isEmpty)
+    check("provenance.simCommitHash non-empty", !p.simCommitHash.isEmpty)
+    check("provenance.consumerTarget non-empty", !p.consumerTarget.isEmpty)
+    check("provenance.atlasCiteBlock non-empty", !p.atlasCiteBlock.isEmpty)
+    let claimText = "\(r.verdict.f1) \(r.verdict.f2) \(r.verdict.rationale)".lowercased()
+    let markers = ["absorbed", "parity", "측정완료", "gate_closed", "검증완료"]
+    let claims = markers.contains { claimText.contains($0) }
+    let measured = (p.measurementGate == .bPinnedMet || p.measurementGate == .closedMeasured)
+    check("verdict claim vs gate consistent",
+          !(claims && !measured),
+          claims && !measured
+            ? "verdict asserts a measurement but gate = \(p.measurementGate.displayLabel)"
+            : "")
+    if !ok {
+        FileHandle.standardError.write(
+            Data("verify: REJECTED — record inconsistent (rfc_011 §4.2 / @F f6)\n".utf8))
+    }
+    return ok ? 0 : 1
+}
+
 let args = CommandLine.arguments
 
 guard args.count >= 2 else {
@@ -292,6 +392,17 @@ case "action":
         exit(2)
     }
     exitCode = cliAction(args[2])
+case "list-gates":
+    exitCode = listGates()
+case "gate-summary":
+    exitCode = gateSummary()
+case "verify":
+    guard args.count >= 3 else {
+        FileHandle.standardError.write(Data("verify: missing <path|id> argument\n".utf8))
+        usage()
+        exit(2)
+    }
+    exitCode = verifyRecord(args[2])
 default:
     FileHandle.standardError.write(Data("unknown subcommand: \(args[1])\n".utf8))
     usage()

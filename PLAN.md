@@ -1877,3 +1877,26 @@
   verify/gate-summary) 는 sub-agent usage limit (10pm KST reset)
   으로 0 tool_use 미착수. 다음 세션 pickup. **g3 정직**: L/K
   measured-green, I/J 는 *시작 안 함* (부분작업 0 — 위조 0).
+- 2026-05-19 — **phase κ-22/κ-23 — I (chat 영속화) + J (CLI gate
+  명령)** (sub-agent usage limit → main session 직접 순차 구현).
+  **κ-22 (I)** — chat history 영속화: `ChatMessage` 를 cockpit
+  struct → DemiurgeCore (Codable·Equatable·Sendable, cockpit·
+  ChatStore 공유, g_ssot_single_source) · 신규 `DemiurgeCore/
+  Loaders/ChatStore.swift` (save/load, `~/Library/Application
+  Support/lab.dancin.demiurge/projects/<uuid>/chat.json`, ProjectStore
+  패턴) · CockpitApp: onAppear/onChange(activeProjectID) chat
+  load+reflag · onChange(chatMessages) persist · `reflagChat()`
+  (load 후 REJECTED 배너 live 가드로 재생성) · rejection 텍스트
+  static 상수화. **g3 정직**: `.rejected` 배너는 *persist 안 함*
+  — ChatStore 가 save 시 drop, load 시 over-claim 가드가 재생성
+  (정직 마커는 항상 live 가드 기준, stale 디스크 사본 아님).
+  **κ-23 (J)** — CLI gate 명령 3: `MeasurementGate` +CaseIterable ·
+  `list-gates` (gate별 record 그룹) · `gate-summary` (gate +
+  absorbed 총계 %) · `verify <path|id>` (provenance 4필드 non-empty
+  + verdict claim↔gate 일관성, exit 0/1) — 전부 ArtifactRegistry/
+  RecordLoader/F1F2Record 공용 (CLI↔cockpit 멱등). 측정: `swift
+  run CockpitApp` 빌드 green (24.36s) · `gate-summary` → **48
+  records 전부 GATE_OPEN · absorbed=false** (engine tool 0 의
+  실측 정직 노출) · `verify <record>` → 6 checks [OK] exit 0.
+  P-⑦ #1..#5 + I + J + L + K 모두 closed. 다음 = cross-repo
+  세션 (D+E hexa-lang / F component) 또는 신규.
