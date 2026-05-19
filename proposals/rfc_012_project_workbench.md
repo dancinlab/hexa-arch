@@ -1,13 +1,11 @@
 # rfc_012 — Project workbench (cockpit evolution: viewer → workbench)
 
-> Status: **DISCUSSION COMPLETE** (2026-05-19) — §8's seven open
-> questions are all resolved through step-by-step discussion. Still
-> NOT locked: no `design.md` decision, no governance change, no code
-> yet — `design.md` decision-lock + implementation are a separate
-> step (the user has been running this in discussion-only mode).
-> Builds-on: `rfc_009` / `rfc_010` / `rfc_011` (the cockpit so far —
-> a read-only record viewer). This RFC is the discussion of turning it
-> into a project workbench.
+> Status: **IMPLEMENTED** (2026-05-19) — §8's seven questions were
+> resolved by discussion, locked as `design.md` D42–D48 + D49, and
+> built as cockpit phases κ-1..κ-8 (workbench live, every phase
+> measured-green). Builds-on: `rfc_009` / `rfc_010` / `rfc_011` (the
+> cockpit's earlier read-only viewer form). This RFC turned it into a
+> project workbench. See §9 for the honest implemented-state.
 
 ---
 
@@ -260,23 +258,28 @@ belongs to which project and weakens g3 provenance tracing.)
 
 ---
 
-## 9. State — discussion complete, not yet locked (g3)
+## 9. State — implemented (g3)
 
-§8's seven questions are all resolved through step-by-step
-discussion. But this is STILL not built:
-- no `design.md` decision is locked (the resolved §8 picks would
-  become a batch of `### Decision N` blocks — D42.. — when the user
-  says go);
-- no governance changed (§7 needs a `@D g_cockpit_isolation`
-  cockpit-app-state clause; the workbench needs the existing
-  `@D g_ai_agent_action_surface` for records);
-- no code written — the cockpit is still the rfc_009–011 read-only
-  viewer (commit `1a6da4c`).
+§8's seven questions were resolved by discussion, then:
+- **locked** — `design.md` D42–D48 (the seven picks) + D49 (θ-2 =
+  mechanism-skeleton first);
+- **governance** — `@D g_cockpit_isolation` gained the app-state
+  clause (e); `@D g_stdlib_ownership` reaffirmed; `@N ssot.decisions`
+  carries D1..D49;
+- **built** — cockpit phases κ-1..κ-8, every phase measured-green
+  (`swift run CockpitApp`): κ-1 workbench scaffold (3-column) ·
+  κ-2 manifest persistence · κ-3 ingredient shelf + verb progress ·
+  κ-4 chat ↔ verb binding · κ-5 θ-2 action skeleton · κ-6 §4.2
+  REJECTED guard · κ-7 domain-aware canvas mode · κ-8 UX polish.
+  Installed as `/Applications/demiurge.app`.
 
-So rfc_012 is a *complete design* awaiting an explicit lock+build
-go-ahead — same DESIGN/build separation as rfc_009 (D22) and the
-phase-α..ι sequence. Honest position: the project-workbench is
-fully designed on paper, zero of it is built.
+Honest remaining gaps (g3): demiurge has **zero engine tools** to run
+(θ-2 reports "no tool" — Yosys §4 unimplemented, booksim in
+hexa-lang/stdlib), so projects carry zero measured records and no
+verb stage is ✅; the ingredient-shelf options + domain inference are
+κ-stubs; the REJECTED guard is a string-match heuristic; the 3D
+viewer is the ι-phase procedural placeholder. The workbench *frame*
+is complete and live; real measurement awaits engine tools.
 
 ---
 

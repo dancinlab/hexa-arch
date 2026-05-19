@@ -48,16 +48,18 @@
 
 ## 현재 정직한 위치 (g3 — over-claim 금지)
 
-**4-Phase 설계 design-complete, 코드·앱·wired·absorbed 모두 0.**
+**4-Phase 설계 design-complete · macOS cockpit workbench 골격 live
+(κ-1~κ-8) · wired·absorbed·측정 record 모두 0.**
 north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
 
 - ✅ **설계 골격 완결**: 7-verb spine cited (9 라이프사이클·D5) ·
   **15 도메인 공개면 맵** (13 Cohort cited + `component.md` cited
-  this session per D21 + `matter/` D17 pointer) · **RFC 9건**
-  (rfc_001/002/003 booksim+F1F2·rfc_004 e2e·rfc_005 SUPERSEDED D17·
-  rfc_006 Yosys 설계+D18/D19·rfc_007/008 두 seam v0·rfc_009 macOS
-  Swift cockpit spec) · **design.md D1–D22 감사추적** ·
-  AGENTS.tape 거버넌스 (D22 정합) · CHARTER+HANDOFF reconciled.
+  per D21 + `matter/` D17 pointer) · **RFC 12건** (rfc_001/002/003
+  booksim+F1F2·rfc_004 e2e·rfc_005 SUPERSEDED D17·rfc_006 Yosys
+  설계+D18/D19·rfc_007/008 두 seam v0·rfc_009 cockpit spec·rfc_010
+  cockpit arch·rfc_011 control surface·rfc_012 project workbench
+  IMPLEMENTED) · **design.md D1–D49 감사추적** · AGENTS.tape
+  거버넌스 (D49 정합) · CHARTER+HANDOFF reconciled.
 - ✅ **hexa-matter measured-parity 검증됨 (단 hexa-lang 소유 — D17)**:
   selftest **38/38** · parity **29/29** 는 실측 사실이나 **hexa-lang
   의 이미 완료된 흡수** (D17 = hexa-lang SSOT · demiurge =
@@ -69,23 +71,33 @@ north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
 - ✅ **component cited-research debt 상환** (debt ①): KiCad·Elmer·
   openEMS 등 10 OSS + ANSYS Icepak·COMSOL 등 4 상용 검증, 출처
   15건 §5 등재, 13맵과 동급 provenance.
+- ✅ **macOS cockpit = project workbench 골격 완결 (κ-1~κ-8,
+  measured-green)**: rfc_012 workbench — ①7-verb recipe rail ·
+  ②work zone (canvas mode) · ③LLM chat "요리 선생님" · ④toolbar
+  3-column + `+` 프로젝트 생성 + manifest 영속화 (App Support,
+  D45) + 재료 선반 + verb 진행 + chat↔verb 연동 + θ-2 액션 골격 +
+  §4.2 REJECTED 가드 + domain-aware canvas mode + UX 마감. 매
+  phase `swift run` 빌드 green · `/Applications/demiurge.app`
+  설치. 단 *틀* 완결이지 측정 0 (아래 🕳️).
 - 🟡 **chip §B = `GATE_B_PINNED_MET`** — pinned PASS(모델 단순화),
   full-curve parity·§D 미입증; `absorbed=false` 유지.
-- 🕳️ **코드·앱 0** (Swift 빌드 = D22 downstream OOS) · **seam records
-  0** (rfc_007/008 v0, `records/` 의도적 빈칸 = g3 위조 0) ·
-  **Yosys §4 모듈 미구현** (hexa-lang 세션, D19) · **`d5a63a82`
-  미push** (hexa-lang 세션 ahead 18) · 어떤 도메인도 `absorbed=true`
-  아님.
+- 🕳️ **engine tool 0** — θ-2 가 돌릴 실제 측정 도구 0개 (Yosys §4
+  미구현 = hexa-lang 세션·D19; booksim = hexa-lang/stdlib) → 어떤
+  프로젝트도 측정 record 0 · 어떤 verb 도 ✅ 아님 (workbench 는
+  *틀*만 live) · **seam records 0** (rfc_007/008 v0, `records/`
+  의도적 빈칸 = g3 위조 0) · **`d5a63a82` 미push** (hexa-lang
+  세션) · 어떤 도메인도 `absorbed=true` 아님.
 
 > GOAL 한 줄(north-star)은 불변 — 달성 주장 아님, 측정 거리 명시.
 
 ## cross-link
 
-- `design.md` — D1–D16 결정 감사추적 (gated picks SSOT)
+- `design.md` — D1–D49 결정 감사추적 (gated picks SSOT)
 - `AGENTS.tape` — 강제 거버넌스 (`g_stdlib_ownership`·g3·`@F`)
 - `CHARTER.md` + `HANDOFF.md` — mission / arch / why
 - `PLAN.md` — `## 계획`(GUI 완성까지 forward) + `## 진행 로그`(append-only)
-- `proposals/rfc_001..005` · `domains/`(14 + `matter/`) · `archive/comb/`
+- `proposals/rfc_001..012` · `cockpit/` (Swift workbench, κ-1..κ-8) ·
+  `domains/`(14 + `matter/`) · `archive/comb/`
 - `README.md` — 콜드 엔트리 7-verb 가족
 
 ---
@@ -104,3 +116,11 @@ north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
   0 · seam records 0 (v0 의도적 빈칸) · Yosys §4 미구현 (hexa-lang
   세션) · `d5a63a82` 미push만 (g3 정정: 61866308 은 이미 push됨). 새
   결정 없음 — position-section 정합만.
+- 2026-05-19 — workbench κ-1~κ-8 구현을 "현재 위치" 에 반영
+  (north-star 불변, position-section 갱신). rfc_012 DISCUSSION
+  COMPLETE → IMPLEMENTED · design.md D42–D49 lock · cockpit =
+  viewer → project workbench 골격 live (8 phase 전부 measured-green ·
+  `/Applications/demiurge.app` 설치). 새 측정 fact: macOS cockpit
+  workbench · RFC 12건 · D1–D49. g3 갭 정직 갱신: '코드·앱 0' →
+  'workbench *틀* live, 측정 record 0' — 핵심 갭은 **engine tool 0**
+  (θ-2 가 돌릴 실제 도구 없음). 새 결정 없음 — position 정합만.

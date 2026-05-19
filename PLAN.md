@@ -1623,3 +1623,18 @@
   canvas mode + UX 마감 까지 골격 완결. 다음 = 문서 정합
   (rfc_012 status / AGENTS.tape @N / GOAL.md 현재위치) 또는
   CLI ↔ Project 정합 — 미정.
+- 2026-05-19 — **SSOT 문서 정합 — κ-1~κ-8 반영** (코드 0, reconcile
+  only). rfc_012 status `DISCUSSION COMPLETE` → **IMPLEMENTED** ·
+  §9 "discussion complete, not yet locked" → "implemented" (D42–D49
+  lock + governance + κ-1..κ-8 measured-green + g3 정직 갭 명시).
+  AGENTS.tape `@N ssot.decisions` D1..D41 → **D1..D49** (D49 요지
+  추가, rfc_012 = "IMPLEMENTED as κ-1..κ-8" 표기) · `arch_why` 에
+  D23..D49 + κ phase 포인터. GOAL.md "현재 정직한 위치" post-κ8
+  갱신: 머리줄 "코드·앱 0" → "macOS cockpit workbench 골격 live
+  (κ-1~κ-8)" · 새 ✅ workbench 항목 · RFC 9건 → 12건 · D1–D22 →
+  D1–D49 · 🕳️ 갭 "코드·앱 0" → "**engine tool 0**" (핵심 갭
+  재정의 — θ-2 가 돌릴 실제 측정 도구 없음 → 측정 record 0 ·
+  ✅ verb 0) · cross-link + Log 갱신. **g3 정직**: 새 결정 0 ·
+  측정 사실만 반영 — north-star 불변, position-section 정합.
+  cockpit 코드 무변경이라 재설치 불요. 다음 = CLI ↔ Project
+  정합 또는 신규 작업 — 미정.
