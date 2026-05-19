@@ -1701,3 +1701,56 @@ export.)
   버튼 + DemiurgeCLI `emit-component` + DemiurgeCLI `action
   synthesize component` 셋의 단일 진입점 그대로. 셋 다 동일 record
   emit.
+
+### Decision 57 — `grid + structure` producer = NetworkX IEEE 14-bus (P-⑧ cohort #2, κ-36)
+
+**picked**: `grid + structure` (architect 셀) 의 producer 를 **NetworkX
+3.2.1 graph-topology 측정기**로 배선한다 — IEEE 14-bus 표준 reference
+(Christie 1962 / pglib-opf case14) 를 canonical 토폴로지로 사용하고,
+`diameter` · `avg_shortest_path_hops` · `bisection_min_cut_edges`
+(edge-connectivity) · top-N betweenness/degree centrality 를 deterministic
+metric 으로 emit. 두 번째 cohort producer (κ-34 / D55 의 sscb+analyze
+ngspice producer 다음 — pickup note `inbox/notes/cohort-pickup-grid-
+networkx-producer.md` 의 runner-up 을 라이브화). 본 셀의 `measurement_
+gate = GATE_CLOSED_MEASURED` 는 honest 함 — 그래프 메트릭은 NetworkX
+의 IEEE-754 deterministic 솔버가 produce 하는 **수학적 사실** 이지
+model prediction 이 아님. 단 `absorbed = false` 영구 — NetworkX 는
+외부 Python 라이브러리, hexa-lang stdlib 미흡수 (D17 mirror — 외부
+도구가 owner, demiurge 는 consumer). (Rejected: ① fat-tree/leaf-spine
+/dragonfly 토폴로지 즉시 합성 — pickup note 의 원안이지만 *plausible*
+topology 라 GATE_OPEN 으로 강등됨, 첫 producer 부터 ↑ gate 손해; ②
+다른 그래프 lib (igraph / graph-tool) — NetworkX 이미 host 설치 +
+순수 Python = 빌드 zero, 다른 lib 는 C 의존성 + 동등 metric set; ③
+DC fabric manifest 직접 ingest — Meta/Google 공개 manifest 미존재,
+clean-room 위반 위험.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — pickup note runner-up 을 κ-34 의 sscb
+  producer 다음 단계로 채택. cohort producer #2 = breadth survey
+  의 13 도메인 중 *두 번째* 가 measuring 도구를 통과.
+- GOAL 갭 ("측정 record 0") 직격 — 본 producer 가 emit 하는
+  GridRecord 는 **GATE_CLOSED_MEASURED** 첫 사례 (chip F1F2 외).
+  sscb 의 GATE_OPEN 보다 epistemic 격상 — graph metric 은 model
+  parameter 가 아니라 topology 위에서 unique 하게 결정.
+- IEEE 14-bus = 표준 reference 의 이유: ① 1962년 이래 power systems
+  교과서에 박혀 *모범 예제* 격 (재현성 100%), ② demiurge `grid`
+  도메인 = AI 데이터센터 fabric 이지만 본 caveat #1 에서 명시 ("
+  power-grid reference, AI-DC fabric 아님"), ③ fat-tree 합성에 비해
+  edge list 가 압축적 (14 nodes / 20 edges) 으로 record JSON 크기
+  관리 가능.
+- absorbed=false 절대 금지 (g3 / @F f6): NetworkX 는 hexa-lang
+  stdlib 가 아닌 외부 Python 라이브러리. `hexa-graph` stdlib 가
+  들어와 동일 metric 을 수치 동일 재현하면 그때 absorbed flip — 본
+  phase 는 scope out. scope_caveats 4종 박제 (power-grid reference /
+  link-count-not-Gbps / closed-measured-scope-limited / absorbed=
+  false-permanent).
+- D53 "measurable-only 셀 매핑" 과 정합 — 본 결정은 매핑 자체를
+  3 → 4 셀로 확장 (`(.structure, "grid")` 추가). 다만 D53 의
+  "측정 가능한 2 verb = 합성·검증" 정책은 약간 확장 — *structure*
+  (architect) 도 그래프 위에서는 측정 가능하기 때문. 후속 가이드:
+  "측정 가능한 verb 는 도메인 마다 다르다 — 단정 금지" (D53 본문
+  주석으로 추가하지 않고 본 D57 의 rationale 에 한정).
+- D50 g_ssot_single_source 준수 — GridStructureProducer 가 cockpit
+  ▶ 버튼 + DemiurgeCLI `action structure grid` 양쪽의 단일 진입점.
+  Python 측 `grid_networkx.py::build_ieee14_edges()` 가 edge list
+  의 SSOT, Swift 는 `edges_sha256_16` 으로 cross-host drift 감시.

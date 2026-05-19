@@ -13,6 +13,8 @@
 //
 // κ-30 (this commit, D53): adds `matter + analyze` → MatterAnalyzer.
 // κ-34 (D55): adds `sscb + analyze` → SSCBProducer (ngspice 46 transient).
+// κ-36 (D57): adds `grid + structure` → GridStructureProducer
+//             (NetworkX 3.2.1 graph metrics on IEEE 14-bus reference).
 //
 // Currently wired:
 //   • component + synthesize → ComponentEmitter.emitBundled
@@ -34,6 +36,14 @@
 //                              measuring-producer threshold; real
 //                              numbers, plausible-not-absorbed circuit,
 //                              GATE_OPEN永구 / absorbed=false ALWAYS)
+//   • grid      + structure  → NetworkX 3.2.1 graph-topology producer
+//                              (κ-36 / D57 — SECOND cohort producer;
+//                              IEEE 14-bus canonical reference,
+//                              deterministic graph metrics →
+//                              GATE_CLOSED_MEASURED honest, but
+//                              absorbed=false since NetworkX is external
+//                              and the topology is power-grid reference
+//                              not AI-DC fabric)
 //
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
@@ -115,6 +125,8 @@ public enum ActionDispatch {
             return runMatterAnalyze()
         case (.analyze, "sscb"):
             return runSSCBAnalyze()
+        case (.structure, "grid"):
+            return runGridStructure()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -170,6 +182,31 @@ public enum ActionDispatch {
     /// turn into real producers, narrow scope is honest g3.
     private static func runSSCBAnalyze() -> ActionResult {
         let r = SSCBProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `grid + structure` engine tool (κ-36 / D57) — spawn NetworkX
+    /// 3.2.1 via `cockpit/scripts/grid_networkx.py` to build the IEEE
+    /// 14-bus canonical reference graph (Christie 1962 / pglib-opf
+    /// case14), compute deterministic graph metrics (diameter, avg
+    /// shortest path, edge-connectivity, top-N betweenness / degree),
+    /// then persist a typed `GridRecord` under
+    /// `exports/grid/structure/<stamp>/`. Producer = `networkx@<v>`.
+    ///
+    /// Honesty (g3): unlike SSCB which stays GATE_OPEN (plausible-not-
+    /// absorbed circuit), this cell can honestly land
+    /// GATE_CLOSED_MEASURED — IEEE 14-bus is a published reference
+    /// topology and the metrics ARE mathematical facts. BUT
+    /// absorbed=false ALWAYS (NetworkX external) AND scope_caveat #1
+    /// surfaces that IEEE 14-bus is power-grid reference, not the
+    /// AI-DC fat-tree the demiurge `grid` domain actually targets
+    /// (cohort producer #2 — proves the wiring on canonical data).
+    private static func runGridStructure() -> ActionResult {
+        let r = GridStructureProducer.runStructure()
         return ActionResult(
             text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],

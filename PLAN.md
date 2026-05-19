@@ -2484,3 +2484,74 @@
     하여 단일 SSOT. ④ cockpit GUI Component 탭이 STEP 파일을 직접
     렌더 (현재는 USDA only) — RealityKit STEP 미지원 → Open Cascade
     Cascade.js 같은 web 뷰 또는 STL 폴백.
+- 2026-05-20 — **phase κ-36 — `grid + structure` 셀을 NetworkX
+  IEEE 14-bus producer 와 배선 (P-⑧ cohort #2)** (rfc_011 §6.3 · D57 ·
+  D53 cite · D50 g_ssot_single_source · g3). κ-34 의 sscb+analyze
+  ngspice producer 다음 단계로, pickup note `inbox/notes/cohort-pickup-
+  grid-networkx-producer.md` 의 runner-up 을 라이브화. 두 번째 cohort
+  도메인이 measuring 도구를 통과하며 매핑 셀 3 → 4.
+  - **신규 SSOT**: `cockpit/scripts/grid_networkx.py` — Python sidecar,
+    `build_ieee14_edges()` 가 IEEE 14-bus (14 nodes / 20 edges) 의
+    canonical edge list SSOT (Christie 1962 / pglib-opf case14, 1-
+    indexed bus 번호). `compute_metrics(nx, g)` 가 deterministic
+    graph 메트릭 9 종 (`node_count` · `edge_count` · `is_connected` ·
+    `density` · `diameter` · `radius` · `avg_shortest_path_hops` ·
+    `average_clustering` · `bisection_min_cut_edges` (edge-connectivity,
+    LINK 수)) + top-N=3 centrality 2 종 (`top_betweenness` · `top_
+    degree`, ties broken by node id) 출력. emit 산물: `<output_dir>/
+    grid_ieee14_v1.gml` (NetworkX round-trip safe) + `.meta.json`
+    (edges hash + version + measurements + topology + artifacts).
+    stderr 의 `GRID_NETWORKX_RESULT <json>` 1줄 = Swift 쪽 parse 마커.
+  - **신규**: `DemiurgeCore/Loaders/GridStructureProducer.swift` —
+    Swift harness. (a) `locatePython3()` 가 `/usr/bin/python3` (macOS
+    system) + brew prefix + PATH 후보 탐색 (없으면 nil), (b)
+    `locateScript()` 가 `<projectRoot>/cockpit/scripts/grid_networkx.py`
+    위치 확인, (c) `Process` 로 `python3 <script> <output_dir>` spawn
+    (per-run timestamped subdir 로 consecutive run 충돌 방지), (d)
+    merged stdout/stderr 에서 `GRID_NETWORKX_RESULT <json>` 파싱, (e)
+    defence-in-depth: 각 claimed file 의 디스크 존재 + non-zero size
+    검증.
+  - **신규**: `DemiurgeCore/Models/GridRecord.swift` — typed sidecar.
+    `GridRecord` (interface `"demiurge:grid:structure-record"` ·
+    schema_version `"1.0"`) + `GridTopology` (name / source /
+    node_count / edge_count / edges) + `GridMeasurements` (9 종 +
+    centrality) + `GridProvenance` (absorbed / producer /
+    measurement_gate / scope_caveats) + `GridCentralityRow`
+    (node / score).
+  - **확장**: `DemiurgeCore/Loaders/ActionDispatch.swift` — `(.structure,
+    "grid") → runGridStructure()` 케이스 1줄 + 헤더 comment + private
+    helper 함수 1개 추가. CLI / cockpit 진입점 byte-identical (D50)
+    그대로 — `runEngineTool(verb:, domain:)` 의 switch 만 확장.
+  - **g3 정직 갭 (제일 중요)**: ① IEEE 14-bus 는 POWER-GRID 표준
+    reference — demiurge `grid` 도메인은 AI 데이터센터 fabric. 본
+    producer 는 cohort producer #2 의 WIRING 을 canonical graph 위에
+    증명, hyperscaler DC fat-tree manifest 아님. ② bisection_min_cut_
+    edges 는 LINK 수 (정수) — Gbps 아님. SerDes / congestion control
+    가정 없음. 실제 DC bisection BW gate 는 ns-3/SST + HFSS/Sigrity
+    SI 후속 phase. ③ measurement_gate = GATE_CLOSED_MEASURED — graph
+    metric 은 deterministic 수학적 사실 (IEEE-754 솔버) → F1F2 chip
+    record 와 동일한 epistemic class. **단** SCOPE 는 power-grid
+    reference (caveat #1). ④ absorbed=false 영구 — NetworkX 는 외부
+    Python 라이브러리, hexa-lang stdlib 미흡수. `hexa-graph` stdlib
+    가 들어와 동일 metric 을 수치 동일 재현하면 그때 absorbed flip
+    (이번 phase 는 scope out, D17 mirror).
+  - **측정 (이 worktree, mac local, swift 6.3.1, python3 3.9.6,
+    networkx 3.2.1)**: `swift run DemiurgeCLI action structure grid` →
+    `python3 grid_networkx.py — exit 0, nodes=14, edges=20` ·
+    `networkx version: 3.2.1` · `artifacts: gml, meta` · 새 record →
+    `exports/grid/structure/2026-05-19T17-13-13Z/grid_structure_
+    20260519T171313Z.json` (3451 bytes). 측정값: diameter=5 / avg_sp=
+    2.374 hops / bisection=1 link / top betweenness = bus 4 (score
+    0.314 — IEEE 14-bus 의 중앙 transmission hub, 문헌과 일치) /
+    edges_sha256_16=`03f0b497e46795bb`. 빌드 green (pre-existing
+    RealityKit MainActor warning 만, 에러 0 · 신규 warning 0).
+  - **다음 pickup**: ① bisection BW 의 Gbps 환산 — NetworkX min-cut
+    × per-link BW (SerDes channel + congestion model) = 진짜 DC
+    bisection BW, ns-3/SST 와 통합 셀 (`grid + analyze`). ② DC fat-
+    tree / leaf-spine / dragonfly 합성 — Al-Fares 2008 알고리즘 +
+    NetworkX 로 plausible AI-DC topology, GATE_OPEN 으로 (실제 manifest
+    아님). ③ `hexa-graph` stdlib 첫 등록 — NetworkX 의 핵심 알고리즘
+    (BFS shortest path, edge connectivity) 을 hexa-lang 으로 재구현
+    후 absorbed=true 자격 검증. ④ 나머지 10 cohort 도메인 (antimatter
+    / aura / bot / brain / cern / fusion / mobility / rtsc / scope /
+    space / energy) 의 다음 producer 발굴 — pickup note 패턴 재사용.
