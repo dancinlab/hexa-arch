@@ -3038,3 +3038,48 @@
     sscb_ngspice.py` (D61 위반 신생아) → `hexa run
     stdlib/sscb/sscb.hexa <subcmd>` 호출로 마이그레이션 (D61 batch
     round 와 정합).
+
+- 2026-05-20 — **phase κ-44 addendum — component Stage 2 hexa-native
+  port (thermal) landed** (D66 의 "다음 pickup ①" 승격 · 사용자
+  게이트 "hexa-native 작성 .hexa" + "hexa upstream 필요시 이 세션에서
+  진행" autonomy mode · g3 · ABSORPTION.md 4-stage 표 기준 component
+  의 첫 Stage 2 전이). κ-44 의 "다음 pickup ① Stage 2 hexa-native
+  port" 가 — 본 세션에서 — thermal 부분 한정 완료. demiurge `.swift`
+  0줄 수정 (D61 절대 준수, hexa-lang 측 single-commit).
+  - **landed artifact** (`~/core/hexa-lang/stdlib/component/`):
+    `heat_conduction.hexa` (213 lines) — closed-form 1D steady-state
+    heat conduction 의 clean-room 재유도. gmsh_skfem.py 의 thermal
+    FEM solve 와 *동일 입력* (P=5 W · L_z=2 mm · Δh=1 mm · A=10×10 mm
+    · k=148 W/m·K · T_amb=298.15 K) 으로 closed-form ΔT 계산. Python
+    spawn 0 · mesh 0 · linear solver 0 — 순수 hexa Fourier 적분.
+    `fn lower_region_rise` + `within_slab_rise` + `delta_t_max_1d` +
+    `main()` selftest. commit `993b80cf`, push origin/rfc006-yosys-
+    rtlil-skeleton.
+  - **Stage 3 parity 측정** (`hexa run stdlib/component/
+    heat_conduction.hexa`): hexa-native 1D `ΔT = 0.506757 K · T_max
+    = 298.657 K` vs Stage-1 FEM substrate `ΔT = 0.528 K · T_max =
+    298.68 K` (scikit-fem 12.0.1, mesh 686 nodes / 2232 tets). parity
+    diff ΔT = **4.02 %** (< 5 % tolerance) · diff T_max = 0.008 %.
+    selftest: `__COMPONENT_HEAT_1D_STAGE2__ PASS (2/2)`. 남은 4 % 는
+    3D lateral spreading (analytic 1D 는 column-direction 만 — adiabatic
+    side faces 의 mesh discretization 이 살짝 옆으로 새는 양).
+  - **g3 정직 (Stage 4 미부여)**: Stage 3 parity ✓ 는 *substrate FEM
+    ↔ 1D analytic* 사이의 일치이지 *둘 중 하나 ↔ 측정된 부품* 의
+    일치가 아니다. `measurement_gate = GATE_OPEN 영구 · absorbed =
+    false 영구` 그대로 — real STEP geometry + measured material +
+    구조 FEM + mesh convergence + 3rd-party signoff cross-check 5종이
+    모두 record 안으로 들어와야 absorbed=true. **thermal 만** 포팅된
+    이유: 1D analytic 은 구조 verdict 의 σ_vM_max (substrate FEM 의
+    ~19 kPa) 를 재현 불가 — 그 peak 은 back-face clamp 의 Poisson-
+    induced edge stress concentration, 본질적으로 3D Poisson 효과.
+    구조 parity 는 3D FEM 포팅 (sparse solver stdlib 대기) 까지 정직
+    하게 보류.
+  - **다음 pickup**: ① **3D FEM hexa-native** — hexa-lang sparse-
+    matrix + Krylov / 직접 solver stdlib 가 들어오면 `stdlib/
+    component/fem3d.hexa` (mesh assembly + condense + solve) 작성 →
+    구조 verdict 까지 Stage 2 확장. ② **real STEP geometry** —
+    rfc_008 chip→component handoff dossier 의 cited 부품으로 toy box
+    교체. ③ **measured material datasheet** — Si wafer supplier
+    측정값으로 textbook 상수 교체. ④~⑤ (mesh convergence sweep +
+    ANSYS/Code_Aster cross-check) 는 κ-44 본 entry 의 "다음 pickup"
+    과 동일.
