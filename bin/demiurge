@@ -9,7 +9,16 @@
 #   demiurge                this help
 set -euo pipefail
 
-REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Resolve through the hx shim symlink chain (~/.hx/bin/demiurge →
+# ~/.hx/packages/demiurge/bin/demiurge, and the packages/demiurge dir
+# is itself a symlink to the real repo) so REPO is the actual checkout.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+REPO="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
 case "${1:-}" in
   install)
