@@ -2484,3 +2484,86 @@
     하여 단일 SSOT. ④ cockpit GUI Component 탭이 STEP 파일을 직접
     렌더 (현재는 USDA only) — RealityKit STEP 미지원 → Open Cascade
     Cascade.js 같은 web 뷰 또는 STL 폴백.
+- 2026-05-20 — **phase κ-39 — P-⑧ 5번째 cohort producer = `space +
+  analyze` (Skyfield SGP4)** (D60 · D55 cohort 발굴 정책 5번째 적용 ·
+  D53 measurable-only mapping · g3). domains/space.md §2 의 도구 맵에서
+  **이미 설치 가능한 OSS + CLI 한 줄 → record emit** 기준으로 Skyfield
+  + sgp4 (pip install, ~500 KB) 를 producer 로 잡고 prototype 완성.
+  chip / component / matter "deep 기둥" + sscb / grid / bot / brain
+  4 cohort 뒤 5번째 — breadth-survey 도메인 누적 5건이 measurable
+  threshold 를 넘는 증거.
+  - **신규 SSOT**: `cockpit/scripts/space_skyfield.py` — Python sidecar
+    (~315 lines). `TLES` 상수가 두 표준 NORAD TLE (ISS ZARYA #25544 +
+    HST #20580) inline bundle (Celestrak 2026-05-01 snapshot — live
+    fetch 가 아니라 deterministic input, typed-record contract 준수
+    g3). `OBS_LAT/LON/ELEV` = Seoul 37.5665°N · 126.978°E · 38 m
+    (prototype reproducibility 우선 — configurable 화는 후속).
+    `SAMPLE_HOURS=24 · SAMPLE_STEP_S=60` → 위성당 1440 sample.
+    `VISIBILITY_ALT_DEG=10.0` 로 visible 판정. 위성당 aggregates:
+    `sample_count` / `visible_count` / `visibility_ratio` /
+    `max_alt_deg` / `mean_alt_deg_visible` / `max_pass_minutes`
+    (가장 긴 연속 가시 윈도우) / `visible_window_count`.
+    `tle_epoch_utc` + `tle_age_days` 박제 (g3 driver). 산출물 4종:
+    `.tle` (입력 보관) + `.meta.json` (요약) + 위성당 `.ndjson` (60s
+    cadence 전체 트랙).
+  - **신규**: `DemiurgeCore/Models/SpaceRecord.swift` — typed sidecar
+    (interface `"demiurge:space:orbit-record"`, schema 1.0).
+    `SpaceProvenance` + `SpaceObserver` + `SpaceWindow` +
+    `SpaceSatelliteAggregates` + `SpaceSatellite` 분리. `SSCBRecord` /
+    `MatterRecord` sibling 패턴.
+  - **신규**: `DemiurgeCore/Loaders/SpaceAnalyzeProducer.swift` —
+    Swift spawner (~330 lines). `orbitRecordsRoot =
+    exports/space/orbit/`. `locatePython()` 가 `/opt/homebrew/bin
+    /python3` 우선 (brew Python 의 site-packages 에 Skyfield 설치됨).
+    매 호출마다 timestamped subdir `<ISO>/` 를 만들어 consecutive
+    run 의 `.ndjson` 트랙이 stomp 안 되도록. `python3
+    space_skyfield.py <runDir>` spawn, merged stdout/stderr 에서
+    `SPACE_SKYFIELD_RESULT <json>` 라인 파싱 + meta.json 재독.
+    `tleFreshnessThresholdDays = 7.0` 로 GATE 결정 — `worst_tle_age
+    ≤ 7 → closedMeasured`, 그 외 `open`. **absorbed=false 영구**
+    (g3: 측정 게이트 닫힘 ≠ 도구 흡수). artifacts (`meta`, `tle`)
+    의 디스크 존재 + non-zero size 검증 (defence-in-depth, @F f6).
+  - **확장**: `DemiurgeCore/Loaders/ActionDispatch.swift` —
+    `runEngineTool` 의 switch 에 `case (.analyze, "space"):` 추가
+    (6번째 측정 가능 셀: component+synth, chip+verify, chip+synth,
+    matter+analyze, sscb+analyze, space+analyze). 새 private
+    `runSpaceAnalyze()` 가 SpaceAnalyzeProducer 호출. 헤더
+    doc-comment 갱신 (κ-39 라인 + space 셀 설명).
+  - **g3 정직 갭 (제일 중요)**: ① numbers ARE real (SGP4 = NORAD-
+    standard propagator, Vallado 2006 reference-impl 검증 — ~1 km
+    positional accuracy at epoch). Skyfield 가 reference C 구현
+    wrap. ② **GATE_CLOSED_MEASURED ELIGIBLE iff worst_tle_age ≤ 7 d**
+    — sscb (영구 GATE_OPEN, plausible 회로) / yosys (영구 OPEN,
+    rfc_006 §5) 와 다르게 본 producer 는 conditional CLOSED 가능.
+    이는 g3 caveat 의 종류가 "도구 흡수 부족" 이 아니라 "입력 TLE
+    age" 라서 — 입력이 fresh 면 측정 정직성 유지. ③ **그러나
+    absorbed=false 영구** — Skyfield 는 EXTERNAL pip library, hexa-
+    lang/hexa-arch 내장이 아님. 측정 게이트 ≠ 도구 흡수 권한 (g3
+    분리). ④ 본 측정 (mac local) 의 TLE = 2026-05-01 snapshot →
+    worst_age = 18.21 d > 7 d → 결과적으로 **GATE_OPEN**. honest
+    surface (buggy 가 아니라 caveat 작동) — fresh TLE bundle 업데이트
+    후 GATE_CLOSED 실증은 후속. ⑤ 관측자 = Seoul 고정 prototype —
+    configurable 화 후속 phase. UL / range-safety / 발사 인증 은
+    별도 게이트 (domains/space.md §1 — propagation ≠ 임무 인증).
+  - **측정 (이 worktree, mac local, Swift 6.3.1)**: `swift run
+    DemiurgeCLI action analyze space` → `python3 = /opt/homebrew/bin
+    /python3` · `python3 space_skyfield.py — exit 0, sats=2` ·
+    `skyfield = 1.54 · sgp4 = 2.25` · `artifacts: meta, tle` ·
+    `📸 space orbit record → exports/space/orbit/<stamp>/
+    space_orbit_<stamp>.json` · ISS (NORAD 25544): visible 1.9% ·
+    max_alt 49.4° · longest_pass 6.0 min · HST (NORAD 20580):
+    visible 1.1% · max_alt 22.3° · longest_pass 6.0 min ·
+    `⏳ GATE_OPEN · absorbed=false · worst TLE age 18.21 d (> 7.0 d)`.
+    파일 크기: `.tle` 296 B · `.meta.json` 1.7 KB · 두 NDJSON ~280 KB
+    각 · record `.json` 2.9 KB. 빌드 green (pre-existing RealityKit
+    MainActor warning 만 — 새 warning 0 · 새 error 0).
+  - **다음 pickup**: ① **fresh TLE bundle 업데이트 workflow** —
+    GATE_CLOSED_MEASURED 실증을 위해 TLE inline-snapshot 을 주기적
+    갱신 (예: 매 7 일). live fetch 도입 시 typed-record 의
+    `tle_sha256_16` 로 input-pin 유지. ② **observer configurable** —
+    프로젝트별 위치 (cockpit chat 에서 입력). ③ **(.synthesize,
+    "space") = GMAT trajectory optimization** — macOS GMAT 설치 (Java
+    GUI) 정리되면 6번째 cohort producer 후보. ④ **ActionAdapter
+    프로토콜 리팩토링** — 6번째 셀 도달, D55 의 "5+ 임계점" 한 칸
+    초과; switch/case 가 다음 셀 (chip/component 후속 verb) 진입
+    전 protocol + registry 로 갈 시점.

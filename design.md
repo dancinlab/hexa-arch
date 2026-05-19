@@ -1701,3 +1701,66 @@ export.)
   버튼 + DemiurgeCLI `emit-component` + DemiurgeCLI `action
   synthesize component` 셋의 단일 진입점 그대로. 셋 다 동일 record
   emit.
+
+### Decision 60 — `space + analyze` producer = Skyfield SGP4 propagation (5번째 cohort producer, κ-39)
+
+**picked**: cohort producer 발굴 (D55 정책) 의 **5번째 실현** —
+`(.analyze, "space")` 셀이 **Skyfield + sgp4** Python 라이브러리 쌍을
+producer 로 잡는다. `cockpit/scripts/space_skyfield.py` 가 inline-
+bundled 표준 NORAD TLE (ISS ZARYA · HST) 를 24-시간 60 s 케이던스로
+SGP4 propagate, 고정 Seoul 관측자 (37.5665°N, 126.978°E, 38 m) 로
+topocentric reduce → altitude/azimuth/visibility 측정, 산출물 4종
+(`.tle` 입력 · `.meta.json` 요약 · 두 satellite 의 `.ndjson` 트랙) 을
+`exports/space/orbit/<stamp>/` 에 박제. Swift `SpaceAnalyzeProducer`
+가 meta.json 을 재독해 typed `SpaceRecord` 1건을 같은 dir 에 emit
+(interface `"demiurge:space:orbit-record"`, schema 1.0). producer
+= `skyfield@<v>+sgp4@<v>` (라이브러리 핀, TLE-source 권한 핀이 아님).
+**measurement_gate path: worst_tle_age_days ≤ 7 → GATE_CLOSED_MEASURED**
+(SGP4 의 nominal validity window 안 — Skyfield+SGP4 는 NORAD reference
+대비 bench-validated, Vallado 2006 검증); **> 7 → GATE_OPEN** (TLE
+drift, ~1 km/d 누적). **absorbed = false 영구** — Skyfield 는
+EXTERNAL pip library, hexa-lang / hexa-arch 로 흡수 아님.
+(Rejected: ① 라이브 Celestrak fetch — typed-record contract 위반,
+매번 다른 결과. ② 사용자 위치 즉시 configurable — prototype 단계의
+reproducibility 우선; configurable 화는 후속. ③ Hubble 단독 / ISS
+단독 — 두 위성이 LEO 다양성 더 잘 입증. ④ `(.synthesize, "space")`
+= GMAT trajectory optimization — macOS GMAT 설치 무거움, analyze 가
+"이미 설치된 OSS + 한 줄" 우선.)
+
+**rationale**:
+- D55 cohort 발굴 정책의 5번째 적용 (앞선 4 = sscb+ngspice [D55],
+  grid+networkx, bot+pinocchio, brain+nibabel). breadth-survey
+  cohort 도메인이 누적적으로 measurable producer 임계점을 넘는
+  증거 — chip / component / matter 세 "deep / hexa-lang owner 기둥"
+  외 패턴이 다섯 사례로 확립.
+- **g3 정직 차별점**: SGP4 는 sscb 의 "plausible-not-datasheet"
+  케이스와 다르다. NORAD-standard propagator (Hoots/Roehrich 1980,
+  Vallado 2006 검증), Skyfield 가 reference C 구현 wrap. **`tle_age
+  ≤ 7 d` 면 GATE_CLOSED_MEASURED 적합** — caveat 는 TLE-age 이지
+  도구 흡수 부족이 아니므로. 이는 sscb (영구 GATE_OPEN) / yosys
+  rfc_006 §5 (절대 OPEN) 와의 첫 honest gate-CLOSED 후보 producer.
+- **그러나 absorbed=false 는 영구** — GATE_CLOSED_MEASURED 가
+  닫혀도 Skyfield 는 외부 pip library 이지 hexa-lang 내장이 아님
+  (g3 분리 원칙: 측정 게이트 ≠ 도구 흡수 권한).
+- 도구 접근성 점수표 (κ-39 분석):
+  - skyfield+sgp4 (space) — pip install, 한 줄 CLI, **9/10**
+  - GMAT (space synthesize) — macOS 설치 무거움 (Java GUI), **5/10**
+  - Basilisk (space analyze) — conda + C++ 빌드, **6/10**
+  - poliastro — pip 가능하지만 Skyfield 보다 cohort 다양성 약함, **7/10**
+- 측정 (이 worktree, mac local): `swift run DemiurgeCLI action
+  analyze space` → `python3 = /opt/homebrew/bin/python3` · `exit 0,
+  sats=2` · `skyfield = 1.54 · sgp4 = 2.25` · `artifacts: meta, tle`
+  · 두 위성 (NORAD 25544 / 20580) 의 visibility/max_alt/longest_pass
+  헤드라인 출력 · 본 측정에서 worst TLE age = 18.21 d (snapshot
+  2026-05-01) > 7 d 임계 → **GATE_OPEN**. record emit OK (2948 B
+  + 두 NDJSON 트랙 ~280 KB 각). 빌드 green (pre-existing RealityKit
+  MainActor warning 만, 새 warning 0 · 새 error 0).
+- TLE 입력은 inline-bundled (Celestrak 2026-05-01 snapshot) — live
+  fetch 미사용 (deterministic input 우선, g3 — silent success 방지).
+  fresh TLE 로 GATE_CLOSED_MEASURED 입증은 후속 phase 가 TLE bundle
+  업데이트 + workflow 결정 후.
+- D53 "measurable-only" 정합 — `(.analyze, "space")` 가 6번째
+  매핑 셀. switch/case 5+ 임계점 D55 에서 이미 surfaced; 6번째
+  진입 = ActionAdapter 프로토콜 리팩토링 정당화 강화. 본 phase 는
+  wiring 만 — 리팩토링은 다음 라운드 (D55 의 후속 pickup 참조).
+

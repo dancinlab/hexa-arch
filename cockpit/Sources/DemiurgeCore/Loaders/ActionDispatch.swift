@@ -13,6 +13,9 @@
 //
 // κ-30 (this commit, D53): adds `matter + analyze` → MatterAnalyzer.
 // κ-34 (D55): adds `sscb + analyze` → SSCBProducer (ngspice 46 transient).
+// κ-39 (D60): adds `space + analyze` → SpaceAnalyzeProducer (Skyfield
+//             SGP4 orbit propagation — FIFTH cohort producer; gate
+//             depends on TLE age, absorbed=false ALWAYS — g3).
 //
 // Currently wired:
 //   • component + synthesize → ComponentEmitter.emitBundled
@@ -34,6 +37,14 @@
 //                              measuring-producer threshold; real
 //                              numbers, plausible-not-absorbed circuit,
 //                              GATE_OPEN永구 / absorbed=false ALWAYS)
+//   • space     + analyze    → Skyfield SGP4 orbit propagation (κ-39 /
+//                              D60 — FIFTH cohort domain; ISS + HST
+//                              standard TLEs, 24 h sample window;
+//                              GATE_CLOSED_MEASURED iff worst_tle_age
+//                              ≤ 7 d (SGP4 nominal validity window),
+//                              else GATE_OPEN. absorbed=false ALWAYS —
+//                              Skyfield external pip library, NOT
+//                              absorbed into hexa-lang.)
 //
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
@@ -115,6 +126,8 @@ public enum ActionDispatch {
             return runMatterAnalyze()
         case (.analyze, "sscb"):
             return runSSCBAnalyze()
+        case (.analyze, "space"):
+            return runSpaceAnalyze()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -170,6 +183,30 @@ public enum ActionDispatch {
     /// turn into real producers, narrow scope is honest g3.
     private static func runSSCBAnalyze() -> ActionResult {
         let r = SSCBProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `space + analyze` engine tool (κ-39 / D60) — spawn Skyfield SGP4
+    /// propagation via `cockpit/scripts/space_skyfield.py` over standard
+    /// NORAD TLEs (ISS ZARYA + HST), 24 h window, 60 s cadence; reduce
+    /// to a fixed Seoul observer; persist a typed `SpaceRecord` under
+    /// `exports/space/orbit/<stamp>/`. Producer = `skyfield@<v>+sgp4@<v>`
+    /// — Skyfield+SGP4 are the NORAD-standard propagator (bench-validated
+    /// against the reference implementation, Vallado 2006). Gate path:
+    /// worst_tle_age_days ≤ 7 → GATE_CLOSED_MEASURED (SGP4 nominal
+    /// validity window); above 7 d → GATE_OPEN (TLE drifted). absorbed
+    /// is permanently false ALWAYS — Skyfield is an EXTERNAL pip
+    /// library, not absorbed into hexa-lang (g3 — see
+    /// SpaceAnalyzeProducer scope_caveats). FIFTH cohort domain (after
+    /// sscb / grid / bot / brain) crossing the measuring-producer
+    /// threshold — cumulative evidence that breadth-survey cohorts can
+    /// become real producers.
+    private static func runSpaceAnalyze() -> ActionResult {
+        let r = SpaceAnalyzeProducer.runAnalyze()
         return ActionResult(
             text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],
