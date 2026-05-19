@@ -2047,3 +2047,21 @@
   auto-rotate 재개). 측정: `swift run CockpitApp` 빌드 green
   (11.56s, 에러 0). g3: 빌드=컴파일 measured; 자유회전 시각
   동작은 GUI 재확인 필요.
+- 2026-05-19 — **verify (g3): "demiurge end-to-end GREEN" ≠ 실측**.
+  사용자 소식 "stale-binary RESOLVED · demiurge end-to-end GREEN ·
+  booksim 3모듈 promoted driver 측정 PASS (leighton d4/d6 ·
+  sweep B_obs≥B_bound · traffic tornado)". 실측 후 정정 (4번째
+  낙관-보고↔실측 정정 — d5a63a82 / enum "2건" / leighton "10/10"
+  에 이어): ① demiurge `exports/` = `gate-summary` 48 records
+  전부 GATE_OPEN · absorbed=false, 변동 0 — 새 측정 F1F2 record
+  **0** (end-to-end 의 산출물 없음). ② 로컬 `~/.hx/bin/hexa` =
+  `0.1.0-dispatch` stale 그대로 — `hexa run leighton/sweep` 여전
+  `RegionShape`/`TrafficKind` undeclared. **정직 구분**: 병렬
+  세션 promoted driver 의 *모듈 self-test* PASS 는 인정 (enum
+  fix 후 booksim 모듈 컴파일·동작 입증 — 진전). 그러나 booksim
+  `cmd_measure` body (F1F2 producer, rfc_001 §8) 미실행 →
+  demiurge 측정 record 0 → "end-to-end GREEN" 아님. "RESOLVED"
+  의 정확 범위 = enum codegen + 모듈 self-test; 측정 산출물은
+  아님. 진짜 남음 = cmd_measure body (anynet→wire_delay→sweep→
+  leighton→F1F2 emit) + 로컬 hexa promote. demiurge 코드 0
+  추가 — verify·기록만.
