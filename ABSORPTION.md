@@ -23,13 +23,51 @@
 
 ## ①~⑤ 영역 분류
 
-### ① STDLIB — 계산 커널
-- **SSOT**: `hexa-lang/stdlib/<topic>/` (D15·D17 — hexa-lang 단독 소유)
-- **무엇이 들어가나**: solver · mesher · synthesis · parser · oracle
-  알고리즘 (수학·물리 verdict 의 *엔진*)
-- **예**: `stdlib/booksim` (NoC sim) · `stdlib/yosys` (synthesis) ·
-  `stdlib/matter` (closure invariant) · `stdlib/atoms` (EMT)
-- **demiurge 측**: consumer 만. typed-interface 로 record 수신·표시.
+### ① STDLIB — 계산 커널 (2-layer, D72)
+
+**SSOT**: `hexa-lang/stdlib/` (D15·D17 — hexa-lang 단독 소유). 도메인
+N×M 폭발을 막기 위해 **2-layer** — 같은 FEM·MC·graph 커널을 도메인
+마다 중복 흡수하지 않는다.
+
+**①a 커널 레이어** — `hexa-lang/stdlib/kernels/<kernel>/`
+- 도메인-무관 재사용 수학·물리 엔진. 외부 도구는 흡수 시 *어느
+  커널* 인지 먼저 분류:
+
+  | 커널          | 흡수하는 외부 도구                          |
+  |---------------|--------------------------------------------|
+  | `fem`         | CalculiX · Code_Aster · Elmer · gmsh · FiQuS · GetDP · scikit-fem |
+  | `mc_transport`| Geant4 · OpenMC                            |
+  | `circuit`     | ngspice · FEMMT                            |
+  | `graph`       | networkx                                   |
+  | `orbital`     | skyfield · poliastro                       |
+  | `wave_optics` | POPPY · WebbPSF                            |
+  | `cfd`         | OpenFOAM                                   |
+  | `logic_synth` | yosys                                      |
+  | `noc_sim`     | booksim                                    |
+  | `ode_pde`     | (일반 적분기 — 공통 substrate)             |
+
+- 새 커널은 **정말 새 수학** 일 때만 추가.
+
+**①b 도메인 어댑터** — `hexa-lang/stdlib/<domain>/`
+- 커널을 호출하고 도메인-specific 파라미터·geometry·boundary
+  condition 만 보유 — **thin**. 예:
+
+  ```
+  sscb + verify       = circuit + fem(thermal)
+  component + verify  = fem(mesh)
+  rtsc + analyze      = fem(coupled EM-thermal-mech)
+  fusion + analyze    = fem + plasma + cfd
+  antimatter / cern   = mc_transport
+  scope               = wave_optics
+  grid / mobility     = graph
+  chip                = noc_sim · logic_synth
+  ```
+
+**흡수 규칙 (N×M → N+M)**: 새 도메인은 **기존 커널 재사용을 우선**.
+커널 1개를 hexa-native 로 포팅하면 그 커널을 쓰는 모든 도메인
+어댑터가 동시에 Stage 4 (absorbed=true) 에 근접 — 제1 원칙과 시너지.
+
+**demiurge 측**: consumer 만 — typed-interface 로 record 수신·표시.
 
 ### ② DOMAIN_MAP — 분야 공개면
 - **SSOT**: `demiurge/domains/<name>.md`
