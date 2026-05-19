@@ -37,7 +37,8 @@ identified, kept here so none are lost.
   - **E.** P-④ — chip §B full-curve measurement. Needs engine tool
     + ubu pool + rate-limit discipline. *open*.
   - **F.** ι-2 — 3D real USDZ. A component-domain producer must
-    emit one first (`exports/**` holds zero geometry today). *open*.
+    emit one first (`exports/**` holds zero geometry today). *open*
+    — handoff prompt: **P-⑨** below.
 
 The ζ dependency-graph half is **deferred** (not in this matrix —
 workbench value vs UI cost unclear; reopen on a concrete use).
@@ -417,6 +418,68 @@ measurement record + gate exists — this depends on an engine tool
 
 ---
 
+## P-⑨ — component-domain producer session (ι-2: real USDZ)
+
+**Use this when:** you want the cockpit's ComponentMode (D35, phase
+ι) to render a REAL component USDZ instead of the procedural 5-layer
+placeholder. The natural repo is `~/core/hexa-component` (the
+sibling); demiurge is the consumer per D2 typed interface — record
+only.
+
+```
+component-domain producer session — emit a real USDZ + provenance.
+
+Read first:
+  ~/core/demiurge/proposals/rfc_009_product_surface_macos_cockpit.md
+    §4 (honesty-as-feature mirror)
+  ~/core/demiurge/domains/component.md §1-§5 (component deliverable,
+    public-surface tool map)
+  ~/core/demiurge/cockpit/Sources/CockpitApp/Views/ComponentView3D.swift
+    (the placeholder viewer that loads it; D35 mouse-drag rotate only)
+  ~/core/demiurge/cockpit/references/bipv-module-exploded-isometric.jpg
+    (aesthetic reference)
+
+Goal: produce ONE real component USDZ + a typed F1F2-style record so
+demiurge's cockpit ComponentMode shows a measured 3D model and the
+"PLACEHOLDER" banner can come down.
+
+Steps (scope-as-you-can, honest staging):
+  1. Pick a concrete target (the BIPV reference module is the
+     obvious first one).
+  2. Use the public-surface tooling from domains/component.md §2 —
+     FreeCAD / KiCad StepUp / OpenSCAD — clean-room (D1), public
+     docs only, no proprietary IP.
+  3. Emit:
+       - the .usdz (or .stl + .usdz pair) under
+         ~/core/demiurge/exports/component/geometry/<id>.usdz
+       - a typed record sibling JSON (F1F2-style per rfc_002 §4)
+         carrying producer + measurement_gate + provenance.
+  4. Verify: open /Applications/demiurge.app, create a component-
+     domain project, switch ② work zone → ComponentMode shows the
+     real USDZ; the "PLACEHOLDER" label is no longer accurate.
+
+g3 (non-negotiable):
+  - Geometry being CORRECT ≠ thermal / EM / structural verdicts
+    being MEASURED. The latter are separate gates.
+  - measurement_gate = GATE_OPEN until a measured value justifies a
+    measured gate. Do NOT pre-set absorbed=true.
+  - The cockpit renders provenance VERBATIM (rfc_009 §4). Have the
+    producer write what was actually measured — never an upgraded
+    claim.
+  - The placeholder viewer label stays until / unless the record is
+    in. No silent UI upgrade.
+
+Exit criterion (any one ends honestly):
+  (a) exports/component/geometry/<id>.usdz + F1F2-style record
+      sibling landed; cockpit renders it on ComponentMode select;
+      provenance gate = GATE_OPEN (or measured if you actually
+      measured), absorbed=false unless a measurement justifies true.
+  (b) Bounded progress + honest "next pickup" note appended to this
+      P-⑨ section.
+```
+
+---
+
 ## Cross-cutting notes (apply to all sessions)
 
 - demiurge decisions are committed (design.md = the decision SSOT;
@@ -454,6 +517,9 @@ measurement record + gate exists — this depends on an engine tool
   repos under `~/core/hexa-*` (cross-repo, like hexa-lang). `hexa-ufo`
   TBD resolved (sibling repo, no demiurge domain map yet). One TBD
   remains: the exact form of "기본 라이브러리".
+- 2026-05-19 — **P-⑨ added** (user "각각 프롬프트줘"). The F track
+  (ι-2 component USDZ) now has its own cold-readable handoff prompt
+  at P-⑨. D track is P-②③, E track is P-④ (both already present).
 - 2026-05-19 — **Tracks matrix added** (user "갈래 모두 기록"). All
   six tracks A/B/C/D/E/F catalogued under "Tracks" at the top of
   this file, classified 🟢 demiurge-internal vs 🟡 cross-repo, with
