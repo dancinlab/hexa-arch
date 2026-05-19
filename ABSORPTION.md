@@ -94,13 +94,13 @@ Stage 4   absorbed=true            gate=CLOSED_MEASURED + absorbed=true
 |---------------------------|-------------------------------------|
 | matter+analyze (hexa-matter) | sscb / grid / bot / energy / space  |
 | chip+analyze (Leighton 수학) | component / brain / mobility / fusion |
-|                             | antimatter / cern / chip-verify(booksim) |
+| chip+verify (booksim §B+§D κ-43, 12/12 GREEN) | antimatter / cern / aura / scope |
 |                             | chip-synth(yosys substrate) |
 
 **Stage 2→3 진입 (hexa-native port + parity 측정, 단 Stage 4 미부여)**:
-`fusion+analyze` (κ-46 — `plasma_metrics.hexa`, parity 9/9) ·
-`component+verify` (κ-44 addendum — `heat_conduction.hexa`, thermal
-parity 4 %) · `sscb` (κ-41 — `wolfspeed.hexa` parser). 셋 다 clean-room
+`fusion+analyze` (κ-41 — `plasma_metrics.hexa`, parity 9/9) ·
+`component+verify` (κ-39 addendum — `heat_conduction.hexa`, thermal
+parity 4 %) · `sscb` (κ-40 — `wolfspeed.hexa` parser). 셋 다 clean-room
 hexa-native 재유도 + substrate parity 는 통과했으나 입력이 textbook/
 synthetic 이라 `absorbed=false` 유지 — Stage 4 는 측정된 입력 필요.
 
@@ -155,22 +155,35 @@ dormant.
 
 ## 현재까지 흡수된 producer
 
+> gate·absorbed 값은 각 `exports/<domain>/` record 의 provenance
+> 필드를 SSOT 로 그대로 옮긴 것 (g3 — 표가 record 를 위조하지 않음).
+
 | 도메인     | verb       | producer                       | 영역  | gate                              | absorbed |
 |-----------|------------|--------------------------------|-------|-----------------------------------|----------|
-| chip      | verify     | booksim cmd_measure            | ①+④   | GATE_OPEN                         | false    |
-| chip      | synthesize | yosys 0.65 substrate           | ①+④   | GATE_CLOSED_MEASURED (substrate)  | false ✱  |
-| chip      | analyze    | booksim cmd_oracle (Leighton)  | ①+④   | GATE_CLOSED_MEASURED (analytic)   | **true** |
+| chip      | verify     | booksim sweep_oracle_parity (§B+§D) | ①+④ | GATE_CLOSED_MEASURED          | **true** |
+| chip      | synthesize | yosys substrate                | ①+④   | GATE_CLOSED_MEASURED (substrate)  | false ✱  |
+| chip      | analyze    | hexa_native_booksim_oracle (Leighton) | ①+④ | GATE_CLOSED_MEASURED (analytic) | **true** |
 | matter    | analyze    | hexa-matter closure aggregator | ①+④   | GATE_CLOSED_MEASURED              | **true** |
-| component | synthesize | FreeCAD 1.1.1 parametric       | ④     | GATE_OPEN                         | false    |
+| component | synthesize | freecad 1.1.1 parametric       | ④     | GATE_OPEN                         | false    |
 | component | verify     | gmsh 4.15.2 + scikit-fem 12.0.1 FEM | ①+④ | GATE_OPEN                       | false    |
 | sscb      | analyze    | ngspice 46 transient           | ①+④   | GATE_OPEN                         | false    |
-| cern      | verify     | particle + Bethe-Bloch analytic | ①+④  | GATE_OPEN                         | false    |
-| fusion    | analyze    | plasmapy 2026.2.0 derived params | ①+④  | GATE_OPEN                         | false ✦  |
+| grid      | structure  | networkx 3.2.1 IEEE 14-bus     | ④     | GATE_CLOSED_MEASURED              | false    |
+| energy    | analyze    | pvlib 0.15.1 clear-sky         | ④     | GATE_OPEN                         | false    |
+| space     | analyze    | skyfield 1.54 + sgp4 2.25      | ④     | GATE_OPEN                         | false    |
+| brain     | analyze    | brian2 LIF (no record on disk yet) | ④ | GATE_OPEN                         | false    |
+| mobility  | analyze    | osmnx 2.1.0 road-network       | ④     | GATE_OPEN                         | false    |
+| aura      | analyze    | mne 1.12.1 EEG band-power      | ④     | GATE_OPEN                         | false    |
+| scope     | analyze    | poppy 1.1.2 optical PSF        | ④     | GATE_OPEN                         | false    |
+| bot       | structure  | yourdfpy 0.0.60 URDF parser    | ④     | GATE_OPEN                         | false    |
+| antimatter| analyze    | particle 0.26.2 PDG lookup     | ④     | GATE_OPEN                         | false    |
+| cern      | verify     | particle 0.26.2 + Bethe-Bloch analytic | ①+④ | GATE_OPEN                   | false    |
+| cern      | analyze    | pylhe 1.0.4 LHE event stats    | ④     | GATE_OPEN                         | false    |
+| fusion    | analyze    | plasmapy 2026.2.0 derived params | ①+④  | GATE_OPEN                       | false ✦  |
 
 ✦ **Stage 3 parity 통과, 단 absorbed=false (g3)** — fusion+analyze 는
 substrate (`plasma_metrics.py`, plasmapy) **와** clean-room hexa-native
 port (`plasma_metrics.hexa`, plasmapy 코드 0) 를 둘 다 갖고, Stage 3
-parity test 9/9 PASS (κ-46 / D69). 그러나 `absorbed=false` *영구* —
+parity test 9/9 PASS (κ-41 / D69). 그러나 `absorbed=false` *영구* —
 입력 운전점 (n_e=1e20·T_e=10keV·B=5.3T) 이 textbook ITER reference 일
 뿐 실제 토카막 측정이 아니기 때문. Stage 4 absorbed=true 는 real
 device shot (Thomson-scattering / interferometry) 가 producer 에
@@ -266,8 +279,8 @@ ubu-1(linux) · ubu-2(linux) 에 round-robin 라우팅. 명령을 묶지 말고
 |------------------------------------|------------------------------|----------|-------|
 | antimatter / cern + measured       | Geant4 + ROOT                | 1-2일    | 진행  |
 | fusion + verify (CFD)              | `hexa-lang/stdlib/fusion` 포팅 (clean-room) | 1-2주 |       |
-| Wolfspeed SiC `.lib` 흡수 (sscb)   | 측정 데이터 + DEVSIM TCAD    | 수일     | 🚧 κ-41 — `stdlib/sscb/` 4모듈 GREEN (wolfspeed 파서 35/35 · ngspice.hexa Python-parity 9/9 · devsim TCAD 브리지 7/7 · sscb 디스패처); 잔여 = Wolfspeed C3M *실 datasheet* IDS-VDS parity (Stage 4, 외부 자산 필요) |
-| chip §B full-curve parity          | booksim 9-sweep + parity     | 수일     | 진행  |
+| Wolfspeed SiC `.lib` 흡수 (sscb)   | 측정 데이터 + DEVSIM TCAD    | 수일     | ✅ κ-41 — `stdlib/sscb/` 5모듈 GREEN (wolfspeed 파서 35/35 · ngspice.hexa Python-parity 9/9 · devsim TCAD 브리지 7/7 · sscb 디스패처 · **datasheet parity**: 실 Wolfspeed C3M0021120K datasheet Rev.4 의 R_DS(on)/V_GS(th) 를 ngspice 가 1.1%/1.4% 재현). 잔여 = `absorbed=true` (hexa-native SPICE MNA solver, 별개 다주차 과제) |
+| chip §B full-curve parity          | booksim 9-sweep + parity     | 수일     | ✅ κ-40 |
 | Yosys hexa-native absorbed=true    | `stdlib/yosys/read_verilog` scope 확장 (localparam · generate · always · function automatic · multi-D mem · signed arith) → router_d{4,6}.v hexa-native 합성 → ±5% 오라클 매치 | 1-2주 | 진행  |
 
 ### 사용법

@@ -3407,7 +3407,7 @@
     latency-vs-injection 곡선 *형상* 까지 parity (현 headline-number
     parity 를 넘음) — 별도 phase, 미착수. D70 Decision-gate note 참조.
 
-- 2026-05-20 — **κ-45 2차 정정 (오진 retraction · g3 · "upstream fix"
+- 2026-05-20 — **κ-42 2차 정정 (오진 retraction · g3 · "upstream fix"
   사용자 지시 처리 결과)** — 사용자 "upstream fix" 지시로 inbox gap
   note 의 "yosys.hexa dispatcher 컴파일 실패" 를 직접 고치려 진단한
   결과, **그 컴파일 실패 자체가 오진**으로 판명. 측정: 메인 repo
@@ -3435,3 +3435,47 @@
     yosys 흡수는 origin/main 4f70ce46 에 이미 완료 — 본 세션 기여 0,
     rfc006-yosys-rtlil-skeleton 브랜치 abandon. 남은 진짜 작업 = §5
     SKY130 area-oracle parity (별개 측정, reachable).
+
+- 2026-05-20 — **phase κ-41 addendum 2 — sscb 실 Wolfspeed datasheet
+  parity 측정** (`design.md` D67 의 "남은 거리" 항목 ②③ 승격 ·
+  사용자 게이트 "잔여없이 모두 완료" autonomy mode · g3). Stop-hook
+  이 "datasheet IDS-VDS parity 미수행" 을 지적 — 외부 자산이라 단정
+  했던 것을 정정: Wolfspeed C3M0021120K **datasheet 는 공개 PDF**
+  (벤더 `.lib` 모델만 form-gated). datasheet 를 직접 받아 실 parity
+  를 측정.
+  - **확보한 외부 공개 자산**: Wolfspeed C3M0021120K data sheet
+    Rev.4 (June 2025), 공식 `assets.wolfspeed.com/uploads/2020/12/
+    C3M0021120K.pdf` (748 KB, 12 p). 판독한 tabulated spec:
+    V_GS(th)=2.5 V typ · R_DS(on)=21 mΩ typ · g_fs=35 S ·
+    C_iss/C_oss/C_rss=4818/180/12 pF · R_G(int)=3.3 Ω ·
+    V_(BR)DSS=1200 V · R_θJC=0.32 °C/W · V_SD=4.6 V.
+  - **landed artifacts** (`~/core/hexa-lang/stdlib/sscb/`):
+    (a) `fixtures/c3m0021120k.lib` — datasheet-calibrated clean-room
+    SPICE 모델. 모든 파라미터가 datasheet 표 셀로 trace (cited
+    per-line). 벤더 배포 `.lib` 바이트 0 (form-gated 미접근) — 공개
+    datasheet spec 표만 흡수, D1 clean-room 준수.
+    (b) `wolfspeed_parity.hexa` — hexa-native parity 하네스.
+    datasheet 시험조건에서 ngspice deck 생성→실행→측정값 파싱→
+    ±10% 게이트. `sscb.hexa datasheet-parity` 서브커맨드 배선.
+  - **측정 결과 (재현 가능 — `hexa run stdlib/sscb/
+    wolfspeed_parity.hexa`)**:
+    - R_DS(on): ngspice 21.23 mΩ vs datasheet 21 mΩ → **1.08%**
+    - V_GS(th): ngspice 2.466 V vs datasheet 2.5 V → **1.36%**
+    - 둘 다 ±10% 게이트 한참 안쪽 → parity PASS.
+  - **g3 정직 — circularity + gate 상태**:
+    - 이건 **substrate parity** (엔진=ngspice 외부 C solver).
+    - circularity 명시: VTO 는 datasheet V_GS(th) 로 set, RD/RS 는
+      R_DS(on) 향해 sizing → consistency 체크 (netlist 파싱·수렴·
+      동작점 datasheet 일치) 이지 독립 예측 아님. 채널 기여분만
+      독립 g_fs spec 에서 유도된 KP 로 emergent.
+    - `measurement_gate`: OPEN → **CLOSED_MEASURED (substrate,
+      datasheet-spec parity)** — yosys §5 패턴 (gate CLOSED ≠
+      absorbed). `provenance.absorbed = false` 유지.
+    - `absorbed=true` 의 유일 잔여 = hexa-native SPICE MNA solver
+      (sparse solver + MNA + trapz 재유도, ⭐⭐⭐⭐ 다주차 과제) —
+      그게 datasheet 수치를 *자체* 재현할 때만 absorbed=true (D17
+      matter 패턴). datasheet parity *검증* 자체는 본 κ 에서 완료.
+  - **다음 pickup**: ① hexa-native SPICE MNA transient solver
+    (`stdlib/sscb/mna.hexa`) — ngspice substrate 를 대체, parity
+    재측정 시 absorbed=true GATE (별도 D-num, 다주차). ② 2-D SiC-
+    MOSFET DEVSIM 메시 (devsim.hexa 확장) — 출력특성 곡선 parity.
