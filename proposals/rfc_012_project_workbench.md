@@ -80,32 +80,68 @@ terms — §8.
 
 ---
 
-## 5. Layout — the single workbench screen (1/2/3/4)
+## 5. Layout — single workbench, 3 columns; ② is widest & split
+
+User-resolved (2026-05-19, refined across several turns). Key insight:
+**area ≠ driver.** The chat is narrow but DRIVES the project; ② is
+the widest because it SHOWS the result.
+
+- **① recipe rail (7-verb)** — NARROW, leftmost.
+- **③ LLM chat (cooking teacher)** — NARROW, centre. The project
+  advances *through this conversation*; honesty signal light (§6)
+  renders inline in replies.
+- **② work zone** — WIDEST, rightmost — split top / bottom:
+  - **② top (short) = ingredient shelf** — plain UI option pick;
+    "[냄비에 넣기]" feeds the selection into the next chat turn.
+  - **② bottom (main, largest) = result visualization** — 3D
+    rendering (RealityKit ComponentView3D), charts, record views —
+    where the design's result is shown.
+
+**Cooking metaphor (product voice):**
+- **③ chat = the cooking teacher** — stands narrow at your side and
+  *directs*; small on screen, but the dialogue is what *moves* the
+  project.
+- **② bottom = the big plate on the bench** — the largest area; the
+  dish being cooked (3D render / work result) is laid out here.
+- **② top = the ingredient shelf** — a short strip; pick ingredients
+  (options) and drop them in.
+- **① = the recipe card on the wall** — which of the 7 steps.
 
 ```
-┌──────────── ④ 상단: 프로젝트명 + 7단계 진행바 ────────────┐
-│  [+]  칩 A ▾   [무엇을]─[어떻게]─[설계]─◉해석─[합성]─…    │
-├────────┬───────────────────────────┬──────────────────────┤
-│ ① 7단계 │ ② 지금 단계의 작업면      │ ③ AI 도우미 + 점검   │
-│  목록   │                           │   "이거 믿어도 돼?"  │
-│ 무엇을✅ │   (현재 단계 = 설계)      │   ⏳/🔶/✅ 신호등     │
-│ 어떻게✅ │                           │   AI 와 대화         │
-│ 설계 ◉  │                           │                      │
-│ 해석    │                           │                      │
-│ 합성    │                           │                      │
-│ 검증    │                           │                      │
-│ 인계    │                           │                      │
-└────────┴───────────────────────────┴──────────────────────┘
+┌──────────── ④ 상단: 프로젝트명 + 7단계 진행바 ──────────────┐
+│  [+]  칩 A ▾   [무엇을]─[어떻게]─[설계]─◉해석─[합성]─…      │
+├──────┬────────────┬──────────────────────────────────────────┤
+│ ①    │ ③ chat     │ ② work zone (widest) ★                  │
+│narrow│ (narrow)   │ ┌─ ② top: ingredient shelf (short) ────┐ │
+│recipe│ cooking    │ │ ○22nm ○7nm  ○mesh ●hex   [냄비에 넣기]│ │
+│rail  │ teacher    │ └──────────────────────────────────────┘ │
+│무엇✅│ (LLM)      │ ┌─ ② bottom: MAIN (largest) ────────────┐│
+│어떻✅│ 👨‍🍳 …     │ │  🧊 3D render · charts · record views  ││
+│설계◉│ 🙋 …       │ │     ┌──────┐                           ││
+│해석  │ 👨‍🍳 …⏳   │ │     │ ╱╲   │  exploded 3D / 결과 시각화 ││
+│합성  │ [입력…]    │ │     │ ╲╱   │                           ││
+│검증  │            │ │     └──────┘                           ││
+│인계  │            │ └────────────────────────────────────────┘│
+└──────┴────────────┴──────────────────────────────────────────┘
+  narrow   narrow              widest (top shelf + bottom main)
 ```
 
-- **① 7-verb 단계 목록** — 일반인이 "지금 어디" 를 한눈에. 완료 ✅ /
-  진행중 ◉ / 예정 (회색).
-- **② 현재 단계 작업면** — 선택된 verb-stage 의 작업 (records / 3D /
-  chat 결과 등).
-- **③ AI 도우미 + 정직 신호등** — "이거 믿어도 돼?" 를 평이하게,
-  ⏳/🔶/✅ + AI 대화 (rfc_011 chat + θ).
-- **④ 상단** — `+` 버튼 · 프로젝트 전환 드롭다운 · 7단계 진행바 ·
+- **① (leftmost, narrow)** — 7-verb recipe; done ✅ / current ◉ /
+  upcoming (grey).
+- **③ (centre, narrow) — LLM chat** — the cooking teacher; rfc_011
+  chat + θ Claude Code CLI; drives the project; ⏳/🔶/✅ inline.
+- **② (rightmost, WIDEST) — work zone**, split:
+  - *top strip* — ingredient shelf (option pick → next chat turn).
+  - *bottom (largest)* — result visualization: 3D render
+    (ComponentView3D), latency charts, record views, …
+- **④ (top)** — `+` button · project switch · 7-step progress bar ·
   light/dark.
+
+Why area≠driver: demiurge's GOAL is a *meta-conductor* — a conductor
+works by *direction* (the narrow chat), while the orchestra's output
+(the wide ② bottom) is what fills the hall. The cockpit is a place you
+*converse a design into being*, and watch the result take shape on the
+big plate.
 
 ---
 

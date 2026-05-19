@@ -1414,3 +1414,14 @@
   여전히 rfc_009–011 의 read-only viewer (`1a6da4c`). project-
   workbench 방향은 spirit 합의, 구체 선택은 §8 미결. 새 design.md
   decision 0, 새 governance 0 (discussion 단계).
+- 2026-05-19 — **rfc_012 §5 layout 갱신** (discussion 진전 —
+  여러 turn 정제). 사용자와 workbench layout 을 다듬어 §5 를
+  3-column 으로 확정: ① 7-verb 레시피 rail (좁음) · ③ LLM chat
+  "요리선생님" (좁음 — 프로젝트 진행 주축) · ② work zone (가장
+  넓음, 상하 분할: 상단=재료선반 short strip / 하단=3D 렌더링·차트·
+  record 시각화 main). 핵심 정제: "면적 ≠ 주축" — 채팅은 좁아도
+  *진행을 끌고*, ② 하단은 넓어도 *결과 전시* (요리: 선생님은 옆에서
+  좁게 지휘, 큰 접시엔 요리 결과). 요리 비유를 product voice 로
+  §5 에 명문화. 여전히 DRAFT — design.md decision 0, governance 0,
+  코드 0. §8 의 나머지 open question (+버튼 흐름 / 무엇을-설계 /
+  expert 모드 / 데이터모델+governance) 미결.
