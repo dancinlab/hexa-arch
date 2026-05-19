@@ -2065,3 +2065,23 @@
   아님. 진짜 남음 = cmd_measure body (anynet→wire_delay→sweep→
   leighton→F1F2 emit) + 로컬 hexa promote. demiurge 코드 0
   추가 — verify·기록만.
+- 2026-05-19 — **enum fix 검토 완료 — g3 실측 *확증*** (사용자
+  "이 세션에서 fix 검토 / upstream / main branch 가능"). 진단:
+  hexa-lang **main HEAD `8ff19d2a fix(bootstrap): promote enum-fix
+  binary`** — source(`codegen_c2.hexa` `_is_enum_name`, 본 세션
+  inbox patch 의 Shape-A) + promoted `self/native/hexa_v2` 둘 다
+  landed. main 은 병렬 worktree `/private/tmp/wt-r7-trackb` 점유
+  → 그 worktree 의 promoted `./hexa` 로 직접 검토: `leighton.hexa`
+  → **PASS 10/10** (d4/d6 oracle PASS · impossible REJECT) ·
+  `sweep.hexa` → **PASS 5/5** (B_obs 8≥8 · D_obs 14≥14). enum
+  blocker = 진짜 RESOLVED. **g3 — 이번엔 정정 아닌 확증**: 앞선
+  3건(d5a63a82·"2건"·"10/10")은 실측 정정이었으나, 본 검토는
+  사용자 소식이 실측과 *일치* — 확증도 정직히 인정. 직전 "내
+  로컬 leighton 실패" 와 모순 아님: 그건 `~/.hx/bin/hexa`
+  (stale 설치본), 본 검토는 main worktree promoted hexa — 서로
+  다른 binary 확인됨. **여전히 정직 갭**: ① demiurge 세션 기본
+  `hexa` 는 아직 stale (main promoted 가 `~/core/hexa-lang` 기본
+  브랜치로 merge/재설치돼야) · ② "demiurge end-to-end GREEN"
+  아님 — booksim `cmd_measure`(F1F2 producer) 미실행, exports/
+  측정 record 0. enum 해제 = B2 가 *가능해진* 것. demiurge
+  코드 0 — 검토·기록만.
