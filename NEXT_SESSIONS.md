@@ -23,10 +23,12 @@ identified, kept here so none are lost.
   - **A.** 문서 정합 — NEXT_SESSIONS / GOAL.md / `@N` reconciled to
     the latest κ phases. *done* (live progress in PLAN.md, decisions
     in design.md).
-  - **B.** hexa-\* sibling 인식 — workbench + CLI surface
-    `~/core/hexa-<domain>` existence (`Domain.siblingRepoPath` /
-    `siblingRepoExists`; NewProjectSheet confirm step;
-    `cli show-project` `sibling_repo:` line). *done*.
+  - **B.** ~~hexa-\* sibling 인식~~ — **withdrawn 2026-05-19**: user
+    confirmed `~/core/hexa-<id>` sibling repos are NOT SSOT; the
+    hexa-lang single-repo holds every domain's stdlib (per the same-
+    day "hexa-lang 이 유일 SSOT" directive). The κ-16 sibling code
+    (Domain.siblingRepoPath / NewProjectSheet banner / cli
+    show-project sibling_repo line) was removed in κ-17.
   - **C.** P-⑧ "기본 라이브러리" 정의 — provisional working
     definition landed under P-⑧ below. *awaiting user confirm
     / adjust*.
@@ -43,8 +45,9 @@ identified, kept here so none are lost.
   - **D + E.** hexa-lang single SSOT session — P-②③ (Yosys modules +
     `d5a63a82` push) **and** P-④ (chip §B full-curve measurement).
     Repo: `~/core/hexa-lang`. *open*.
-  - **F.** P-⑨ — hexa-component session (real USDZ producer). Repo:
-    `~/core/hexa-component`. *open*.
+  - **F.** P-⑨ — component producer (real USDZ). Location:
+    `~/core/hexa-lang/component/` (per user 2026-05-19 — hexa-lang
+    sole SSOT, no separate sibling repo). *open*.
 
 The ζ dependency-graph half is **deferred** (not in this matrix —
 workbench value vs UI cost unclear; reopen on a concrete use).
@@ -424,13 +427,13 @@ measurement record + gate exists — this depends on an engine tool
 
 ---
 
-## P-⑨ — component-domain producer session (ι-2: real USDZ)
+## P-⑨ — component producer session (ι-2: real USDZ)
 
 **Use this when:** you want the cockpit's ComponentMode (D35, phase
 ι) to render a REAL component USDZ instead of the procedural 5-layer
-placeholder. The natural repo is `~/core/hexa-component` (the
-sibling); demiurge is the consumer per D2 typed interface — record
-only.
+placeholder. **Location: `~/core/hexa-lang/component/`** (user
+2026-05-19 — hexa-lang sole SSOT; no separate sibling repo). demiurge
+is the consumer per D2 typed interface — record only.
 
 ```
 component-domain producer session — emit a real USDZ + provenance.
@@ -523,6 +526,16 @@ Exit criterion (any one ends honestly):
   repos under `~/core/hexa-*` (cross-repo, like hexa-lang). `hexa-ufo`
   TBD resolved (sibling repo, no demiurge domain map yet). One TBD
   remains: the exact form of "기본 라이브러리".
+- 2026-05-19 — **κ-17 — sibling-repo 인식 철회 (user correction
+  "hexa-lang 이 모두 stdlib / hexa-lang/component 나")**. The κ-16
+  B-track sibling code was a wrong assumption — `~/core/hexa-<id>`
+  directories exist on disk but are NOT SSOT; the single hexa-lang
+  repo holds every domain's stdlib (booksim/matter pattern; component
+  belongs at `~/core/hexa-lang/component/`). Removed
+  Domain.siblingRepoPath / siblingRepoExists, NewProjectSheet
+  sibling banner, cli show-project sibling_repo line. NEXT_SESSIONS
+  Tracks B withdrawn, F path corrected, P-⑨ heading corrected.
+  AGENTS.tape user_directive carries the 정정 line.
 - 2026-05-19 — **hexa-lang = sole SSOT (user directive)** + **two-
   prompt collapse**. AGENTS.tape `g_stdlib_ownership.user_directive`
   gains the 2026-05-19 강화 line. The cross-repo tracks collapse to

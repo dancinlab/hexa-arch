@@ -1810,3 +1810,20 @@
   3D 애니메이션 = 여전히 NO (D35 명시); ι-2 (실 USDZ) 미완 —
   component producer 후. 다음 = cross-repo 세션 (P-②③/P-④/
   P-⑧) 또는 신규 작업.
+- 2026-05-19 — **phase κ-17 — sibling-repo 인식 철회** (사용자 정정
+  "~/core/hexa-component 가 아니야 hexa-lang 이 모두 stdlib /
+  hexa-lang/component 나"). κ-16 의 B 항목(sibling-repo 인식)이
+  사실관계 오류였음 — `~/core/hexa-<id>` 디렉토리가 실제 존재하나
+  SSOT 는 hexa-lang 단일 repo 안 (booksim/matter 패턴; component 도
+  `hexa-lang/component/`). **(코드 철회)** `Domain.siblingRepoPath`
+  / `siblingRepoExists` 제거 (DemiurgeCore) · NewProjectSheet 의
+  sibling banner 제거 · CLI `show-project` 의 `sibling_repo:` 줄
+  제거. **(문서 정정)** AGENTS.tape `g_stdlib_ownership.
+  user_directive` 에 정정 라인 추가 ("sibling repo 패턴 폐기; 모든
+  도메인 stdlib 는 hexa-lang 안"). NEXT_SESSIONS Tracks B 항목
+  *withdrawn* 마크, F 항목 경로 `~/core/hexa-component` →
+  `~/core/hexa-lang/component/`, P-⑨ 본문 경로 정정. 측정:
+  `swift run CockpitApp` 빌드 green (19.11s, 에러 0). **g3 정직**:
+  κ-16 의 sibling 인식은 *measured 도 cited 도 아닌 가정* 이었음 —
+  사용자 정정으로 즉시 철회. workbench 가 "잘못된 위치 표시"보다
+  "표시 안 함" 이 정직.
