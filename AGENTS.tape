@@ -7,6 +7,7 @@
   version = "1.2"
 
 ## INDEX (curated pointer table — keep in sync if you add or remove a top-level entry)
+# @D g_demiurge_pointer_only  — demiurge = pointer / spawn wrapper ONLY; every producer script lives in hexa-lang/stdlib/  (D61)
 # @D g_stdlib_ownership       — stdlib/ namespace belongs EXCLUSIVELY to hexa-lang; demiurge is consumer only   (D15)
 # @D g3_no_over_claim         — never assert unmeasured/unproven results; SKIP-mode regression banned           (D12)
 # @D g_clean_room             — prior art absorbed from public surface only; no closed-binary RE / DRM bypass   (D1)
@@ -24,6 +25,15 @@
 # @N ssot                     — pointer map: where governance + decisions + arch + progress live
 # @N n_cockpit_ar_target      — cockpit 3D viewer uses RealityKit to port to AR / visionOS spatial rendering    (D35)
 # the entries themselves are SSOT; this index is a derived pointer table per @D g_ssot_single_source / D50.
+
+@D g_demiurge_pointer_only := "demiurge = pointer / spawn wrapper ONLY" :: governance [required d=2026-05-20 active]
+  rule = "demiurge is a pointer / spawn-wrapper ONLY for every external-tool producer script (Python / shell / hexa-native). The script SSOT lives in `hexa-lang/stdlib/<domain>/`, NEVER in `demiurge/`. demiurge's Swift `*Producer.swift` files only `Process`-spawn the hexa-lang-owned script; they hold no compute logic."
+  demiurge_role = "spawn wrapper + typed Record decoder. NEVER author or own a producer script. NEVER carry `cockpit/scripts/*.py` (generalizes g_stdlib_ownership from hexa-native wrappers to ALL producer scripts including Python/shell)."
+  user_directive = "2026-05-20 — 'AGENTS.tape 최상단으로 해당내용 옮겨서 기록, demiurge 는 포인터 (spawn wrapper)'. Generalizes D15/g_stdlib_ownership to producer-side scripts (Python ngspice/pvlib/skyfield/urdfpy/networkx/freecad wrappers etc.) — not only hexa-native modules."
+  examples_correct = "`MatterAnalyzer.swift` spawns `hexa run ~/core/hexa-matter/verify/run_all.hexa` — hexa-lang owns the script. Future `SSCBProducer.swift` correctly spawns `~/core/hexa-lang/stdlib/sscb/ngspice.py`."
+  examples_violated_at_birth_must_migrate = "`cockpit/scripts/bipv_freecad.py` (κ-33) · `sscb_ngspice.py` (κ-34) · `grid_networkx.py` / `bot_urdf.py` / `energy_pvlib.py` / `space_skyfield.py` (κ-35..κ-39 in-flight) — all violations; migration round moves each to `hexa-lang/stdlib/<domain>/`, updates demiurge Producer.swift spawn path."
+  enforcement = "every new producer's PR must show the script lives under `~/core/hexa-lang/stdlib/<domain>/` and demiurge carries only a `*Producer.swift` `Process` spawn wrapper. Any `cockpit/scripts/*.py` = automatic block."
+  see_also = "D15 (stdlib ⊂ hexa-lang) · D17 (matter parity precedent: SSOT=hexa-lang, demiurge=consumer-pointer) · D61 (this decision, design.md) · ABSORPTION.md ① STDLIB"
 
 @D g_stdlib_ownership := "stdlib ⊂ hexa-lang ONLY" :: governance [required d=2026-05-18 active]
   rule = "The `stdlib/` namespace belongs EXCLUSIVELY to hexa-lang. demiurge is a *consumer* of hexa-lang stdlib — it MUST NOT own or carry a `stdlib/` tree."

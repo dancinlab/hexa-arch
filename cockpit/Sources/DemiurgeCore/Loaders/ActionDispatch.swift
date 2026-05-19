@@ -15,6 +15,19 @@
 // κ-34 (D55): adds `sscb + analyze` → SSCBProducer (ngspice 46 transient).
 // κ-38 (D59): adds `energy + analyze` → EnergyAnalyzeProducer
 //             (pvlib clear-sky + CEC SAPM, 4th cohort producer).
+// κ-43 (D65): adds `antimatter + analyze` → AntimatterAnalyzeProducer
+//             (particle / PDG live-data lookup, 5th cohort producer;
+//             FIRST D61-compliant-from-birth producer — script SSOT in
+//             ~/core/hexa-lang/stdlib/antimatter/pdg_lookup.py, never
+//             in cockpit/scripts/).
+// κ-39 (D62): adds `cern + verify` → CernVerifyProducer (particle +
+//             Bethe-Bloch analytic, 6th cohort cell and FIRST verify-
+//             verb cell in the cohort domains; D61-compliant — script
+//             SSOT in ~/core/hexa-lang/stdlib/cern/bethe_bloch_stopping.py).
+// κ-44 (D66): adds `component + verify` → ComponentVerifyProducer
+//             (gmsh + scikit-fem FEM on a Si die proxy box, 7th
+//             measurable-only cell; D61-compliant — script SSOT in
+//             ~/core/hexa-lang/stdlib/component/gmsh_skfem.py).
 //
 // Currently wired:
 //   • component + synthesize → ComponentEmitter.emitBundled
@@ -42,6 +55,15 @@
 //                              verified algorithm output but ZERO sky-
 //                              measured data → clear-sky upper bound,
 //                              GATE_OPEN영구 / absorbed=false ALWAYS)
+//   • antimatter+ analyze    → particle (scikit-hep) PDG live-data
+//                              lookup (κ-43 / D65 — 5th cohort domain,
+//                              FIRST particle-physics cell AND FIRST
+//                              D61-compliant-from-birth producer
+//                              (script SSOT in hexa-lang/stdlib/);
+//                              real PDG measured constants but COPIED
+//                              from PDG aggregator, NOT demiurge
+//                              experiment → GATE_OPEN영구 /
+//                              absorbed=false ALWAYS)
 //
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
@@ -125,6 +147,14 @@ public enum ActionDispatch {
             return runSSCBAnalyze()
         case (.analyze, "energy"):
             return runEnergyAnalyze()
+        case (.analyze, "antimatter"):
+            return runAntimatterAnalyze()
+        case (.analyze, "fusion"):
+            return runFusionAnalyze()
+        case (.verify, "cern"):
+            return runCernVerify()
+        case (.verify, "component"):
+            return runComponentVerify()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -199,6 +229,121 @@ public enum ActionDispatch {
     /// the FIRST renewable-energy cell.
     private static func runEnergyAnalyze() -> ActionResult {
         let r = EnergyAnalyzeProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `antimatter + analyze` engine tool (κ-43 / D65) — spawn the
+    /// `particle` (scikit-hep, BSD-3) PDG live-data lookup via
+    /// `~/core/hexa-lang/stdlib/antimatter/pdg_lookup.py` and persist
+    /// a typed `AntimatterRecord` under
+    /// `exports/antimatter/pdg/<stamp>/`. Producer = `particle@<v> (PDG
+    /// live-data lookup)`. FIRST cohort domain that ships D61-compliant-
+    /// from-birth — the Python script lives in hexa-lang/stdlib/, NEVER
+    /// in cockpit/scripts/ (g_demiurge_pointer_only). FIFTH cohort
+    /// domain crossing the measuring-producer threshold and the FIRST
+    /// particle-physics cell. PDG values ARE real measured constants
+    /// but THIS run is not a demiurge measurement — it copies the PDG
+    /// aggregator's record, so measurement_gate stays GATE_OPEN AND
+    /// absorbed is permanently false (g3 — see scope_caveats).
+    private static func runAntimatterAnalyze() -> ActionResult {
+        let r = AntimatterAnalyzeProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `fusion + analyze` engine tool (κ-42 / D67) — spawn plasmapy
+    /// derived-parameter producer via
+    /// `~/core/hexa-lang/stdlib/fusion/plasma_metrics.py` and persist a
+    /// typed `FusionRecord` under `exports/fusion/plasma/<stamp>/`.
+    /// Producer = `plasmapy@<v> (ITER core reference derivation)`.
+    /// SEVENTH cohort cell crossing the measuring-producer threshold
+    /// (after sscb κ-34, energy κ-38, antimatter κ-43, cern κ-39) and
+    /// the FIRST plasma-physics cell. D61-compliant-from-birth — the
+    /// Python script lives in hexa-lang/stdlib/, NEVER in cockpit/
+    /// scripts/ (g_demiurge_pointer_only). Bohm·Debye·Lorentz algebra
+    /// IS real but the inputs (n_e=1e20 · T_e=10 keV · B=5.3 T) are
+    /// textbook ITER values, NOT device-measured — so measurement_gate
+    /// stays GATE_OPEN AND absorbed is permanently false (g3 — see
+    /// FusionAnalyzeProducer scope_caveats; Stage 4 absorbed=true
+    /// requires Thomson-scattering / interferometry / magnetic-probe
+    /// readings from a real tokamak shot per ABSORPTION.md §"hexa
+    /// 포팅 단계").
+    private static func runFusionAnalyze() -> ActionResult {
+        let r = FusionAnalyzeProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `cern + verify` engine tool (κ-39 / D62) — spawn the Bethe-Bloch
+    /// antiproton stopping-power producer via
+    /// `~/core/hexa-lang/stdlib/cern/bethe_bloch_stopping.py` and persist
+    /// a typed `CernRecord` under `exports/cern/stopping/<stamp>/`.
+    /// Producer = `particle@<v> + Bethe-Bloch analytic (no Geant4 MC)`.
+    /// SIXTH cohort cell crossing the measuring-producer threshold and
+    /// the FIRST `verify`-verb cell in the cohort domains. The PDG
+    /// constants + Bethe-Bloch formula ARE real measured-physics, but
+    /// this slice omits four pieces vs full Geant4 MC (shell corrections,
+    /// density effect, straggling, nuclear stopping) — so
+    /// measurement_gate stays GATE_OPEN AND absorbed is permanently
+    /// false (g3 — see CernVerifyProducer scope_caveats; Stage 4
+    /// absorbed=true requires hexa-native re-derivation + Geant4 MC
+    /// parity per ABSORPTION.md §"hexa 포팅 단계").
+    /// `fusion + analyze` engine tool (κ-41 / D65) — spawn the
+    /// plasmapy ITER core reference derivation via
+    /// `~/core/hexa-lang/stdlib/fusion/plasma_metrics.py` and persist
+    /// a typed `FusionRecord` under `exports/fusion/plasma/<stamp>/`.
+    /// Producer = `plasmapy@<v> (ITER core reference derivation)`.
+    /// D61-compliant-from-birth — script SSOT in hexa-lang/stdlib/.
+    /// Derived ω_pe / λ_D / v_A / r_Li ARE real Bohm·Debye·Lorentz
+    /// algebra, but inputs are textbook ITER reference values (NOT a
+    /// measured-from-device shot) → measurement_gate stays GATE_OPEN
+    /// AND absorbed is permanently false (g3).
+    private static func runFusionAnalyze() -> ActionResult {
+        let r = FusionAnalyzeProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    private static func runCernVerify() -> ActionResult {
+        let r = CernVerifyProducer.runVerify()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `component + verify` engine tool (κ-44 / D66) — spawn the
+    /// (gmsh + scikit-fem + meshio + numpy) FEM pipeline via
+    /// `~/core/hexa-lang/stdlib/component/gmsh_skfem.py` and persist a
+    /// typed `ComponentVerifyRecord` under
+    /// `exports/component/verify/<stamp>/`. Producer =
+    /// `gmsh@<v> + scikit-fem@<v>`. The SEVENTH measurable-only cell
+    /// crossing the engine-tool threshold (after component+synthesize,
+    /// chip+verify, chip+synthesize, matter+analyze, sscb+analyze,
+    /// energy+analyze, antimatter+analyze, cern+verify) and a
+    /// D61-compliant-from-birth producer (script SSOT in hexa-lang/
+    /// stdlib/, never in cockpit/scripts/). FIRST package/board/system
+    /// engineering verdict cell. PDE solutions ARE real numbers but
+    /// the geometry is a TOY box (10×10×2 mm Si die proxy), the
+    /// material is textbook silicon, and the load case is single
+    /// steady-state — so measurement_gate stays GATE_OPEN AND absorbed
+    /// is permanently false (g3 — see scope_caveats).
+    private static func runComponentVerify() -> ActionResult {
+        let r = ComponentVerifyProducer.runVerify()
         return ActionResult(
             text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],

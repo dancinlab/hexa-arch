@@ -59,6 +59,67 @@
   `absorbed=true` 주장 금지. 외부 도구의 *substrate-측정* 과 *hexa-
   native absorbed* 는 별개 (Yosys §5 예시).
 
+## hexa 포팅 단계 (substrate → absorbed=true)
+
+`①` STDLIB 의 Python / shell wrapper 는 **임시 substrate**이지
+최종 목표가 아닙니다. **absorbed=true 의 전제는 hexa-native 재구현**
+— D17 matter parity 의 패턴.
+
+```
+Stage 1   substrate wrapper       Python · shell · docker spawn
+          ──────────────────       hexa-lang/stdlib/<domain>/<tool>.py
+                                   외부 도구 binary 의 신뢰에 기댐
+                                   measurement_gate = OPEN 또는 CLOSED
+                                   ✗ absorbed = false (도구는 외부)
+                │
+                ▼   clean-room 재유도 (알고리즘만, 코드 NO)
+                │
+Stage 2   hexa-native 포팅          .hexa 모듈
+          ──────────────────       hexa-lang/stdlib/<domain>/<tool>.hexa
+                                   알고리즘 자체 재유도, spawn 0
+                │
+                ▼   parity check (substrate vs hexa output ± tol)
+                │
+Stage 3   parity 측정               rfc_001~005 §8 measured-gate 패턴
+          ──────────────────       PASS → absorbed=true 권한 획득
+                │
+                ▼
+Stage 4   absorbed=true            gate=CLOSED_MEASURED + absorbed=true
+          ──────────────────       D17 matter / Leighton chip+analyze 예
+```
+
+**현재 단계별 producer 분류**:
+
+| Stage 4 (absorbed=true)   | Stage 1 (substrate, absorbed=false) |
+|---------------------------|-------------------------------------|
+| matter+analyze (hexa-matter) | sscb / grid / bot / energy / space  |
+| chip+analyze (Leighton 수학) | component / brain / mobility / fusion |
+|                             | antimatter / cern / chip-verify(booksim) |
+|                             | chip-synth(yosys substrate) |
+
+**hexa 포팅 난이도 (참고)**:
+
+| producer            | hexa 포팅 작업량                            |
+|---------------------|--------------------------------------------|
+| networkx (grid)     | ⭐⭐ — graph algorithm stdlib, 작음           |
+| urdfpy (bot)        | ⭐⭐ — XML parser + tree                     |
+| skyfield (space)    | ⭐⭐⭐ — SGP4 propagator, 표준 알고리즘         |
+| pvlib (energy)      | ⭐⭐⭐ — clear-sky 모델 + PV I-V curve        |
+| ngspice (sscb)      | ⭐⭐⭐⭐ — sparse solver + MNA + trapz       |
+| yosys (chip)        | ⭐⭐⭐⭐ — read_verilog scope 확장 (이미 일부)   |
+| FreeCAD (component) | ⭐⭐⭐⭐⭐ — OpenCascade B-Rep kernel clean-room |
+| Code_Aster          | ⭐⭐⭐⭐⭐ — FEM solver 전체                    |
+| Geant4              | ⭐⭐⭐⭐⭐ — Monte Carlo 입자 simulator         |
+| OpenFOAM            | ⭐⭐⭐⭐⭐ — CFD solver                       |
+
+⚠️ 대부분 거대 도구는 hexa 포팅이 매우 큰 작업 (수개월~수년).
+substrate 상태에서 GOAL 의 "측정 전엔 과대주장 금지" (g3) 가 정확히
+적용 — `absorbed=false` 유지. **substrate 측정 ≠ 흡수**.
+
+D17 matter parity (29/29 PASS) 가 hexa 포팅의 *최초* 완성 사례 —
+hexa-lang/stdlib/matter 가 자체 hexa-native, parity ±tolerance 후
+absorbed=true 권한.
+
 ## 불필요 — 재사용하지 않는 부분
 
 ```
@@ -94,6 +155,7 @@ dormant.
 | matter    | analyze    | hexa-matter closure aggregator | ①+④   | GATE_CLOSED_MEASURED              | **true** |
 | component | synthesize | FreeCAD 1.1.1 parametric       | ④     | GATE_OPEN                         | false    |
 | sscb      | analyze    | ngspice 46 transient           | ①+④   | GATE_OPEN                         | false    |
+| cern      | verify     | particle + Bethe-Bloch analytic | ①+④  | GATE_OPEN                         | false    |
 
 ✱ **substrate vs absorbed 구분 (g3)** — Yosys §5 는 *외부 yosys
 binary + SKY130* 로 측정해서 cited oracle ±5 % 안에 들었으나, hexa-
@@ -124,6 +186,99 @@ producer 가 ① 에 들어오는 순서대로 매핑 추가.)
 - D55 — sscb analyze = ngspice transient (first cohort producer)
 - rfc_001 §8 · rfc_002 §3 — F1F2 schema + 측정 gate 규칙
 - `proposals/rfc_001` ~ `rfc_005` — 도메인-별 absorption RFC
+
+## 포그라운드 직접 진행용 프롬프트 카탈로그
+
+> 오래 걸리는 producer (FEM 시뮬 · device-model 흡수 · 거대 도구
+> 설치 · multi-config sweep · 큰 학습 곡선) 은 background sub-agent
+> 보다 **별도 Claude Code 세션에서 사용자가 직접 진행**하는 것이
+> 안전합니다 — sub-agent 는 토큰 / 시간 한계로 commit 직전에 끊길
+> 위험이 큽니다 (실제 사례: bot+structure Agent 가 verify 단계에서
+> 토큰 끊김).
+
+### Template — 새 producer 1셀 wiring
+
+```
+demiurge `<DOMAIN> + <verb>` 셀에 lowest-hanging-fruit producer 를
+추가해주세요.
+
+repo: ~/core/demiurge. AGENTS.tape `@D g_demiurge_pointer_only` (D61)
+필수 준수:
+- producer script SSOT = `~/core/hexa-lang/stdlib/<DOMAIN>/<tool>.py`
+  (또는 hexa-native wrapper). hexa-lang 디렉토리 새로 만들 것.
+- demiurge 측 = `cockpit/Sources/DemiurgeCore/Loaders/
+  <Domain><Verb>Producer.swift` (`Process` spawn wrapper 만).
+- `cockpit/scripts/*.py` 절대 만들지 말 것 — 위반시 PR block.
+
+패턴: matter / sscb / energy / chip-analyze / grid producer 의
+D17 / D61 정합 미러.
+
+작업:
+1. `domains/<DOMAIN>.md` §2 도구맵 → 가장 가벼운 OSS (pip · brew 한 줄).
+2. `hexa-lang/stdlib/<DOMAIN>/<tool>.py` — 표준 sample, 측정 한 점.
+3. demiurge Swift `<Domain><Verb>Producer.swift` (spawn) +
+   `<Domain>Record.swift` typed + `ActionDispatch` case.
+4. `design.md` D-num + `PLAN.md` κ-num + `ABSORPTION.md` ④ 표 row
+   추가 + `exports/<DOMAIN>/` record emit.
+5. 빌드 green + `swift run DemiurgeCLI action <verb> <DOMAIN>` 검증.
+6. commit (push 는 사용자 결정).
+
+g3: GATE_OPEN / absorbed=false 기본 (외부 도구). 수학적 fact 면
+GATE_CLOSED_MEASURED 가능 (chip+analyze · grid+structure · matter
++analyze 의 패턴). hexa-native 자체 측정만 absorbed=true.
+
+Pool 자원: wilson-pool 의 Bash hook 이 무거운 명령 (swift build /
+hexa run / docker run / brew / pip 등) 을 자동으로 mini(macOS) ·
+ubu-1(linux) · ubu-2(linux) 에 round-robin 라우팅. 명령을 묶지 말고
+한 번씩 흘려보내 hook 이 분배하게 할 것. macOS 부하 분산 = 사용자
+명시 우선사항. mini 다운이면 macOS-only 명령(swift run · freecadcmd
+등) 은 로컬로 폴백.
+```
+
+### 무거운 후보 — 별도 세션 권장
+
+| 후보                                | 도구                         | 비용     | 상태  |
+|------------------------------------|------------------------------|----------|-------|
+| component + verify (열·구조 verdict) | gmsh + Salome-Meca docker    | 1-2일    |       |
+| antimatter / cern + measured       | Geant4 + ROOT                | 1-2일    | 진행  |
+| fusion + verify (CFD)              | `hexa-lang/stdlib/fusion` 포팅 (clean-room) | 1-2주 |       |
+| Wolfspeed SiC `.lib` 흡수 (sscb)   | 측정 데이터 + DEVSIM TCAD    | 수일     | 🚧 κ-39 skeleton (`hexa-lang/stdlib/sscb/`) |
+| chip §B full-curve parity          | booksim 9-sweep + parity     | 수일     | 진행  |
+| Yosys hexa-native absorbed=true    | `stdlib/yosys/read_verilog` scope 확장 (localparam · generate · always · function automatic · multi-D mem · signed arith) → router_d{4,6}.v hexa-native 합성 → ±5% 오라클 매치 | 1-2주 | 진행  |
+
+### 사용법
+
+새 Claude Code 세션 열고 위 Template 을 그대로 복사 + `<DOMAIN>` /
+`<verb>` 치환. background sub-agent 가 아니라 **포그라운드** 에서
+사용자가 진행하면 토큰 한계로 끊길 위험 없음. 무거운 후보는 hint
+1줄 추가 ("OpenFOAM tokamak SOL pipe flow" 같은) 로 producer 의
+스코프를 좁힐 것.
+
+### Pool 자원 활용 (wilson-pool)
+
+이 머신은 wilson-pool roster (mini · ubu-1 · ubu-2) 에 자동
+라우팅됩니다. macOS 본체 부하 회피가 사용자의 명시 우선사항이라
+**무거운 명령은 일부러 묶지 말고 그대로 흘려보내는 것이 원칙** —
+hook 이 알아서 분배합니다.
+
+```
+호스트     │ 플랫폼   │ 라우팅 대상
+──────────┼─────────┼───────────────────────────────────
+mini      │ macOS   │ swift build · freecadcmd · macOS-only
+ubu-1     │ linux   │ pip · docker · gmsh CLI · yosys 등
+ubu-2     │ linux   │ ubu-1 와 round-robin (load balance)
+local mac │ -       │ pool 호스트 다운시 fallback (swift run)
+```
+
+- 모든 사용자 prompt 와 sub-agent prompt 에 "wilson-pool hook 이
+  자동 라우팅 — 명령 묶지 않고 흘려보내라" 한 줄 명시 권장.
+- `docker run` · `pip install` · `brew install` · `swift build` ·
+  `hexa run` 모두 hook 이 감지.
+- Read · Write · Edit · Grep 은 항상 local (file edit 은 동기화 안
+  됨).
+- mini 다운 사례: 라우팅 시도 → SSH timeout → ubu fallback or
+  local. 빌드 끊김 발생 시 wilson-pool 상태 확인 (`! ssh mini` 등)
+  후 재시도.
 
 ---
 

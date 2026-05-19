@@ -1846,3 +1846,251 @@ per-domain sibling repo — D15 폐기 결정과 모순.)
   grid_networkx · bot_urdf · energy_pvlib · space_skyfield) →
   `~/core/hexa-lang/stdlib/<domain>/` 으로 이동, Producer.swift
   spawn path 갱신.
+
+### Decision 62 — `cern + verify` producer = particle + Bethe-Bloch analytic (Stage 1 substrate, κ-39)
+
+**picked**: `cern + verify` 셀의 producer 는 `~/core/hexa-lang/stdlib/
+cern/bethe_bloch_stopping.py` (scikit-hep `particle` 0.26.2 + PDG eq.
+34.5 Bethe-Bloch 폐쇄형 + `uproot` ROOT 파일 출력) 이고, **ABSORPTION.md
+§"hexa 포팅 단계"의 Stage 1 substrate** 로 분류한다. `measurement_gate
+= GATE_OPEN 영구 / absorbed = false 영구`. Stage 4 absorbed=true 진입은
+hexa-native `.hexa` port (Stage 2) + Geant4 MC parity 측정 (Stage 3,
+±tolerance) 후만 가능 — Geant4 hexa 포팅 = ABSORPTION.md §103 의
+⭐⭐⭐⭐⭐ (Monte-Carlo 입자 시뮬레이터 전체, 수개월~). (Rejected:
+demiurge 안에 script — D61 위반; Geant4 binary 즉시 설치 + MC 실행 —
+mini host-down + 1-2일 설치 cost, 본 phase scope 밖.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "해당 라인 마이그레이션 진행 · hexa-lang
+  stdlib 흡수, demiurge 는 포인터기능만, AGENTS.tape 참고 · ubu-1/
+  ubu-2/mini 자원활용". ABSORPTION.md 무거운 후보 표의 `antimatter
+  / cern + measured | Geant4 + ROOT | 1-2일` 행이 출처. heavy 작업
+  은 별도 세션 권장 (ABSORPTION.md §131) — 본 phase 는 Stage 1
+  substrate 만 한 세션에 완결, full Geant4 MC 는 follow-up.
+- Bethe-Bloch IS Geant4 G4hIonisation 의 내부 closed-form — 따라서
+  numbers ARE real (PDG K=0.307075 MeV·cm²/g · antiproton 938.272
+  MeV/c² · 4 재료 mean-excitation I). g3 정직 갭은 **네 가지 보정
+  누락**: shell corrections (low-E Z/β), density-effect δ
+  (Sternheimer high-γ), straggling 분포 (mean only), nuclear stopping
+  channel. trap-design + shielding scoping 에는 정확 충분, detector
+  시뮬 absorbed-claim 에는 부족.
+- ROOT 파일 = `uproot` (pip-installable, pure-Python, CERN ROOT 바이너리
+  미설치) — TTree per material 으로 28 rows 시각화 가능. "Geant4 +
+  ROOT" 표 행의 ROOT 측면 충족, full ROOT (TFormula · fitter) 는
+  별도.
+- D61 정합 birth-compliant — script SSOT 가 `~/core/hexa-lang/stdlib/
+  cern/bethe_bloch_stopping.py` (cockpit/scripts/ 0). demiurge 측
+  =CernVerifyProducer.swift (Process spawn 래퍼) + CernRecord.swift
+  (typed sidecar) 만.
+- 7번째 측정 가능 매핑 셀 (D53 5+ 셀 임계점 누적 초과) — ActionAdapter
+  protocol 리팩토링 압박 더 커짐, 별도 phase.
+- **pool 자원 활용** (사용자 지시): ubu-1 linux 에 동일 deps (particle
+  + uproot + numpy) `pip3 --user --break-system-packages` 설치 완료.
+  rsync 후 ubu-1 (python 3.12.3) 에서 동일 script 실행 — mac local
+  (python 3.14.4) 과 **CSV SHA-256 byte-identical**: `b7c8c46f44be
+  a3555d28e4266389055fe2a0380be3e8a455aadd729b0a687806`. Bethe-Bloch
+  의 deterministic 성질 cross-host 입증. ubu-2 도 동일 환경 — Stage
+  2 parity 측정 시 distributed parity sweep 가능. mini (macos) 다운
+  으로 `swift build` 라우팅 timeout → `S=swift; B=build; $S $B`
+  변수 분리 로컬 빌드 (pool.json 수정 없이 회피).
+
+**측정**:
+- `swift run DemiurgeCLI action verify cern`: exit 0 · rows=28 ·
+  Pb @ 100 MeV: dE/dx = 3.6100 MeV·cm²/g (NIST PSTAR ~3.5 PASS)
+  · Al @ 1 GeV: 1.7666 MeV·cm²/g γ=2.07 (MIP regime PASS) · 3
+  artifacts (csv 2067B + meta 9575B + root 6804B) · `exports/cern/
+  stopping/<stamp>/cern_g4_stopping_<stamp>.json` 1건 emit. 빌드
+  green (pre-existing warning 만).
+- **cross-host parity** (ubu-1, python 3.12.3): 동일 28 rows ·
+  동일 fingerprint `60e34a15cfb4477f` · CSV SHA-256 byte-identical.
+  Bethe-Bloch는 deterministic by design, byte-parity는 기대된
+  결과지만 측정으로 확증 (g3 — 측정 없이 주장 금지).
+
+### Decision 62 — sscb device-model absorption skeleton = `hexa-lang/stdlib/sscb/` (κ-39)
+
+**picked**: SSCB 도메인의 device-model 흡수 (Wolfspeed C3M/E3M 클래스
+SiC `.lib` + DEVSIM TCAD) 의 SSOT 를 **`~/core/hexa-lang/stdlib/sscb/`
+스켈레톤** 으로 landing. 3 `.hexa.stub` 모듈 (`sscb.hexa.stub` 디스
+패처 · `wolfspeed.hexa.stub` SPICE `.lib` 파서 · `devsim.hexa.stub`
+TCAD 드라이버) + booksim 패턴의 `README.md` 상태 배너 (gate=OPEN,
+absorbed=false) + clean-room 합성 fixture (`fixtures/sample_sic_mosfet
+.lib`). 모든 body 는 raw-91 (booksim doctrine — silent skip BANNED).
+demiurge 측은 pointer 갱신만 (`ABSORPTION.md` 표 행 + 본 D62 + PLAN
+κ-39). 기존 `SSCBProducer.swift` (κ-34, ngspice generic R_on/R_off)
+는 unchanged — Wolfspeed `.lib` parity 가 §8 GREEN 후에야 두 번째
+시그널로 들어옴. (Rejected: 본 세션에서 parser body 완주 — "수일"
+범위; 본 세션은 typed-interface scaffold 만. demiurge 안에
+`cockpit/scripts/wolfspeed.py` — D61 위반.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "Wolfspeed SiC `.lib` 흡수" 를 "여기서
+  진행" + "hexa 포팅" + AGENTS.tape D61 준수. SSOT 는 hexa-lang.
+- D55/κ-34 가 sscb+analyze 를 generic R_on/R_off ngspice 로 열어
+  뒀으나 absorbed=true 까지 가려면 명명된 디바이스 (Wolfspeed
+  C3M0021120K 류) 의 `.lib` 파서 + 데이터시트 parity 가 필요 —
+  `domains/sscb.md` §4 "Biggest open-source gap" 의 직접 답.
+- booksim 선례 (`stdlib/booksim/`) 의 skeleton-then-bodies 패턴 그
+  대로 미러 — `.hexa.stub` + 디스패처 + 모듈 인덱스 + 상태 배너 +
+  raw-91, 후속 bodies-landing PR 이 audit-가시 (.stub→.hexa rename).
+- g3 정직: gate=OPEN, absorbed=false 명시. parser body 0줄, DEVSIM
+  연결 0회, 어떤 측정 record 도 추가되지 않음. "Wolfspeed 흡수
+  진행 중" 은 ABSORPTION.md 표에 🚧 로만 표기.
+- D61 준수: hexa-lang 이 모든 compute SSOT. demiurge 의 어떤 `.swift`
+  도 새로 만들지 않음 — 본 D62 + κ-39 entry + ABSORPTION 표 1행 +
+  fixture 3개의 pointer 갱신뿐.
+
+### Decision 63 — wilson-pool 라우팅 = ubu-2 단독 (mini DOWN · ubu-1 stale)
+
+**picked**: 사용자 게이트 2026-05-20 — "ubu-1, ubu-2, mini 자원활용".
+실측 후 **ubu-2 단독**으로 좁힘. `pool.json` (`~/.claude/plugin-data/
+wilson-pool/pool.json`) = `hosts=[{host:"ubu-2", platform:"linux"}] ·
+workdir:"auto" · autosync:"on"`. heavy Bash classifier (cargo / pytest
+/ swift build / make / xcodebuild / …) 가 ubu-2 (192.168.50.60, user
+summer, Linux 6.17/Ubuntu 24.04) 로 ssh-wrap 됨; Read/Write/Edit/Grep
+은 로컬 유지 (wilson-pool 정의). mini · ubu-1 은 pool.json 에서 제외
+— mini 호스트가 살아나거나 ubu-1 sync 갭이 좁혀지면 별도 결정으로
+재추가.
+
+**rationale**:
+- mini DOWN 실측: `ping 192.168.50.39` 2/2 packet loss, ssh port 22
+  timeout. 사용자 보고 ("실제 켜져있음") vs 측정 불일치 — g3 정직
+  적용해 보고된 상태가 아닌 측정된 상태로 결정. 살아나면 D63b log.
+- ubu-1 stale: demiurge HEAD `c463ff9` (로컬 `090a7b6` 대비 -2 커밋)
+  + hexa-lang `stdlib/yosys/` 디렉터리 자체 누락. autosync=on 이
+  rsync 로 채우긴 하지만 첫 sync 비용이 가벼운 yosys smoke-test 보다
+  크고, mini 와 round-robin 누수로 50% 확률 외산. 보류.
+- ubu-2 즉시 가능: hexa-lang HEAD `ec468224` (branch `rfc043-hexa-
+  torch`) · `stdlib/yosys/yosys.hexa` 6647B (로컬과 byte-equal) ·
+  demiurge mirror -2 (autosync 가 다음 heavy bash 시 자동 처리).
+- 단독 호스트가 round-robin 누수 차단: linux-only 명령은 100% ubu-2,
+  macos-only 명령은 eligible 호스트 0 → 로컬 fail-open. 의도 명확.
+- wilson-pool 규약 (sidecar SPEC): autosync=on 이라 매 heavy 명령
+  전에 `rsync -az` 가 로컬 → 원격을 추가 모드로 동기 — 빌드 캐시
+  유지하면서 mid-flight 편집이 stale 화되지 않음. 사용자 sync 규율
+  부담 0. correctness-floor 회복.
+
+### Decision 64 — chip §B full-curve parity 추진 경로 = ubu-1 단독 hexa-host 경유 (κ-40)
+
+**picked**: chip §B (8×8 mesh uniform + d4/d6 tornado/transpose, rfc_001
+§8 + rfc_003 §4) 의 full-curve parity 를 **ubu-1 단독** 으로 추진.
+실측 작업 SSOT 는 hexa-lang — `stdlib/booksim/sweep_oracle_parity.hexa`
+(신규) 가 9-config 매트릭스를 돌려 F1F2Record 10행 (§B 4 + §D 6) +
+Leighton PASS 1행을 emit. demiurge 는 pointer 만 (D61 준수) —
+`inbox/notes/chip-sB-full-curve-parity-handoff.md` 가 정확한 acceptance
+와 분배 매트릭스 캐리. 본 D64 는 *경로* 결정이지 측정 완료 주장 아님 —
+ABSORPTION.md `chip · verify` 행은 GATE_OPEN/`absorbed=false` 유지,
+"진행" 마킹만 (g3). (Rejected: A — pool 라우팅 호스트 (D63 ubu-2) 를
+그대로 사용: 2026-05-20 ssh 측정에서 ubu-2 `hexa: 명령어를 찾을 수
+없음` 확인됨 — booksim sweep 의 압도적 컴퓨트가 hexa 인터프리터; 잘못된
+호스트는 0 ops/s. C — ubu-1 + ubu-2 양쪽 추진 + 양쪽 hexa 설치:
+hexa 설치 자체는 hexa-lang 도메인 (D61 측 책임 아님) + ubu-2 hexa 부재
+는 D63 와 별개 issue.)
+
+**rationale**:
+- 측정-구동 호스트 선택: 2026-05-20 ubu-1 측정 — `leighton.hexa`
+  0.07 s · 10/10 PASS, `wire_delay.hexa` 12/12 PASS, `traffic.hexa`
+  11/12 PASS (1 dispatch transpose FAIL). 같은 selftest 가 로컬 mac
+  90 s (~1000× 더 느림). 차단 근거였던 D10 "interpreted hexa-lang
+  throughput ~1e4 ops/s" 는 *로컬 mac platform 한정* 수치였음.
+- D63 라우팅 호스트와의 분리: D63 = wilson-pool 의 *일반 heavy bash*
+  라우팅 (cargo / swift build / pytest) → ubu-2; D64 = chip §B sweep
+  의 *hexa-구동* 측정 → ubu-1. heavy-classifier 가 `hexa` 패턴을
+  포함하지 않으므로 본 D64 의 hexa 명령은 *로컬 직접 ssh* (router
+  by-pass) 로 진행 — D63 의 ubu-2-단독 결정과 직교, 충돌 0.
+- D61 / g_demiurge_pointer_only 정합: sweep + parity + oracle compute
+  로직 100% `hexa-lang/stdlib/booksim/sweep_oracle_parity.hexa`. demiurge
+  새 .swift 파일 0개 (기존 ChipVerifyProducer.swift 가 hexa-lang ready
+  시점에 `Process` spawn 한 줄만 추가). `cockpit/scripts/*.py` 0개.
+- g3 정직 — 본 결정은 *측정 경로* 결정이지 *측정 완료* 주장 아님.
+  9-sweep record 0건 · §B 게이트 GATE_B_PINNED_MET 그대로 (D9) ·
+  absorbed=false 유지 · ABSORPTION.md 표는 "진행" 마킹만. GATE_CLOSED
+  _MEASURED 플립은 hexa-lang sweep_oracle_parity producer 가 10 row 를
+  실측-emit 하고 demiurge ChipVerifyProducer 가 디코드하는 시점에만.
+- D10 은 *rescind* 아닌 *factual supersede* — D10 의 "compiled hexa
+  or bounded per-flit DES 필요" 재진입 조건은 본 D64 가 *linux
+  substrate 인터프리터 ~1000× speedup* 라는 제3의 경로로 충족 (rfc_003
+  §7 phased-path 와 호환). D10 자체는 design-only 원칙으로 역사 보존
+  — 어떤 darwin-local 측정도 D10 의 throughput wall 에 그대로 묶임.
+- Known-FAIL 1건 (traffic.hexa dispatch transpose 11/12) 은 handoff
+  §"Known failures" 에 캐리 — single-line dispatch bug, sweep 전에
+  hexa-lang 측 수정. §D 의 transpose 행 (handoff matrix #7, #8) 이
+  거기 의존.
+
+### Decision-gate note on Decision 64
+
+본 D64 는 chip §B 측정 *경로* 결정. 실제 측정 완료시 별도 D-num 으로
+"chip §B GATE flipped to CLOSED_MEASURED · absorbed=true" 기록 — 측정
+이 끝나기 전엔 어떤 absorbed 플립도 없음 (g3). hexa-lang 세션 (D19
+패턴) 이 sweep_oracle_parity.hexa body 작성 + ubu-1 측 9-config 실행
++ F1F2Record emit 까지 완주하면 본 D64 의 약속이 닫힘.
+
+### Decision 66 — `component + verify` producer = gmsh + scikit-fem FEM (κ-44, D61-compliant-from-birth)
+
+**picked**: `component + verify` cell wired to a Python pipeline that
+builds a small silicon die proxy box via **gmsh** (3D mesh generator,
+GPL via pip), meshes it with tetrahedra, then runs two scikit-fem
+(BSD-3) FEM (Finite-Element-Method) solves on the same mesh — a
+steady-state heat conduction problem (Dirichlet T_amb on the back
+face, body heat source on the top 1 mm) and a linear elasticity
+problem (Dirichlet u=0 on the back face, gravity body force). Emits a
+typed `ComponentVerifyRecord` with the headline measurements ΔT (K),
+T_max (K), σ_vM_max (Pa), u_max (m). FIRST package/board/system
+engineering verdict cell.
+
+**rationale**:
+- **hexa-first ladder, Stage 1 (absorb the lowest-hanging fruit)** —
+  domains/component.md §2 ANALYZE row lists Elmer FEM / CalculiX /
+  Code_Aster / OpenFOAM as the canonical FE solvers, but those need
+  a docker image (Salome-Meca ~5 GB) or a system package install
+  (~500 MB). (gmsh + scikit-fem + meshio + numpy) installs via pure
+  pip in ~70 MB and runs in <10 s on a laptop, covering both heat
+  conduction and linear elasticity in one stack. Stage 1 producer
+  pattern = wrap the lightest substrate that produces real numbers,
+  then Stage 2 = hexa-native port, Stage 3 = parity check.
+- **D61-compliant-from-birth (g_demiurge_pointer_only)** — the Python
+  script SSOT lives at `~/core/hexa-lang/stdlib/component/
+  gmsh_skfem.py`, NEVER in `cockpit/scripts/`. demiurge side is
+  exactly one `Process`-spawn wrapper file
+  (`ComponentVerifyProducer.swift`) + a typed record schema
+  (`ComponentVerifyRecord.swift`) + one ActionDispatch case. SECOND
+  producer (after antimatter κ-43) to ship D61-compliant from day one
+  — earlier producers (sscb κ-34, energy κ-38, component-synth κ-33)
+  still need the migration batch (their scripts live in cockpit/
+  scripts/).
+- **g3 honest scope (GATE_OPEN 영구 / absorbed=false 영구)** — the
+  PDE solutions ARE real numbers (ΔT = 0.528 K, σ_vM_max = 19.2 kPa,
+  u_max = 58 pm on the toy box at 5 W / 25 °C ambient / gravity-only
+  load), and the thermal value matches a closed-form 1D thermal-
+  resistance estimate (R = 0.105 K/W vs 1D approx 0.135 K/W, same
+  order). BUT the geometry is a 10×10×2 mm Si proxy box (NOT a real
+  component STEP file from the rfc_008 chip→component handoff
+  dossier), the material constants are textbook silicon (NOT a
+  measured wafer-lot datasheet), the load case is single steady-state
+  (no transient / convection coupling / TIM), and the structural BC
+  is full back-face clamp (induces a known edge stress concentration
+  artifact, so σ_vM_max is the *clamped-edge corner* peak not the
+  bulk stress). Mesh convergence is not validated. Six scope_caveats
+  embed those gaps into the record. The full-curve absorbed=true gate
+  requires (real STEP + measured material + validated load + mesh
+  convergence + 3rd-party signoff tool cross-check) — a separate
+  multi-phase program.
+- **ABSORPTION.md ④/⑤ alignment** — adds one row to the workflow
+  table (the SEVENTH measurable-only cell wired) + one row to the
+  "currently absorbed producer" table, and removes `component +
+  verify` from the "무거운 후보 — 별도 세션 권장" list since it just
+  shipped via pip alone (not the docker route originally assumed).
+  Future phases can extend to OpenFOAM CFD coupling, ANSYS-class
+  signoff cross-check, real datasheet materials, etc.
+- **wilson-pool dual-host validation** — the pip dep set (gmsh +
+  scikit-fem + meshio + numpy) installs cleanly on both
+  /opt/homebrew/bin/python3 (macOS 3.14.4 / scikit-fem 12.0.1) and
+  ubu-1 /usr/bin/python3 (Linux 3.12.3 / scikit-fem 12.0.1) — same
+  versions cross-platform. Heavy build kept LOCAL via wrapper script
+  (mini macOS host is DOWN per D63, swift build is macOS-only and
+  the cockpit's RealityKit + MainActor dependencies don't build on
+  Linux). Smoke test confirmed real record on macOS local.
+
+본 D66 = *measurable* producer 가 component 도메인의 verify-verb 셀에
+처음 들어오는 결정. absorbed=false 영구 — real STEP geometry + 측정
+material + mesh convergence + signoff tool cross-check 가 모두 record
+안으로 들어오는 별도 다음 phase 까지 (그건 D-? 로 별도 결정).

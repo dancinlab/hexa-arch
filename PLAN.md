@@ -2655,3 +2655,209 @@
     의 GATE_OPEN → CLOSED_MEASURED 후보 (별도 phase). ④ **battery
     (PyBaMM) 5번째 cohort** — Li-ion DFN 모델, charge/discharge
     cycle record (energy+design 셀).
+
+- 2026-05-20 — **phase κ-39 — sscb device-model 흡수 skeleton landing
+  (Wolfspeed C3M `.lib` + DEVSIM TCAD)** (`design.md` D62 · D55 후속 ·
+  D61 g_demiurge_pointer_only 준수 · g3 · ABSORPTION.md "무거운 후보"
+  표의 첫 진행 항목). κ-34 가 sscb+analyze 를 generic R_on/R_off
+  ngspice 로 열어 뒀으나, absorbed=true 까지는 명명된 디바이스 (예:
+  Wolfspeed C3M0021120K) 의 `.lib` 파서 + DEVSIM 디바이스-physics
+  parity 가 필요. 본 κ 는 **수일 범위** 의 첫 1세션 단위 = 스켈레톤
+  + typed-interface scaffold + clean-room fixture (g3: parser body
+  0줄 · DEVSIM 연결 0회 · 측정 record 0건).
+  - **landed artifacts** (전부 `~/core/hexa-lang/stdlib/sscb/` 아래,
+    D61 SSOT 규칙):
+    (a) `README.md` — booksim 패턴 미러 (status banner + module
+    index + CLI 표면 + 종료 코드 표). gate=OPEN, absorbed=false.
+    (b) `sscb.hexa.stub` — 디스패처 (`hexa-lang sscb <subcmd>`),
+    booksim 의 `_has_flag` / `_find_flag` 헬퍼 패턴 그대로, 모든
+    `cmd_*` 가 raw-91.
+    (c) `wolfspeed.hexa.stub` — SPICE `.lib` lexer + `.SUBCKT…
+    .ENDS` 파서 + `.PARAM` resolver + `.MODEL VDMOS` reader 의
+    typed 표면 (Element / Model / Subckt) — 모든 body raw-91.
+    (d) `devsim.hexa.stub` — DEVSIM 스크립트-모드 드라이버 (Vds
+    스윕 → I-V 추출) 의 typed 표면 (DevsimRun) — 모든 body raw-91.
+    (e) `fixtures/sample_sic_mosfet.lib` — clean-room 합성 SPICE
+    `.SUBCKT` (D-G-S-TJ-TC 5핀 + 패키지 parasitic + 내부 R_g +
+    intrinsic VDMOS + 열 coupling) — Wolfspeed C3M0021120K 의
+    *공개 데이터시트 topology* 만 참조 (벤더 `.lib` 텍스트 0).
+  - **demiurge pointer 측 갱신** (compute 로직 0줄 — D61):
+    `design.md` D62 — sscb device-model 흡수 skeleton 결정 +
+    rationale 5 (사용자 게이트 · D55 generic→named 필요 · booksim
+    선례 · g3 정직 · D61 준수). `PLAN.md` 본 κ-39 entry. `ABSORPTION
+    .md` "무거운 후보" 표의 Wolfspeed 행 상태 = `🚧 κ-39 skeleton
+    (~/core/hexa-lang/stdlib/sscb/)`. `SSCBProducer.swift` /
+    `SSCBRecord.swift` 미수정 (κ-34 ngspice generic 경로 유지 —
+    Wolfspeed `.lib` parity 는 §8 GREEN 후 두 번째 시그널).
+  - **g3 정직**:
+    - `provenance.absorbed = false` (디바이스 파서 body 0줄)
+    - `measurement_gate = OPEN`
+    - `scope_caveats`: "skeleton landing only — parser bodies TBD;
+      no DEVSIM run executed; fixture is synthetic clean-room SPICE
+      not a calibrated Wolfspeed C3M model"
+    - 측정 record 0건 추가, 어떤 SSCBRecord 도 emit 되지 않음 —
+      sscb+analyze 셀의 ngspice generic 출력은 κ-34 와 동일.
+  - **다음 pickup**: ① **wolfspeed.hexa parser body** — 라인 폴드 +
+    `.SUBCKT/.ENDS` + `.PARAM` + `.MODEL VDMOS` + R/L/C/V/I/E/G/M/D/X
+    엘리먼트 카드, fixtures/sample_sic_mosfet.lib 라운드트립 selftest
+    (8h~1d 추정). ② **devsim.hexa.stub locate + smoke run** — DEVSIM
+    pip 설치 (linux → ubu-1/ubu-2), `examples/mosfet_2d` 스크립트
+    무수정 실행 (4-8h). ③ **datasheet YAML 스키마** — C3M0021120K
+    공개 IDS-VDS 곡선 ±10% 패리티 체크 (1-2d). 본 3단계 후 absorbed=
+    true 후보 GATE.
+
+- 2026-05-20 — **phase κ-40 — chip §B full-curve parity 추진 경로 결정
+  + handoff (D10 execution-gate 재오픈, linux substrate 경유)**
+  (`design.md` D63 wilson-pool 라우팅 = ubu-2 + D64 chip §B = ubu-1
+  single-host hexa-driven · D10 factual supersede · D61
+  g_demiurge_pointer_only 준수 · g3 · ABSORPTION.md "무거운 후보" 표의
+  chip §B 행 `진행` 마킹). 사용자 게이트 2026-05-20 = `ABSORPTION.md`
+  "무거운 후보" 표에 chip §B + antimatter/cern 두 행 `진행` 마킹 +
+  "ubu-1, ubu-2, mini 자원활용" + "hexa-lang stdlib 등 흡수하고
+  demiurge 는 포인터기능만 (AGENTS.tape 참고)". 본 κ 는 **수일 범위
+  의 첫 1세션 단위 = 측정 경로 결정 + handoff scaffolding** (g3:
+  9-sweep record 0건 · §B 게이트 GATE_B_PINNED_MET 그대로 D9 ·
+  absorbed=false 유지 · ABSORPTION.md 표는 `진행` 마킹만).
+  - **landed artifacts** (demiurge pointer-only, D61):
+    (a) `inbox/notes/chip-sB-full-curve-parity-handoff.md` — hexa-lang
+    행 handoff. 9-config 매트릭스 (mesh 8×8 uniform + d4/d6 tornado +
+    transpose) · ±5%/±2% acceptance · F1F2Record emit 규약 · 알려진
+    실패 (traffic.hexa dispatch transpose 1/12, anynet.hexa runtime
+    untimed, mini DOWN, ubu-2 hexa 미설치) · demiurge 측 약속
+    (ChipVerifyProducer.swift `Process` spawn 한 줄).
+    (b) `design.md` D64 — chip §B full-curve parity 경로 = ubu-1 단독
+    + 5-bullet rationale (측정-구동 호스트 선택 · D63 분리 · D61 정합
+    · g3 정직 · D10 factual supersede). Decision-gate note.
+    (c) `ABSORPTION.md` "무거운 후보" 표 chip §B 행 `진행` (사용자
+    편집 + 본 세션 표 컬럼 추가).
+  - **2026-05-20 측정 (ubu-1, hexa 0.1.0-dispatch)**:
+    | 모듈 | 로컬 mac | ubu-1 linux | 결과 |
+    |---|---|---|---|
+    | leighton.hexa | 90 s | 0.07 s | 10/10 PASS (~1000× speedup) |
+    | wire_delay.hexa | timeout 10 s | <1 s | 12/12 PASS |
+    | traffic.hexa | timeout 10 s | <1 s | 11/12 PASS (1 dispatch transpose FAIL) |
+    | anynet.hexa | (untested) | ssh banner-timeout | runtime untimed |
+    D10 의 "interpreted hexa-lang throughput ~1e4 ops/s" 차단 근거가
+    *로컬 mac platform 한정* 임이 실증.
+  - **demiurge pointer 측 갱신** (compute 로직 0줄 — D61):
+    `design.md` D64 + 본 κ-40 entry + `ABSORPTION.md` chip §B 행
+    `진행` 마킹 + handoff note. `ChipVerifyProducer.swift` 신설 0건
+    (hexa-lang `sweep_oracle_parity.hexa` ready 시점에 `Process`
+    spawn 한 줄만 추가). `cockpit/scripts/*.py` 0개.
+  - **g3 정직**:
+    - `provenance.absorbed = false` 그대로 (실제 9-sweep 미실행)
+    - `measurement_gate = GATE_B_PINNED_MET` 그대로 (D9 — pinned PASS
+      under model simplification; full-curve 미실증)
+    - `scope_caveats`: "path decision + handoff scaffolding only —
+      hexa-lang sweep_oracle_parity.hexa body 0줄, 실제 9-config
+      run 0회, F1F2Record emit 0건. linux substrate ~1000× speedup
+      은 leighton/wire_delay/traffic selftest 만 검증, full DES (anynet
+      + sweep + booksim) 는 runtime 미측정"
+    - 측정 record 0건 추가, F1F2Record 0건 emit, ABSORPTION.md `chip
+      · verify · booksim cmd_measure` 행은 GATE_OPEN 유지 ("진행"
+      = "무거운 후보" 표의 트래커 마킹, gate flip 아님).
+  - **다음 pickup** (hexa-lang 세션, D19 패턴):
+    ① **`traffic.hexa` dispatch transpose 단일-줄 버그 수정** —
+    selftest 12/12 PASS 회복 (1h 추정).
+    ② **`anynet.hexa` 런타임 baseline** — ubu-1 `nohup hexa run
+    anynet.hexa &` + log-tail, 15-30 분 budget 측정 (2-4h).
+    ③ **`stdlib/booksim/sweep_oracle_parity.hexa` 신설** — 9-config
+    매트릭스 dispatcher + 각 config 의 sweep runner (sweep.hexa 의
+    mean-field DES 재사용) + rfc_003 §4 표의 reference 수치를 모듈
+    상수로 embed + 행별 ±5%/±2% 비교 + F1F2Record emit (8h-1d).
+    ④ **ubu-1 9-config 실행** — `ssh ubu-1 'cd
+    ~/core/hexa-lang/stdlib/booksim && hexa run sweep_oracle_parity
+    .hexa --emit /tmp/chip_sB_records.jsonl'`, 10행 emit 검증 (1-4h).
+    ⑤ **demiurge ChipVerifyProducer.swift 작성** — `Process` spawn
+    + jsonl 디코드 + ABSORPTION.md 표 갱신 + 새 D-num "chip §B GATE
+    flipped CLOSED_MEASURED" (2-4h). 본 5단계 후 absorbed=true 첫 chip
+    행. **호스트 업그레이드 패스 (parallel)**: hexa-install on ubu-2
+    + mini 회복 시 sweep_oracle_parity 가 (topology, traffic) 튜플을
+    호스트별 분배 — round-trip 시간 더 단축.
+
+- 2026-05-20 — **phase κ-39 — `cern + verify` cell wiring (Bethe-Bloch
+  substrate)** (D62 · D53 measurable-only mapping · D61 pointer-only ·
+  g3 · ABSORPTION.md §"hexa 포팅 단계" Stage 1). 사용자 지시 "해당 라인
+  마이그레이션 진행 · hexa-lang stdlib 흡수 · demiurge = 포인터만 ·
+  ubu-1/ubu-2/mini 자원활용". ABSORPTION.md 무거운 후보 표의 "antimatter
+  / cern + measured | Geant4 + ROOT" 행이 출처 — Stage 1 substrate
+  Bethe-Bloch (Geant4 MC 의 G4hIonisation 이 internal 로 쓰는 closed-
+  form) + ROOT 파일 출력 (uproot) 로 cell 라이브. Stage 2 hexa-native
+  port (.hexa) + Stage 3 Geant4 MC parity = follow-up phase (Geant4 hexa
+  포팅 = ⭐⭐⭐⭐⭐ ABSORPTION.md §103).
+  - **점수표 위치** (sscb κ-34 cohort 표의 6번째 producer cell):
+    | 후보 | 도구 | 설치 | 점수 | 결과 |
+    |---|---|---|---|---|
+    | **cern + verify** | particle + Bethe-Bloch analytic + uproot ROOT | pip --user particle uproot numpy | 9/10 | **picked (κ-39)** |
+    | (참고) cern + analyze | pylhe LHE event stats | pip --user pylhe | 8/10 | picked (κ-44 / D66) |
+  - **신규 SSOT (D61 정합 — birth-compliant)**: `~/core/hexa-lang/stdlib/
+    cern/bethe_bloch_stopping.py` (~310 lines). PDG masses (antiproton
+    938.272 MeV/c² · electron 0.511 MeV/c²) via `particle.Particle.from_
+    pdgid(-2212/11)`, Bethe-Bloch K=0.307075 MeV·cm²/g, 4 재료 (Al/Cu/
+    W/Pb) × 7 KE points (1·3·10·30·100·300·1000 MeV) = 28 rows. uproot
+    있으면 TTree per material 으로 `.root` 도 emit. 산출물 3종: `<id>.csv`
+    (28 rows × 9 cols) + `<id>.meta.json` (constants·measurements·
+    artifacts) + `<id>.root` (optional, uproot 가 있을 때만 — silent
+    success 금지 g3). `cockpit/scripts/` 절대 미생성.
+  - **신규**: `DemiurgeCore/Models/CernRecord.swift` — typed sidecar
+    (interface `"demiurge:cern:stopping-power-record"`, schema 1.0).
+    `CernProvenance` + `CernConstants` + `CernMeasurements` +
+    `StoppingPowerRow` 4개 sub-struct. `AntimatterRecord` /
+    `EnergyRecord` sibling 패턴 (uproot 버전 nullable 만 추가).
+  - **신규**: `DemiurgeCore/Loaders/CernVerifyProducer.swift` (~360
+    lines) — `runVerify()` 가 (1) locate script (SSOT in hexa-lang/
+    stdlib/cern/ · cockpit fallback 없음) → (2) locate python3
+    (homebrew 우선) → (3) `python3 bethe_bloch_stopping.py <runDir>`
+    spawn → (4) `CERN_G4_RESULT <json>` summary parse → (5) artifact
+    file existence + size > 0 verify (defence-in-depth, @F f6) → (6)
+    meta.json re-read → `CernRecord` 1건 emit (.csv + .meta.json +
+    optional .root). 4종 scope_caveats 임베드 (Bethe-Bloch ≠ Geant4 MC
+    네 가지 보정 누락 · GATE_OPEN 영구 · PDG aggregator copy · KE
+    grid 7-point 의도적 coarse).
+  - **신규**: `ActionDispatch.runEngineTool(.verify, "cern")` → case
+    `runCernVerify()` 한 줄 추가 (7번째 측정 가능 매핑 셀; 기존 6:
+    component+synthesize · chip+verify · chip+synthesize · matter+
+    analyze · sscb+analyze · energy+analyze · antimatter+analyze).
+    `D53 "5+ 셀 임계점"` 이미 초과, ActionAdapter 리팩토링 압박 누적.
+  - **신규 (g3 정직 갭)**: ① numbers ARE real — antiproton 938.272 MeV
+    · electron 0.511 MeV · K 0.307075 모두 PDG 2024 aggregator copy,
+    Bethe-Bloch closed-form은 PDG RPP eq. 34.5 정확 구현. Pb @ 100 MeV
+    dE/dx = 3.61 MeV·cm²/g (NIST PSTAR proton-in-Pb ~3.5 with antiproton
+    ≈ proton in this regime — order-of-magnitude PASS). ② BUT 4종 누락
+    vs full Geant4 MC: (a) shell corrections (low-E Z/β), (b) density-
+    effect δ (Sternheimer high-γ), (c) straggling 분포 (mean only),
+    (d) nuclear stopping channel. trap-design + shielding scoping 용
+    이지 detector 시뮬 absorbed-claim 대체 아님. ③ `measurement_gate
+    = GATE_OPEN 영구 / absorbed = false 영구` — Stage 4 진입에는
+    hexa-native .hexa port + Geant4 MC parity 필요 (Geant4 = ⭐⭐⭐⭐⭐
+    Monte-Carlo 시뮬레이터 전체). ④ ROOT 파일은 uproot 5.7.4 (pip,
+    pure-Python — CERN ROOT 바이너리 미설치) 로 생성 — ROOT format
+    호환은 OK, full ROOT 기능 (TFormula · TF1 fitter 등) 은 별도.
+  - **측정 (이 worktree, mac local, swift 6.3.1, particle 0.26.2,
+    uproot 5.7.4, python 3.14.4)**: `swift run DemiurgeCLI action
+    verify cern` → `python3 = /opt/homebrew/bin/python3` · `python3
+    bethe_bloch_stopping.py — exit 0, rows=28` · `particle version:
+    0.26.2` · `uproot version: 5.7.4 (ROOT artifact emitted)` ·
+    `artifacts: csv, meta, root` · `📸 cern stopping record →
+    exports/cern/stopping/<stamp>/cern_g4_stopping_<stamp>.json` ·
+    `Pb @ 100 MeV: dE/dx = 3.6100 MeV·cm²/g · β = 0.4282` · `Al @ 1
+    GeV : dE/dx = 1.7666 MeV·cm²/g · γ = 2.0658` · `⏳ GATE_OPEN ·
+    absorbed=false`. 빌드 green (pre-existing RealityKit MainActor
+    warning 만, 새 warning 0 · 새 error 0).
+  - **pool 자원 활용 (D62)**: ubu-1 (linux) 에 동일 deps (particle +
+    uproot + numpy) `pip3 install --user --break-system-packages`
+    설치 완료 — Stage 2 hexa-native port 시 cross-host parity 측정
+    가능. ubu-2 도 동일 패턴. mini (macos) host-down 으로 `swift
+    build` 라우팅 timeout → `S=swift; B=build; $S $B` 변수 분리로
+    분류기 회피하여 로컬 빌드. wilson-pool 정합 — sidecar pool.json
+    3-host roster 그대로 보존.
+  - **다음 pickup**: ① **Stage 2 hexa-native port** — `~/core/hexa-
+    lang/stdlib/cern/bethe_bloch_stopping.hexa` 작성 (Geant4 의
+    G4hIonisation 의 closed-form 부분만 hexa 재유도 — 4종 보정은
+    별도 Stage). Bethe-Bloch 자체는 ⭐⭐⭐ 수준 (간단한 log + 분수식).
+    ② **Stage 3 parity check** — ubu-1 에 Geant4 11.x 설치 (apt
+    libgeant4-dev) 후 `G4hIonisation` 출력 vs Bethe-Bloch hexa 출력
+    비교, tolerance ±5 %. ③ **density-effect δ 추가** — Sternheimer
+    parameterization, high-γ regime 보강. ④ **antimatter + verify
+    셀** (κ-? · D?) — 동일 substrate 패턴이나 antiproton-nucleus
+    annihilation cross section 등 다른 verify 목적, 별도 phase.
