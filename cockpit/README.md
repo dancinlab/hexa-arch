@@ -23,7 +23,23 @@ cockpit/
 └── references/                         # design + validation assets
 ```
 
-## Build / run
+## Install (macOS .app)
+
+```
+hx install /Users/ghost/core/demiurge    # register as an hx package
+demiurge install                         # build + install /Applications/demiurge.app
+demiurge run                             # launch the installed app
+demiurge cli list-records                # run DemiurgeCLI through the shim
+```
+
+`demiurge install` runs `cockpit/install.sh`: release build → procedural
+app icon (`AppIcon/generate-icon.swift` → `.icns` via sips/iconutil) →
+assemble `demiurge.app` (Info.plist bakes `DEMIURGE_REPO` via
+`LSEnvironment` so the installed app still resolves `../exports/**`) →
+copy to `/Applications`. Icon artifacts are git-ignored — re-derived
+each install from `generate-icon.swift`.
+
+## Build / run (dev — from source)
 
 ```
 cd cockpit

@@ -38,10 +38,19 @@ public enum RecordLoaderError: LocalizedError {
 }
 
 public enum RecordLoader {
-    /// `../exports/` resolved against the cockpit/ package directory (the
-    /// pwd when launched via `swift run`). The ONLY directory the cockpit
-    /// (and CLI) may read from per @D g_cockpit_isolation (a).
+    /// The exports directory the cockpit / CLI reads records from
+    /// (@D g_cockpit_isolation a). Resolution order:
+    ///   1. `$DEMIURGE_REPO/exports` if the env var is set — used by the
+    ///      installed `/Applications/demiurge.app` (Info.plist LSEnvironment
+    ///      bakes the repo path, since an installed app's cwd is not the
+    ///      repo).
+    ///   2. else `<cwd>/../exports` — the `swift run` case (pwd = cockpit/).
     public static let exportsRoot: URL = {
+        let env = ProcessInfo.processInfo.environment
+        if let repo = env["DEMIURGE_REPO"], !repo.isEmpty {
+            return URL(fileURLWithPath: repo, isDirectory: true)
+                .appendingPathComponent("exports").standardizedFileURL
+        }
         let cwd = URL(fileURLWithPath: FileManager.default.currentDirectoryPath,
                       isDirectory: true)
         return cwd.appendingPathComponent("../exports").standardizedFileURL

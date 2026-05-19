@@ -1282,3 +1282,40 @@
   NEXT_SESSIONS P-⑥ ③ 갱신 (viewer shell CLOSED measured-green,
   ι-2 = real-USDZ 데이터 게이트). 새 RFC 0, 새 design.md decision
   0, 새 governance @D 0 (note 1개).
+- 2026-05-19 — **macOS .app packaging + hx install + app icon —
+  measured-green**. 사용자 directive: "hx install demiurge 로 설치 ·
+  /Applications/demiurge.app · 앱아이콘". 환경 probe: `hx` (hexa
+  package manager) 있음 — `~/.hx/packages/<name>` symlink + `<pkg>/
+  bin/<name>` entry convention; `iconutil`/`sips` 있음; `/Applications`
+  writable. 산출:
+  · **`bin/demiurge`** (hx entry script) — `install` / `run` / `cli`
+    / `--help` 서브커맨드. hx 가 `bin/demiurge` 를 entry 로 인식.
+  · **`cockpit/install.sh`** — release build (`swift build -c
+    release`) → 절차적 app icon → `.app` bundle 조립 → `/Applications/
+    demiurge.app`. Info.plist 의 `LSEnvironment.DEMIURGE_REPO` 에
+    repo 절대경로 baked (설치된 app 의 cwd 가 repo 아니므로 —
+    `RecordLoader.exportsRoot` 가 `$DEMIURGE_REPO/exports` 우선
+    resolve).
+  · **`cockpit/AppIcon/generate-icon.swift`** — 절차적 Demiurge app
+    icon (1024² PNG): 검은 라운드 필드 + 흰 cosmos ring + craftsman
+    compass (Platonic Demiurge 모티프). AppKit/CoreGraphics canonical.
+    install.sh 가 sips 로 iconset 해상도 생성 → `iconutil` 로
+    `AppIcon.icns`.
+  · **`RecordLoader.exportsRoot`** — `DEMIURGE_REPO` env var fallback
+    추가 (env 있으면 `$DEMIURGE_REPO/exports`, 없으면 cwd-relative
+    `../exports`). 설치된 .app 이 records 찾을 수 있게.
+  · **`cockpit/.gitignore`** — 생성물 (`AppIcon/icon-1024.png`,
+    `AppIcon/AppIcon.icns`) ignore; `generate-icon.swift` (소스) 만
+    commit. **빌드 measured-green**: `bash cockpit/install.sh` PASS —
+    release build 18.31s · icon 1024² 생성 · `.app` 조립 ·
+    `/Applications/demiurge.app` (Info.plist 944B + MacOS/demiurge
+    884KB + Resources/AppIcon.icns 195KB). `hx install /Users/ghost/
+    core/demiurge` → `~/.hx/packages/demiurge` symlink + shim;
+    `hx list` 에 demiurge; `demiurge --help` shim 작동 검증.
+  · **g3 정직**: install + hx 등록 + 아이콘 measured-green. app
+    icon 은 *절차적 placeholder* (compass mark) — 정교한 hand-design
+    은 후속, `generate-icon.swift` 교체로 install.sh 재생성. 설치된
+    `.app` 의 GUI 실행 자체는 사용자 macOS 검증 (`demiurge run` /
+    `open /Applications/demiurge.app`). 새 RFC 0, 새 design.md
+    decision 0, 새 governance 0 (실행 작업 — 사용자 directive 가
+    spec).
