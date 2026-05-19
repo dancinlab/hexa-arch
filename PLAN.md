@@ -1843,3 +1843,19 @@
   Built / Not done 3 묶음, "engine tool 0" 가 핵심 갭임 명시.
   코드 무변경 → install 불요. **g3 정직**: 카테고리 서술만; 모든
   수치 (D-번호, RFC 건수, κ phase) 는 design.md / PLAN.md SSOT 포인터.
+- 2026-05-19 — **phase κ-19 — CHARTER + HANDOFF 정합** (H 갈래).
+  **(CHARTER)** Current state 재작성 — "design-complete · NOT
+  built" → "design-complete · workbench live · NOT wired/absorbed/
+  measured-records-zero"; RFC 카운트 / "9 RFCs" / "D1–D22" 제거 →
+  카테고리 서술만 (g_ssot_single_source). Related repos 정정 —
+  hexa-lang sole SSOT 명시 + hexa-* sibling NOT SSOT (κ-17 반영) ·
+  Swift cockpit "build out-of-scope" → "built + installed". **(HANDOFF)**
+  헤더 "Reconciled to D1–D22" → "Reconciled to workbench-live" + SSOT
+  포인터 한 줄. §9 Current state 재구성 — Design-complete / Built /
+  Honest core gap "engine tool 0" 3 묶음, 카운트 제거. §10 RESUME
+  copy-paste 블록 갱신 — workbench live · engine tool 0 · 다음 =
+  NEXT_SESSIONS Tracks matrix 참조 (D+E hexa-lang / F component
+  producer). SSOT note 갱신 — design.md = 결정 SSOT, PLAN.md =
+  κ-phase SSOT, NEXT_SESSIONS = 핸드오프 SSOT. **g3 정직**: 카테고리
+  서술만 — D-범위·RFC건수·phase 수치는 design.md/PLAN.md SSOT 포인터.
+  코드 무변경 → install 불요.

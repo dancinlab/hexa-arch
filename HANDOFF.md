@@ -3,7 +3,9 @@
 > 2026-05-19 · This single file is everything needed to continue demiurge
 > anywhere (new machine / new agent / new repo) with **zero prior context**.
 > Read top to bottom; the RESUME block at the end is copy-paste ready.
-> Reconciled to `design.md` D1–D22 (post-Phase-4 design-complete).
+> Reconciled to **workbench-live** state — `design.md` and `PLAN.md` are
+> the SSOTs for decision numbers and phase counts (g_ssot_single_source);
+> this file describes *categories* only.
 
 ---
 
@@ -193,66 +195,81 @@ SMART ISPASS'17 · Leighton DOI 10.1007/BF01744433 등 — 상세 인용은
   (D19 idiom). Public honest-audit surface is the public GitHub
   `dancinlab/demiurge` repo itself (D16).
 
-## 9. Current state (post-D22, g3 — measured distance only)
+## 9. Current state (g3 — *category* only; numbers live in PLAN.md)
 
 Original First-Milestone plan above (steps 1–4) is **superseded by
-actual progress** — preserved in `design.md` and the rfc_001/003
-audit trail. Current snapshot:
+actual progress** — preserved in `design.md` and the audit trail.
 
 **Design-complete (4-Phase roadmap):**
-- `rfc_001/003`: BookSim2 NoC-sim absorption + 6-module clean-room
-  re-derivation, hexa-native (modules now in `hexa-lang/stdlib/
-  booksim/` per D15, commit `d5a63a82`).
-- `rfc_002`: F1F2 typed-interface schema v1.0 (chip→comb seam).
-- `rfc_004`: end-to-end meta-conductor program (D11).
-- `rfc_005`: SUPERSEDED by D17 (hexa-matter SSOT = hexa-lang).
-- `rfc_006`: Yosys absorption design + D18 (ABC = bounded-subprocess)
-  + D19 (impl belongs to a hexa-lang session, target `stdlib/yosys/`).
-- `rfc_007`: materials→chip typed seam contract v0 (D20).
-- `rfc_008`: chip→component typed seam contract v0 (D21).
-- `rfc_009`: macOS Swift cockpit spec (D22, build OOS here).
-- 15 domain maps: 13 Agent-cited Cohort 1+2 + `component.md`
-  cited this session (D21).
-- chip NoC §B = `GATE_B_PINNED_MET` (pinned baseline only).
+- Absorption RFCs — BookSim2 (rfc_001/003 → `hexa-lang/stdlib/booksim/`
+  per D15, commit `d5a63a82`) · Yosys (rfc_006 + D18 bounded-
+  subprocess + D19 hexa-lang session) · matter SUPERSEDED to
+  hexa-lang (D17, rfc_005 tombstone).
+- Typed-interface seams — rfc_002 F1F2 v1.0 (chip→comb) · rfc_007
+  materials→chip v0 · rfc_008 chip→component v0.
+- Meta-conductor program — rfc_004 (D11 chain).
+- Cockpit spec — rfc_009 (product surface, D22) · rfc_010
+  (architecture) · rfc_011 (control surface) · rfc_012 (project
+  workbench).
+- Domain maps (Cohort + `component.md` D21 + `matter/` D17 pointer)
+  — each §6 = workbench ingredient shelf SSOT.
 
-**NOT done (honest gap, g3):**
-- Yosys §4 modules — unimplemented, hexa-lang session (D19).
-- `d5a63a82` (booksim absorb) — committed locally in hexa-lang
+**Built (measured-green via `swift run`):**
+- macOS cockpit workbench — `cockpit/` SwiftPM package · 3-column
+  workbench (recipe rail · LLM chat · work zone) · project manifest
+  persistence (App Support, D45) · ingredient shelf · verb stepper ·
+  θ-2 action skeleton · §4.2 REJECTED guard · domain-aware canvas
+  mode · CLI ↔ cockpit parity (ActionDispatch). Installed as
+  `/Applications/demiurge.app`. κ-phase log = `PLAN.md`.
+
+**Honest core gap (g3) — "engine tool 0":**
+- θ-2 has NO real measurement tool yet — Yosys §4 unimplemented
+  (hexa-lang session, D19); booksim now in `hexa-lang/stdlib`. So
+  every workbench project carries **0 measured records** and **no
+  verb is ✅**.
+- `d5a63a82` (booksim absorb) committed locally in hexa-lang
   (`rfc043-hexa-torch` ahead 18), **unpushed** — hexa-lang session.
   inbox handoff filed: `~/core/hexa-lang/inbox/notes/2026-05-19-
   demiurge-rfc006-yosys-handoff.md` + `inbox/PATCHES.yaml` +2.
 - chip §B full-curve / §D — not measured; `absorbed=false`.
-- Seam records — 0; both rfc_007/008 schemas at v0, `records/`
-  intentionally empty (g3 — no fabricated data).
-- Swift app — unbuilt; gated downstream session (D22).
+- Seam records — 0 (both rfc_007/008 v0, `records/` intentionally
+  empty — no fabrication).
+- 3D real USDZ — 0 (`exports/` holds zero geometry; component
+  producer awaited per `NEXT_SESSIONS.md` P-⑨).
 - Nothing flips `absorbed=true` without a cited measurement.
 
 ## 10. RESUME (copy-paste anywhere)
 
 ```
-demiurge 이어서. 이 repo(~/core/demiurge) 의 SSOT 4종:
+demiurge 이어서. 이 repo(~/core/demiurge) 의 SSOT:
 HANDOFF.md (cold-readable 아키텍처) · CHARTER.md (mission/거버넌스) ·
-design.md (D1–D22 결정 감사추적) · PLAN.md (진행/측정 거리, append-only).
-거버넌스 SSOT = AGENTS.tape (g_stdlib_ownership · g3_no_over_claim · g5).
-정체: 📐 모든 기술설계의 hexa-native 메타프레임워크 + 메타-컨덕터(D11)
-— 7-verb 스파인(명세→구조→설계→해석⟲→합성→검증→인계, 9 lifecycle
-cited, D5) 을 materials→chip→component 체인에 직렬 적용. 도메인 = chip
-(deep) + component (NEW top-level, D21) + 13 cohort shallow 맵.
-hexa-matter / hexa-bio = typed-interface 소비 (D2); hexa-matter 흡수
-SSOT = hexa-lang (D17 — demiurge 는 소비-포인터). 재도출 모듈은
-hexa-lang/stdlib/ 행 (D15 — demiurge 는 stdlib 미보유). 공개면 클린룸
-한정(D1). 산출표면 = macOS Swift cockpit(D16, rfc_009 spec; 빌드는
-범위밖 — D22, downstream 세션). 거버넌스 = g3 RETAINED + g5 + g_clean_
-room + rfc_048-precedented bounded-subprocess 예외(D18). 현 상태(g3):
-**4-Phase 설계 design-complete · 9 RFC · D1–D22 · 15 도메인맵 · 코드/
-앱 0 · absorbed 0 · chip §B GATE_B_PINNED_MET**. 다음 = (a) hexa-lang
-세션에서 `d5a63a82` push + rfc_006 §4 Yosys 모듈 (inbox handoff 적재
-완료: `hexa-lang/inbox/notes/2026-05-19-demiurge-rfc006-yosys-
-handoff.md`) · (b) chip 측정 (gated) · (c) Swift 빌드 (downstream).
+design.md (결정 감사추적 SSOT — 번호·요지 보유) · PLAN.md (진행 ·
+측정 거리 · cockpit κ-phase log SSOT) · NEXT_SESSIONS.md (cross-repo
+/ post-completion 핸드오프). 거버넌스 SSOT = AGENTS.tape (g_stdlib_
+ownership · g_ssot_single_source · g_cockpit_isolation · g_swift_
+native · g_cockpit_reinstall · g_ai_agent_* · g3 · g5 · @F).
+정체: 📐 모든 기술설계의 hexa-native 메타프레임워크 + 메타-컨덕터 —
+7-verb 스파인(명세→구조→설계→해석⟲→합성→검증→인계, 9 lifecycle
+cited) 을 materials→chip→component 체인에 직렬 적용. 도메인 = chip
+(deep) + component (NEW top-level) + Cohort shallow 맵.
+hexa-matter / hexa-bio = typed-interface 소비; **hexa-lang 이 유일
+SSOT** (재사용 stdlib · 도구 · 흡수 전부 — 2026-05-19 user directive).
+공개면 클린룸 한정. 산출 표면 = macOS Swift cockpit workbench —
+**built · `/Applications/demiurge.app` live**. 거버넌스 = g3 RETAINED
++ g5 + g_clean_room + bounded-subprocess 예외(rfc_048 선례, D18).
+현 상태 (g3 — category only, 수치는 PLAN.md/design.md):
+**4-Phase 설계 design-complete · workbench live (rfc_012 IMPLEMENTED)
+· engine tool 0 (핵심 갭) · 측정 record 0 · ✅ verb 0 · `d5a63a82`
+미push (hexa-lang) · chip §B GATE_B_PINNED_MET · 어떤 도메인도
+absorbed=true 아님**. 다음 = `NEXT_SESSIONS.md` Tracks matrix 참조 —
+hexa-lang 세션 (D + E: Yosys + push + chip §B 측정) · component
+producer 세션 (F: USDZ via D18 bounded-subprocess).
 ```
 
 > SSOT note: this HANDOFF + CHARTER are the architecture/why SSOT; PLAN.md
-> is the progress/measured-distance SSOT; `design.md` is the decision audit
-> trail (D1–D22); `AGENTS.tape` is the enforced governance. No over-claim
-> (g3): 4-Phase design-complete ≠ wired/absorbed — measured distance lives
-> in PLAN.md, never asserted here.
+> is the progress / measured-distance / κ-phase SSOT; `design.md` is the
+> decision audit trail SSOT (numbers + summaries live there, not here);
+> `NEXT_SESSIONS.md` is the cross-repo / post-completion handoff SSOT;
+> `AGENTS.tape` is the enforced governance. No over-claim (g3): workbench
+> built ≠ wired / absorbed / measured — the engine-tool-0 gap is honest,
+> and the measured distance lives in PLAN.md, never asserted here.

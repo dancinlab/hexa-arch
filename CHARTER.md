@@ -75,39 +75,48 @@ Python-0 · measured · no fake progress. See `design.md` Decisions 1, 15.
 - **Not comb** — comb (hexa-lang, n=6 fabric) is a *consumer* of the chip
   domain, not the EDA absorber. Decoupled by design.
 
-## Current state (snapshot, g3 — measured distance only)
+## Current state (snapshot, g3 — *category* only; numbers in PLAN.md)
 
-4-Phase forward roadmap is **design-complete** at the contract/spec
-level — NOT built, NOT wired, NOT absorbed:
+4-Phase forward roadmap is **design-complete at the contract/spec
+level** AND the macOS Swift cockpit **workbench is live**
+(`/Applications/demiurge.app`). What is NOT done: wired / absorbed /
+measured-records-zero, per the honest core gap below.
 
-- 9 RFCs delivered: rfc_001/002/003 (BookSim2 NoC absorption + F1F2
-  seam + clean-room re-derivation), rfc_004 (e2e program), rfc_005
-  (SUPERSEDED by D17), rfc_006 (Yosys absorption design + D18/D19),
-  rfc_007/008 (materials→chip / chip→component typed seams, v0),
-  rfc_009 (macOS Swift cockpit spec + D22).
-- 15 domain maps (Cohort 1+2 = 13 Agent-cited + `component.md`
-  cited this session — `design.md` Decision 21).
-- chip NoC §B = `GATE_B_PINNED_MET` (pinned baseline measured, full-
-  curve / §D NOT yet — `absorbed=false`, g3).
-- Honest gap (what is NOT done): seam records 0 (both v0, contract
-  only), Yosys §4 modules unimplemented (hexa-lang session, D19),
-  Swift app unbuilt (gated downstream, D22), no domain measured-
-  absorbed=true.
+- Absorption RFCs land re-derived modules in `hexa-lang/stdlib/`
+  (D15). booksim done (commit `d5a63a82`, unpushed in a hexa-lang
+  session). Yosys design done (D18 bounded-subprocess), modules
+  unimplemented (D19, hexa-lang session). matter SUPERSEDED to
+  hexa-lang (D17).
+- Typed-interface seams v0 (rfc_007 materials→chip · rfc_008
+  chip→component) — `records/` intentionally empty (no fabrication).
+- chip NoC §B = `GATE_B_PINNED_MET` — pinned baseline only; full-
+  curve / §D not measured; `absorbed=false`.
+- macOS cockpit workbench built — rfc_009 / 010 / 011 / 012 spec →
+  `cockpit/` SwiftPM package: 3-column 7-verb workbench, θ-2 action
+  skeleton, §4.2 REJECTED guard, domain-aware canvas mode, CLI ↔
+  cockpit parity. Live progress = `PLAN.md` κ-phase log.
 
-Progress / measured distance lives in `PLAN.md`; decision audit in
-`design.md` D1–D22.
+**Honest core gap (g3):** **engine tool 0** — θ-2 has no real
+measurement tool yet (Yosys §4 unimplemented · booksim now in
+`hexa-lang/stdlib`), so every workbench project carries **0 measured
+records** and **no verb is ✅**. Seam records 0. No domain
+`absorbed=true`.
+
+Progress / measured distance = `PLAN.md`; decision audit = `design.md`
+(SSOT); cross-repo / post-completion handoffs = `NEXT_SESSIONS.md`.
 
 ## Related repos
 
-- `~/core/hexa-lang` — substrate + the **single SSOT for `stdlib/`**
-  (D15); first consumer `comb/`. Hosts the absorbed re-derived
-  modules demiurge references (e.g. `stdlib/booksim/` per rfc_003,
-  hexa-lang commit `d5a63a82` — pending push in a hexa-lang session,
-  D19).
-- `~/core/hexa-matter` — sibling; absorption SSOT = hexa-lang per
-  D17. demiurge carries only `domains/matter/` pointer.
-- `~/core/hexa-chip` (5G/6G·packaging) and `~/core/hexa-space` —
-  distinct existing repos.
-- macOS Swift cockpit (D16, rfc_009): the product surface =
-  read-only consumer of `exports/`; **build out-of-scope** here,
-  belongs to a downstream session (D22). See `HANDOFF.md` §8.
+- `~/core/hexa-lang` — substrate + the **sole SSOT** for stdlib /
+  tools / absorbed modules (D15 / D17 + 2026-05-19 user directive
+  "hexa-lang 이 유일 SSOT"). Every domain's reusable tooling
+  (booksim · matter · component · …) lives inside this single repo;
+  demiurge consumes only. First consumer `comb/`.
+- `~/core/hexa-*` (hexa-chip · hexa-space · hexa-component · …) —
+  exist on disk but are **NOT SSOT** (κ-17 correction). The
+  canonical stdlib home for each domain is `hexa-lang/<domain>`
+  (booksim / matter pattern).
+- **macOS Swift cockpit** (D16 / rfc_009·010·011·012) — `cockpit/`
+  SwiftPM package, **built and installed** as
+  `/Applications/demiurge.app`. The product surface is now live;
+  the κ-phase build log lives in `PLAN.md`.
