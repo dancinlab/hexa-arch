@@ -1632,3 +1632,50 @@ STL 과 용도가 겹쳐 제외. (Rejected: `.obj` 포함 — STL 과 CAD/프린
   (g_ssot_single_source / D50) — viewer 와 다른 모델을 내보내는
   사고 차단.
 - `.obj` 제외로 λ-3 범위 절감; 필요 시 후속 phase 에서 추가 가능.
+
+### Decision 53 — matter 셀 매핑 = `analyze` (verb) × `matter` (domain) (cockpit phase κ-30)
+
+**picked**: matter 도메인의 첫 라이브 (verb, domain) 셀은 `analyze
++ matter` 로 매핑한다. 이 셀의 engine tool 은 `~/core/hexa-matter` 의
+`verify/run_all.hexa` aggregator 를 `hexa run` 으로 spawn 하고, 그
+stdout 을 `MatterRecord` 로 흡수해 `exports/matter/parity/` 에 commit-
+pinned typed sidecar 로 persist 한다. Producer 는 항상
+`hexa_matter@<commit>` (절대 `demiurge_…` 아님 — D17). 측정 게이트는
+exit==0 ∧ 모든 subscript PASS ∧ commit hash 캡처 셋이 동시일 때만
+`GATE_CLOSED_MEASURED`; 그 외는 honest `GATE_OPEN` (silent fallback
+금지). (Rejected: `verify + matter` — hexa-matter run_all 은
+documentation/anchor cross-check 이지 bench 측정이 아니므로 verb 의
+"측정으로 확인" 의미를 침범. `synthesize + matter` — 새 물리적
+artifact 생성이 아니라 closure-invariant audit. demiurge 가 자체로
+matter 시뮬레이션 — D15 / D17 SSOT 직접 침범.)
+
+**rationale**:
+- `analyze` (해석⟲) 의 plain hint = "설계가 잘 됐는지 점검하고
+  따져봐요" (Verb.hint) — closure consistency · lattice arithmetic ·
+  real-limits anchor · spec presence 의 4-axis cross-check 이
+  정확히 그 의미. spec_presence 의 PASS 는 "spec 파일이 있다" 이지
+  "재료가 측정됐다" 가 아님 — `verify` 와 의미적으로 구분.
+- D17 (hexa-matter SSOT = hexa-lang/hexa-matter, demiurge = consumer-
+  pointer) 강제. demiurge 는 spawner + witness 일 뿐, 측정은
+  hexa-matter 가 수행. record provenance.producer 의 prefix 가 이
+  계약을 record 안에 박제한다.
+- κ-29 의 (verb, domain) 라우팅 골격(D49 메커니즘 우선) 위에서
+  골격 변경 없이 셀 하나만 라이브로 전환 — `ActionDispatch.switch`
+  에 한 줄 추가 + 새 loader 한 개 + 새 model 한 개 (D50 SSOT 유지:
+  CLI `action analyze matter` 와 cockpit "▶ 실제로 돌리기" 가
+  같은 코드 경로).
+- g3 정직성: GATE 산출 규칙 셋(exit / per-script / commit-pin)을
+  AND 로 결합하고, `absorbed=true` 의 의미를 record scope_caveats 에
+  명시 박제 — "demiurge 가 hexa-matter 의 측정 사실을 commit-pinned
+  record 로 흡수" 한 사실에 한정. 물리적 시료 측정은 별개 게이트.
+- 확장 경로: 같은 패턴으로 (energy, chip+analyze 등) 추가 셀이
+  열린다 — switch 한 줄 + loader 한 개 + 새 record 모델 한 개.
+
+**measurement (worktree-agent-a2088ca1f01791864 · 2026-05-20)**:
+`swift run DemiurgeCLI action analyze matter` →
+`hexa run verify/run_all.hexa — exit 0` · 4/4 scripts passed
+(spec_presence · lattice_arithmetic · real_limits_anchor ·
+closure_consistency) · producer=`hexa_matter@315eebe` ·
+**GATE_CLOSED_MEASURED** · absorbed=**true** ·
+`exports/matter/parity/matter_parity_20260519T160833Z.json`.
+빌드 measured-green (mini · swift 6.3.1 · error 0 · 신규 warning 0).
