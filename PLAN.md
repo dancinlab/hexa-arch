@@ -1765,3 +1765,25 @@
   unknown record 는 캐시에 없어 필터 시 숨김 — 가짜 통과 0.
   dependency graph 는 별도 (사용자 게이트 — workbench 가치 재고
   필요). 다음 추천 = #5 CLI θ 액션 subcommand 골격.
+- 2026-05-19 — **phase κ-15 — CLI θ 액션 + ActionDispatch 공유**
+  (rfc_011 §6 · D49 · g_ssot_single_source). cockpit κ-5 의 θ-2
+  dispatch (runClaude/actionPrompt/parseRecordIDs) 가 cockpit
+  static func 였음 — CLI 가 같은 액션 노출하려면 복제 위험.
+  **(공유 dispatch)** 신규 `DemiurgeCore/Loaders/ActionDispatch.swift` —
+  `actionPrompt(verb:)` + `parseRecordIDs(_:)` + 동기 `askClaude
+  (prompt:context:)` (Process subprocess) 를 DemiurgeCore 에 집중.
+  cockpit·CLI 둘 다 호출 (멱등 보장). **(cockpit)** static
+  runClaude/actionPrompt/parseRecordIDs 제거 → ActionDispatch
+  호출. UI 비차단 위해 instance `ask(_:_:)` async wrapper —
+  Task.detached 로 askClaude 감쌈. sendChat/runAction 둘 다 `ask`
+  사용. **(CLI)** `demiurge cli action <verb>` 신설 — verb 인자
+  파싱 (specify/structure/design/analyze/synthesize|synth/verify|
+  measure/handoff + 한글) → ActionDispatch.actionPrompt →
+  askClaude → 출력 + parseRecordIDs (record 0 → "⏳ no measured
+  record" 정직 출력). 측정: `swift run CockpitApp` 빌드 green
+  (8.75s, 에러 0) · `swift run DemiurgeCLI action invalid` →
+  unknown verb stderr (parse OK). **g3 정직**: cockpit·CLI 가
+  byte-identical action 발사 — engine tool 0 이라 누구 누르든
+  agent 가 "도구 없음" 보고 동일 (멱등 실증). 실제 측정 0.
+  workbench 후속 (#1~#5) 모두 닫힘 — 다음은 hexa-lang/측정
+  세션 (cross-repo, P-②③/P-④) 또는 신규 작업.

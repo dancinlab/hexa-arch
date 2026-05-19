@@ -13,6 +13,8 @@
 //   demiurge list-projects            List workbench projects (manifests)
 //   demiurge show-project <name>      Show one project + 7-verb progress
 //   demiurge list-shelf <domain>      Show a domain's §6 shelf options
+//   demiurge action <verb>            θ-2 action — dispatch a 7-verb
+//                                     stage to claude (rfc_011 §6, κ-5/κ-15)
 //
 // Project subcommands read the SAME manifests the cockpit writes
 // (~/Library/Application Support/lab.dancin.demiurge/projects/, D45)
@@ -49,6 +51,11 @@ func usage() {
       demiurge list-projects           List workbench projects
       demiurge show-project <name>     Show one project + 7-verb progress
       demiurge list-shelf <domain>     Show a domain's §6 shelf options
+      demiurge action <verb>           θ-2 action — dispatch a verb
+                                       (specify/structure/design/analyze/
+                                        synthesize/synth/verify/measure/
+                                        handoff; 한글 명세/구조/설계/해석/
+                                        합성/검증/인계 also accepted)
       demiurge --version | -v          Print version
       demiurge --help    | -h          This help
 
@@ -185,6 +192,50 @@ func listShelf(_ domain: String) -> Int32 {
     return 0
 }
 
+/// Map a CLI verb string (English short-name or Korean canonical) to a
+/// Verb enum value. `synth` / `measure` are accepted aliases for
+/// `synthesize` / `verify` per rfc_011 §6.3's named action set.
+func parseVerbArg(_ s: String) -> Verb? {
+    switch s.lowercased() {
+    case "specify", "명세":             return .specify
+    case "structure", "구조":            return .structure
+    case "design", "설계":               return .design
+    case "analyze", "해석", "해석⟲":     return .analyze
+    case "synthesize", "synth", "합성":  return .synthesize
+    case "verify", "measure", "검증", "측정": return .verify
+    case "handoff", "인계":              return .handoff
+    default: return nil
+    }
+}
+
+/// `demiurge action <verb>` — dispatch a θ-2 action through the SAME
+/// ActionDispatch the cockpit's "▶ 실제로 돌리기" button uses
+/// (@D g_ssot_single_source / D50 — CLI↔cockpit byte-identical).
+/// κ-5 honest gap holds: demiurge carries zero engine tools, so the
+/// agent will report "no tool" — no measured record, no ✅ (g3).
+func cliAction(_ verbStr: String) -> Int32 {
+    guard let verb = parseVerbArg(verbStr) else {
+        FileHandle.standardError.write(
+            Data(("action: unknown verb '\(verbStr)' — try one of "
+                  + "specify/structure/design/analyze/synthesize/verify/handoff\n").utf8))
+        return 2
+    }
+    let context = "CLI-invoked action — no specific project context."
+    print("action: \(verb.canonical) (\(verb.plain)) — dispatching to claude CLI…")
+    let prompt = ActionDispatch.actionPrompt(verb: verb)
+    let reply = ActionDispatch.askClaude(prompt: prompt, context: context)
+    print(reply)
+    let ids = ActionDispatch.parseRecordIDs(reply)
+    if ids.isEmpty {
+        print("---")
+        print("⏳ no new measured record — this stage has not been measured (g3).")
+    } else {
+        print("---")
+        print("📸 new record ID(s): \(ids.joined(separator: ", "))")
+    }
+    return 0
+}
+
 let args = CommandLine.arguments
 
 guard args.count >= 2 else {
@@ -233,6 +284,13 @@ case "list-shelf":
         exit(2)
     }
     exitCode = listShelf(args[2])
+case "action":
+    guard args.count >= 3 else {
+        FileHandle.standardError.write(Data("action: missing <verb> argument\n".utf8))
+        usage()
+        exit(2)
+    }
+    exitCode = cliAction(args[2])
 default:
     FileHandle.standardError.write(Data("unknown subcommand: \(args[1])\n".utf8))
     usage()

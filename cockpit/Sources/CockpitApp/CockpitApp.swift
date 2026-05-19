@@ -258,15 +258,15 @@ struct WorkbenchView: View {
         let thinkingIndex = chatMessages.count
         chatMessages.append(ChatMessage(role: .assistant, text: "🍳 … 실행 경로 확인 중 …"))
         let context = chatContext()
-        let prompt = Self.actionPrompt(verb: verb)
+        let prompt = ActionDispatch.actionPrompt(verb: verb)
         isRunningAction = true
         Task {
-            let reply = await Self.runClaude(prompt: prompt, context: context)
+            let reply = await ask(prompt, context)
             await MainActor.run {
                 if thinkingIndex < chatMessages.count {
                     chatMessages[thinkingIndex] = ChatMessage(role: .assistant, text: reply)
                 }
-                let ids = Self.parseRecordIDs(reply)
+                let ids = ActionDispatch.parseRecordIDs(reply)
                 if ids.isEmpty {
                     chatMessages.append(ChatMessage(
                         role: .assistant,
@@ -285,36 +285,7 @@ struct WorkbenchView: View {
         }
     }
 
-    /// Action prompt for a verb run — instructs the agent to look for a
-    /// real engine tool and report honestly, never claiming a
-    /// measurement without a backing exports/ record (g3 / @F f6).
-    private static func actionPrompt(verb: Verb) -> String {
-        return "The user clicked '실제로 돌리기' (run for real) on the "
-            + "\(verb.canonical) stage of a demiurge project. Check "
-            + "whether demiurge has a real engine tool for this stage "
-            + "and whether any measured record exists under exports/**. "
-            + "If a tool is available, describe how it would run. If "
-            + "NOT, state plainly in Korean that there is no engine "
-            + "tool yet — do NOT claim anything was measured or "
-            + "verified (g3 — no over-claim). Never assert ✅ / 측정완료 "
-            + "without a backing exports/ record ID."
-    }
-
-    /// Best-effort extraction of F1F2 record IDs from agent output —
-    /// rfc_011 §6.3 "output piped + parsed for new record IDs".
-    private static func parseRecordIDs(_ text: String) -> [String] {
-        let pattern = "F1F2[-_][A-Za-z0-9._-]+"
-        guard let regex = try? NSRegularExpression(pattern: pattern) else {
-            return []
-        }
-        let range = NSRange(text.startIndex..., in: text)
-        let ids = regex.matches(in: text, range: range).compactMap {
-            Range($0.range, in: text).map { String(text[$0]) }
-        }
-        return Array(Set(ids)).sorted()
-    }
-
-    /// rfc_011 §4.2 / @F f6 — does the reply assert a measurement /
+/// rfc_011 §4.2 / @F f6 — does the reply assert a measurement /
     /// parity / absorption that NO real measured record backs?
     private static func overclaims(_ reply: String) -> Bool {
         guard mentionsClaim(reply) else { return false }
@@ -369,6 +340,16 @@ struct WorkbenchView: View {
             text: "이 응답은 측정·parity·흡수를 주장하지만 그것을 뒷받침하는 "
                 + "exports/ record 가 없습니다. 측정 없이는 ✅ 로 인정되지 "
                 + "않습니다 (g3 / @F f6)."))
+    }
+
+    /// Async wrapper around the shared `ActionDispatch.askClaude`
+    /// (DemiurgeCore — cockpit + CLI share it, @D g_ssot_single_source).
+    /// Detached so the synchronous claude subprocess does not block
+    /// the UI thread.
+    private func ask(_ prompt: String, _ context: String) async -> String {
+        await Task.detached(priority: .userInitiated) {
+            ActionDispatch.askClaude(prompt: prompt, context: context)
+        }.value
     }
 
     /// Project context handed to the chat agent so the "cooking
@@ -1011,7 +992,7 @@ struct WorkbenchView: View {
         chatMessages.append(ChatMessage(role: .assistant, text: "🍳 … 생각 중 …"))
         let context = chatContext()
         Task {
-            let reply = await Self.runClaude(prompt: text, context: context)
+            let reply = await ask(text, context)
             await MainActor.run {
                 if thinkingIndex < chatMessages.count {
                     chatMessages[thinkingIndex] = ChatMessage(role: .assistant, text: reply)
@@ -1021,38 +1002,4 @@ struct WorkbenchView: View {
         }
     }
 
-    /// Invoke `claude -p <prompt>` as a subprocess and capture stdout.
-    /// `/usr/bin/env` resolves `claude` on PATH; shell aliases (and so
-    /// `--dangerously-skip-permissions`) are NOT inherited by Process —
-    /// print mode without tool permissions stays read-only.
-    private static func runClaude(prompt: String, context: String) async -> String {
-        let guarded = "[demiurge cockpit chat — you are 요리 선생님, a friendly "
-            + "engineering-design guide. Answer concisely in Korean, in plain "
-            + "language a non-expert understands. Do NOT modify files, run "
-            + "builds, or invoke tools. Project context: \(context)] \(prompt)"
-        return await withCheckedContinuation { cont in
-            DispatchQueue.global(qos: .userInitiated).async {
-                let proc = Process()
-                proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-                proc.arguments = ["claude", "-p", guarded]
-                let pipe = Pipe()
-                proc.standardOutput = pipe
-                proc.standardError = pipe
-                do {
-                    try proc.run()
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    proc.waitUntilExit()
-                    let out = (String(data: data, encoding: .utf8) ?? "")
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                    if out.isEmpty {
-                        cont.resume(returning: "(claude returned no output; exit \(proc.terminationStatus))")
-                    } else {
-                        cont.resume(returning: out)
-                    }
-                } catch {
-                    cont.resume(returning: "claude invocation failed: \(error.localizedDescription)\n(phase θ — `claude` must be on PATH)")
-                }
-            }
-        }
-    }
 }
