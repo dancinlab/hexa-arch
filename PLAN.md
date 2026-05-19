@@ -1526,3 +1526,20 @@
   domains/** 소싱, 후속) · signal-light 는 verbState 기반일
   뿐 measurement_gate 미바인딩 (θ-2) · 실제 도구 실행 0.
   다음 = κ-4 (chat ↔ verb 연동 / θ-2 실제 실행 경로).
+- 2026-05-19 — **phase κ-4 — chat ↔ verb 연동 빌드 green**
+  (rfc_012 §5 ③ · D48). ③ "요리 선생님" chat 이 프로젝트의
+  7-verb 단계를 인지하도록 연결: 신규 `chatContext()` 가
+  활성 프로젝트의 이름·목표·분야·현재 verb(N/7) 를 문자열로
+  만들어 `runClaude` 에 주입 — `claude -p` prompt 가 "you are
+  요리 선생님 … Project context: …" 로 verb-stage frame 안에서
+  답하도록 보강 (read-only 가드 유지 — modify/build/tool 금지).
+  verb stepper(◀/▶) 이동 시 `announceVerb` 가 chat 에 교사
+  메시지 append ("이제 N단계 — plain(canonical) … <verbHint>")
+  — ① recipe rail 과 ③ chat 동기화. `verbHint` = 7 verb 평이
+  안내문. 측정: `swift run CockpitApp` 로컬 빌드 — `Build of
+  product 'CockpitApp' complete!` (9.21s) · 에러 0 · 경고 0.
+  **g3 정직**: chat 은 verb 를 *읽기*만 — 자연어로 "다음 단계"
+  말해도 자동 advance 0 (진행은 stepper 명시 조작) · chat
+  backend 는 여전히 `claude -p` read-only stub · θ-2 실제
+  도구 실행 미착수. 다음 = κ-5 (θ-2 실제 실행 경로 — 측정
+  record → ✅; rfc_011 scoped action dispatch).

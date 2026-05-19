@@ -202,12 +202,49 @@ struct WorkbenchView: View {
         guard var project = activeProject else { return }
         project.advance()
         persistActive(project)
+        announceVerb(project)
     }
 
     private func retreatVerb() {
         guard var project = activeProject else { return }
         project.retreat()
         persistActive(project)
+        announceVerb(project)
+    }
+
+    /// Post a teacher message when the verb pointer moves — keeps the
+    /// chat (③) and the recipe rail (①) in sync (rfc_012 §5).
+    private func announceVerb(_ project: Project) {
+        let verb = project.currentVerb
+        chatMessages.append(ChatMessage(
+            role: .assistant,
+            text: "🍳 이제 \(verb.rawValue + 1)단계 — "
+                + "\(verb.plain)(\(verb.canonical)) 입니다. \(verbHint(verb))"))
+    }
+
+    private func verbHint(_ verb: Verb) -> String {
+        switch verb {
+        case .specify:    return "무엇을 만들지, 가장 중요한 게 뭔지 같이 정해요."
+        case .structure:  return "전체를 어떤 짜임새로 나눌지 그려봐요."
+        case .design:     return "각 부분을 구체적으로 설계해요."
+        case .analyze:    return "설계가 잘 됐는지 점검하고 따져봐요."
+        case .synthesize: return "실제로 만들 수 있는 형태로 합쳐요."
+        case .verify:     return "측정으로 맞는지 확인해요."
+        case .handoff:    return "결과를 다음 단계로 넘길 수 있게 정리해요."
+        }
+    }
+
+    /// Project context handed to the chat agent so the "cooking
+    /// teacher" answers within the project's verb-stage frame (κ-4).
+    private func chatContext() -> String {
+        guard let project = activeProject else {
+            return "The user has not created a project yet — gently "
+                 + "suggest the ＋ button to start one."
+        }
+        let verb = project.currentVerb
+        return "Project \"\(project.name)\" — 목표: \(project.target), "
+             + "분야: \(project.domain). Current 7-verb stage: "
+             + "\(verb.rawValue + 1)/7 \(verb.canonical)(\(verb.plain))."
     }
 
     /// Write a mutated project back to the in-memory list + manifest,
@@ -606,8 +643,9 @@ struct WorkbenchView: View {
         chatInput = ""
         let thinkingIndex = chatMessages.count
         chatMessages.append(ChatMessage(role: .assistant, text: "🍳 … 생각 중 …"))
+        let context = chatContext()
         Task {
-            let reply = await Self.runClaude(prompt: text)
+            let reply = await Self.runClaude(prompt: text, context: context)
             await MainActor.run {
                 if thinkingIndex < chatMessages.count {
                     chatMessages[thinkingIndex] = ChatMessage(role: .assistant, text: reply)
@@ -620,8 +658,11 @@ struct WorkbenchView: View {
     /// `/usr/bin/env` resolves `claude` on PATH; shell aliases (and so
     /// `--dangerously-skip-permissions`) are NOT inherited by Process —
     /// print mode without tool permissions stays read-only.
-    private static func runClaude(prompt: String) async -> String {
-        let guarded = "[demiurge cockpit chat — answer concisely; do NOT modify files, run builds, or invoke tools] \(prompt)"
+    private static func runClaude(prompt: String, context: String) async -> String {
+        let guarded = "[demiurge cockpit chat — you are 요리 선생님, a friendly "
+            + "engineering-design guide. Answer concisely in Korean, in plain "
+            + "language a non-expert understands. Do NOT modify files, run "
+            + "builds, or invoke tools. Project context: \(context)] \(prompt)"
         return await withCheckedContinuation { cont in
             DispatchQueue.global(qos: .userInitiated).async {
                 let proc = Process()
