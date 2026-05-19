@@ -4,7 +4,7 @@
   "geometry_id" : "bipv_5layer_v0",
   "interface" : "hexa-arch:component:geometry-record",
   "layer_count" : 5,
-  "produced_at_utc" : "2026-05-19T14:21:25Z",
+  "produced_at_utc" : "2026-05-19T15:44:52Z",
   "provenance" : {
     "absorbed" : false,
     "measurement_gate" : "GATE_OPEN",

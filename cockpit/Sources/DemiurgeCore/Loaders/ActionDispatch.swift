@@ -6,6 +6,15 @@
 // are byte-identical across both surfaces (@D g_ssot_single_source /
 // D50 — CLI ↔ cockpit 멱등성).
 //
+// κ-29 (this commit): adds `runEngineTool(verb:, domain:)` — when a
+// real demiurge engine tool exists for the (verb, domain) cell, the
+// dispatcher calls IT (record-producing, deterministic) instead of
+// the claude-CLI LLM fallback. Currently wired:
+//   • component + synthesize → ComponentEmitter.emitBundled
+//   • chip      + verify     → booksim self-test sniffer
+//                              (honest-gap if hexa not on PATH or
+//                               cmd_measure body not on local branch)
+//
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
 // to claim a measurement without a backing exports/ record. The
@@ -13,6 +22,30 @@
 // independent second line of defense.
 
 import Foundation
+
+/// One θ-2 action dispatch outcome — what to show the user and
+/// whether a new record was produced. The cockpit + CLI both render
+/// this the same way (D50 byte-identical).
+public struct ActionResult: Sendable {
+    /// The body text — engine-tool stdout or claude-CLI reply.
+    public let text: String
+    /// New F1F2 / component record IDs produced by this dispatch.
+    public let newRecordIDs: [String]
+    /// Did we route to a real engine tool (true) or fall back to the
+    /// claude-CLI LLM honest-gap path (false)?
+    public let usedEngineTool: Bool
+    /// If we routed to a real tool, did it succeed? `nil` for the
+    /// LLM-fallback path (success is text-only, not record-backed).
+    public let engineToolSucceeded: Bool?
+
+    public init(text: String, newRecordIDs: [String],
+                usedEngineTool: Bool, engineToolSucceeded: Bool?) {
+        self.text = text
+        self.newRecordIDs = newRecordIDs
+        self.usedEngineTool = usedEngineTool
+        self.engineToolSucceeded = engineToolSucceeded
+    }
+}
 
 public enum ActionDispatch {
 
@@ -43,6 +76,217 @@ public enum ActionDispatch {
             Range($0.range, in: text).map { String(text[$0]) }
         }
         return Array(Set(ids)).sorted()
+    }
+
+    /// κ-29 — main dispatch entry. Routes (verb, domain) to a real
+    /// demiurge engine tool when one exists; otherwise falls back to
+    /// `askClaude` (LLM honest-gap path). Used by both cockpit's
+    /// "▶ 실제로 돌리기" button and `DemiurgeCLI action <verb>`.
+    public static func runEngineTool(verb: Verb, domain: String,
+                                     context: String) -> ActionResult {
+        switch (verb, domain) {
+        case (.synthesize, "component"):
+            return runComponentSynthesize()
+        case (.verify, "chip"):
+            return runChipVerify()
+        default:
+            let prompt = actionPrompt(verb: verb)
+            let reply = askClaude(prompt: prompt, context: context)
+            return ActionResult(
+                text: reply,
+                newRecordIDs: parseRecordIDs(reply),
+                usedEngineTool: false,
+                engineToolSucceeded: nil)
+        }
+    }
+
+    /// `component + synthesize` engine tool — emits the bundled BIPV
+    /// procedural geometry to `exports/component/geometry/`. Same path
+    /// as `DemiurgeCLI emit-component` (both call ComponentEmitter).
+    /// Result: GATE_OPEN / absorbed=false (geometry, not a measured
+    /// verdict — g3).
+    private static func runComponentSynthesize() -> ActionResult {
+        let r = ComponentEmitter.emitBundled()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `chip + verify` engine tool — try to spawn the local booksim
+    /// self-test (rfc_001 §8 / rfc_003 Phase B). On THIS branch, the
+    /// local `~/core/hexa-lang/stdlib/booksim/booksim.hexa` ships with
+    /// the cmd_measure body as a gate-90 stub (the F1F2-producer body
+    /// has not merged into the rfc043 branch yet — see PLAN logs
+    /// ①-step2c). The hexa-lang `hexa-arch` CLI entry-point is also
+    /// not wired, so `hexa run` cannot pass `--emit <dir>` argv.
+    ///
+    /// Honest path (g3, D17 — Swift never simulates the chip; that
+    /// belongs to hexa-lang): we spawn the self-test, inspect any
+    /// newly-written `/tmp/hexa_native_*.json` (mtime check), and if
+    /// one appears we copy it into `exports/chip/noc/f1f2/records/`.
+    /// If hexa is missing OR no record is produced, report engine-tool
+    /// gap honestly — never silent success (g3).
+    private static func runChipVerify() -> ActionResult {
+        let hexaBin = locateHexa()
+        guard let hexaPath = hexaBin else {
+            return ActionResult(
+                text: "⏳ engine tool gap — `hexa` 실행 파일을 PATH 또는 "
+                    + "~/core/hexa-lang/hexa 에서 찾지 못했습니다. chip + "
+                    + "verify (rfc_001 §8) 는 booksim cmd_measure 가 "
+                    + "F1F2 record 를 emit 해야 하지만, 그 본체는 아직 "
+                    + "hexa-lang/rfc043-hexa-torch 브랜치에 없습니다 "
+                    + "(g3 — silent success 금지).",
+                newRecordIDs: [],
+                usedEngineTool: true,
+                engineToolSucceeded: false)
+        }
+        let booksim = NSString(string: "~/core/hexa-lang/stdlib/booksim/booksim.hexa")
+            .expandingTildeInPath
+        guard FileManager.default.fileExists(atPath: booksim) else {
+            return ActionResult(
+                text: "⏳ engine tool gap — booksim.hexa 를 찾지 못했습니다 "
+                    + "(\(booksim)). chip + verify 는 hexa-lang stdlib 의 "
+                    + "booksim 모듈을 필요로 합니다 (g3).",
+                newRecordIDs: [],
+                usedEngineTool: true,
+                engineToolSucceeded: false)
+        }
+
+        // Note the existing /tmp record mtime (if any) so we can tell
+        // if the self-test produced a *new* one this run.
+        let tmpRecord = "/tmp/hexa_native_8x8_mesh_d4_uniform_22nm.json"
+        let beforeMtime = mtimeOf(tmpRecord)
+
+        // Spawn `hexa run booksim.hexa` — captures the self-test
+        // output. With cmd_measure body landed, the self-test emits
+        // one F1F2 record to /tmp; with the stub, exit 90 / no emit.
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: hexaPath)
+        proc.arguments = ["run", booksim]
+        let pipe = Pipe()
+        proc.standardOutput = pipe
+        proc.standardError = pipe
+        var stdoutText = ""
+        var ranOK = false
+        var exitCode: Int32 = -1
+        do {
+            try proc.run()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            proc.waitUntilExit()
+            exitCode = proc.terminationStatus
+            stdoutText = String(data: data, encoding: .utf8) ?? ""
+            ranOK = (exitCode == 0)
+        } catch {
+            return ActionResult(
+                text: "⏳ engine tool gap — hexa 실행 실패: "
+                    + "\(error.localizedDescription) (g3).",
+                newRecordIDs: [],
+                usedEngineTool: true,
+                engineToolSucceeded: false)
+        }
+
+        let afterMtime = mtimeOf(tmpRecord)
+        let producedNew = (afterMtime != nil && afterMtime != beforeMtime)
+
+        var lines: [String] = []
+        lines.append("hexa run booksim.hexa — exit \(exitCode)")
+        lines.append(stdoutText.trimmingCharacters(in: .whitespacesAndNewlines))
+
+        if producedNew {
+            // Self-test emitted a fresh record → copy to exports/.
+            let dest = RecordLoader.f1f2RecordsRoot
+                .appendingPathComponent("hexa_native_8x8_mesh_d4_uniform_22nm.json")
+            do {
+                try FileManager.default.createDirectory(
+                    at: RecordLoader.f1f2RecordsRoot,
+                    withIntermediateDirectories: true)
+                if FileManager.default.fileExists(atPath: dest.path) {
+                    try FileManager.default.removeItem(at: dest)
+                }
+                try FileManager.default.copyItem(
+                    at: URL(fileURLWithPath: tmpRecord), to: dest)
+                lines.append("---")
+                lines.append("📸 새 측정 record → exports/chip/noc/f1f2/records/"
+                    + "hexa_native_8x8_mesh_d4_uniform_22nm.json")
+                lines.append("   GATE_OPEN · absorbed=false · single-point "
+                    + "measurement (rfc_001 §8 full-curve parity 아직 미입증 — g3)")
+                return ActionResult(
+                    text: lines.joined(separator: "\n"),
+                    newRecordIDs: ["hexa_native_8x8_mesh_d4_uniform_22nm"],
+                    usedEngineTool: true,
+                    engineToolSucceeded: true)
+            } catch {
+                lines.append("---")
+                lines.append("⏳ /tmp record copy 실패: \(error.localizedDescription)")
+                return ActionResult(
+                    text: lines.joined(separator: "\n"),
+                    newRecordIDs: [],
+                    usedEngineTool: true,
+                    engineToolSucceeded: false)
+            }
+        }
+
+        // No new record — honest gap. Either cmd_measure is still a
+        // stub (7/7 self-test, no emit) or the run failed outright.
+        lines.append("---")
+        if ranOK {
+            lines.append("⏳ engine tool gap — booksim self-test 는 통과했지만 "
+                + "cmd_measure body 가 아직 stub 입니다 (exit 90 / no record emit). "
+                + "F1F2 record producer 본체는 hexa-lang 의 별도 브랜치에 있고 "
+                + "현재 local rfc043-hexa-torch 에는 미머지 (g3 — 측정 record 0).")
+        } else {
+            lines.append("⏳ engine tool gap — hexa 실행 exit \(exitCode) "
+                + "(stale binary / 미컴파일 모듈 가능성). chip + verify "
+                + "측정 record 생성 0 (g3).")
+        }
+        return ActionResult(
+            text: lines.joined(separator: "\n"),
+            newRecordIDs: [],
+            usedEngineTool: true,
+            engineToolSucceeded: false)
+    }
+
+    /// Find a hexa binary — prefer local `~/core/hexa-lang/hexa`
+    /// wrapper (D17 SSOT), then `$HOME/.hx/bin/hexa`, then PATH.
+    /// Returns nil if none is executable.
+    private static func locateHexa() -> String? {
+        let fm = FileManager.default
+        let home = NSString(string: "~").expandingTildeInPath
+        let candidates = [
+            "\(home)/core/hexa-lang/hexa",
+            "\(home)/.hx/bin/hexa",
+            "/usr/local/bin/hexa",
+            "/opt/homebrew/bin/hexa",
+        ]
+        for c in candidates where fm.isExecutableFile(atPath: c) {
+            return c
+        }
+        // Fallback — `which hexa` via /usr/bin/env (synchronous).
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        proc.arguments = ["which", "hexa"]
+        let pipe = Pipe()
+        proc.standardOutput = pipe
+        do {
+            try proc.run()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            proc.waitUntilExit()
+            let out = (String(data: data, encoding: .utf8) ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if !out.isEmpty, fm.isExecutableFile(atPath: out) {
+                return out
+            }
+        } catch {
+            return nil
+        }
+        return nil
+    }
+
+    private static func mtimeOf(_ path: String) -> Date? {
+        let attrs = try? FileManager.default.attributesOfItem(atPath: path)
+        return attrs?[.modificationDate] as? Date
     }
 
     /// Invoke `claude -p <guarded>` as a SYNCHRONOUS subprocess and

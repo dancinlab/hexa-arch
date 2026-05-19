@@ -2204,3 +2204,56 @@
   producer = hexa-lang/component (P-⑨ — FreeCAD/gmsh 미설치로 별도
   세션). viewer 3D 인터랙션(zoom·프리셋·레이어 선택·export 메뉴)은
   컴파일 measured-green — 시각 동작은 GUI 확인 필요.
+- 2026-05-20 — **phase κ-29 — θ-2 action 에 실제 엔진 도구 배선**
+  (rfc_011 §6.3 · D49 · D50 · g_ssot_single_source · g3). κ-5 이래
+  cockpit 의 "▶ 실제로 돌리기" 와 CLI 의 `action <verb>` 둘 다
+  `claude -p` honest-gap 만 갈 수 있었던 것을 — 가능한 (verb,
+  domain) 쌍에 **실 엔진 도구**를 라우팅.
+  - **신규**: `DemiurgeCore/Loaders/ComponentEmitter.swift` — λ-4 의
+    emit-component 본체를 코어 함수 `ComponentEmitter.emitBundled()`
+    로 추출 (CLI `emit-component` + `action synthesize component` +
+    cockpit "▶" 셋이 한 writer 공유, D50). `ComponentEmitResult` 가
+    텍스트·새 record ID·성공여부 반환.
+  - **확장**: `ActionDispatch.runEngineTool(verb:, domain:, context:)`
+    → `ActionResult{text, newRecordIDs, usedEngineTool,
+    engineToolSucceeded}`. 매핑:
+      • `component + synthesize` → `ComponentEmitter.emitBundled()`
+        (record 생성 path).
+      • `chip + verify` → `~/core/hexa-lang/hexa run booksim.hexa`
+        spawn → `/tmp/hexa_native_*.json` mtime 감시 → 새 record
+        있으면 `exports/chip/noc/f1f2/records/` 로 복사. hexa 없거나
+        cmd_measure stub 인 경우 **honest gap 보고** (silent
+        success 절대 금지).
+      • 나머지 — 기존 `askClaude` fallback.
+  - **결정 근거 (chip+verify)**: hexa-lang rfc043-hexa-torch 의
+    booksim.hexa 는 cmd_measure body 미머지(stub, exit 90) — local
+    self-test 는 7/7 PASS 지만 record emit 0. Swift 가 직접 sweep
+    시뮬레이션하면 D15/D17 SSOT 침범 → NO. `emit-chip` subcommand
+    신설도 같은 침범 → NO. 가장 honest = hexa run spawn + 결과
+    sniffer + 실패 시 정직 gap 보고. cmd_measure body 가 main 으로
+    머지되면 같은 path 가 자동으로 record-producing.
+  - **CLI 변경**: `cliAction(verb, domain?)` 으로 시그니처 확장
+    → `demiurge action <verb> [domain]`. `emitComponent` 가
+    `ComponentEmitter.emitBundled()` 위임으로 슬림화 (중복 0).
+  - **cockpit 변경**: `runAction` 이 `dispatch(verb, domain, context)`
+    로 라우팅 — `project.domain` 을 그대로 전달. engineToolSucceeded
+    == false 이면 "engine tool gap" 메시지로 honest 표시 (silent
+    success 금지). 새 record ID 있으면 ② 참고 자료 새로고침.
+  - **측정**: `swift run DemiurgeCLI action synthesize component` →
+    `bipv_5layer_v0.{usda,usdz,json}` emit, exit 0, "📸 new record
+    ID(s): bipv_5layer_v0" (procedural placeholder, GATE_OPEN).
+    `swift run DemiurgeCLI action verify chip` → hexa run booksim
+    spawn → 7/7 PASS, /tmp record mtime unchanged → "⏳ engine tool
+    gap — cmd_measure body 가 stub" honest 보고, CLI exit 1 (g3 —
+    gap 도 명시적). `swift build --target CockpitApp` green
+    (RealityKit MainActor warning 만, 에러 0).
+  - **g3 정직 갭**: ① component emit 은 procedural placeholder —
+    GATE_OPEN/absorbed=false 유지, "측정 완료" 아님. ② chip verify
+    는 hexa-lang booksim cmd_measure body merge 전까지 항상 honest
+    gap (이 worktree 의 local branch 가 rfc043-hexa-torch — main 의
+    enum-fix promote 후 cmd_measure body 가 아직 안 도착). ③ 다른
+    domain×verb (≈ 100여 셀) 는 여전히 claude CLI fallback — 엔진
+    없음 보고. 다음 pickup = hexa-lang main 의 cmd_measure body 가
+    rfc043 로 머지되면 chip+verify 가 자동 record-producing 으로
+    전환 (코드 변경 0); 또는 matter/energy 같은 다른 domain 엔진
+    추가.

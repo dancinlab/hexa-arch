@@ -266,45 +266,63 @@ struct WorkbenchView: View {
 
     // MARK: — θ-2 action dispatch (rfc_011 §6 / D48 / D49)
 
-    /// "▶ 실제로 돌리기" — dispatch the current verb as an action to the
-    /// Claude Code CLI (rfc_011 §6.3). κ-5 is the mechanism skeleton:
-    /// demiurge has no engine tool yet (D49), so the agent reports "no
-    /// tool" honestly and no measured record is produced (g3). When a
-    /// real engine tool lands, the same path drives the measurement.
+    /// "▶ 실제로 돌리기" — dispatch the current verb as an action.
+    /// κ-29: routes through `ActionDispatch.runEngineTool(verb:, domain:)`
+    /// so (component, synthesize) → ComponentEmitter and
+    /// (chip, verify) → booksim self-test sniffer get real records
+    /// when their engine tools succeed; every other cell still hits
+    /// the claude-CLI honest-gap path. Same dispatcher as
+    /// `DemiurgeCLI action <verb> <domain>` (D50 byte-identical).
     private func runAction() {
         guard let project = activeProject else { return }
         let verb = project.currentVerb
+        let domain = project.domain
         chatMessages.append(ChatMessage(
             role: .user,
             text: "▶ \(verb.plain)(\(verb.canonical)) 단계 실제로 돌리기"))
         let thinkingIndex = chatMessages.count
         chatMessages.append(ChatMessage(role: .assistant, text: "🍳 … 실행 경로 확인 중 …"))
         let context = chatContext()
-        let prompt = ActionDispatch.actionPrompt(verb: verb)
         isRunningAction = true
         Task {
-            let reply = await ask(prompt, context)
+            let result = await dispatch(verb: verb, domain: domain, context: context)
             await MainActor.run {
                 if thinkingIndex < chatMessages.count {
-                    chatMessages[thinkingIndex] = ChatMessage(role: .assistant, text: reply)
+                    chatMessages[thinkingIndex] = ChatMessage(
+                        role: .assistant, text: result.text)
                 }
-                let ids = ActionDispatch.parseRecordIDs(reply)
-                if ids.isEmpty {
-                    chatMessages.append(ChatMessage(
-                        role: .assistant,
-                        text: "⏳ 새 측정 record 없음 — 이 단계는 아직 측정되지 "
-                            + "않았습니다 (g3 — 측정 없이는 ✅ 로 바뀌지 않습니다)."))
+                if result.newRecordIDs.isEmpty {
+                    let why: String
+                    if result.usedEngineTool, result.engineToolSucceeded == false {
+                        why = "⏳ engine tool gap — 새 측정 record 없음. "
+                            + "보고된 사유를 확인하세요 (g3 — silent success 금지)."
+                    } else {
+                        why = "⏳ 새 측정 record 없음 — 이 단계는 아직 측정되지 "
+                            + "않았습니다 (g3 — 측정 없이는 ✅ 로 바뀌지 않습니다)."
+                    }
+                    chatMessages.append(ChatMessage(role: .assistant, text: why))
                 } else {
                     chatMessages.append(ChatMessage(
                         role: .assistant,
-                        text: "📸 새 측정 record: \(ids.joined(separator: ", ")) "
+                        text: "📸 새 record: \(result.newRecordIDs.joined(separator: ", ")) "
                             + "— ② 참고 자료에서 확인하세요."))
                     artifacts = ArtifactRegistry.loadAll()
                 }
-                flagIfOverclaim(reply)
+                flagIfOverclaim(result.text)
                 isRunningAction = false
             }
         }
+    }
+
+    /// Async wrapper around `ActionDispatch.runEngineTool` — detaches
+    /// so the synchronous engine-tool subprocess (or claude CLI) does
+    /// not block the UI thread.
+    private func dispatch(verb: Verb, domain: String,
+                          context: String) async -> ActionResult {
+        await Task.detached(priority: .userInitiated) {
+            ActionDispatch.runEngineTool(
+                verb: verb, domain: domain, context: context)
+        }.value
     }
 
 /// rfc_011 §4.2 / @F f6 — does the reply assert a measurement /

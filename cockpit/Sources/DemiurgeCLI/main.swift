@@ -54,11 +54,16 @@ func usage() {
       demiurge list-projects           List workbench projects
       demiurge show-project <name>     Show one project + 7-verb progress
       demiurge list-shelf <domain>     Show a domain's §6 shelf options
-      demiurge action <verb>           θ-2 action — dispatch a verb
+      demiurge action <verb> [domain]  θ-2 action — dispatch a verb
                                        (specify/structure/design/analyze/
                                         synthesize/synth/verify/measure/
                                         handoff; 한글 명세/구조/설계/해석/
-                                        합성/검증/인계 also accepted)
+                                        합성/검증/인계 also accepted).
+                                       optional domain (chip/component/…)
+                                       routes to a real engine tool when
+                                       one exists (e.g. component+synth
+                                       → emit-component; chip+verify →
+                                       booksim self-test).
       demiurge list-gates              F1F2 records grouped by gate
       demiurge verify <path|id>        provenance / claim-gate check
                                        (exit 0 consistent · 1 not)
@@ -222,32 +227,38 @@ func parseVerbArg(_ s: String) -> Verb? {
     }
 }
 
-/// `demiurge action <verb>` — dispatch a θ-2 action through the SAME
-/// ActionDispatch the cockpit's "▶ 실제로 돌리기" button uses
+/// `demiurge action <verb> [domain]` — dispatch a θ-2 action through
+/// the SAME ActionDispatch the cockpit's "▶ 실제로 돌리기" button uses
 /// (@D g_ssot_single_source / D50 — CLI↔cockpit byte-identical).
-/// κ-5 honest gap holds: demiurge carries zero engine tools, so the
-/// agent will report "no tool" — no measured record, no ✅ (g3).
-func cliAction(_ verbStr: String) -> Int32 {
+/// κ-29: when a real engine tool exists for (verb, domain), we route
+/// to IT (record-producing); otherwise honest-gap via claude CLI (g3).
+/// Wired engine tools: component+synthesize · chip+verify.
+func cliAction(_ verbStr: String, _ domainArg: String?) -> Int32 {
     guard let verb = parseVerbArg(verbStr) else {
         FileHandle.standardError.write(
             Data(("action: unknown verb '\(verbStr)' — try one of "
                   + "specify/structure/design/analyze/synthesize/verify/handoff\n").utf8))
         return 2
     }
-    let context = "CLI-invoked action — no specific project context."
-    print("action: \(verb.canonical) (\(verb.plain)) — dispatching to claude CLI…")
-    let prompt = ActionDispatch.actionPrompt(verb: verb)
-    let reply = ActionDispatch.askClaude(prompt: prompt, context: context)
-    print(reply)
-    let ids = ActionDispatch.parseRecordIDs(reply)
-    if ids.isEmpty {
-        print("---")
-        print("⏳ no new measured record — this stage has not been measured (g3).")
+    // Domain hint — caller may pass it explicitly; else default to a
+    // "general" cohort that hits the claude-CLI honest-gap path.
+    let domain = domainArg ?? "general"
+    let context = "CLI-invoked action — domain=\(domain)."
+    print("action: \(verb.canonical) (\(verb.plain)) · domain=\(domain) — dispatching…")
+    let result = ActionDispatch.runEngineTool(
+        verb: verb, domain: domain, context: context)
+    print(result.text)
+    print("---")
+    if result.newRecordIDs.isEmpty {
+        if result.usedEngineTool, result.engineToolSucceeded == false {
+            print("⏳ engine tool gap — no new measured record (g3).")
+        } else {
+            print("⏳ no new measured record — this stage has not been measured (g3).")
+        }
     } else {
-        print("---")
-        print("📸 new record ID(s): \(ids.joined(separator: ", "))")
+        print("📸 new record ID(s): \(result.newRecordIDs.joined(separator: ", "))")
     }
-    return 0
+    return result.engineToolSucceeded == false ? 1 : 0
 }
 
 /// Resolve a CLI arg to a record — try it as a relative exports/ path
@@ -344,63 +355,15 @@ func verifyRecord(_ arg: String) -> Int32 {
 }
 
 /// `emit-component` — the demiurge procedural component producer.
-/// Writes the bundled BIPV placeholder geometry to
-/// exports/component/geometry/ as .usda + .usdz + a typed
-/// ComponentRecord. HONEST (g3): producer =
-/// demiurge_procedural_placeholder, GATE_OPEN, absorbed=false.
+/// Now delegates to DemiurgeCore.ComponentEmitter so that this CLI
+/// subcommand and `action synthesize` for a component project share
+/// ONE writer (D50 — CLI↔cockpit byte-identical). HONEST (g3):
+/// producer = demiurge_procedural_placeholder, GATE_OPEN,
+/// absorbed=false.
 func emitComponent() -> Int32 {
-    let geometry = ComponentGeometry.bipv5Layer
-    let dir = RecordLoader.exportsRoot
-        .appendingPathComponent("component/geometry", isDirectory: true)
-    do {
-        try FileManager.default.createDirectory(
-            at: dir, withIntermediateDirectories: true)
-    } catch {
-        FileHandle.standardError.write(
-            Data("emit-component: mkdir failed — \(error)\n".utf8))
-        return 1
-    }
-    let usdaName = "\(geometry.id).usda"
-    let usdzName = "\(geometry.id).usdz"
-    let jsonName = "\(geometry.id).json"
-    let usdaURL = dir.appendingPathComponent(usdaName)
-    let usdzURL = dir.appendingPathComponent(usdzName)
-    let jsonURL = dir.appendingPathComponent(jsonName)
-
-    do {
-        try USDExporter.usda(geometry).write(
-            to: usdaURL, atomically: true, encoding: .utf8)
-    } catch {
-        FileHandle.standardError.write(
-            Data("emit-component: write \(usdaName) failed — \(error)\n".utf8))
-        return 1
-    }
-    print("emit-component: wrote \(usdaName)")
-
-    let usdzOK = USDExporter.packageUSDZ(from: usdaURL, to: usdzURL)
-    print(usdzOK
-        ? "emit-component: wrote \(usdzName)"
-        : "emit-component: usdz packaging unavailable — .usda only "
-          + "(honest gap, g3)")
-
-    let iso = ISO8601DateFormatter().string(from: Date())
-    let record = ComponentRecord.procedural(
-        for: geometry, producedAtUtc: iso,
-        usdaFile: usdaName, usdzFile: usdzOK ? usdzName : nil)
-    let enc = JSONEncoder()
-    enc.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    do {
-        try enc.encode(record).write(to: jsonURL)
-    } catch {
-        FileHandle.standardError.write(
-            Data("emit-component: write \(jsonName) failed — \(error)\n".utf8))
-        return 1
-    }
-    print("emit-component: wrote \(jsonName)")
-    print("---")
-    print("📦 component artifact → exports/component/geometry/")
-    print("   GATE_OPEN · absorbed=false · procedural placeholder (g3)")
-    return 0
+    let r = ComponentEmitter.emitBundled()
+    print(r.text)
+    return r.ok ? 0 : 1
 }
 
 /// `export-component <format> [path]` — write the bundled geometry to
@@ -488,7 +451,7 @@ case "action":
         usage()
         exit(2)
     }
-    exitCode = cliAction(args[2])
+    exitCode = cliAction(args[2], args.count >= 4 ? args[3] : nil)
 case "list-gates":
     exitCode = listGates()
 case "gate-summary":
