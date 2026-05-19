@@ -138,3 +138,37 @@ first four were. It is genuinely multi-session work (ABSORPTION.md
 §178). A follow-up session resumes from `rfc006-yosys-rv-scope`
 `762786ba`; the four landed components are stable foundation. SKY130
 PDK + ABC remain provisioned.
+
+## UPDATE 2026-05-20 (e) — read_verilog scope 6/6 + first synth measurement
+
+read_verilog scope expansion landed 13 components on
+`rfc006-yosys-rv-scope` (HEAD `389a6d92`, all 34/34 selftest GREEN):
+
+- b4b916ff constant-expression evaluator
+- 294a9026 parameter/localparam declaration parsing
+- b8e1d5dd width elaboration + ANSI-style ports
+- 762786ba function-automatic declaration parsing
+- aa489cfe expression elaboration → RTLIL cell tree
+- 36bbdfc6 SymTab propagation + array indexing
+- c088df29 generate-for static unroll
+- f40a8659 always-block parser + simple $dff
+- bb8b814b body wire/reg width + 1-D unpacked
+- 93852f50 multi-statement always body
+- a12f0194 2-level index + integer body decl
+- a93b707b for inside always (static unroll)
+- 389a6d92 if/else skip inside always
+
+`router_d4.v` now parses end-to-end through `read_verilog`. A synth
+driver against the origin/main yosys pipeline + SKY130 tt-corner
+Liberty exercises stage 1-4: read_verilog OK, passes OK, **abc_map**
+exits 0 but emits an empty mapped BLIF — the if-bodies are skipped
+in the current RTLIL (honest gap), so ABC has no cells to map.
+
+The next blocker is therefore the **yosys `proc` pass core**:
+cond-mux emission + per-variable signal tracking inside always (so if-
+then-else bodies emit `$mux` + `$dff` cells with correct enable/
+reset structure). This is the proc-pass clean-room re-derivation
+ABSORPTION.md §178 sized as the heart of the 1-2-week work. SKY130
+PDK + ABC remain provisioned; the next session resumes from
+`rfc006-yosys-rv-scope` HEAD with the synth-driver measurement
+log as the immediate signal of progress.
