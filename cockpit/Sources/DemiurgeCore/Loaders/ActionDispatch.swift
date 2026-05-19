@@ -13,6 +13,9 @@
 //
 // κ-30 (this commit, D53): adds `matter + analyze` → MatterAnalyzer.
 // κ-34 (D55): adds `sscb + analyze` → SSCBProducer (ngspice 46 transient).
+// κ-35 (D56): adds `chip + analyze` → ChipAnalyzer (hexa-native booksim
+//             oracle, Leighton analytic lower bounds — first chip-cell
+//             that legitimately CLOSES the gate with absorbed=true).
 //
 // Currently wired:
 //   • component + synthesize → ComponentEmitter.emitBundled
@@ -34,6 +37,14 @@
 //                              measuring-producer threshold; real
 //                              numbers, plausible-not-absorbed circuit,
 //                              GATE_OPEN永구 / absorbed=false ALWAYS)
+//   • chip      + analyze    → hexa-native booksim oracle (κ-35 / D56
+//                              — Leighton analytic lower bounds for
+//                              the 8×8 / n=64 reference; GATE_CLOSED_
+//                              MEASURED + absorbed=true LEGITIMATE
+//                              because the bound is a mathematical
+//                              theorem and the oracle is hexa-native
+//                              — scope_caveats clarify the bound is
+//                              math, NOT real wire latency)
 //
 // Honesty (g3, @F f6): the action prompt instructs the agent to
 // report "no engine tool" plainly when none is available, and never
@@ -115,6 +126,8 @@ public enum ActionDispatch {
             return runMatterAnalyze()
         case (.analyze, "sscb"):
             return runSSCBAnalyze()
+        case (.analyze, "chip"):
+            return runChipAnalyze()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -170,6 +183,35 @@ public enum ActionDispatch {
     /// turn into real producers, narrow scope is honest g3.
     private static func runSSCBAnalyze() -> ActionResult {
         let r = SSCBProducer.runAnalyze()
+        return ActionResult(
+            text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true,
+            engineToolSucceeded: r.ok)
+    }
+
+    /// `chip + analyze` engine tool (κ-35 / D56) — spawn the hexa-
+    /// native booksim oracle dispatch (`hexa run stdlib/booksim/
+    /// booksim.hexa`). The dispatcher self-test exercises `cmd_oracle`
+    /// (booksim.hexa:492), which emits the Leighton analytic lower
+    /// bounds for the 8×8 / n=64 reference (d4 mesh + d6 hex):
+    ///
+    ///   booksim oracle — Leighton analytic bounds (8x8, n=64):
+    ///     d4 mesh: bisection_lower=8 diameter_lower=14
+    ///     d6 hex : bisection_lower=8 diameter_lower=14
+    ///     cite: Leighton 1984 Thm 2 (DOI 10.1007/BF01744433) + …
+    ///
+    /// We parse those lines and persist a typed `ChipAnalyzeRecord`
+    /// under `exports/chip/noc/analyze/`. Producer = `hexa_native_
+    /// booksim_oracle@<commit>` — first chip-cell legitimately
+    /// closing `GATE_CLOSED_MEASURED` AND `absorbed=true` because
+    /// the Leighton bound is a mathematical theorem (not a wire
+    /// clocking) and the oracle is hexa-native (no external library
+    /// absorbed). scope_caveats clarify the bound is the FLOOR every
+    /// F1F2 record must clear — NOT a substitute for cmd_measure's
+    /// full-curve wire-latency parity (rfc_001 §7.3 / §8, g3).
+    private static func runChipAnalyze() -> ActionResult {
+        let r = ChipAnalyzer.runAnalyze()
         return ActionResult(
             text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],

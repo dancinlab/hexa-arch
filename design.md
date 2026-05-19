@@ -1759,3 +1759,72 @@ pickup note 로 이월. ③ scope+design (POPPY) — pip install + 우주
   / `cohort-pickup-bot-…` 로 다음 세션 위임. 한 라운드 한 셀이
   D53 의 "premature abstraction 회피" 와 g3 의 "honest scope"
   정신과 정합.
+
+### Decision 56 — `chip + analyze` producer = hexa-native booksim oracle (Leighton analytic bounds, κ-35)
+
+**picked**: `chip + analyze` 의 producer 를 **hexa-native
+`stdlib/booksim/booksim.hexa::cmd_oracle`** (Leighton 1984 analytic
+lower bounds) 로 매핑한다. ChipAnalyzer 가 `hexa run
+stdlib/booksim/booksim.hexa` 를 spawn — 디스패처 self-test 가
+`cmd_oracle` 을 실행해 8×8 / n=64 reference (d4 mesh + d6 hex) 의
+`bisection_lower=8 diameter_lower=14` 라인을 emit. ChipAnalyzer 가
+이 라인 + cite 라인 (Leighton 1984 Thm 2 + Dally & Towles PPIN 2004
+§3.2-3.3) 을 파싱해 typed `ChipAnalyzeRecord` 를
+`exports/chip/noc/analyze/<recordId>.json` 에 영구화. producer 는
+`hexa_native_booksim_oracle@<hexa-lang commit>` 으로 핀,
+**measurement_gate = GATE_CLOSED_MEASURED + absorbed = true 정당**
+— Leighton bound 는 수학적 정리, oracle dispatch 는 그 algebraic
+표현의 평가, 그리고 알고리즘 자체가 hexa-native 이라 외부 라이브러리
+absorbed 없음 (D17 matter+analyze 패턴 동일). (Rejected: ① 셀
+미매핑 유지 — D53 measurable-only 정책상 매핑 가능 셀을 매핑 안 하는
+것이 더 큰 갭. ② cmd_measure 를 analyze 셀에 wiring — verb 의미
+충돌 (verify=측정 검증 vs analyze=설계 점검). ③ booksim oracle 을
+별도 sub-CLI 로 추출 — 현 디스패처 self-test 가 cmd_oracle 을
+이미 호출하므로 추가 entry 불필요, premature abstraction.)
+
+**rationale**:
+- D53 "measurable-only 셀 매핑" 과 정합 — `(.analyze, "chip")` 가
+  6번째 매핑 셀 (기존: component+synthesize, chip+verify, chip+
+  synthesize, matter+analyze, sscb+analyze). switch/case 가 6 셀에
+  도달 — D53 의 "5+ 시점 ActionAdapter 리팩토링" 임계점 정식 통과,
+  다음 라운드에서 protocol + registry 패턴이 자연 (본 phase 는 wiring
+  만, 리팩토링은 별도).
+- **gate=CLOSED_MEASURED + absorbed=true 가 정당한 이유** (g3 의
+  honest-scope, 본 결정의 핵심):
+  - Leighton 1984 Thm 2 는 *수학적 정리* — k-ary 2-mesh 의
+    bisection 하한이 k 이고 diameter 하한이 2k-2 라는 것은 algebraic
+    closed form. oracle dispatch 는 이 closed form 을 평가하는 것
+    이지 가정 (assumption) 이 아님. 따라서 "측정으로 확인됨" 의
+    rfc_012 §4 의미를 만족 — `bisection_lower=8 diameter_lower=14`
+    는 8×8 reference 에 대한 *증명된 fact* 이다.
+  - producer 가 *hexa-native* (`stdlib/booksim/leighton.hexa`,
+    D15·D17) — 외부 라이브러리·datasheet·OSS 도구를 absorbed 한
+    것이 아니라 hexa-lang 자체가 closed form 을 구현. matter+analyze
+    (D55) 와 동일 stance: hexa-native code 가 producer 면
+    `absorbed=true` 합법, 외부 substrate 의존 0.
+  - **이 정당성의 한계** (scope_caveat) — record 는 *수학적 하한*
+    이지 *real chip 의 wire latency 측정*이 아님. delay 측정은
+    booksim cmd_measure 의 F1F2 record (chip+verify 셀) 가 담당.
+    본 record 는 그 F1F2 record 들이 위배되지 않는지의 *cross-floor*
+    — 모든 F1F2 record 가 이 bound 를 만족해야 함 (rfc_001 §7.3 /
+    §8). 즉 absorbed=true 가 "demiurge 가 real chip 을 측정함" 을
+    뜻하지 *않는다*는 점이 scope_caveats 의 핵심.
+- 6번째 매핑이 chip+analyze 인 이유 — chip 도메인이 demiurge 의
+  "deep" 기둥 중 첫 진입 (rfc_001~003), Leighton 오라클은 이미
+  hexa-lang 에 라이브 (D17 — hexa-lang owner). 외부 도구 설치 0 /
+  네트워크 의존 0 / brew 의존 0. 가장 빠른 매핑 — script 작성 0,
+  netlist 작성 0, Python sidecar 0.
+- 처음으로 chip 도메인에서 `GATE_CLOSED_MEASURED + absorbed=true`
+  record 를 보유 — 기존 chip 셀들 (verify: GATE_OPEN single-point;
+  synthesize: GATE_OPEN dispatcher) 의 부족함을 보완. 단 "real chip
+  wire latency 측정" 이라는 GOAL 갭은 *여전히 미해결* — 본 결정은
+  *analytic floor* 확보이지 *measured curve* 확보가 아님 (g3 — 과대
+  주장 금지).
+- D50 g_ssot_single_source 준수 — ChipAnalyzer 가 cockpit GUI
+  `▶ 실제로 돌리기` 버튼 + DemiurgeCLI `action analyze chip` 두
+  경로의 단일 진입점. 동일 record 1건/호출, byte-identical 렌더.
+- D55 패턴 재사용 — SSCBProducer / MatterAnalyzer 와 sibling 코드
+  구조 (typed Record + Provenance · scope_caveats 박제 · 4-종 gate
+  fallback · git commit 핀 producer · honest-gap 우선). 본 결정은
+  새 패턴 도입 0, 기존 패턴 + chip 의 특수성 (hexa-native math) 만
+  결합.

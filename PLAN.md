@@ -2569,3 +2569,79 @@
     Wolfspeed C3M0021120K class `.lib` 흡수 + DEVSIM TCAD coupling
     이 들어가야 GATE_CLOSED_MEASURED 후보 (별도 phase, 본 κ-34 의
     scope 밖).
+
+- 2026-05-20 — **phase κ-35 — `chip + analyze` 셀 = hexa-native
+  booksim oracle 매핑** (D56 · D53 measurable-only · g3). chip 도메인의
+  6번째 매핑 셀 — `(.analyze, "chip")` 가 `ChipAnalyzer.runAnalyze()`
+  를 통해 `hexa run stdlib/booksim/booksim.hexa` 를 spawn, 디스패처
+  self-test 가 emit 하는 Leighton analytic 하한 (8×8 / n=64, d4 mesh
+  + d6 hex) 을 typed `ChipAnalyzeRecord` 로 영구화. chip 도메인 최초의
+  `GATE_CLOSED_MEASURED + absorbed=true` record — 외부 도구 0 / brew
+  0 / pip 0 / network 0 / script 0, 단 hexa-lang stdlib + git rev-parse
+  만 의존 (가장 빠른 매핑).
+  - **신규**: `cockpit/Sources/DemiurgeCore/Models/ChipAnalyzeRecord.swift`
+    — typed sidecar (~120 lines). interface
+    `"demiurge:chip:noc:analyze-leighton"`, schema 1.0.
+    `ChipAnalyzeProvenance` + `ChipLeightonBounds` 분리,
+    `MatterRecord` / `SSCBRecord` 의 sibling 패턴 (CodingKeys
+    snake_case · public 멤버 · Sendable).
+  - **신규**: `cockpit/Sources/DemiurgeCore/Loaders/ChipAnalyzer.swift`
+    — Swift spawner (~300 lines). `analyzeRecordsRoot =
+    exports/chip/noc/analyze/`. `locateHexa()` 가 `~/core/hexa-lang
+    /hexa` 등 후보 탐색 (MatterAnalyzer 와 동일 로직). `hexa run
+    booksim.hexa` 의 stdout 에서 `booksim oracle —` 헤더로 oracle
+    블록 시작 감지 → `d4 mesh: bisection_lower=N diameter_lower=N`
+    + `d6 hex : ...` + `cite: ...` 3 라인 파싱 → cite 라인이 블록
+    종료. `extractInt(_, key:)` 헬퍼가 `bisection_lower=8` 형식의
+    `=` 이후 숫자만 안전 추출. `gitCommitHash(repoRoot:)` 가
+    `~/core/hexa-lang` 의 short HEAD 캡처 (producer 핀).
+  - **확장**: `cockpit/Sources/DemiurgeCore/Loaders/ActionDispatch.swift`
+    — `runEngineTool` switch 에 `case (.analyze, "chip"): return
+    runChipAnalyze()` 추가 (6번째 측정 가능 셀). 새 private
+    `runChipAnalyze()` 가 ChipAnalyzer 호출. 헤더 doc-comment
+    갱신 (κ-35 라인 + chip+analyze 셀 설명).
+  - **g3 정직 갭 (제일 중요)**: ① bound IS a *mathematical theorem*
+    (Leighton 1984 Thm 2, DOI 10.1007/BF01744433; Dally & Towles
+    PPIN 2004 §3.2-3.3) — oracle dispatch 는 그 algebraic 표현의
+    평가, 가정이 아님. ② producer 가 **hexa-native** (`stdlib/
+    booksim/leighton.hexa`) — 외부 라이브러리 absorbed 0, 수학 자체가
+    hexa-lang 의 closed form (matter+analyze 와 동일 stance). ③
+    **단 record 는 *수학적 하한* 이지 *real chip wire latency 측정*이
+    아님** — 4종 scope_caveats 가 이 격차를 박제:
+    (a) bound 는 algebraic, NoC wire clocking 아님;
+    (b) scope = 8×8 / n=64 reference 만 (다른 n / torus / fat-tree
+        은 별도 oracle);
+    (c) absorbed=true 의 의미 = "hexa-native 가 producer" (외부
+        substrate 의존 0);
+    (d) delay 측정은 booksim cmd_measure 의 F1F2 record 가 담당,
+        본 record 는 cross-floor (rfc_001 §7.3 / §8).
+    ④ 단 (a)~(d) 를 record 가 *자기 자신* 에 박제하므로 cockpit
+    이 verbatim 렌더해도 over-claim 0 — REJECTED 가드 (rfc_011
+    §4.2) 가 catch 할 필요 없음.
+  - **측정 (이 worktree, mac local, swift 6.3.1)**: `swift run
+    DemiurgeCLI action analyze chip` →
+    `hexa run booksim.hexa — exit 0` ·
+    `Leighton oracle (n=64):` ·
+    `  d4 mesh: bisection_lower=8 diameter_lower=14` ·
+    `  d6 hex: bisection_lower=8 diameter_lower=14` ·
+    `cite: Leighton 1984 Thm 2 (DOI 10.1007/BF01744433) + ...` ·
+    `📸 chip analyze record → exports/chip/noc/analyze/
+    chip_analyze_leighton_<stamp>.json` ·
+    `✅ GATE_CLOSED_MEASURED · absorbed=true · producer=
+    hexa_native_booksim_oracle@52b9ed92` ·
+    `scope_caveat: 수학적 하한 (Leighton 1984) — real chip wire
+    latency 측정 아님 (g3)`. 빌드 green (pre-existing RealityKit
+    MainActor warning 만, 새 warning 0 · 새 error 0). record JSON
+    크기 ~2.0 KB.
+  - **다음 pickup**: ① **ActionAdapter 프로토콜 리팩토링** — 본
+    phase 로 switch/case 가 6 셀에 도달, D53 의 "5+ 시점 리팩토링"
+    임계점 정식 통과. 다음 라운드에서 protocol + registry 패턴이
+    자연. ② **chip + verify cmd_measure 본체 머지** — rfc043-hexa-
+    torch 브랜치의 cmd_measure F1F2-producer 본체가 머지되면 chip
+    +verify 셀이 진짜 F1F2 record (full-curve wire-latency) 를
+    emit. 본 D56 의 Leighton floor 가 그 F1F2 record 들의 cross-
+    floor — 두 셀이 서로의 g3 가드 역할. ③ **다른 reference n /
+    topology** — oracle 을 32×32 / hex 8×8 / torus 등으로 sweep해
+    더 풍부한 분석 record set 확보 (현재는 8×8 only). ④ **grid +
+    structure (NetworkX)** — κ-34 의 미해결 pickup, P-⑧ cohort
+    breadth 입증의 다음 단계.

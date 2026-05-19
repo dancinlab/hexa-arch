@@ -91,6 +91,7 @@ dormant.
 |-----------|------------|--------------------------------|-------|-----------------------------------|----------|
 | chip      | verify     | booksim cmd_measure            | ①+④   | GATE_OPEN                         | false    |
 | chip      | synthesize | yosys 0.65 substrate           | ①+④   | GATE_CLOSED_MEASURED (substrate)  | false ✱  |
+| chip      | analyze    | booksim cmd_oracle (Leighton)  | ①+④   | GATE_CLOSED_MEASURED (analytic)   | **true** |
 | matter    | analyze    | hexa-matter closure aggregator | ①+④   | GATE_CLOSED_MEASURED              | **true** |
 | component | synthesize | FreeCAD 1.1.1 parametric       | ④     | GATE_OPEN                         | false    |
 | sscb      | analyze    | ngspice 46 transient           | ①+④   | GATE_OPEN                         | false    |
@@ -122,6 +123,7 @@ producer 가 ① 에 들어오는 순서대로 매핑 추가.)
 - D53 — 7-verb 셀 매핑 = measurable-only
 - D54 — component synthesize = FreeCAD parametric
 - D55 — sscb analyze = ngspice transient (first cohort producer)
+- D56 — chip analyze = booksim cmd_oracle (Leighton analytic bounds, hexa-native)
 - rfc_001 §8 · rfc_002 §3 — F1F2 schema + 측정 gate 규칙
 - `proposals/rfc_001` ~ `rfc_005` — 도메인-별 absorption RFC
 
@@ -134,3 +136,9 @@ producer 가 ① 에 들어오는 순서대로 매핑 추가.)
   + 현재 흡수된 producer 5건 표 + 가벼운 distrib 선호. substrate vs
   absorbed 구분 (Yosys §5 사례) 명시. 새 D-decision 없음 — 기존
   D15/D17/D50/D53~D55 + rfc_001~005 cite.
+- 2026-05-20 — ④ WORKFLOW 표에 `chip + analyze = booksim cmd_oracle
+  (Leighton)` 추가 (κ-35 / D56). chip 도메인 최초의 `GATE_CLOSED_
+  MEASURED + absorbed=true` cell — 외부 라이브러리 흡수 0, hexa-
+  native math (Leighton 1984 closed form). matter+analyze 와 동일
+  stance — hexa-native code 가 producer 면 absorbed=true 합법.
+  scope_caveat: 수학적 하한이지 real chip wire latency 측정 아님.
