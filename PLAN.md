@@ -2370,3 +2370,43 @@
     은 여전히 fallback. 다음 pickup = 다른 매핑 가능 producer (예:
     materials F1F2 stack 검증) 발굴 또는 cmd_measure body 머지로
     chip+verify 자동 record-producing 전환.
+- 2026-05-20 — **phase κ-32 — chip + verify 셀 라이브 측정 확정**
+  (rfc_001 §B · κ-31 의 g3-③ 후속 · g3). κ-29 의 chip+verify 셀이
+  최초로 hexa-native cmd_measure body 를 실행해 F1F2 record 를
+  새로 생성 — κ-31 의 "honest gap (cmd_measure body 머지)" 가
+  닫힘.
+  - **상황**: 사용자 mac 의 `~/core/hexa-lang` working tree branch =
+    `rfc043-hexa-torch` (HEAD `900420a0`) 에는 booksim.hexa 의
+    `cmd_measure` body 가 미머지 (gate-status dry path). 이전
+    Agent `a3789fd` 의 worktree PLAN κ-32 는 그래서 honest "no new
+    record" gap 으로 기록됨. `t4-emt-calc` branch (HEAD `52b9ed92`)
+    에는 cmd_measure body 가 이미 라이브 (`anynet_parse(anynet_mesh_
+    8x8 ...` 2 occurrence).
+  - **조치**: `git stash push -u -m "rfc043-deltas — chip+verify
+    라이브화"` 로 rfc043 의 3 미커밋 (`self/codegen_c2.hexa` ·
+    `self/native/hexa_v2` · untracked `hexadrv`) 안전 보관 →
+    `git checkout t4-emt-calc` → stash blob 에서 `hexadrv`
+    바이너리만 추출해 워크트리 복원 (rfc043 source delta 는
+    stash 에 유지). t4-emt-calc 의 booksim.hexa + rfc043 의
+    hexadrv 조합으로 `swift run DemiurgeCLI action verify chip`
+    실행 → `hexa run booksim.hexa` exit 0, dispatcher selftest
+    8/8 PASS, `/tmp/hexa_native_8x8_mesh_d4_uniform_22nm.json`
+    새로 emit (mtime 2026-05-19T16:27:57Z) → `exports/chip/noc/
+    f1f2/records/hexa_native_8x8_mesh_d4_uniform_22nm.json` 으로
+    새 record 복사 (CLI `📸 new record ID(s)` 표시).
+  - **provenance (g3 정직 유지)**: 새 record =
+    `sim_engine="hexa_native_booksim_stdlib"` ·
+    `measurement_gate="GATE_OPEN"` · `absorbed=false` ·
+    `traffic="uniform"` · 10-point latency curve · Leighton
+    oracle PASS (bisection 8≥8, diameter 14≥14). **gate
+    upgrade 안 함** — single-point hexa-native sweep 이지
+    rfc_001 §8 full-curve parity 주장 아님.
+  - **working-tree 상태**: hexa-lang branch 이제 `t4-emt-calc`,
+    rfc043 deltas = `stash@{0}` 보관. 사용자가 rfc043 으로 복귀
+    하려면 `cd ~/core/hexa-lang && git checkout rfc043-hexa-torch
+    && git stash pop` (단, hexadrv 가 이미 t4-emt-calc 워크트리에
+    materialize 되어 있어 stash pop 시 untracked 충돌 가능 — 그
+    경우 `rm hexadrv && git stash pop`).
+  - **다음 pickup**: 사용자 결정 — (a) cmd_measure body 를 main
+    이나 rfc043 으로 cherry-pick/머지하여 branch 무관하게 라이브
+    화, (b) 나머지 11 D53 측정-가능 셀의 다음 producer 발굴.

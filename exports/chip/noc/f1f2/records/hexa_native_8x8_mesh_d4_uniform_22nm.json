@@ -2,7 +2,7 @@
   "interface": "hexa-arch:chip:noc:F1F2-record",
   "schema_version": "1.0",
   "record_id": "hexa_native_8x8_mesh_d4_uniform_22nm",
-  "produced_at_utc": "2026-05-19T13:35:18Z",
+  "produced_at_utc": "2026-05-19T16:27:57Z",
   "topology": {
     "kind": "mesh_2d",
     "degree": 4,
