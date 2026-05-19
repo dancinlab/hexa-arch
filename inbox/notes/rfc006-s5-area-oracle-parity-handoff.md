@@ -1,6 +1,6 @@
 # incoming note: rfc006-s5-area-oracle-parity-handoff — the genuine remaining Yosys-absorption work
 
-> **id**: `rfc006-s5-area-oracle-parity` · **opened**: 2026-05-20 KST · **status**: `handoff-open — ABC + SKY130 PDK both secured & measured-against; blocked on read_verilog 6-construct scope expansion (ABSORPTION.md §178, ~1-2 weeks)`
+> **id**: `rfc006-s5-area-oracle-parity` · **opened**: 2026-05-20 KST · **status**: `in-progress — read_verilog scope expansion underway, 3/6 components landed on branch rfc006-yosys-rv-scope; ABC + SKY130 PDK secured`
 > **source**: demiurge session 2026-05-20 — after confirming origin/main's rfc_006 §4 (7 yosys modules) is complete (dispatcher selftest 8/8 PASS), §5 is the one genuine open item of the Yosys absorption.
 > **destination repo**: `~/core/hexa-lang/` — the `hexa yosys synth` flow + `stdlib/yosys/` modules live there (D15 / D61). demiurge stays pointer-only.
 > **scope**: run the rfc_006 §5 SKY130 area-oracle parity measurement and, on PASS, flip the Yosys absorption to `absorbed=true`.
@@ -67,3 +67,40 @@ ABC and SKY130 are now permanently in place — once `read_verilog` covers the s
 ## Boundary / provenance (g3)
 
 The demiurge 2026-05-20 session contributed nothing to §4 (it was already done on origin/main) and could not run §5 (infra absent). This note exists so §5 is a *named, scoped handoff* rather than a vague "remaining work" — its prerequisites (PDK, ABC) are explicit and measured-absent. Nothing is claimed absorbed; the Yosys `measurement_gate` is `GATE_OPEN` and stays there until §5 G1-G4 are filed with numbers.
+
+## UPDATE 2026-05-20 (c) — read_verilog scope expansion IN PROGRESS
+
+The read_verilog 6-construct scope expansion is underway on hexa-lang
+branch `rfc006-yosys-rv-scope` (cut from origin/main). 3 of 6 components
+landed, each with a green self-test:
+
+- ✅ `b4b916ff` — constant-expression evaluator (SymTab + Verilog
+  literal parser + precedence-climbing folder). 16/16 self-test.
+- ✅ `294a9026` — parameter/localparam declaration parsing (ANSI
+  `#(...)` header + body `localparam`). 19/19.
+- ✅ `b8e1d5dd` — width elaboration + ANSI-style port parsing
+  (`[hi:lo]` → real bit-width, unpacked 1-D array expansion). 22/22.
+
+Remaining 3 components (each its own commit on this branch):
+
+- ⬜ function automatic inlining — router uses `dst_x_of`, `dst_y_of`,
+  `route_xy` (signed return, `-:` part-select). Called from inside
+  always/generate blocks, so couples with those.
+- ⬜ genvar/generate-for static unrolling — router's `g_fifo` block.
+- ⬜ always-block → RTLIL Process/$dff inference — the hardest part
+  (yosys `proc` pass clean-room): `always @(*)` comb + `always
+  @(posedge clk)` register inference, for-loops, nested if, 2-D array
+  writes. + multi-D memory (`fifo_mem[0:P-1][0:DEPTH-1]` → RTLIL
+  Memory) + signed arithmetic.
+
+Then: `hexa yosys synth --top router_d{4,6} --lib <sky130 tt.lib>` →
+area → oracle parity (d4 ≈61762.99 / d6 ≈93608.53 µm², 1.5156×, ±5%) →
+measurement_gate CLOSED_MEASURED.
+
+A follow-up session resumes from branch `rfc006-yosys-rv-scope` HEAD
+(`b8e1d5dd`). The 3 landed components are independent and stable; the
+remaining 3 are coupled (function calls live inside always/generate,
+always indexes the 2-D memory) — they are best landed together with
+incremental router_d4.v parse-progress checks. SKY130 PDK
+(`~/.volare/`) and ABC (`/opt/homebrew/bin/abc` → yosys-abc) need no
+re-provisioning.
