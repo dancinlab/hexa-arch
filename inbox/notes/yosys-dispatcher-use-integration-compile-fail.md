@@ -1,56 +1,47 @@
-# incoming note: yosys-dispatcher-use-integration-compile-fail — rfc_006 §4 module-7 blocker
+# note: yosys-dispatcher-use-integration-compile-fail — RESOLVED (mis-diagnosis)
 
-> **id**: `yosys-dispatcher-use-integration-compile-fail` · **opened**: 2026-05-20 KST · **status**: `handoff-open — awaits hexa-lang session`
-> **source**: demiurge session 2026-05-20 — user directive "hexa 포팅" + "hexa upstream 필요시도 이 세션에서 진행" + `/goal "완료시까지 진행"`. Discovered while measuring origin/main's yosys 7-module landing (commit `4f70ce46`).
-> **destination repo**: `~/core/hexa-lang/` — the bug is in either the hexa transpiler's cross-module `use` symbol emission OR in `stdlib/yosys/yosys.hexa`'s `use` of `stdlib/yosys/rtlil`.
-> **scope**: make `hexa run stdlib/yosys/yosys.hexa` compile + pass its dispatcher selftest. demiurge stays pointer-only per D61 — this is a hexa-lang toolchain/stdlib fix.
+> **id**: `yosys-dispatcher-use-integration-compile-fail` · **opened**: 2026-05-20 KST · **status**: `resolved — mis-diagnosis, no hexa-lang action needed`
+> **source**: demiurge session 2026-05-20.
+> **resolution**: the reported "yosys.hexa dispatcher compile failure" was a **measurement artifact**, not an upstream bug. origin/main's rfc_006 §4 yosys modules are healthy.
 
 ---
 
-## The measured failure
+## What was originally reported (and was WRONG)
 
-origin/main carries hexa-lang commit `4f70ce46` "stdlib(yosys): rfc_006 §4 bodies landed for 7 modules" (2026-05-20 01:04 KST, verified `origin/main` ancestor). All seven rfc_006 §4 modules have real bodies — `rtlil.hexa` (346 lines), `read_verilog.hexa` (501), `passes.hexa` (473), `liberty.hexa` (481), `abc_map.hexa` (361), `write_verilog.hexa` (293), `yosys.hexa` (302) + `gate_record.hexa`.
+The first version of this note claimed origin/main's `yosys.hexa` dispatcher fails to compile (`rtlil_module_add_cell` / `rtlil_cell` / `rtlil_cell_connect` undeclared), and filed it as an rfc_006 §4 module-7 blocker for a hexa-lang session.
 
-But the dispatcher does not compile. Measured on a clean `git worktree` of `origin/main` (HEAD `28374717`), mac darwin-arm64, `hexa ~/.hx/bin/hexa`:
+**That diagnosis was wrong.** Corrected here per g3 (a mis-diagnosis filed as a handoff is itself an over-claim — retract it explicitly).
+
+## The actual measurement (what really happened)
+
+The compile failure was reproduced inside a `git worktree` of `origin/main` at `/tmp/hexa-om`. But hexa's `module_loader` resolves `use "stdlib/..."` against a **fixed `~/core/hexa-lang/` root** — NOT the worktree the entry file lives in. The `[module_loader] begin:` marker in the expanded flat file proved it:
+
+```
+// [module_loader] begin: /Users/ghost/core/hexa-lang/stdlib/yosys/rtlil.hexa
+// stdlib/yosys/rtlil.hexa — Yosys RTLIL IR data model (CLEAN-ROOM minimum body)
+```
+
+`(CLEAN-ROOM minimum body)` is THIS demiurge session's stale rtlil.hexa (the `rfc006-yosys-rtlil-skeleton` branch's 280-line minimum body, `module_add_wire`-style names). The main `~/core/hexa-lang/` checkout was on that stale branch, so every yosys build — even one whose entry file lived in an origin/main worktree — pulled the stale `rtlil.hexa` and mismatched origin/main's `read_verilog.hexa` (which calls the `rtlil_*`-prefixed API).
+
+## The proof origin/main is healthy
+
+Set the main checkout's `stdlib/yosys/` to origin/main (`git checkout origin/main -- stdlib/yosys/`) and re-ran:
 
 ```
 $ hexa run stdlib/yosys/yosys.hexa
-build/artifacts/hexa_run.*.c:1715:24: error: use of undeclared identifier 'rtlil_module_add_cell'
-build/artifacts/hexa_run.*.c:1740:20: error: use of undeclared identifier 'rtlil_cell'
-build/artifacts/hexa_run.*.c:1741:20: error: use of undeclared identifier 'rtlil_cell_connect'
-fatal error: too many errors emitted, stopping now
-2 warnings and 20 errors generated.
-error: clang compile failed — binary not produced
+yosys dispatcher selftest: 8/8 PASS
 ```
 
-## What is NOT the problem
+origin/main's 7-module rfc_006 §4 absorption (hexa-lang commit `4f70ce46`) compiles and passes its dispatcher selftest. There is no upstream `use`-integration bug.
 
-The functions ARE defined. `stdlib/yosys/rtlil.hexa` on origin/main:
+## The real lesson (worth keeping)
 
-- `struct CellConn` (line 47), `struct Cell` (line 52)
-- `fn rtlil_cell(name, cell_type, is_mapped) -> Cell` (line 114)
-- `fn rtlil_cell_connect(c, pin, net) -> Cell` (line 124)
-- `fn rtlil_module_add_cell(m, c) -> Module` (line 144)
+`module_loader` resolves `use "stdlib/..."` against a fixed `~/core/hexa-lang/` root, regardless of which worktree the entry file is in. **Consequence**: you cannot reliably measure a stdlib build in a `git worktree` — the build silently uses whatever branch the *main* `~/core/hexa-lang/` checkout happens to be on. If a sibling session has the main checkout on a feature branch, your worktree measurement is contaminated.
 
-And `rtlil.hexa` runs clean standalone: `hexa run stdlib/yosys/rtlil.hexa` → **`rtlil selftest: 10/10 PASS`**.
+Mitigation when measuring hexa stdlib: ensure the *main* `~/core/hexa-lang/` checkout is on the intended branch (or scope-checkout the relevant `stdlib/<topic>/` subtree with `git checkout <ref> -- stdlib/<topic>/`), then measure — and restore afterward.
 
-`yosys.hexa` line 46 imports it: `use "stdlib/yosys/rtlil"`.
+## g3 closeout
 
-So: the module is correct, the import statement is present, the standalone selftest is green. The transpiler simply does not emit (or does not link) the `rtlil_*` symbols into the `yosys.hexa` translation unit. This is a **cross-module `use` symbol-emission gap** in the hexa transpiler — or a `use`-path resolution mismatch specific to `yosys.hexa`.
+No hexa-lang action required — origin/main yosys is fine. This note stays in the inbox as a `resolved` audit trail of the mis-diagnosis and its real lesson. The demiurge-side `rfc006-yosys-rtlil-skeleton` branch (commits `ec8a51fc`/`06ccb656`) remains a stale-base duplicate of `4f70ce46` and is recommended for abandon — see demiurge `design.md` "Decision-gate note on Decision 68" (and its follow-up correction). The lasting demiurge-side fruit of the 2026-05-20 session is D63 (wilson-pool roster) + these honest correction artifacts.
 
-## Why this matters — it is the real rfc_006 §4 blocker
-
-rfc_006 §4 has 7 modules; module-7 is the `yosys` dispatcher that ties the other 6 together (`hexa yosys <subcmd>` entry). The 7 module *files* landed in `4f70ce46`, but the dispatcher integration is broken — so the §5 SKY130 area-oracle gate (router_d4 ≈61,763 µm² · d6 ≈93,609 µm² · 1.516× ±5%) cannot even be attempted: there is no working `hexa yosys synth` to run. **This compile failure is the gating blocker for the entire Yosys absorption**, not any individual module body.
-
-## Suggested next action (hexa-lang session)
-
-1. Reproduce: `git worktree add /tmp/x origin/main && cd /tmp/x && hexa run stdlib/yosys/yosys.hexa`.
-2. Diagnose whether the gap is (a) the transpiler not emitting `use`-imported free fns into a dependent translation unit, or (b) a `use`-path string mismatch (e.g. `use "stdlib/yosys/rtlil"` vs the path the resolver expects). Compare against a `use` that *does* work — `stdlib/booksim/booksim.hexa` cross-module `use` is a known-good reference.
-3. If (a), it is a transpiler bug → fix in `compiler/` + file a `PATCHES.yaml` entry. If (b), it is a one-line `use`-path fix in `yosys.hexa`.
-4. Re-run the dispatcher selftest to green, then the §5 area-oracle measurement becomes reachable.
-
-## Boundary / provenance (g3)
-
-This note is the ONLY artifact filed about this bug from the demiurge side. No hexa-lang source modified to diagnose it (the worktree was read-only and removed after measurement). The demiurge session's own `rfc006-yosys-rtlil-skeleton` branch (commits `ec8a51fc`/`06ccb656`) is a stale-base duplicate of `4f70ce46`'s rtlil.hexa and is recommended for abandon — see demiurge `design.md` "Decision-gate note on Decision 68" for that audit trail. The lasting demiurge-side fruit of the 2026-05-20 session is D63 (wilson-pool roster) + this gap note.
-
-g3: nothing here is claimed absorbed. The Yosys absorption's §5 gate is OPEN and this compile failure keeps it unreachable.
+g3: the original compile-failure claim was retracted by measurement. Nothing is claimed absorbed; rfc_006 §5 SKY130 area-oracle gate is OPEN (the genuine remaining work — but reachable, since the 7 modules + dispatcher are healthy on origin/main).

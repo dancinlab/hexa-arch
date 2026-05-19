@@ -2570,7 +2570,7 @@
     이 들어가야 GATE_CLOSED_MEASURED 후보 (별도 phase, 본 κ-34 의
     scope 밖).
 
-- 2026-05-20 — **phase κ-38 — P-⑧ 4번째 cohort producer = `energy + analyze`
+- 2026-05-20 — **phase κ-35 — P-⑧ 4번째 cohort producer = `energy + analyze`
   (pvlib clear-sky)** (D59 · D53 measurable-only mapping · g3). 13 cohort
   도메인 중 sscb (κ-34, ngspice) 다음 4번째 picks. **`energy + analyze`
   cell** 이 6번째 측정 가능 매핑 셀로 wired (기존 5: component+synthesize,
@@ -2578,10 +2578,10 @@
   "5+ 셀 임계점" 초과, 다음 라운드 ActionAdapter 프로토콜 리팩토링
   압박 더 커짐. FIRST renewable-energy cell — 흡수된 광물·소자 외
   *재생에너지 분야의 demiurge 첫 발자국*.
-  - **점수표 위치** (κ-38, D55 의 cohort 점수표 위에 4번째 칸 추가):
+  - **점수표 위치** (κ-35, D55 의 cohort 점수표 위에 4번째 칸 추가):
     | 후보 | 도구 | 설치 | 점수 | 결과 |
     |---|---|---|---|---|
-    | **energy + analyze** | pvlib 0.15.1 | pip install (~19 MB pure-Python) | 8/10 | **picked (κ-38)** |
+    | **energy + analyze** | pvlib 0.15.1 | pip install (~19 MB pure-Python) | 8/10 | **picked (κ-35)** |
     | (참고) sscb + analyze | ngspice 46 | brew | 10/10 | picked (κ-34) |
   - **신규 SSOT**: `cockpit/scripts/energy_pvlib.py` — Python sidecar
     (~250 lines). 표준 site = Phoenix AZ (33.4484°N · 112.074°W ·
@@ -2617,7 +2617,7 @@
   - **확장**: `DemiurgeCore/Loaders/ActionDispatch.swift` —
     `runEngineTool` 의 switch 에 `case (.analyze, "energy"):` 추가
     (6번째 측정 가능 셀). 새 private `runEnergyAnalyze()` 가
-    EnergyAnalyzeProducer 호출. 헤더 doc-comment 갱신 (κ-38 라인 +
+    EnergyAnalyzeProducer 호출. 헤더 doc-comment 갱신 (κ-35 라인 +
     energy 셀 설명).
   - **g3 정직 갭 (제일 중요)**: ① numbers ARE real (pvlib 의 Ineichen
     clear-sky + CEC SAPM ModelChain — NREL SAM 검증된 표준 알고리즘
@@ -2656,7 +2656,7 @@
     (PyBaMM) 5번째 cohort** — Li-ion DFN 모델, charge/discharge
     cycle record (energy+design 셀).
 
-- 2026-05-20 — **phase κ-39 — sscb device-model 흡수 skeleton landing
+- 2026-05-20 — **phase κ-36 — sscb device-model 흡수 skeleton landing
   (Wolfspeed C3M `.lib` + DEVSIM TCAD)** (`design.md` D62 · D55 후속 ·
   D61 g_demiurge_pointer_only 준수 · g3 · ABSORPTION.md "무거운 후보"
   표의 첫 진행 항목). κ-34 가 sscb+analyze 를 generic R_on/R_off
@@ -2684,8 +2684,8 @@
   - **demiurge pointer 측 갱신** (compute 로직 0줄 — D61):
     `design.md` D62 — sscb device-model 흡수 skeleton 결정 +
     rationale 5 (사용자 게이트 · D55 generic→named 필요 · booksim
-    선례 · g3 정직 · D61 준수). `PLAN.md` 본 κ-39 entry. `ABSORPTION
-    .md` "무거운 후보" 표의 Wolfspeed 행 상태 = `🚧 κ-39 skeleton
+    선례 · g3 정직 · D61 준수). `PLAN.md` 본 κ-36 entry. `ABSORPTION
+    .md` "무거운 후보" 표의 Wolfspeed 행 상태 = `🚧 κ-36 skeleton
     (~/core/hexa-lang/stdlib/sscb/)`. `SSCBProducer.swift` /
     `SSCBRecord.swift` 미수정 (κ-34 ngspice generic 경로 유지 —
     Wolfspeed `.lib` parity 는 §8 GREEN 후 두 번째 시그널).
@@ -2706,7 +2706,7 @@
     공개 IDS-VDS 곡선 ±10% 패리티 체크 (1-2d). 본 3단계 후 absorbed=
     true 후보 GATE.
 
-- 2026-05-20 — **phase κ-40 — chip §B full-curve parity 추진 경로 결정
+- 2026-05-20 — **phase κ-37 — chip §B full-curve parity 추진 경로 결정
   + handoff (D10 execution-gate 재오픈, linux substrate 경유)**
   (`design.md` D63 wilson-pool 라우팅 = ubu-2 + D64 chip §B = ubu-1
   single-host hexa-driven · D10 factual supersede · D61
@@ -2740,7 +2740,7 @@
     D10 의 "interpreted hexa-lang throughput ~1e4 ops/s" 차단 근거가
     *로컬 mac platform 한정* 임이 실증.
   - **demiurge pointer 측 갱신** (compute 로직 0줄 — D61):
-    `design.md` D64 + 본 κ-40 entry + `ABSORPTION.md` chip §B 행
+    `design.md` D64 + 본 κ-37 entry + `ABSORPTION.md` chip §B 행
     `진행` 마킹 + handoff note. `ChipVerifyProducer.swift` 신설 0건
     (hexa-lang `sweep_oracle_parity.hexa` ready 시점에 `Process`
     spawn 한 줄만 추가). `cockpit/scripts/*.py` 0개.
@@ -2775,7 +2775,7 @@
     + mini 회복 시 sweep_oracle_parity 가 (topology, traffic) 튜플을
     호스트별 분배 — round-trip 시간 더 단축.
 
-- 2026-05-20 — **phase κ-42 — `cern + verify` cell wiring (Bethe-Bloch
+- 2026-05-20 — **phase κ-38 — `cern + verify` cell wiring (Bethe-Bloch
   substrate)** (D65 · D53 measurable-only mapping · D61 pointer-only ·
   g3 · ABSORPTION.md §"hexa 포팅 단계" Stage 1). 사용자 지시 "해당 라인
   마이그레이션 진행 · hexa-lang stdlib 흡수 · demiurge = 포인터만 ·
@@ -2788,8 +2788,8 @@
   - **점수표 위치** (sscb κ-34 cohort 표의 6번째 producer cell):
     | 후보 | 도구 | 설치 | 점수 | 결과 |
     |---|---|---|---|---|
-    | **cern + verify** | particle + Bethe-Bloch analytic + uproot ROOT | pip --user particle uproot numpy | 9/10 | **picked (κ-39)** |
-    | (참고) cern + analyze | pylhe LHE event stats | pip --user pylhe | 8/10 | picked (κ-44 / D66) |
+    | **cern + verify** | particle + Bethe-Bloch analytic + uproot ROOT | pip --user particle uproot numpy | 9/10 | **picked (κ-38)** |
+    | (참고) cern + analyze | pylhe LHE event stats | pip --user pylhe | 8/10 | picked (post-merge cohort, no standalone κ entry) |
   - **신규 SSOT (D61 정합 — birth-compliant)**: `~/core/hexa-lang/stdlib/
     cern/bethe_bloch_stopping.py` (~310 lines). PDG masses (antiproton
     938.272 MeV/c² · electron 0.511 MeV/c²) via `particle.Particle.from_
@@ -2862,11 +2862,12 @@
     셀** (κ-? · D?) — 동일 substrate 패턴이나 antiproton-nucleus
     annihilation cross section 등 다른 verify 목적, 별도 phase.
 
-- 2026-05-20 — **phase κ-44 — `component + verify` cell wiring
+- 2026-05-20 — **phase κ-39 — `component + verify` cell wiring
   (gmsh + scikit-fem FEM, D61-compliant-from-birth)** (D66 ·
   g_demiurge_pointer_only · g3). The 7번째 measurable-only 셀이고
   component 도메인의 *FIRST verify-verb cell*. SECOND producer (after
-  antimatter κ-43) to ship D61-compliant from day one — script SSOT
+  the antimatter producer — post-merge no standalone κ entry) to ship
+  D61-compliant from day one — script SSOT
   at `~/core/hexa-lang/stdlib/component/gmsh_skfem.py`, NEVER in
   `cockpit/scripts/`. ABSORPTION.md 의 "무거운 후보" 표에서
   `component + verify` 행이 — docker (Salome-Meca 5 GB+) 가정으로
@@ -2908,7 +2909,7 @@
   - **확장 (demiurge)**: `DemiurgeCore/Loaders/ActionDispatch.swift`
     의 `runEngineTool` switch 에 `case (.verify, "component"):` 추가
     + 새 private `runComponentVerify()` 가 ComponentVerifyProducer
-    호출. 헤더 doc-comment 갱신 (κ-44 라인 + component-verify 셀
+    호출. 헤더 doc-comment 갱신 (κ-39 라인 + component-verify 셀
     설명). 부수효과: 다른 에이전트가 추가한 미정의 `runFusionAnalyze`
     참조 (`case (.analyze, "fusion")` → FusionAnalyzeProducer) 도
     빌드 통과시키기 위해 wrapper 함수 추가 — fusion 의 D-decision /
@@ -2921,12 +2922,12 @@
     measured 0.105 K/W (heating top 1 mm 만 → 유효 L ~1.5 mm, 동일
     자릿수); structural u_max 2.80e-13 m vs 1D ρgL²/2E = 2.70e-13 m
     (3.3 %), σ_vM_max 38.4 Pa vs 1D ρgL = 45.7 Pa (16 %, centroid-
-    평가). **κ-44 STRUCTURAL FIX (g3)**: 첫 record (commit dde9640)
+    평가). **κ-39 STRUCTURAL FIX (g3)**: 첫 record (commit dde9640)
     의 `σ_vM_max ≈ 19 kPa / u_max ≈ 58 pm` 는 *구조 solve 버그값*
     이었음 — (a) hand-rolled elasticity bilinear form 이 closed-form
     단축검증 u=T·L/E 대비 ~44× 너무 무름, (b) ElementVector 의 DOF
     를 component-major 로 잘못 가정 (실제는 node-major-interleaved,
-    `3·node+comp`). κ-44 Stage-2 작업 중 두 버그 모두 발견·정정,
+    `3·node+comp`). κ-39 addendum Stage-2 작업 중 두 버그 모두 발견·정정,
     substrate 가 이제 scikit-fem 의 audited built-in
     `linear_elasticity` model 사용. 버그를 숨기지 않고 정정+기록 (g3).
     ② BUT geometry = TOY box (NOT rfc_008 dossier 의 real component
@@ -2975,12 +2976,12 @@
     출력과 비교 (±2 %). 5종 전부 record 안으로 들어오면 `GATE_OPEN
     → GATE_CLOSED_MEASURED` flip 가능 (별도 D-num).
 
-- 2026-05-20 — **phase κ-41 — sscb 도메인 첫 hexa-native body =
+- 2026-05-20 — **phase κ-40 — sscb 도메인 첫 hexa-native body =
   `stdlib/sscb/wolfspeed.hexa` parser 본체 (Stage 1→Stage 2 진입)**
-  (`design.md` D67 · D62/κ-39 의 "다음 pickup ①" · 사용자 게이트
+  (`design.md` D67 · D62/κ-36 의 "다음 pickup ①" · 사용자 게이트
   "완료시 까지 진행" + "hexa upstream 필요시도 이 세션에서 진행"
   autonomy mode · g3 · ABSORPTION.md 신설 4-stage 표 기준 sscb 첫
-  Stage 2 전이). κ-39 의 `wolfspeed.hexa.stub` body 0줄 → 실제 SPICE
+  Stage 2 전이). κ-36 의 `wolfspeed.hexa.stub` body 0줄 → 실제 SPICE
   `.lib` 파서 구현 + selftest GREEN. demiurge `.swift` 0줄 수정
   (D61 절대 준수, hexa-lang 측 single-commit rename `.stub`→`.hexa`).
   - **landed artifacts** (전부 `~/core/hexa-lang/stdlib/sscb/`):
@@ -3002,7 +3003,7 @@
     spot-check + lookup-helper 동작.
     (c) `README.md` 갱신 — module index 의 `wolfspeed.hexa.stub`
     행을 `wolfspeed.hexa` ⭐ 로 승격 + `wolfspeed_test.hexa` 행 신설
-    + "Measured progress (κ-41 — wolfspeed module Stage 2 GREEN)"
+    + "Measured progress (κ-40 — wolfspeed module Stage 2 GREEN)"
     섹션 신설 (35/35 + ngspice 패리티 + g3 boundary 명시).
     (d) `wolfspeed.hexa.stub` 삭제 (rename audit).
   - **dual-parser parity sanity** (보조 검증, 동일 fixture 다른
@@ -3017,8 +3018,8 @@
     — 합성 fixture 의 수치는 검증되지 않은 placeholder.
   - **demiurge pointer 측 갱신** (compute 0줄 — D61):
     `design.md` D67 — sscb Stage 2 첫 모듈 결정 + rationale 5
-    (κ-39 pickup ① 승격 · ABSORPTION 4-stage 최초 실측 · 측정
-    fact 2건 재현가능 · D61 준수 · g3 거리 명시). `PLAN.md` 본 κ-41
+    (κ-36 pickup ① 승격 · ABSORPTION 4-stage 최초 실측 · 측정
+    fact 2건 재현가능 · D61 준수 · g3 거리 명시). `PLAN.md` 본 κ-40
     entry. `ABSORPTION.md` Wolfspeed 행은 본 PLAN 이후 별도 갱신.
   - **g3 정직**:
     - `provenance.absorbed = false` *유지* (parser-only, 디바이스
@@ -3047,12 +3048,12 @@
     stdlib/sscb/sscb.hexa <subcmd>` 호출로 마이그레이션 (D61 batch
     round 와 정합).
 
-- 2026-05-20 — **phase κ-44 addendum — component Stage 2 hexa-native
+- 2026-05-20 — **phase κ-39 addendum — component Stage 2 hexa-native
   port (thermal + structural) landed + structural-solve bug fix**
   (D66 의 "다음 pickup ①" 승격 · 사용자 게이트 "hexa-native 작성
   .hexa" + "hexa upstream 필요시 이 세션에서 진행" + "잔여없이 모두
   완료" autonomy mode · g3 · ABSORPTION.md 4-stage 표 기준 component
-  의 첫 Stage 2 전이). κ-44 의 "다음 pickup ① Stage 2 hexa-native
+  의 첫 Stage 2 전이). κ-39 의 "다음 pickup ① Stage 2 hexa-native
   port" 가 — 본 세션에서 — thermal + structural 둘 다 완료. demiurge
   `.swift` 는 scope_caveats #4 정정 1줄만 (D61 — pointer 외 compute
   0줄).
@@ -3104,10 +3105,10 @@
     rfc_008 chip→component handoff dossier 의 cited 부품으로 toy box
     교체. ③ **measured material datasheet** — Si wafer supplier
     측정값으로 textbook 상수 교체. ④~⑤ (mesh convergence sweep +
-    ANSYS/Code_Aster cross-check) 는 κ-44 본 entry 의 "다음 pickup"
+    ANSYS/Code_Aster cross-check) 는 κ-39 본 entry 의 "다음 pickup"
     과 동일.
 
-- 2026-05-20 — **phase κ-46 — `fusion + analyze` cell wiring + Stage 2
+- 2026-05-20 — **phase κ-41 — `fusion + analyze` cell wiring + Stage 2
   hexa-native port (plasmapy → plasma_metrics.hexa)** (`design.md`
   D69 · 사용자 게이트 "ubu-1/ubu-2/mini 자원활용" → pool 실측 →
   "hexa-native 작성 .hexa" 명시 · `/goal "완료시까지 진행"` autonomy
@@ -3115,7 +3116,7 @@
   관통). demiurge 의 8번째 측정-가능 셀이자 첫 plasma-physics 셀.
   - **landed artifacts** (전부 D61 birth-compliant):
     (a) `~/core/hexa-lang/stdlib/fusion/plasma_metrics.py` 헤더 갱신
-    — stale D64/κ-42 → D69/κ-46, cross-host parity fact 추가.
+    — stale D64/κ-37 → D69/κ-41, cross-host parity fact 추가.
     (Stage 1 substrate — plasmapy 2026.2.0, 기존 파일.)
     (b) `~/core/hexa-lang/stdlib/fusion/plasma_metrics.hexa` (신규,
     ~210 lines) — clean-room hexa-native re-derivation. plasmapy
@@ -3166,7 +3167,7 @@
     real ITER 50:50 D-T 의 T+ contribution 후속 record. ③ **real
     device shot** — Stage 4 absorbed=true 의 전제, 측정 데이터 ingest.
 
-- 2026-05-20 — **phase κ-45 — Yosys rfc_006 §4 module-1 (`rtlil`)
+- 2026-05-20 — **phase κ-42 — Yosys rfc_006 §4 module-1 (`rtlil`)
   hexa-native body landing** (D68 · 사용자 게이트 "hexa 포팅" +
   "hexa upstream 필요시도 이 세션에서 진행" + `/goal "완료시까지
   진행"` autonomy)
@@ -3174,7 +3175,7 @@
     `passes` · `liberty` · `abc_map` · `write_verilog` · `yosys`
     dispatcher) 은 2026-05-19 hexa-lang 세션에 scaffold (`.hexa.stub`
     7개, raw-91) 만 land 됨 (`stdlib-yosys-rfc006-scaffold` PATCHES
-    entry, phase plan = rtlil→read_verilog→…). 본 κ-45 가 그 phase
+    entry, phase plan = rtlil→read_verilog→…). 본 κ-42 가 그 phase
     plan 의 **첫 body** — module-1 `rtlil`.
   - **신규 (hexa-lang SSOT — D15/D61)**: `~/core/hexa-lang/stdlib/
     yosys/rtlil.hexa` (280 lines, clean-room). Wire+Module+Design
@@ -3201,19 +3202,19 @@
   - **demiurge 측 (D61 — pointer-only)**: `.swift` 0줄 수정. chip+
     synthesize 셀은 이미 κ-31/D53 에 wired (`ActionDispatch.
     runChipSynthesize()` 가 `hexa run yosys.hexa` dispatcher 를
-    spawn). 본 κ-45 의 demiurge 측 산출 = audit trail 만: `design.md`
+    spawn). 본 κ-42 의 demiurge 측 산출 = audit trail 만: `design.md`
     D68 · `ABSORPTION.md` 178행 "진행" 마킹 · 본 PLAN entry.
   - **g3 정직 거리**: `absorbed=true` 까지 = ① 6 모듈 body land
     (read_verilog·passes·liberty·abc_map·write_verilog + dispatcher
     `use` 배선) · ② ABC bounded-subprocess (rfc_006 D18) + SKY130
     `sky130_fd_sc_hd` lib 연결 · ③ router_d{4,6}.v 합성 후 §5
     area-oracle ±5% parity (d4≈61,763 / d6≈93,609 µm² · 1.516×).
-    본 κ-45 = ① 중 module-1 의 시작점 — rfc_006 §5 게이트 OPEN
+    본 κ-42 = ① 중 module-1 의 시작점 — rfc_006 §5 게이트 OPEN
     유지, 어떤 yosys measurement_gate 도 CLOSED_MEASURED 주장 0,
     `absorbed=false`. "1/7 모듈 body landed ≠ Yosys absorbed".
   - **pool 자원 (D63)**: wilson-pool roster = ubu-2 단독 (mini
     192.168.50.39 DOWN — ping 0/2 · ubu-1 demiurge mirror -2커밋
-    stale + hexa-lang/stdlib/yosys 디렉터리 누락). 본 κ-45 의 hexa
+    stale + hexa-lang/stdlib/yosys 디렉터리 누락). 본 κ-42 의 hexa
     selftest 는 로컬 mac 실행 (`hexa run` 은 wilson-pool heavy
     classifier 패턴 미매치 → 로컬). pool.json 의 mini·ubu-1 제거는
     protected-state 파일이라 사용자 슬래시 (`/wilson-pool:pool rm
@@ -3229,9 +3230,9 @@
     2026-05-20-demiurge-rfc006-yosys-rtlil-handoff.md`.
 
 
-- 2026-05-20 — **phase κ-42 addendum — `cern + verify` Stage 2 hexa-
+- 2026-05-20 — **phase κ-38 addendum — `cern + verify` Stage 2 hexa-
   native port + Stage 3 parity GREEN** (D65 · ABSORPTION.md §"hexa
-  포팅 단계" Stage 2→3 · g3). κ-42 본체는 Stage 1 substrate
+  포팅 단계" Stage 2→3 · g3). κ-38 본체는 Stage 1 substrate
   (`bethe_bloch_stopping.py`) 였고, 사용자 지시 "hexa-native 작성 ·
   .hexa · 완료시까지 진행" 으로 Stage 2 hexa-native 포팅 + Stage 3
   parity 측정까지 본 addendum 에서 완결.
@@ -3275,7 +3276,7 @@
     G4hIonisation 출력 vs Bethe-Bloch hexa 비교. ③ **density-effect
     δ** — Sternheimer parameterization, high-γ regime 보강.
 
-- 2026-05-20 — **κ-45 정정 (stale-base 중복 발견 · g3 정직)** — κ-45
+- 2026-05-20 — **κ-42 정정 (stale-base 중복 발견 · g3 정직)** — κ-42
   실행 직후 측정으로 드러난 정정 사실. origin/main 에 hexa-lang commit
   `4f70ce46` "stdlib(yosys): rfc_006 §4 bodies landed for 7 modules"
   (2026-05-20 01:04 KST · origin/main ancestor) 로 rfc_006 §4 의 7
@@ -3293,7 +3294,7 @@
   추정). 7 모듈 *파일* 은 land 됐으나 dispatcher 통합은 broken.
   상세 audit = `design.md` "Decision-gate note on Decision 68".
   - **본 세션 유효 산출**: D63 (wilson-pool roster = ubu-2 단독,
-    pool.json 갱신 완료 — 유효) + κ-45 의 정정 audit trail (stale-
+    pool.json 갱신 완료 — 유효) + κ-42 의 정정 audit trail (stale-
     base hazard 기록) + hexa-lang inbox gap note (yosys.hexa `use`
     통합 컴파일 실패). `rfc006-yosys-rtlil-skeleton` 브랜치의
     rtlil.hexa 중복 자체는 lasting 산출 아님 — abandon 권고.
@@ -3302,10 +3303,10 @@
     하는지 확인하지 않으면 stale-base 중복 발생 — wilson-pool sync
     caveat 와 동형 (로컬이 SSOT 아님).
 
-- 2026-05-20 — **phase κ-41 addendum — sscb DEVSIM TCAD 브리지 +
+- 2026-05-20 — **phase κ-40 addendum — sscb DEVSIM TCAD 브리지 +
   디스패처 landing (`.stub` 0 화)** (`design.md` D67 의 "남은 거리"
   항목 ①④ 승격 · 사용자 게이트 "잔여없이 모두 완료" + "hexa-native
-  작성 .hexa" autonomy mode · g3). κ-41 본문의 "다음 pickup ①
+  작성 .hexa" autonomy mode · g3). κ-40 본문의 "다음 pickup ①
   (DEVSIM install)" 과 "④ (sscb.hexa dispatcher)" 를 같은 세션에서
   완료 — `stdlib/sscb/` 에 `.hexa.stub` 0개.
   - **landed artifacts** (전부 `~/core/hexa-lang/stdlib/sscb/`):
@@ -3326,7 +3327,7 @@
     8 elements · 6 params · 1 VDMOS/15-param GREEN.
     (d) `devsim.hexa.stub` · `sscb.hexa.stub` 삭제 (rename audit).
     (e) `README.md` — 전 모듈 bodied 반영.
-  - **demiurge pointer 측**: `ABSORPTION.md` Wolfspeed 행 → "κ-41
+  - **demiurge pointer 측**: `ABSORPTION.md` Wolfspeed 행 → "κ-40
     4모듈 GREEN" + 잔여 명시. (`design.md` D67 불변 — devsim 브리지는
     D67 결정의 *실행*, 새 결정 아님 · g_ssot_single_source.)
   - **g3 정직 — 잔여 (외부 자산 필요, 위조 불가)**:
@@ -3345,3 +3346,92 @@
     추가 → Stage 4 `absorbed=true` GATE (별도 D-num + κ-num).
     ② `sscb.hexa` 를 hexa-lang top-level dispatcher 에 wire (현재
     `hexa run` 직접 호출만).
+
+- 2026-05-20 — **phase κ-43 — chip §B+§D oracle parity 측정 완료 +
+  `chip + verify` GATE_CLOSED_MEASURED 종결** (`design.md` D70 ·
+  D9/D10/D64 호 계열 종결 · D61 g_demiurge_pointer_only 준수 · g3 ·
+  ABSORPTION.md chip·verify 행 flip + Stage 4 이동). κ-37 이 추진
+  경로 (handoff + scaffolding) 만 남겼던 chip §B 를, 본 κ 가 실제
+  측정으로 닫음. 사용자 게이트 2026-05-20 = "완료시까지 진행" +
+  "잔여없이 모두 완료" (autonomy) + "hexa-native 작성 .hexa" +
+  "hexa upstream 필요시 진행".
+  - **landed artifacts**:
+    (a) `~/core/hexa-lang/stdlib/booksim/sweep_oracle_parity.hexa`
+    (신규, ~470줄) — §B+§D 오케스트레이터. 정확한 unweighted BFS
+    최단경로로 topology+traffic-aware mean hop count 계산 (sweep.hexa
+    의 topology-agnostic mean-field 한계 해소) · cost-2 d6 대각선
+    wire surplus 를 BFS-wire 로 별도 실측 · ZLL = H·t_r + xwire +
+    (L−1) (PPIN §16) · t_r=5.0 은 §B reference 1점 calibration ·
+    12행 acceptance + 3 F1F2Record jsonl emit · exit 0/1/91.
+    (b) `~/core/hexa-lang/stdlib/booksim/traffic.hexa` (수정) —
+    `traffic_dest` enum-dispatch 가 hexa 0.1.0-dispatch 의 `str(enum)`
+    버그 2종에 걸려 폴백하던 것을 리터럴+discriminant 양형 수용으로
+    우회. selftest 11/12→12/12.
+    (c) demiurge `ActionDispatch.runChipVerify()` (교체) — 옛 booksim
+    self-test sniffer → `hexa build sweep_oracle_parity.hexa` + 컴파일
+    바이너리 `Process` spawn + stdout banner/jsonl parse + F1F2Record
+    witness. D61 — compute 0줄.
+    (d) `exports/chip/noc/f1f2/records/2026-05-20_{sB_mesh88_uniform,
+    sD_mesh_d4_tornado,sD_hex_d6_tornado}_22nm.json` — 3 F1F2Record,
+    measurement_gate=GATE_CLOSED_MEASURED · absorbed=true.
+  - **측정 결과 (2026-05-20, native-compiled, exit 0)**:
+    | row | 측정 | band | |
+    |---|---|---|---|
+    | B1 ZLL | 50.0044 | [47.7,52.8] | PASS |
+    | B2 hops | 6.26333 | [6.125,6.375] | PASS |
+    | B3 knee | 0.30 | [0.30,0.45] | PASS |
+    | B4 monotone | yes | strict↑ | PASS |
+    | D1 d4 ZLL | 61.5 | [61.5,67.9] | PASS |
+    | D2 d6 ZLL | 55.875 | [54.5,60.3] | PASS |
+    | D3 d6 sat-later | B=15>8 | qual | PASS |
+    | D4 zll gap | 5.625 | ≥5 | PASS |
+    | D5 d4 hops | 8.5 | [8.32,8.66] | PASS |
+    | D6 d6 hops | 7.094 | [7.00,7.28] | PASS |
+    | L1/L2 Leighton | d4·d6 | PASS | PASS |
+    **12/12 GREEN · GATE_CLOSED_MEASURED · absorbed=true.**
+  - **컴파일 경로 발견**: `hexa run` (interpreter) 은 booksim sweep
+    에 로컬 mac ~1000× 느림 (leighton selftest 90s vs ubu-1 0.07s)
+    — D10 의 "interpreted throughput ~1e4 ops/s" 차단의 실체.
+    `hexa build` → C → native 바이너리는 §B+§D 전체 ~1초. D10 차단이
+    interpreter 한정임이 실증되어 pool 원격 분산조차 불필요.
+  - **g3 정직 — scope**: §B = full-curve parity (knee+monotone 포함);
+    §D = headline-number parity (ZLL@0.05 + hops@0.05 + d6<d4
+    directional — rfc_003 §4 §D 정의 그대로). closed-form ZLL 모델,
+    full per-flit iSLIP DES 아님 — record scope_caveats 4종 명시.
+    t_r 은 §B 1점 calibration 후 §D 예측 적용 (cross-validation,
+    per-config 피팅 0). hops 는 BFS 결정론적 실측.
+  - **회귀 0**: traffic.hexa 12/12 · sweep.hexa 5/5 · cockpit
+    `swift build` green · `swift run DemiurgeCLI action verify chip`
+    end-to-end → 12/12 + 3 record witnessed.
+  - **다음 pickup**: §D 를 full per-flit iSLIP DES 로 격상하면
+    latency-vs-injection 곡선 *형상* 까지 parity (현 headline-number
+    parity 를 넘음) — 별도 phase, 미착수. D70 Decision-gate note 참조.
+
+- 2026-05-20 — **κ-45 2차 정정 (오진 retraction · g3 · "upstream fix"
+  사용자 지시 처리 결과)** — 사용자 "upstream fix" 지시로 inbox gap
+  note 의 "yosys.hexa dispatcher 컴파일 실패" 를 직접 고치려 진단한
+  결과, **그 컴파일 실패 자체가 오진**으로 판명. 측정: 메인 repo
+  `~/core/hexa-lang/stdlib/yosys/` 를 origin/main 으로 맞춘 뒤 `hexa
+  run stdlib/yosys/yosys.hexa` → `yosys dispatcher selftest: 8/8
+  PASS`. origin/main 의 rfc_006 §4 7 모듈 (4f70ce46) 정상.
+  - **오진 메커니즘**: 첫 컴파일-실패는 origin/main `git worktree`
+    에서 측정했으나 hexa `module_loader` 가 `use "stdlib/..."` 를
+    고정 `~/core/hexa-lang/` 루트 기준 resolve — 메인 repo 가 본
+    세션 stale 브랜치 (minimum-body rtlil.hexa) 였던 탓에 origin/main
+    의 read_verilog 와 API 불일치. 즉 본 세션 ec8a51fc 가 메인 repo
+    stdlib 를 오염시킨 측정 artifact.
+  - **조치**: inbox note `yosys-dispatcher-use-integration-compile-
+    fail.md` → `resolved — mis-diagnosis` 정정 · 메인 repo
+    stdlib/yosys/ checkout 원복 · `/tmp/hexa-om` worktree 제거 ·
+    design.md "Decision-gate note on D68" 2차 정정 entry. 상세 =
+    design.md.
+  - **g3 교훈**: hexa stdlib 빌드를 `git worktree` 에서 측정 금지 —
+    `module_loader` 가 stdlib 를 고정 `~/core/hexa-lang/` 에서 가져와
+    메인 checkout 브랜치에 오염됨. 측정이 "버그 있다" over-claim 을
+    잡아낸 instrument-first 사례.
+  - **본 세션 최종 유효 산출 (재확정)**: D63 (wilson-pool roster =
+    ubu-2 단독, pool.json 갱신 — 유효) + 일련의 g3 정직 정정 audit
+    trail (stale-base hazard · worktree 측정 오염 교훈). rfc_006 §4
+    yosys 흡수는 origin/main 4f70ce46 에 이미 완료 — 본 세션 기여 0,
+    rfc006-yosys-rtlil-skeleton 브랜치 abandon. 남은 진짜 작업 = §5
+    SKY130 area-oracle parity (별개 측정, reachable).
