@@ -2101,3 +2101,20 @@
   측정 record 는 여전 0 (cmd_measure body 미구현). 다음 =
   ①-step2 cmd_measure body (anynet→wire_delay→sweep→leighton→
   F1F2 emit, rfc_001 §8).
+- 2026-05-19 — **phase ①-step2a — booksim cmd_oracle wired**
+  (cross-repo, hexa-lang). enum fix promote 후 `booksim.hexa` 가
+  `use leighton` 가능 → `cmd_oracle` 의 exit-91 stub 을 실제
+  leighton 호출로 교체: 8×8(n=64) d4-mesh + d6-hex `LeightonInput`
+  → `leighton_bounds` → analytic bisection/diameter lower bound
+  출력 + cite. 측정: `hexa run stdlib/booksim/booksim.hexa` →
+  dispatcher selftest **7/7 PASS** rc 0; `booksim oracle` → d4/d6
+  bisection_lower=8 diameter_lower=14. hexa-lang local commit
+  `76b3e15c` (rfc043). **push 보류** — rfc043 working tree 에
+  병렬 hexa-lang 세션의 미커밋 변경(`codegen_c2.hexa`·`compiler/
+  PLAN.md`)이 있어 `pull --rebase` 가 막힘; 내가 stash 하면 그
+  세션 작업 위험 → git 안전상 push 안 강행 (그 세션 정리 후 /
+  별도). **g3 정직**: cmd_oracle 은 *analytic lower bound* 출력
+  — no-over-claim cross-floor (leighton oracle_check) 이지
+  *측정* 아님. cmd_sweep/cmd_measure 여전 gate, F1F2 record 0,
+  "absorbed" 0. 다음 = ①-step2b cmd_sweep (sweep_curve) ·
+  step2c cmd_measure (F1F2 emit, rfc_001 §8).
