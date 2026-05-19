@@ -357,12 +357,18 @@ complete, take **hexa-rtsc · hexa-antimatter · hexa-cern · hexa-ufo**
 through demiurge for *real verification runs* (producing measured
 records) and turn them into a baseline library.
 
-**OPEN — TBD (awaiting user clarification):**
-- `hexa-ufo` — which domain? `domains/` carries `rtsc` /
-  `antimatter` / `cern` maps, but no `ufo` — is `hexa-ufo` a new
-  domain, an alias, or a sibling repo? TBD.
-- "기본 라이브러리" — the exact form: a set of demiurge-bundled
-  reference/verified projects? a separate deliverable? TBD.
+**hexa-* = sibling repos** — `~/core/hexa-rtsc` ·
+`~/core/hexa-antimatter` · `~/core/hexa-cern` · `~/core/hexa-ufo`
+(cross-repo, like hexa-lang / hexa-matter). demiurge's `domains/`
+has `rtsc` / `antimatter` / `cern` maps; `ufo` has no demiurge
+domain map yet. So P-⑧ is a CROSS-REPO verification session — run
+each sibling repo's design through demiurge's 7-verb spine and
+record the measured result.
+
+**OPEN — TBD:**
+- "기본 라이브러리" — the exact form: demiurge-bundled
+  reference/verified projects, or a separate deliverable? TBD
+  pending user clarification.
 
 g3: none of the four may be called "verified" until a real 7-verb
 measurement record + gate exists — this depends on an engine tool
@@ -402,9 +408,11 @@ measurement record + gate exists — this depends on an engine tool
 - 2026-05-19 — **P-⑧ added** (user intent). Once the workbench is
   complete, hexa-rtsc / hexa-antimatter / hexa-cern / hexa-ufo are to
   be run through demiurge for real verification → a baseline library.
-  Recorded as a post-completion handoff; two points (what `hexa-ufo`
-  is, the exact "기본 라이브러리" form) flagged TBD pending user
-  clarification.
+  Recorded as a post-completion handoff.
+- 2026-05-19 — **P-⑧ updated** — user confirmed the four are sibling
+  repos under `~/core/hexa-*` (cross-repo, like hexa-lang). `hexa-ufo`
+  TBD resolved (sibling repo, no demiurge domain map yet). One TBD
+  remains: the exact form of "기본 라이브러리".
 - 2026-05-19 — **cockpit workbench built (κ-1..κ-10) + P-⑦ added.**
   After P-⑥ closed, rfc_012 (project workbench) was discussed,
   locked (design.md D42..D50), and built as cockpit phases
