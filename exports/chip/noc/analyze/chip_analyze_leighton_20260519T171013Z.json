@@ -1,0 +1,32 @@
+{
+  "bounds" : [
+    {
+      "bisection_lower" : 8,
+      "diameter_lower" : 14,
+      "topology" : "d4 mesh"
+    },
+    {
+      "bisection_lower" : 8,
+      "diameter_lower" : 14,
+      "topology" : "d6 hex"
+    }
+  ],
+  "derivation_cite" : "Leighton 1984 Thm 2 (DOI 10.1007/BF01744433) + Bhatt-Leighton VLSI graph-layout framework; Dally & Towles PPIN 2004 §3.2-3.3 k-ary 2-mesh closed forms — NOT BookSim2-derived",
+  "exit_code" : 0,
+  "interface" : "demiurge:chip:noc:analyze-leighton",
+  "n_nodes" : 64,
+  "produced_at_utc" : "2026-05-19T17:10:13Z",
+  "provenance" : {
+    "absorbed" : true,
+    "measurement_gate" : "GATE_CLOSED_MEASURED",
+    "producer" : "hexa_native_booksim_oracle@52b9ed92",
+    "scope_caveats" : [
+      "Leighton 하한은 **수학적 사실** (Leighton 1984 Thm 2 / Dally & Towles PPIN 2004 §3.2-3.3) — oracle dispatch 는 그 algebraic 표현을 평가할 뿐이지 NoC wire 를 실제 clocking 하지 않음. record 는 cmd_measure 의 full-curve wire-latency parity 의 *대체*가 아니라 *floor* — 모든 F1F2 record 가 이 bound 를 만족해야 함 (rfc_001 §7.3 / §8, g3).",
+      "scope = 8×8 / n=64 reference 만 (d4 mesh + d6 hex 두 토폴로지). 다른 n / 다른 topology shape (torus, fat-tree …) 은 별도 oracle 호출이 필요 — 본 record 가 covers 하지 않음.",
+      "absorbed=true 의 의미: 'hexa-native stdlib/booksim/leighton.hexa 가 producer' (D17 — external library 가 들어오지 않음, 수학 자체가 hexa-lang 의 closed form). matter+analyze 와 동일 stance: hexa-native code 가 producer 면 absorbed=true 가능 (외부 substrate 의존 0).",
+      "real chip 의 wire latency 측정과는 별개 게이트 — 이 record 는 *bisection / diameter* 하한이지 *delay* 측정이 아님. delay 측정은 booksim cmd_measure 의 F1F2 record 가 담당, 본 record 는 cmd_measure 가 emit 한 값이 위배되지 않는지의 cross-floor (g3)."
+    ]
+  },
+  "record_id" : "chip_analyze_leighton_20260519T171013Z",
+  "schema_version" : "1.0"
+}

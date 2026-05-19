@@ -152,6 +152,7 @@ dormant.
 |-----------|------------|--------------------------------|-------|-----------------------------------|----------|
 | chip      | verify     | booksim cmd_measure            | ①+④   | GATE_OPEN                         | false    |
 | chip      | synthesize | yosys 0.65 substrate           | ①+④   | GATE_CLOSED_MEASURED (substrate)  | false ✱  |
+| chip      | analyze    | booksim cmd_oracle (Leighton)  | ①+④   | GATE_CLOSED_MEASURED (analytic)   | **true** |
 | matter    | analyze    | hexa-matter closure aggregator | ①+④   | GATE_CLOSED_MEASURED              | **true** |
 | component | synthesize | FreeCAD 1.1.1 parametric       | ④     | GATE_OPEN                         | false    |
 | component | verify     | gmsh 4.15.2 + scikit-fem 12.0.1 FEM | ①+④ | GATE_OPEN                       | false    |
