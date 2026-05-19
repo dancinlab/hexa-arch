@@ -234,19 +234,7 @@ struct WorkbenchView: View {
         chatMessages.append(ChatMessage(
             role: .assistant,
             text: "🍳 이제 \(verb.rawValue + 1)단계 — "
-                + "\(verb.plain)(\(verb.canonical)) 입니다. \(verbHint(verb))"))
-    }
-
-    private func verbHint(_ verb: Verb) -> String {
-        switch verb {
-        case .specify:    return "무엇을 만들지, 가장 중요한 게 뭔지 같이 정해요."
-        case .structure:  return "전체를 어떤 짜임새로 나눌지 그려봐요."
-        case .design:     return "각 부분을 구체적으로 설계해요."
-        case .analyze:    return "설계가 잘 됐는지 점검하고 따져봐요."
-        case .synthesize: return "실제로 만들 수 있는 형태로 합쳐요."
-        case .verify:     return "측정으로 맞는지 확인해요."
-        case .handoff:    return "결과를 다음 단계로 넘길 수 있게 정리해요."
-        }
+                + "\(verb.plain)(\(verb.canonical)) 입니다. \(verb.hint)"))
     }
 
     // MARK: — θ-2 action dispatch (rfc_011 §6 / D48 / D49)
@@ -735,11 +723,11 @@ struct WorkbenchView: View {
     /// bottom shows a different body per the project's domain.
     @ViewBuilder private var domainModeView: some View {
         if let project = activeProject {
-            switch project.domain {
-            case "component": componentModeView
-            case "matter":    matterPointerView
-            case "chip":      chipModeView
-            default:          cohortShallowView(project)
+            switch DomainCatalog.domain(for: project.domain).canvasMode {
+            case .component: componentModeView
+            case .matter:    matterPointerView
+            case .chip:      chipModeView
+            case .cohort:    cohortShallowView(project)
             }
         }
     }

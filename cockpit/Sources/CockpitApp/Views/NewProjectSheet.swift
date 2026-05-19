@@ -116,7 +116,7 @@ struct NewProjectSheet: View {
                 HStack(spacing: 6) {
                     Image(systemName: "tag")
                         .foregroundStyle(.tint)
-                    Text("\(domainLabel(inferredDomain)) 프로젝트군요")
+                    Text("\(DomainCatalog.domain(for: inferredDomain).label) 프로젝트군요")
                         .font(.callout.weight(.medium))
                 }
                 Text("이 분야로 시작할게요 — 맞나요?")
@@ -130,20 +130,6 @@ struct NewProjectSheet: View {
                 .buttonStyle(.bordered)
                 Spacer()
             }
-        }
-    }
-
-    private func domainLabel(_ key: String) -> String {
-        switch key {
-        case "chip":      return "칩 설계"
-        case "component": return "부품 설계"
-        case "matter":    return "물질·재료"
-        case "energy":    return "에너지"
-        case "space":     return "우주·항공"
-        case "brain":     return "뇌·신경"
-        case "cern":      return "가속기·입자"
-        case "general":   return "일반 공학"
-        default:          return key
         }
     }
 
@@ -178,7 +164,7 @@ struct NewProjectSheet: View {
         case .name:
             step = .target
         case .target:
-            inferredDomain = DomainInference.infer(from: target)
+            inferredDomain = DomainCatalog.infer(from: target)
             step = .confirm
         case .confirm:
             onCreate(Project(

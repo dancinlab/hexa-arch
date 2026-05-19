@@ -48,18 +48,16 @@
 
 ## 현재 정직한 위치 (g3 — over-claim 금지)
 
-**4-Phase 설계 design-complete · macOS cockpit workbench 골격 live
-(κ-1~κ-8) · wired·absorbed·측정 record 모두 0.**
-north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
+**4-Phase 설계 design-complete · macOS cockpit workbench 골격 live ·
+wired·absorbed·측정 record 모두 0.**
+north-star 불변. 아래는 *카테고리* 서술 — D-번호·RFC건수·cockpit
+phase 같은 수치의 SSOT 는 `design.md` / `PLAN.md` (g_ssot_single_source):
 
 - ✅ **설계 골격 완결**: 7-verb spine cited (9 라이프사이클·D5) ·
-  **15 도메인 공개면 맵** (13 Cohort cited + `component.md` cited
-  per D21 + `matter/` D17 pointer) · **RFC 12건** (rfc_001/002/003
-  booksim+F1F2·rfc_004 e2e·rfc_005 SUPERSEDED D17·rfc_006 Yosys
-  설계+D18/D19·rfc_007/008 두 seam v0·rfc_009 cockpit spec·rfc_010
-  cockpit arch·rfc_011 control surface·rfc_012 project workbench
-  IMPLEMENTED) · **design.md D1–D49 감사추적** · AGENTS.tape
-  거버넌스 (D49 정합) · CHARTER+HANDOFF reconciled.
+  **15 도메인 공개면 맵** (13 Cohort cited + `component.md` +
+  `matter/` D17 pointer) · **RFC 묶음** (`proposals/rfc_*` —
+  booksim·e2e·seam·cockpit 4-spec) · **design.md 결정 감사추적** ·
+  AGENTS.tape 거버넌스 · CHARTER+HANDOFF reconciled.
 - ✅ **hexa-matter measured-parity 검증됨 (단 hexa-lang 소유 — D17)**:
   selftest **38/38** · parity **29/29** 는 실측 사실이나 **hexa-lang
   의 이미 완료된 흡수** (D17 = hexa-lang SSOT · demiurge =
@@ -71,8 +69,8 @@ north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
 - ✅ **component cited-research debt 상환** (debt ①): KiCad·Elmer·
   openEMS 등 10 OSS + ANSYS Icepak·COMSOL 등 4 상용 검증, 출처
   15건 §5 등재, 13맵과 동급 provenance.
-- ✅ **macOS cockpit = project workbench 골격 완결 (κ-1~κ-8,
-  measured-green)**: rfc_012 workbench — ①7-verb recipe rail ·
+- ✅ **macOS cockpit = project workbench 골격 완결 (measured-green)**:
+  rfc_012 workbench — ①7-verb recipe rail ·
   ②work zone (canvas mode) · ③LLM chat "요리 선생님" · ④toolbar
   3-column + `+` 프로젝트 생성 + manifest 영속화 (App Support,
   D45) + 재료 선반 + verb 진행 + chat↔verb 연동 + θ-2 액션 골격 +
@@ -92,11 +90,11 @@ north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
 
 ## cross-link
 
-- `design.md` — D1–D49 결정 감사추적 (gated picks SSOT)
+- `design.md` — 결정 감사추적 (gated picks SSOT — D-번호 SSOT)
 - `AGENTS.tape` — 강제 거버넌스 (`g_stdlib_ownership`·g3·`@F`)
 - `CHARTER.md` + `HANDOFF.md` — mission / arch / why
 - `PLAN.md` — `## 계획`(GUI 완성까지 forward) + `## 진행 로그`(append-only)
-- `proposals/rfc_001..012` · `cockpit/` (Swift workbench, κ-1..κ-8) ·
+- `proposals/rfc_*` · `cockpit/` (Swift workbench) ·
   `domains/`(14 + `matter/`) · `archive/comb/`
 - `README.md` — 콜드 엔트리 7-verb 가족
 
@@ -124,3 +122,9 @@ north-star 불변. 측정된 거리 (g3 — 과대주장 금지):
   workbench · RFC 12건 · D1–D49. g3 갭 정직 갱신: '코드·앱 0' →
   'workbench *틀* live, 측정 record 0' — 핵심 갭은 **engine tool 0**
   (θ-2 가 돌릴 실제 도구 없음). 새 결정 없음 — position 정합만.
+- 2026-05-19 — SSOT single-source 규율 적용 (D50 · `@D
+  g_ssot_single_source`). "현재 위치" 섹션에서 매 phase 갱신을
+  유발하던 수치(D-range·RFC건수·cockpit phase)를 제거하고
+  design.md/PLAN.md 로 위임 — 본 파일은 *카테고리* 서술만. 사용자
+  지시 'update 마다 양쪽 업데이트 하지 않게'. 새 측정 fact 없음 —
+  중복 제거만.

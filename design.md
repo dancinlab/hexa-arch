@@ -1570,3 +1570,26 @@ record-ID 파싱. demiurge 에 실행할 engine tool 이 현재 0개 (Yosys §4
   record ID 추출) 를 그대로 구현.
 - 사용자 게이트 2026-05-19 — 3택(메커니즘 골격 / §4.2 REJECTED
   가드 / workbench 마감) 중 "θ-2 메커니즘 골격" 선택.
+
+### Decision 50 — SSOT single-source: 한 사실/한 로직 = canonical 한 곳 (cockpit phase κ-9)
+
+**picked**: 문서·코드 양면 SSOT 규율을 `@D g_ssot_single_source`
+governance 로 박는다. (문서) 결정 SSOT = `design.md`, 진행 SSOT =
+`PLAN.md`; 파생 문서(AGENTS.tape `@N` · GOAL.md · CHARTER · HANDOFF ·
+README · rfc_*)는 D-range·RFC건수·phase 목록을 복제하지 말고 포인터로
+참조. (코드) cockpit 과 CLI 의 공통 도메인/verb/record 분기는
+DemiurgeCore 의 동일 함수를 호출 — 각자 `switch` 복제 금지 → 같은
+입력에 같은 출력 (CLI↔cockpit 멱등성). 적용: `@N` decisions 의 D 요지
+전체 사본 → 포인터; GOAL.md "현재 위치" 의 수치 → design.md/PLAN.md
+위임; cockpit 의 domain label·verb hint·canvas-mode `switch` →
+DemiurgeCore (`DomainCatalog` · `Verb.hint` · `CanvasMode`).
+
+**rationale**:
+- 사용자 2026-05-19 — SSOT reconcile 한 번에 D-번호가 9개 파일에
+  박혀 "양쪽" 동시 갱신 부담; 원문 "update 마다 양쪽 업데이트 하지
+  않게".
+- cockpit 의 domain/verb `switch` 가 CLI 로 복붙되면 drift —
+  원문 "CLI, cockpit 멱등성 보장" (동일 함수 → 동일 출력).
+- 중복은 정의상 drift 위험; 단일 SSOT + 포인터가 정합 불변식 보존.
+- DemiurgeCore 는 이미 `ArtifactRegistry`/`RecordLoader` 를 cockpit·
+  CLI 가 공유 — `DomainCatalog`/`Verb` 도 같은 패턴으로 정렬.

@@ -1638,3 +1638,26 @@
   측정 사실만 반영 — north-star 불변, position-section 정합.
   cockpit 코드 무변경이라 재설치 불요. 다음 = CLI ↔ Project
   정합 또는 신규 작업 — 미정.
+- 2026-05-19 — **phase κ-9 — SSOT single-source 규율** (D50 ·
+  사용자 지시 "update 마다 양쪽 업데이트 하지 않게 / CLI, cockpit
+  멱등성 보장"). 진단: D-번호가 9개 파일·RFC건수 3곳·cockpit
+  phase 3곳에 중복 → reconcile 1회에 여러 파일 동시 갱신 부담.
+  **(거버넌스)** AGENTS.tape `@D g_ssot_single_source` 신설 —
+  문서: 결정 SSOT=design.md·진행 SSOT=PLAN.md, 파생 문서는
+  D-range·건수·phase 복제 금지·포인터만; 코드: cockpit·CLI 공통
+  도메인/verb/record 분기는 DemiurgeCore 동일 함수 (멱등성).
+  **(문서 정리)** `@N` decisions 의 D15..D49 요지 전체 사본 →
+  포인터 한 줄 · GOAL.md "현재 위치" 의 수치 → design.md/PLAN.md
+  위임. **(코드 정리)** 신규 `DemiurgeCore/Models/Domain.swift`
+  — `CanvasMode` · `Domain` · `DomainCatalog` (도메인 키·label·
+  canvasMode·키워드 단일 카탈로그); `Project.swift` 의
+  `DomainInference` 제거 → `DomainCatalog.infer` 통합 · `Verb.hint`
+  추가. cockpit 의 `domainLabel`(NewProjectSheet)·`verbHint`
+  (CockpitApp)·`domainModeView` 문자열 `switch` 제거 →
+  `DomainCatalog`/`Verb.hint`/`CanvasMode` 공용 호출. CLI 가
+  나중에 domain/verb 기능 붙일 때 동일 함수 사용 → CLI↔cockpit
+  멱등. design.md **D50** lock. 측정: `swift run CockpitApp`
+  로컬 빌드 — `Build of product 'CockpitApp' complete!` (24.56s) ·
+  에러 0 · 경고 0. **g3 정직**: 중복 제거·governance 만 — 새
+  기능 0, 측정 record 0 그대로. CLI 는 아직 viewer 명령만 (domain/
+  verb 기능 미착수 — 붙을 때 공용 함수 적용은 governance 가 보장).

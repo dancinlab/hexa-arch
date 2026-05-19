@@ -56,6 +56,20 @@ public enum Verb: Int, CaseIterable, Codable, Identifiable, Sendable {
         case .handoff:    return "arrow.right.doc.on.clipboard"
         }
     }
+
+    /// Plain-language one-line hint for the chat teacher (rfc_012 §5).
+    /// Lives here so cockpit and CLI share it (g_ssot_single_source).
+    public var hint: String {
+        switch self {
+        case .specify:    return "무엇을 만들지, 가장 중요한 게 뭔지 같이 정해요."
+        case .structure:  return "전체를 어떤 짜임새로 나눌지 그려봐요."
+        case .design:     return "각 부분을 구체적으로 설계해요."
+        case .analyze:    return "설계가 잘 됐는지 점검하고 따져봐요."
+        case .synthesize: return "실제로 만들 수 있는 형태로 합쳐요."
+        case .verify:     return "측정으로 맞는지 확인해요."
+        case .handoff:    return "결과를 다음 단계로 넘길 수 있게 정리해요."
+        }
+    }
 }
 
 /// A verb stage's progress relative to the project's current verb.
@@ -130,34 +144,5 @@ public struct Project: Codable, Identifiable, Sendable {
         if let prev = Verb(rawValue: currentVerb.rawValue - 1) {
             currentVerb = prev
         }
-    }
-}
-
-/// Phase-κ-1 STUB domain inference (rfc_012 §3, D44 option C).
-///
-/// The user types a free-text goal; this maps it to one of demiurge's
-/// domains by keyword. This is a deterministic placeholder — the real
-/// AI inference (a Claude Code call) lands with the θ chat-agent path;
-/// either way the user still ratifies via the [네 / 바꾸기] confirm
-/// step, so the human stays the authority (g3, rfc_012 §3 note).
-public enum DomainInference {
-    private static let table: [(keys: [String], domain: String)] = [
-        (["칩", "반도체", "chip", "soc", "asic", "프로세서", "cpu", "gpu", "noc"], "chip"),
-        (["부품", "component", "기구", "케이스", "enclosure", "냉각", "heatsink", "방열"], "component"),
-        (["물질", "재료", "material", "합금", "분자", "matter", "소재"], "matter"),
-        (["에너지", "배터리", "energy", "태양", "solar", "전력", "발전"], "energy"),
-        (["우주", "위성", "space", "로켓", "궤도", "satellite"], "space"),
-        (["뇌", "brain", "신경", "neuro", "인지"], "brain"),
-        (["가속기", "cern", "입자", "antimatter", "반물질"], "cern"),
-    ]
-
-    /// Best-effort domain key for a free-text target; "general" when
-    /// nothing matches (the confirm step lets the user correct it).
-    public static func infer(from target: String) -> String {
-        let t = target.lowercased()
-        for row in table where row.keys.contains(where: { t.contains($0) }) {
-            return row.domain
-        }
-        return "general"
     }
 }
