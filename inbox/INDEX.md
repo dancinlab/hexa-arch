@@ -12,7 +12,7 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (23 entries)
+## Index (25 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
@@ -25,8 +25,10 @@
 | `cohort-pickup-rtsc-femm-producer.md` | resolved | κ-48 + κ-49 | pyfemm rtsc+analyze (κ-48) + GetDP rtsc+verify (κ-49) substrates landed |
 | `hexa-8domain-measurement-stack-2026-05-20.md` | resolved | κ-47..κ-49 | 8-domain stack survey consumed by empty-cell sweep |
 | `hexa-lang-branch-consolidation-2026-05-20.md` | pickup-blocked | (cross-session) | hexa-lang live tree alignment to origin/main — concurrent session blocker |
+| `hexa-native-port-pattern-pilot-mc-transport.md` | pickup-open | (D80 g_hexa_only pilot) | Minimum-viable hexa-native mc_transport 1-D slab pilot — port without OpenMC / Geant4 / nuclear-data |
 | `hexa-lang-stdlib-full-consolidation-2026-05-20.md` | resolved | κ-45 | 15 domain modules consolidated to hexa-lang origin/main |
 | `kernel-extraction-pickup.md` | resolved | κ-45 | All 13 D72 kernels landed on hexa-lang origin/main |
+| `openmc-install-blocker-2026-05-20.md` | pickup-blocked | (Track D / H-3) | OpenMC + ENDF/B-VIII.0 install fails on osx-arm64 + Linux pool unreachable — k-eff measurement deferred |
 | `openmdao-kernel-promotion-pickup.md` | pickup-open | (2nd consumer) | OpenMDAO 2 consumers (scope+space) — promote to kernels/mdo/ |
 | `parity_attempt_bot_synth_2026-05-20.md` | resolved | κ-50 | Pinocchio rel err 0.04% / 0.0003% vs Spong; flip NO (URDF hermetic) |
 | `parity_attempt_cern_synth_2026-05-20.md` | resolved | κ-51 | xsuite FODO rel err 1e-10; **absorbed=true flip executed** |
@@ -42,8 +44,8 @@
 
 ## Open pickup count
 
-- **pickup-open**: 2 (`openmdao-kernel-promotion-pickup.md` — promotion at 2nd MDO consumer; condition met by κ-47 space+synth + scope+synth, awaits a κ-N kernel extraction round · `rfc006-s5-area-oracle-parity-handoff.md` — next-session entry-point is router_d4 read_verilog_file SEGFAULT debug, then sub-steps #4g preceding-stmts / #4h multi-LHS dyn-idx / #4i with-else dyn-idx, then ABC tech-map area parity verification)
-- **pickup-blocked**: 1 (`hexa-lang-branch-consolidation-2026-05-20.md` cross-session live-tree alignment)
+- **pickup-open**: 3 (`openmdao-kernel-promotion-pickup.md` 2nd MDO consumer · `rfc006-s5-area-oracle-parity-handoff.md` next-session entry = router_d4 read_verilog_file SEGFAULT debug + sub-steps #4g/#4h/#4i + ABC tech-map · `hexa-native-port-pattern-pilot-mc-transport.md` D80 hexa-native mc_transport 1-D pilot)
+- **pickup-blocked**: 2 (`hexa-lang-branch-consolidation-2026-05-20.md` cross-session live-tree alignment · `openmc-install-blocker-2026-05-20.md` osx-arm64 + Linux pool unreachable)
 
 ## Cross-references
 
