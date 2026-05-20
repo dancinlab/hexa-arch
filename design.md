@@ -2902,6 +2902,48 @@ origin/main` HEAD `4e210d85` 에서 직접 시작 — 5 sub-step 의 cell-emit
 primitive 를 base 로 indexed LHS / `$adff` / function inline 의 3 추가
 sub-step 진행. 각 sub-step 별 selftest 가 separated regression guard.
 
+### Decision-gate note on Decision 68 — 8차 (cond-mux primitive family 정적-static 완성 + 3 PR 누적 — 세션 누적 8 PR)
+
+7차 note 의 cond-mux primitive 위에 indexed-LHS (static const-foldable
+idx) + with-else multi-LHS 두 sub-step 적재. 세션 누적 8 PR:
+
+| PR | merge | sub-step | selftest |
+|----|-------|----------|----------|
+| #126 | `3cc45397` | #3a indexed-LHS static (T37) | 41/41 |
+| #128 | `0fe271da` | #3b with-else multi-LHS (T38) | 42/42 |
+
+(+7차 note 의 5 PR.) cond-mux *cell-emit* primitive 가 *정적 shape*
+의 family 완성:
+- with-else sequential single-LHS (T31)
+- with-else combinational single-LHS (T32)
+- no-else sequential single-LHS (T33, T35)
+- multi-stmt body interleaving (T34)
+- multi-LHS no-else (T36)
+- single-stmt indexed-LHS no-else, *static const idx* (T37)
+- with-else multi-LHS simple-name (T38)
+
+**측정 사실 (g3)** — `router_d4` cover *여전히 0%*. predict-first 로
+재확인:
+- router 의 모든 if-body 가 *dynamic-indexed LHS* (`fifo_head[grant_in]`,
+  `out_data[grant_out]` — `grant_in`/`grant_out` 가 wire). 8 PR 의
+  *static* idx primitive 는 dynamic idx 처리 불가.
+- 다음 진짜 cover step 3개 모두 **새 lowering machinery** 가 필요
+  (primitive 변종이 아님):
+  1. **Dynamic indexing** — `name[wire_idx]` lowering = `$shiftx` 또는
+     Memory cell (`$memrd`/`$memwr`).
+  2. **`$adff` (또는 `$dffsr`) set/reset port** — `if (rst) q<=rst_val`
+     의 dedicated reset wiring (현재는 mux feedback 으로만 표현).
+  3. **Function-call inline at expression site** — `route_xy(...)`
+     식 expression elab 시점 substitution.
+
+이 3 step 각각 multi-day, 한 세션 closure 불가 (g3 — 측정-사실).
+`rfc_006 §5` `measurement_gate = OPEN`, `absorbed = false` 유지.
+
+**Effect on demiurge consumer**: 다음 proc-pass session 은 `hexa-lang
+origin/main` HEAD `0fe271da` 에서 직접 시작. T31-T38 8 selftest 가
+primitive family 의 regression net. session 분리 권고 — dynamic
+indexing + `$adff` + function inline 의 multi-week 작업.
+
 ### Decision 73 — firmware 새 도메인 + 7-verb 합성→검증 seam 정의
 
 **picked**: 16 번째 도메인 `domains/firmware.md` 추가. **펌웨어

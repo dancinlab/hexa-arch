@@ -278,3 +278,44 @@ so a future session can verify regressions without re-deriving the
 cell-emit primitive. The Linux native hexa toolchain on ubu-2
 (`/tmp/hexa_native_linux` + clang link chain) remains the verified
 build/test surface.
+
+## UPDATE 2026-05-20 (i) — proc-pass core 3 more PRs (8 cumulative)
+
+Three additional sub-step PRs landed in the same session,
+extending the cond-mux primitive past simple-name single/multi-LHS
+into indexed-LHS (static) and with-else multi-LHS:
+
+| PR | merge | sub-step | selftest |
+|----|-------|----------|----------|
+| #126 | `3cc45397` | #3a indexed-LHS (static const idx) — T37 | 41/41 |
+| #128 | `0fe271da` | #3b with-else multi-LHS — T38 | 42/42 |
+
+(plus the earlier 5 PRs from update (h): #115/#116/#119/#120/#122.)
+
+Cumulative this session: **8 PRs landed on `hexa-lang origin/main`**,
+`read_verilog` selftest **34 → 42/42 PASS, regression 0**. The
+cond-mux primitive now covers:
+
+- with-else sequential single-LHS (T31)
+- with-else combinational single-LHS (T32)
+- no-else sequential single-LHS (T33, T35)
+- multi-stmt body interleaving (T34)
+- multi-LHS no-else (T36)
+- single-stmt indexed-LHS no-else, static const idx (T37)
+- with-else multi-LHS simple-name (T38)
+
+**router_d4 coverage measurement** (predicted, not re-fired in this
+session): still 0%. The remaining gap is **dynamic indexing**
+(`fifo_head[grant_in]` where `grant_in` is a runtime wire) — beyond
+the const-foldable index that #3a handles. Lowering dynamic indexing
+needs either yosys-style `$shiftx` per-bit selection or a Memory
+cell + `$memrd`/`$memwr` pair — multi-day in a separate session.
+
+The cond-mux *cell-emit* primitive family is functionally complete
+for static shapes; the remaining router_d4 blockers (dynamic-idx
+LHS, `$adff` set/reset port, function-call inlining) all need new
+*lowering machinery*, not new primitive variants.
+
+Cross-session resumption point updated: `hexa-lang origin/main`
+HEAD `0fe271da`. selftest T31-T38 form a regression net for the
+primitive family.
