@@ -3896,6 +3896,88 @@ g3 — `.demi` 데이터 SSOT 무변경. `DependenciesLoader.swift` 무변경
 3개 stale doc/comment 정정 + 본 D101 entry. 새 SSOT 0, 새 stored
 data 0, schema 변경 0.
 
+### Decision 102 — chem 첫 `PILOTS.demi` row = `pilot-chem_arrhenius` (Stage-0 scaffolding, no external oracle)
+
+**picked**: chem 도메인의 첫 hexa-native kernel
+(`stdlib/kernels/chem/arrhenius_kernel.hexa`, hexa-lang `78aee88d`,
+6/6 self-test PASS, 2026-05-20) 을 `domains/PILOTS.demi` 의 14번째
+row `[pilot-chem_arrhenius]` 로 등록. D90 8-field schema 1:1 — 단,
+`parity_method` / `parity_tolerance` 두 field 는 **Stage-0 scaffolding
+seed** semantics 로 명시: 외부 Python substrate (Cantera / RDKit / Psi4)
+참조 없이 **textbook closed-form** (Arrhenius 1889 · CODATA 2018 R 상수)
+이 self-oracle. P-⑫ chem 부분 ② "chem substrate growth — first pilot
+row" 적용. `DEPENDENCIES.demi` `kernel-chem` row 는 본 결정에서 추가
+하지 않음 (gate: 2nd consumer rule + Python substrate가 아직 없음).
+
+**rationale**:
+- D80 g_hexa_only 정신: hexa-native substrate 가 origin/main 에 land 한
+  순간 PILOTS.demi 에 row 가 있어야 cross-link 이 단방향에서 끊기지
+  않는다. D90 schema 는 *parity_method* / *parity_tolerance* 의 자유
+  서식을 허용 — closed-form / Python-companion / analytic-oracle / 외부-
+  파일 oracle 모두 표현 가능. 따라서 oracle-부재 Stage-0 seed 도 row
+  자격이 있다 (필드는 "self-oracle: 공식 자체").
+- D91 row-per-kernel 정합: arrhenius_kernel 1 file = 1 row. 미래 chem
+  kernel (catalyst turnover / equilibrium / transition-state) 들은 각자
+  별도 row 추가.
+- D93 양쪽 유지 정합: hexa-lang `inbox/notes/hexa-native-port-pattern-
+  pilot.md` 의 rolling table (prose dimension) 에도 chem row 가 들어
+  가야 일관 — 그 쪽 entry 는 hexa-lang side 의 후속 PR scope (본 결정
+  은 demiurge SSOT 측만 정합화; cross-link 의 데이터 dimension 우선).
+- D86 g_no_hardcoded_data 정합: chem pilot fact (kernel_path /
+  parity_status / hexa_lang_sha) 는 데이터로 보관, Swift hardcoded
+  mirror 0. T7 phase (`PilotLoader.find(kernelPath:)`) 가 자연스럽게
+  본 row 를 소비.
+- D98 dual-source consistency CI 정합: `DEPENDENCIES.demi` 에 `kernel-
+  chem` row 가 없으므로 `testEveryAlreadyPortedDependencyHasMatching
+  Pilot` 의 단방향 검사 (DEPENDENCIES `already-ported` → PILOTS) 는
+  vacuous-통과; 본 PILOTS row 는 future `kernel-chem` dependency row
+  (2nd consumer 발생 시 추가) 의 anchor 역할로 미리 land.
+- P-⑫ NEXT_SESSIONS scope ② 와 정합: "chem substrate growth — first
+  pilot row" 의 acceptance criterion (b) 만족. (a) 2nd-consumer 조사
+  + (c) `~/core/hexa-chem/` sibling seed 는 본 결정 scope 밖 (별도
+  세션).
+
+**적용**:
+1. `domains/PILOTS.demi` — `[pilot-bio_align_nw]` row 뒤에 `[pilot-
+   chem_arrhenius]` section 추가. 8 field 모두 채움:
+   - `kernel_path` = `stdlib/kernels/chem/arrhenius_kernel.hexa`
+   - `parity_test` = `stdlib/kernels/chem/arrhenius_kernel_test.hexa`
+   - `parity_method` = "textbook closed-form Arrhenius rate equation
+     k = A·exp(-Ea/(R·T)) ... 6 self-test assertions"
+   - `parity_tolerance` = "exact (closed-form match · 6/6 self-test
+     PASS · 4 closed-form assertions at 1e-12 rel · 1 high-T limit
+     at 1e-6 rel · 2 guard assertions at <1e-12 abs)"
+   - `parity_status` = "6/6 PASS (Stage-0 scaffolding · no external
+     oracle yet — formula IS the algorithm)"
+   - `hexa_lang_sha` = `78aee88d`
+   - `algorithm_ref` = "Arrhenius 1889 (Z. Phys. Chem. 4 226-248) ·
+     CODATA 2018 R (Tiesinga et al., Rev. Mod. Phys. 93 025010 2021)"
+   - `scope_notes` = "NEW DOMAIN ... Stage-0 scaffolding seed —
+     NOT a D80 pilot in the parity-oracle sense ... Promotes to
+     Stage-2 when a Cantera / Psi4 parity oracle lands. absorbed=
+     true NOT flipped — chem domain has no producer cells yet
+     consuming this kernel"
+2. `design.md` D102 entry (본 entry).
+3. **NOT** 적용 (scope 밖, P-⑫ ②a/②b/②c 별도 세션):
+   - `DEPENDENCIES.demi` `kernel-chem` row — 2nd consumer 부재 +
+     Python substrate 없음. 추가 시 `portable_status =
+     "already-ported"` 가 되어 cross-ref CI 단방향 의무가 발동.
+   - `SUBSTRATE_LINKS.demi` chem row — sibling `~/core/hexa-chem/`
+     repo 미존재 (Tier ① fail floor).
+   - `domains/chem.md` substrate narrative — 3215cea 에서 이미
+     `stdlib/kernels/chem/` seed 로 갱신됨.
+4. swift build PASS · swift test PASS — PILOTS.demi 14 row 로 늘었고
+   `DependenciesPilotsCrossRefTests` 3/3 모두 PASS (단방향 검사: 새
+   PILOTS row 가 reverse-direction 의무를 발동시키지 않음).
+
+g3 — `.demi` 데이터 row 1개 추가 + design.md 1 entry. Swift type /
+loader / 새 stored field 0. `HexaNativeParityRef` schema 그대로 (D90
+8-field). 측정 record / gate / absorbed flip 0. 새 sibling repo seed
+0. 새 D-decision 의 다음 번 가능성: chem 2nd consumer 발생 시 D72
+N+M promotion + `DEPENDENCIES.demi` `kernel-chem` row 추가 (별도
+결정 필요 — `portable_status` ladder 위치 + Python substrate 확정
+순간 트리거).
+
 ### Decision 103 — cell `absorbed` vs `isHexaNativeAbsorbed` = 2 orthogonal dimensions (κ-67 producer-trigger 명시화)
 
 **picked**: 5 cell record 의 두 absorbed-shaped 표면 — 기존 stored
