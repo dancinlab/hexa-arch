@@ -1,0 +1,75 @@
+# domains/SUBSTRATE_LINKS.demi — link-integrity SSOT for the 5
+# substrate-bearing sibling repos (D97, Q3 = 3-tier verifier).
+#
+# Authority (D87 — `.demi` lives in `demiurge/domains/`):
+#   This file declares the 5 demiurge domains whose substrate SSOT
+#   physically lives in a sibling repo (`~/core/hexa-<id>/`). For
+#   each domain we record:
+#     * the sibling repo path on disk (Tier ① existence check),
+#     * the expected identity-key the sibling's `AGENTS.tape @I id001`
+#       must declare (Tier ② identity-claim concord check), and
+#     * the advisory prereq-DAG mention the sibling implicitly assumes
+#       (Tier ③ — `INDEX.demi` transitive-closure coverage, advisory
+#       only — does NOT fail the test).
+#
+# Authority split vs `INDEX.demi`:
+#   `INDEX.demi` is the demiurge-side prereq DAG SSOT (`prerequisites
+#   = […]` per domain) — owns the dependency-graph truth.
+#   `SUBSTRATE_LINKS.demi` is the demiurge-side **link** SSOT — owns
+#   "which sibling repo + what identity-key does that sibling claim."
+#   Two SSOTs preserved independent (Q1 decision): the sibling repo
+#   carries the substrate, demiurge carries the pointer + checked-link
+#   metadata; advisory_prereqs is an annotation, not a duplication of
+#   the prereq DAG.
+#
+# Verifier (D97 / Q3 picked A — 3 tiers):
+#   Tier ①  substrate_ssot_existence — `sibling_path` is a directory on
+#           disk (FileManager.fileExists isDirectory). FAIL on miss.
+#   Tier ②  identity_claim_concord  — `<sibling_path>/AGENTS.tape`
+#           contains line matching `@I id001 := "<identity_key>"`.
+#           FAIL on miss / mismatch.
+#   Tier ③  advisory_prereq_coverage — every id in `advisory_prereqs`
+#           is in this row's transitive closure inside `INDEX.demi`'s
+#           prereq DAG. **Advisory only — print warning, do NOT fail.**
+#           (Q1: two SSOTs stay independent — sibling-side `§3` mention
+#           and demiurge `INDEX.demi` prereq edge are different
+#           dimensions; mismatch is information, not an error.)
+#
+# Schema:
+#   [<demiurge-id>]
+#   sibling_path     = "~/core/hexa-<id>/"          # tilde-expanded
+#   identity_key     = "hexa-<id>"                  # AGENTS.tape @I id001 RHS
+#   advisory_prereqs = ["<id>", ...]                # optional
+#   notes            = "<one-line>"
+#
+# Adding a new sibling = append one section. No Swift code change.
+
+[rtsc]
+sibling_path     = "~/core/hexa-rtsc/"
+identity_key     = "hexa-rtsc"
+advisory_prereqs = []
+notes            = "HEXA-RT-SC family — room-temperature superconductor; INDEX.demi prereqs=[]; root of substrate chain (cern/fusion/ufo all reach back here)"
+
+[cern]
+sibling_path     = "~/core/hexa-cern/"
+identity_key     = "hexa-cern"
+advisory_prereqs = ["chip"]
+notes            = "HEXA-CERN family — particle physics; INDEX.demi prereqs=[chip]; consumed by fusion + grid"
+
+[antimatter]
+sibling_path     = "~/core/hexa-antimatter/"
+identity_key     = "hexa-antimatter"
+advisory_prereqs = ["matter", "space"]
+notes            = "HEXA-Antimatter family — antimatter physics; INDEX.demi prereqs=[matter, space]; consumed by fusion + ufo"
+
+[fusion]
+sibling_path     = "~/core/hexa-fusion/"
+identity_key     = "hexa-fusion"
+advisory_prereqs = ["antimatter", "cern", "energy", "rtsc"]
+notes            = "HEXA-Fusion family — fusion · plasma · 12 reactor closures · 122/122 EXACT; INDEX.demi prereqs=[antimatter, cern, energy, rtsc]; consumed by ufo"
+
+[ufo]
+sibling_path     = "~/core/hexa-ufo/"
+identity_key     = "hexa-ufo"
+advisory_prereqs = ["fusion", "antimatter", "rtsc"]
+notes            = "HEXA-Disc family — UFO · RT-SC VTOL · alien-index 6→500; INDEX.demi prereqs=[fusion, antimatter, rtsc]; integration apex"

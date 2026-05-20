@@ -3635,3 +3635,57 @@ antimatter · fusion · ufo), placed just below the head blockquote.
 **적용**: 5 `domains/<id>.md` 각각 head 블록 (head + `> Status: …` 블
 록쿼트) 바로 아래 한 줄 추가. 그 외 변경 0. branch `sibling-sub-
 narrative`, FF push to `origin/main`.
+
+### Decision 97 — 3-tier substrate link-integrity verifier (Q3 = A)
+
+**picked**: 5 substrate-bearing sibling repo (`hexa-rtsc / cern /
+antimatter / fusion / ufo`) 와 demiurge `INDEX.demi` 사이의 link rot
++ identity drift 를 자동 alert 하는 **3-tier verifier** 추가. 데이터
+SSOT = 신규 `domains/SUBSTRATE_LINKS.demi` (5 row, 4 field per row);
+verifier = 신규 `cockpit/Tests/DemiurgeCoreTests/SubstrateLinkIntegrity
+Tests.swift` (3 XCTest method, live FS read-only walk). 양 SSOT
+(`INDEX.demi` prereq DAG · `SUBSTRATE_LINKS.demi` sibling 링크) 는
+**independent 보존** — Tier ③ 만 두 SSOT 사이 cross-check 인데
+advisory only (warn print, XCTFail 안 함). (Rejected: B = 자동 데이터
+sync — Q1 의 'two SSOTs independent' 결정 위반; C = no-op + manual
+audit — drift 감지 0.)
+
+**rationale**:
+- E sibling-sync 검증 agent (`a6d38d81`) §6 추천: 자동 sync 가 아니라
+  link-integrity check — sibling repo 의 실 substrate 와 demiurge 의
+  pointer 사이가 끊어졌는지 (path 부재 · identity 변경 · prereq
+  drift) 만 confirm. drift 감지는 자동, drift 해소는 사람 결정.
+- Q1 = '두 SSOT independent' 의 직접 결과: Tier ① ② 는 fail-loud
+  (sibling 이 진짜 사라지거나 identity 가 바뀌면 즉시 알아야), Tier
+  ③ 는 warn-only (sibling-side 가 자기 prereq 을 다르게 표현해도 그건
+  drift 가 아니라 다른 dimension — 정보로만 surface).
+- D86 (`g_no_hardcoded_data`) — 5 sibling 의 path / identity_key /
+  advisory_prereqs 모두 declarative .demi, Swift 코드는 type +
+  loader 만. 새 sibling 추가 = .demi 한 section, Swift 변경 0.
+
+**적용**:
+1. `domains/SUBSTRATE_LINKS.demi` (신규 SSOT, 5 row) — rtsc / cern
+   / antimatter / fusion / ufo, 각 4 field (sibling_path /
+   identity_key / advisory_prereqs / notes).
+2. `cockpit/Sources/DemiurgeCore/Loaders/SubstrateLinksLoader.swift`
+   (신규) — `SubstrateLinkEntry` struct + `loadAll()` + `find(id:)`,
+   PilotLoader / DependenciesLoader 패턴 1:1 mirror, D80 honesty
+   (file 부재 → stderr warn + 빈 array, no hardcoded fallback).
+3. `cockpit/Tests/DemiurgeCoreTests/SubstrateLinkIntegrityTests.swift`
+   (신규) — 3 XCTest method, live sibling FS read-only walk:
+   * Tier ① `testTier1SubstrateSsotExistence` — `sibling_path` 가
+     directory 로 존재 (FileManager isDirectory). FAIL on miss.
+   * Tier ② `testTier2IdentityClaimConcord` — `<sibling_path>/AGENTS.
+     tape` 가 `@I id001 := "<identity_key>"` 선언 보유. FAIL on miss.
+   * Tier ③ `testTier3AdvisoryPrereqCoverage` — `advisory_prereqs`
+     의 매 id 가 `DomainGraph.transitiveClosure(of: row.id)` 안 존재.
+     **warn-only — XCTFail 안 함** (Q1 보존).
+4. swift build PASS / swift test PASS (28/28; SubstrateLinkIntegrity
+   3/3 — DEMIURGE_REPO 설정 시 5 sibling 실 walk 통과, 미설정
+   degenerate case 는 D80 honesty 로 trivially pass + stderr warn).
+   Tier ③ advisory drift 0 (`SUBSTRATE_LINKS.demi`의 advisory_prereqs
+   가 `INDEX.demi`의 transitive closure 와 정확 일치).
+
+g3 — 새 SSOT 추가만, 기존 record / gate / absorbed schema 변경 0.
+sibling 5 repo 는 100% READ-ONLY (FileManager + String contents only,
+write/edit 0).
