@@ -4195,3 +4195,57 @@ measurement-parity 의 typed enforcement). 본 entry 는 RFC 013 §6.12
 ("illustrative-physics gate, STILL QUEUED" per D105) 를 LANDED 로
 flip 시킴 — RFC 013 §6.12 status 갱신은 별도 doc-only 후속이 아니라
 이 결정의 일부 (RFC 본문 1줄 patch + 이 entry 의 cross-link).
+
+### Decision 107 — `SiblingRepoSpawner.resolveEntrypoint()` 5th fallback `cli/hexa-<id>.hexa`
+
+**picked**: 기존 4-candidate 배열 끝에 `cli/hexa-<id>.hexa` 를
+**slot ⑤** 로 추가 — `~/core/hexa-aura/cli/hexa-aura.hexa` /
+`~/core/hexa-ufo/cli/hexa-ufo.hexa` 의 실제 on-disk 파일명. 4번째
+slot (`verify/run_all.hexa`) 까지 다 miss 한 다음에야 ⑤ 가 작동
+하도록 **순서를 마지막에** 두어 D17 matter 의 slot ④ 정밀성 (G3
+backward compatibility) 을 보존.
+
+**rationale**:
+- 현재 4-candidate 는 hexa-* family canonical 을 `cli/hexa-<id>`
+  (확장자 없음) 으로 가정 — 빌드된 바이너리 케이스. hexa-aura /
+  hexa-ufo 는 hexa-native script (확장자 `.hexa`) 로 같은 자리에
+  있어 slot ① miss → slot ②~④ 모두 miss → nil 반환 → cockpit 이
+  "entrypoint missing" skip record 를 (잘못) 발행하는 silent
+  regression 이 D80 honesty floor 위반.
+- D17 matter (slot ④ 사용) 의 precedence 가 깨지면 안 됨 → slot ⑤
+  를 **배열 끝** 에 두는 게 답. 새 candidate 가 기존 4개 중 어느
+  것의 우선순위도 흔들지 않음 (priority-preserving extension).
+- 위치 선택 = **fixed array** 추가 (config / `.demi` 데이터 SSOT
+  무변경). G7 taxonomy 가 아니므로 새 stored field / `gate_type` /
+  PILOTS.demi schema 변경 모두 0 — D86 `g_no_hardcoded_data` 정합.
+- `~/core/hexa-matter/cli/hexa-matter.hexa` 도 같은 모양으로 존재
+  하지만 D17 의 운영 패턴이 slot ④ (`verify/run_all.hexa`) 인
+  점은 그대로 — 이 entry 는 hexa-aura / hexa-ufo 만을 위해 ⑤ 를
+  연다 (priority-preserving).
+
+**적용**:
+1. `cockpit/Sources/DemiurgeCore/Loaders/SiblingRepoSpawner.swift`
+   — `resolveEntrypoint(for:)` 의 `candidates` 배열 끝에 새 항목
+   `"\(repo)/cli/hexa-\(domain.id).hexa"` 추가. docstring 의 우선
+   순위 목록도 5번째 줄을 추가 ("D107 hexa-aura / hexa-ufo actual
+   CLI filename").
+2. `cockpit/Tests/DemiurgeCoreTests/SiblingRepoSpawnerTests.swift`
+   — 새 10 test (4 candidate 회귀 + 5번째 candidate aura/ufo
+   2-case + priority order slot①>⑤ / slot④>⑤ + honesty floor 2
+   case). 각 test 는 temp 디렉토리에 fixture 파일을 만들고
+   `addTeardownBlock` 으로 정리 — host filesystem 무손상.
+3. `design.md` D107 entry (본 entry). D104 자리는 reserved
+   (κ-sweep 의 numbering 연속성 보존).
+4. swift build PASS (72.7s · 새 warning 0). swift test PASS —
+   53 tests, 1 XCTSkip (이전 D106 baseline 43+1 에서 새 spawner
+   tests 10개 추가, skip 동일).
+
+**g3**: `.demi` 데이터 SSOT 무변경. `INDEX.demi` /
+`SUBSTRATE_LINKS.demi` / `PILOTS.demi` 0줄. cell record schema /
+JSON wire shape 무변경. 변경된 surface = (a) `SiblingRepoSpawner`
+의 candidate 배열 4→5 항목 확장 (priority-preserving), (b) 새 test
+1 파일. 기존 4 candidate 의 우선순위는 byte-unchanged — slot ⑤
+는 모든 기존 slot 이 miss 한 다음에만 발화. 어떤 sibling repo 의
+absorbed=true flip 도 없음 — pointer-only spawn pattern (D61) 이
+hexa-aura / hexa-ufo 의 실제 파일명을 정직히 인식하도록 한 좁은
+보정.

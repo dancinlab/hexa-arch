@@ -56,6 +56,8 @@ public enum SiblingRepoSpawner {
     ///   2. `<repo>/cli/main.hexa`          — alt hexa-native entry
     ///   3. `<repo>/<id>.hexa`              — top-level hexa entry
     ///   4. `<repo>/verify/run_all.hexa`    — D17 matter precedent
+    ///   5. `<repo>/cli/hexa-<id>.hexa`     — D107 hexa-aura / hexa-ufo
+    ///                                       actual CLI filename
     /// Returns nil if none exist (caller emits an honest skip record).
     public static func resolveEntrypoint(for domain: Domain) -> String? {
         guard let ssot = domain.substrateSSOT,
@@ -65,6 +67,7 @@ public enum SiblingRepoSpawner {
             "\(repo)/cli/main.hexa",
             "\(repo)/\(domain.id).hexa",
             "\(repo)/verify/run_all.hexa",
+            "\(repo)/cli/hexa-\(domain.id).hexa",
         ]
         return candidates.first(where: {
             FileManager.default.fileExists(atPath: $0)
