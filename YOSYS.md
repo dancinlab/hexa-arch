@@ -44,11 +44,11 @@ sub-steps 가 incremental gap 축소.
   - branch: `rfc006-yosys-param-initial-dispatch`
   - measured: selftest **58/58 PASS** (base 56 + T48 + T49), regression 0
   - flat_v2k/router_d4.v now parses via hexa-native → §5 measurement chain unblocked on input side
-- [ ] **PR-B: hexa-cc `__hexa_strlit_init` unique-emit (`__hexa_strlit_init__<TU>`)**
-  - file: `self/codegen_c2.hexa` L1278 + L1338 + L7899 + L7935
-  - effect: sed workaround 제거, multi-file driver pattern 기본 지원
-  - signal: 기존 1500+ selftest 영향 0 (within-TU rename), 새 multi-file link 가 sed 없이 동작
-  - blocker: codegen 변경은 hexa-cc binary rebuild 필요 (bootstrap chain). multi-session.
+- [x] **PR-B: hexa-cc `__hexa_strlit_init` unique-emit** ✓ LANDED (hexa-lang PR #208 `adbb9e3b`)
+  - 4-site codegen edit (L1329 + L1389 + L7985 + L8021), within-TU caller+def rename together
+  - emit form: `void __hexa_strlit_init__<TU>(void)` (non-static), TU = `_hexa_cert_module_name()`
+  - chunk-internal `_<N>` helpers 그대로 static
+  - **note**: binary rebuild (bootstrap chain) 필요 — effect 는 다음 build cycle 부터. 다음 hexa-cc binary 가 emit 시작하면 sed workaround 자동 제거
 - [x] **#4g function-body preceding-stmts inline** ✓ LANDED (hexa-lang PR #202 `41c7b1fc`)
   - new helper `_rv_collapse_func_body_with_prefix` (~50 lines) — handles reg/integer/wire decls + begin/end wrap + blocking-assigns + SSA-style substitution into existing cascaded-if collapse
   - T50 selftest: route_xy-shaped body inlines to `$mux(S=$gt(h,0), A=0, B=1, Y=r)` — exact-count 1 × $gt + 1 × $mux
@@ -100,6 +100,7 @@ sub-steps 가 incremental gap 축소.
 
 (append-only, latest 위에)
 
+- 2026-05-20 — PR-B landed: hexa-lang PR #208 `adbb9e3b` (codegen_c2.hexa strlit-init unique-emit, 4-site within-TU rename). 효과는 bootstrap chain 후
 - 2026-05-20 — cell-tally re-measure post-#4g: 35 → 55 cells (+57%), 20 new all-combinational (5×$and, 10×$logic_not, 5×$logic_and = always-body condition expressions). Sequential still 0. Gap to oracle 99.5%
 - 2026-05-20 — #4g landed: hexa-lang PR #202 `41c7b1fc` (function-body preceding-stmt prefix + T50, selftest 61/61). route_xy inline 가능
 - 2026-05-20 — router_d6 oracle 재현: 93,608.528 µm² (cited 일치, ratio 1.5156×) — d4+d6 양쪽 oracle reproducible
