@@ -1372,3 +1372,77 @@ form mapping). Separate PR after #4h/#4i.
 `rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
 flip; turn landed infrastructure + measurement of substrate parse
 handoff working).
+
+## UPDATE 2026-05-20 (z) — substrate end-to-end synth chain 완전 functional; cells all dead due to no always-body LHS
+
+write_verilog cell-emit behavioural-form dispatch landed in-tree on
+ubu-2 worktree (T10/T11/T12 cover $add binop, $mux ternary, $not
+unary forms). Selftest 12/12 PASS, regression 0. PR pending push.
+
+**Substrate end-to-end test** (the §5 measurement chain target):
+
+```
+$ /tmp/drv_wvb /tmp/router_d4_flat.v /tmp/router_d4_hexa_b.v
+write_verilog ok=yes -> /tmp/router_d4_hexa_b.v
+
+$ yosys -p "read_verilog router_d4_hexa_b.v; hierarchy -top router_d4;
+  synth -top router_d4; dfflibmap -liberty <tt.lib>;
+  abc -liberty <tt.lib>; opt_clean; stat -liberty <tt.lib>"
+
+  Removed 55 unused cells and 177 unused wires.   ← all cells opt_clean'd
+  Extracted 0 gates and 0 wires to a netlist     ← abc has nothing to map
+  Don't call ABC as there is nothing to map.
+
+=== router_d4 ===
+   12 wires (= 10 module ports + 2 internal scaffolds), 0 cells
+```
+
+**Measured fact**: substrate yosys's `synth` macro now accepts the
+hexa-native output and exercises the full pipeline (read_verilog →
+hierarchy → proc → opt → memory → techmap → dfflibmap → abc →
+opt_clean → stat) without errors. The chain is **functionally
+end-to-end**. But the 55 cells from hexa-native's generate-for
+unroll + always-body condition-expression elaboration are all
+*disconnected from module outputs*: yosys's `opt_clean` removes
+them as dead code, leaving area = 0.
+
+Why all cells are dead: hexa-native's always-body emit landed up
+to condition-expression elaboration (handoff (x)) — `$logic_and`,
+`$logic_not`, `$and`, `$eq`, `$ne` wires get created — but the
+LHS-write half (`out_data[grant_out] <= …`, `rr_ptr <= …`,
+`fifo_head[i] <= …`) doesn't emit, so the condition wires never
+connect to any output through a `$mux + $dff` chain. That's the
+exact #4h/#4i scope.
+
+**Closure-path map (post-(z)):**
+
+The hexa-native → substrate chain works structurally. The remaining
+gap to oracle parity = the LHS-write half of always-body lowering:
+
+1. ☐ `_wv_emit_cell` cell-emit behavioural-form: ✓ done in-tree
+   (T10-T12, selftest 12/12, PR push pending — covers 16 binop + 3
+   unary + $mux; sequential $dff/$adff still instance form).
+2. ☐ **#4h-a** multi-LHS path indexed-LHS (static const idx) — needed
+   for the for-loop-unrolled `fifo_head[pp] <= 0` reset cascade.
+3. ☐ **#4h-b** dyn-idx LHS (wire-indexed) multi-LHS — needed for
+   `out_data[grant_out] <= fifo_peek[grant_in]` in the `if (any_grant)
+   begin … end` body.
+4. ☐ **#4h-c** for-in-always static unroll — needed for the three
+   `for (pp = 0; pp < P; …)` loops in router L101+L108+L115.
+5. ☐ **#4h-d** nested-if inside always-body — `if (in_valid[pp] &&
+   !fifo_full[pp]) begin … end` at L109.
+6. ☐ **#4i** with-else top-level rst/else cascade.
+7. ☐ end-to-end area measurement.
+
+Each sub-step is independently measurable: cell-tally diff after
+each lands quantifies its contribution. The substrate handoff is
+ready to receive each measurable increment.
+
+**Cumulative this session sequence (5 PRs landed + 1 in-flight):**
+PR #196 (PR-A) · PR #202 (#4g) · PR #208 (PR-B) · PR #210
+(write_verilog wire-emit) · ☐ cell-emit behavioural (in-tree, push
+pending). Plus sibling ternary (auto-landed during sequence).
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
+flip; chain end-to-end functional, but hexa-native cell-emit doesn't
+yet drive any output wire, so area measurement = 0 ≠ oracle).

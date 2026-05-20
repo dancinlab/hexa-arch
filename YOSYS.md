@@ -64,11 +64,11 @@ sub-steps 가 incremental gap 축소.
 - [ ] **#4i with-else dyn-idx emit** (L98-123 with-else reset structure)
   - signal: sequential cells ≈ N × P (P-fold sequential emit)
   - dependency: #4h sub-steps all landed first
-- [~] **write_verilog chain via driver link** — wire-emit ✓ landed (PR #210), cell-emit ✗ blocker
-  - PR #210 (admin-merge `116d6799`): width prefix `[W-1:0]` + IEEE 1364 escaped-ident `\name<ws>` emit
-  - substrate yosys 0.65 가 hexa-native 출력 **parse 완전 동작** (wires=134, cells=55, type distribution 완전 일치)
-  - **다음 blocker**: yosys `synth` macro 가 RTLIL-internal cell types (`$and`, `$mux`, `$eq` 등) 를 unknown module 로 봄 — write_verilog 가 cell instance form (`$and name(.A,.B,.Y)`) 대신 **behavioral Verilog (`assign y = a + b;` 등)** 로 emit 해야 함
-  - multi-day fix: stdlib/kernels/logic_synth/write_verilog.hexa 의 `_wv_emit_cell` 를 cell-type-dispatch (각 RTLIL primitive 의 behavioral 표현) 으로 rewrite
+- [x] **write_verilog chain via driver link** ✓ LANDED (PR #210 wire-emit + PR #212 cell-emit behavioural)
+  - PR #210 `116d6799`: width prefix + escaped-identifier — substrate parse OK (wires=134, cells=55)
+  - PR #212 `b0a800f3`: behavioural-form dispatch (16 binop + 3 unary + $mux) — substrate `synth` macro 가 hexa-native output 처리 가능
+  - selftest 9/9 → 12/12 PASS, regression 0
+  - 검증: end-to-end substrate chain (read_verilog → hierarchy → synth → dfflibmap → abc → stat) runs without errors on hexa-native router_d4 output
 - [ ] **share/freduce 또는 ABC -dff 옵션 통합** (comb-side oracle parity)
   - oracle 의 12k 차이 = `synth` macro 의 logic-sharing optimizations
   - 옵션: hexa-native passes 가 자체 share/freduce 구현 · 또는 substrate yosys 에 defer
@@ -100,6 +100,7 @@ sub-steps 가 incremental gap 축소.
 
 (append-only, latest 위에)
 
+- 2026-05-20 — PR #212 landed: hexa-lang `b0a800f3` (write_verilog cell-emit behavioural form, 16 binop + 3 unary + $mux). substrate `synth` chain end-to-end functional. 단 hexa-native cells 모두 disconnected (always-body LHS-write 부재) → opt_clean removes → final cells=0
 - 2026-05-20 — substrate handoff parse 동작 확인: yosys read_verilog(hexa-native output) → wires=134, cells=55, type 완전 일치. 다만 synth macro fail (cell-emit 가 behavioral 아닌 instance form)
 - 2026-05-20 — PR #210 landed: hexa-lang `116d6799` (write_verilog wire-emit width prefix + escaped-identifier, selftest 9/9)
 - 2026-05-20 — PR-B landed: hexa-lang PR #208 `adbb9e3b` (codegen_c2.hexa strlit-init unique-emit, 4-site within-TU rename). 효과는 bootstrap chain 후
