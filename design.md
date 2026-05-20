@@ -2877,3 +2877,45 @@ honest). ABSORPTION.md ② DOMAIN_MAP "15 도메인" → "16 도메인
 정의). cockpit project type `firmware` 옵션 + ActionDispatch wiring
 은 후속 라운드 (PLAN κ entry 로 인계). 측정 record 0 (도메인 추가
 자체는 design baseline 작업, 빈-셀 measurement 라운드와 독립).
+
+### Decision 74 — ProducerRegistry (cells with alternative producers)
+
+**picked**: ActionDispatch 의 `(verb, domain)` switch 앞에 **얇은
+registry** 를 둔다 — `ProducerRegistry.entries` 가 cell 별 default
+producer + override 변형들을 등록. Registry 에 등록된 cell 은 switch
+를 건너뛰고 variant.run 으로 dispatch; 등록 안 된 cell 은 기존 switch
+그대로. **첫 적용 = `(cern, analyze)`** — variants: `xsuite-tracking`
+(default, 100-turn FODO tracking, κ-49 substrate) + `pylhe` (legacy
+LHE round-trip, synthetic). CLI flag `action analyze cern --producer
+pylhe` 로 override. (Rejected: (A) Replace pylhe → Xsuite — pylhe
+parser-coverage 손실; (B) sub-verb triple `(verb, domain, sub)` —
+모든 cell touch, invasive; (D) Tag-based fan-out single Record —
+schema 충돌.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — Option C (Producer registry) + Q2
+  default = xsuite-tracking + Q3 CLI flag only + Q4 AGENTS.tape note
+  YES. friendly decision-gate 답신 "C" 로 묶음 진행.
+- κ-49 가 cern+analyze 에 elegant_tracking.py 를 substrate landed
+  했지만 기존 pylhe Producer 가 dispatch 점유 — Registry 가 그
+  충돌 해소.
+- κ-49 추천 (`inbox/notes/cern_analyze_producer_alternative_decision_
+  2026-05-20.md`) Option C: 다른 옵션들에 비해 *additive* — 새
+  producer 도입할 때마다 모든 cell 을 touch 하지 않음. 다른 cell 은
+  registry 미등록 상태로 기존 switch 잔존.
+- default 를 xsuite-tracking 으로: pylhe round-trip 는 synthetic LHE
+  parser test — 진짜 cern+analyze 측정 아님. xsuite tracking 은 실
+  입자 tracking → "더 정직한 default" (g3).
+- AGENTS.tape `n_cern_producer_alternatives` 거버넌스 note 추가
+  (project-governance principle — single source of truth on cell
+  alternatives + default selection).
+
+**적용**: `cockpit/Sources/DemiurgeCore/Loaders/ProducerRegistry.swift`
+신규 (ProducerVariant/Entry/CellKey + entries dict). ActionDispatch.
+runEngineTool 에 `producer: String?` arg 추가 + registry lookup 우선.
+CernAnalyzeXsuiteProducer.swift 신규 (elegant_tracking.py spawn).
+DemiurgeCLI 가 `--producer <name>` flag 파싱 → ActionDispatch 전파.
+CernAnalyzeRecord Swift type 은 pylhe shape 유지 (xsuite record 는
+raw json — Codable 추가는 후속 phase). g3 — registry 자체는 측정
+없음, 두 variant 다 기존 GATE_OPEN 유지 (cern+synthesize 의 absorbed=
+true flip 과 별개 cell).

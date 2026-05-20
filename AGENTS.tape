@@ -123,3 +123,9 @@
   text = "The cockpit's 3D viewer (phase ι — `ComponentView3D`, the exploded-isometric ComponentMode) uses RealityKit (D35) specifically so it can port to AR / visionOS spatial rendering. RealityKit was picked over SceneKit for exactly this forward path — visionOS is RealityKit-native. On macOS the cockpit runs a plain virtual `ARView` viewport with mouse-drag orbit (v0, measured-green); AR / visionOS spatial is the stated future target — new platform surfaces reuse the same RealityKit scene graph."
   decision_ref = "design.md D35 · rfc_011 §9"
   user_directive = "2026-05-19 — 'AR/visionOS 지원 목표로 하자 AGENTS.tape 기록'"
+
+@N n_cern_producer_alternatives := "cern + analyze carries alternative producers" :: note [d=2026-05-20 active]
+  text = "Cell (cern, analyze) is the FIRST cell to use ProducerRegistry (cockpit/Sources/DemiurgeCore/Loaders/ProducerRegistry.swift). Variants: `xsuite-tracking` (default, Xsuite 100-turn FODO tracking — real physics, κ-49 substrate) and `pylhe` (legacy LHE round-trip — synthetic, kept for parser-coverage). CLI override: `action analyze cern --producer pylhe`. Other cells stay on the hardcoded ActionDispatch switch — registry is additive, joined only when a cell actually carries alternatives. Same-shape Record decode TBD per consumer."
+  default_producer = "xsuite-tracking — promotes the κ-49 substrate (real Xsuite particle tracking) over the legacy pylhe round-trip toy, per user gate 2026-05-20."
+  decision_ref = "design.md D74 · inbox/notes/cern_analyze_producer_alternative_decision_2026-05-20.md"
+  user_directive = "2026-05-20 — 'Option C — ProducerRegistry; defaults Q2 xsuite-tracking, Q3 CLI-only, Q4 governance line YES'"

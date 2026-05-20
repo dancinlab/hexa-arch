@@ -144,7 +144,26 @@ public enum ActionDispatch {
     /// `askClaude` (LLM honest-gap path). Used by both cockpit's
     /// "▶ 실제로 돌리기" button and `DemiurgeCLI action <verb>`.
     public static func runEngineTool(verb: Verb, domain: String,
-                                     context: String) -> ActionResult {
+                                     context: String,
+                                     producer: String? = nil) -> ActionResult {
+        // ProducerRegistry takes priority for cells with alternatives
+        // (cern + analyze has pylhe vs xsuite-tracking — default
+        // xsuite-tracking per the 2026-05-20 user gate).
+        let cellKey = ProducerCellKey(verb: verb, domain: domain)
+        if let entry = ProducerRegistry.entries[cellKey] {
+            if let variant = entry.pick(producer) {
+                return variant.run()
+            }
+            // Requested variant not registered — honest fail rather
+            // than silently falling back.
+            return ActionResult(
+                text: "unknown producer '\(producer ?? "?")' for "
+                    + "\(verb.canonical) + \(domain). Available: "
+                    + entry.variants.keys.sorted().joined(separator: ", "),
+                newRecordIDs: [],
+                usedEngineTool: false,
+                engineToolSucceeded: false)
+        }
         switch (verb, domain) {
         case (.synthesize, "component"):
             return runComponentSynthesize()

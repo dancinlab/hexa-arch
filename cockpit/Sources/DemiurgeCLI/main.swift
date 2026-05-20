@@ -238,7 +238,8 @@ func parseVerbArg(_ s: String) -> Verb? {
 /// matter+analyze · sscb+analyze · grid+structure (NetworkX IEEE 14-bus
 /// · κ-36 / D57 — second cohort producer · GATE_CLOSED_MEASURED honest
 /// since graph metrics are mathematical facts, absorbed=false).
-func cliAction(_ verbStr: String, _ domainArg: String?) -> Int32 {
+func cliAction(_ verbStr: String, _ domainArg: String?,
+               _ producerArg: String? = nil) -> Int32 {
     guard let verb = parseVerbArg(verbStr) else {
         FileHandle.standardError.write(
             Data(("action: unknown verb '\(verbStr)' — try one of "
@@ -249,9 +250,11 @@ func cliAction(_ verbStr: String, _ domainArg: String?) -> Int32 {
     // "general" cohort that hits the claude-CLI honest-gap path.
     let domain = domainArg ?? "general"
     let context = "CLI-invoked action — domain=\(domain)."
-    print("action: \(verb.canonical) (\(verb.plain)) · domain=\(domain) — dispatching…")
+    let producerNote = producerArg.map { " · producer=\($0)" } ?? ""
+    print("action: \(verb.canonical) (\(verb.plain)) · domain=\(domain)\(producerNote) — dispatching…")
     let result = ActionDispatch.runEngineTool(
-        verb: verb, domain: domain, context: context)
+        verb: verb, domain: domain, context: context,
+        producer: producerArg)
     print(result.text)
     print("---")
     if result.newRecordIDs.isEmpty {
@@ -456,7 +459,20 @@ case "action":
         usage()
         exit(2)
     }
-    exitCode = cliAction(args[2], args.count >= 4 ? args[3] : nil)
+    // Parse optional `--producer <name>` flag for cells with
+    // ProducerRegistry alternatives (e.g. cern + analyze →
+    // xsuite-tracking | pylhe).
+    var actionArgs = Array(args.dropFirst(2))
+    var producerArg: String? = nil
+    if let pIdx = actionArgs.firstIndex(of: "--producer"),
+       pIdx + 1 < actionArgs.count {
+        producerArg = actionArgs[pIdx + 1]
+        actionArgs.remove(at: pIdx + 1)
+        actionArgs.remove(at: pIdx)
+    }
+    let cliVerb = actionArgs.first ?? ""
+    let cliDomain = actionArgs.count >= 2 ? actionArgs[1] : nil
+    exitCode = cliAction(cliVerb, cliDomain, producerArg)
 case "list-gates":
     exitCode = listGates()
 case "gate-summary":

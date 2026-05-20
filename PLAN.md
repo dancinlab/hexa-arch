@@ -3714,3 +3714,58 @@
   **잔여 = 0** — ROI rank 1→18 모든 측정-가능 cell sweep 완료.
   실측 흡수 (parity, absorbed=true flip) 은 별 세션 — install + 측정
   + 비교 라운드.
+- 2026-05-20 — **phase κ-50 — parity round 7 agents (ROI 1→10 측정
+  검토)**. 7 parallel agent: cern+synth · scope+verify · scope+synth ·
+  energy+synth · bot+synth · space+synth · cern+analyze decision.
+  결과 (note only, flip 안 함):
+  - cern+synth: parity 100.0000% (Wiedemann/Lee FODO, rel err 1e-10)
+    ⭐ flip 후보
+  - scope+verify: 4/5 PASS (Airy 100%, FWHM 98.39%); WebbPSF env data
+    부재로 skip; flip 보류
+  - scope+synth: 87-94% FAIL (substrate metric mismatch, 3 root cause);
+    flip 보류
+  - energy+synth: parity 6e-6% vs scipy.linprog (machine ε); data
+    honesty 갭, flip 보류
+  - bot+synth: parity 0.04%/0.0003% vs Spong; URDF hermetic, flip 보류
+  - space+synth: parity ≤1e-4% vs Tsiolkovsky; SLSQP walked to bound,
+    flip 보류
+  - cern+analyze decision: 4 options → Option C (ProducerRegistry)
+    추천 + 4 open questions.
+  모든 노트 demiurge/inbox/notes/parity_attempt_*.md 합쳐서 main 에
+  push (a72c2d7).
+- 2026-05-20 — **phase κ-51 — cern+synth absorbed=true flip + Producer
+  Registry (cern+analyze pylhe/xsuite alternatives) — D74**. 사용자
+  게이트 "go" 로 두 작업 동시 진행.
+  **(1) cern+synth flip**: hexa-lang origin/main `79a8f6f8` —
+  substrate xsuite_optics.py 에 `_analytic_fodo_twiss` (pure Python,
+  Wiedemann §6.2 + §7.4 closed-form, no numpy/xsuite import) 추가.
+  Xsuite 결과와 비교, 양쪽 rel err ≤ 1e-6 통과 시 GATE_CLOSED_MEASURED
+  + absorbed=true 로 emit. macOS local 실행 검증: β_x_max rel err
+  2.57e-14, Q_x rel err 4.11e-14 (tolerance 1e-6 의 8 orders 안쪽) →
+  GATE flipped. scope_caveats 가 "this is ALGORITHM-level closure
+  (Xsuite ⇄ Wiedemann/Lee), NOT measured-lattice closure" 명시 (g3).
+  chip §B+§D 의 dynamic absorbed=true 이후 cern 도메인 첫 dynamic
+  흡수.
+  **(2) ProducerRegistry (D74)**: 사용자 가운드 "C" 답신 = Option C +
+  defaults Q2 xsuite-tracking · Q3 CLI-only · Q4 governance YES.
+  - `cockpit/Sources/DemiurgeCore/Loaders/ProducerRegistry.swift`
+    (신규) — `ProducerVariant` · `ProducerEntry` · `ProducerCellKey` +
+    entries dict. 첫 cell `(cern, analyze)` = variants
+    {xsuite-tracking (default), pylhe}.
+  - `cockpit/Sources/DemiurgeCore/Loaders/CernAnalyzeXsuiteProducer.
+    swift` (신규) — elegant_tracking.py spawn (live tree missing 시
+    honest skip).
+  - ActionDispatch.runEngineTool 에 `producer: String?` arg 추가 +
+    registry lookup 우선 (등록 안 된 cell 은 기존 switch 잔존,
+    additive).
+  - DemiurgeCLI 가 `--producer <name>` flag 파싱 → 전파.
+  - AGENTS.tape `@N n_cern_producer_alternatives` 추가 (project-
+    governance principle).
+  - design.md D74 audit-trail.
+  **3-경로 smoke test**: `action analyze cern` (default xsuite-
+  tracking, honest-skip on missing live-tree substrate), `--producer
+  pylhe` (실제 record emit n_events=100), `--producer foo` (Available
+  list 친절 안내 + g3 honest no-record).
+  build: xcrun swift build --product DemiurgeCLI OK (2.03s).
+  g3 — cern+synth flip 만 진짜 GATE_CLOSED_MEASURED·absorbed=true;
+  registry 자체는 측정 없음, 두 variant 다 GATE_OPEN 유지.
