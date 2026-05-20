@@ -319,3 +319,63 @@ LHS, `$adff` set/reset port, function-call inlining) all need new
 Cross-session resumption point updated: `hexa-lang origin/main`
 HEAD `0fe271da`. selftest T31-T38 form a regression net for the
 primitive family.
+
+## UPDATE 2026-05-20 (j) — Steps 4/4b partial+verified, Step 4c honest abandon (10 PR cumulative)
+
+Continued past update (i) to attempt Steps 4 (dynamic indexing),
+4b ($adff set/reset), 4c (function-call inline). Two PRs landed,
+one step measured-as-already-covered, one step honestly abandoned:
+
+| PR | merge | step | what landed | selftest |
+|----|-------|------|-------------|----------|
+| #133 | `09072f8e` | #4 partial — static idx | with-else indexed-LHS cond-mux (T39) | 43/43 |
+| #135 | `24422976` | #4b verified — no new code | T40/T41: reset shape already covers via existing with-else cond-mux (PR #115/#128 lowers to `$mux+$dff`; ABC tech-map handles `$mux+$dff` → SKY130 `dfrtp`) | 45/45 |
+
+Cumulative this session: **10 PRs on `hexa-lang origin/main`**,
+`read_verilog` selftest **34 → 45/45 PASS, regression 0**.
+
+**Step 4c — Function-call inline at expression site — abandoned**
+(honest g3 — not attempted): measured the implementation cost as
+multi-day with high single-session fail-risk:
+- `_rv_elab_primary` would need a new `funcs` parameter; 12+ caller
+  sites in `_rv_elab_expr`/`_rv_elab_*` need symmetric updates.
+- Call-site detection: `name ( args )` token sequence in the
+  expression elab path → currently treated as a wire reference and
+  fails with "name not found" → the cleanest signal that inline is
+  unimplemented.
+- Arg-substitution + body token re-elab against the call-site SymTab.
+
+This was sized as a separate-session sub-step rather than a partial
+attempt, per fire-gate predict-first (the partial attempt could
+leave call-site detection without inline emission — measurably worse
+than the current honest-fail behaviour).
+
+**Step 4 — Dynamic indexing — primary blocker remains.** PR #133's
+*static* indexed-LHS (with-else) is a measurable base but does not
+move router_d4 coverage. The actual router_d4 blocker is
+`fifo_head[grant_in]` etc. where the index is a runtime wire —
+lowering needs yosys-style `$shiftx` per-bit selection or a Memory
+cell (`$memrd`/`$memwr`). Multi-day, separate session.
+
+router_d4 coverage = **still 0%** (predicted, not re-fired). The
+synth pipeline (read_verilog → passes → abc_map → area) cannot
+emit a non-empty mapped BLIF for router_d4 until dynamic indexing
++ function-inline land. `rfc_006 §5` `measurement_gate = OPEN`,
+`absorbed = false` stays.
+
+**Stale branch cleanup completed this session**: 10 merged feature
+branches deleted from origin + local (`rfc006-yosys-rv-scope-clean`,
+`rfc006-yosys-condmux`, `rfc006-yosys-condmux-comb`,
+`rfc006-yosys-condmux-noelse`, `rfc006-yosys-condmux-mstest`,
+`rfc006-yosys-condmux-multilhs`, `rfc006-yosys-condmux-indexed`,
+`rfc006-yosys-condmux-welse-multi`, `rfc006-yosys-condmux-idx-all`,
+`rfc006-yosys-condmux-reset-test`) + 10 worktrees removed. The
+in-tree `rfc006-yosys-rv-scope` local ref (HEAD `389a6d92`,
+preserves the original 13-commit history that became PR #107) is
+kept as audit trail.
+
+Cross-session resumption point: `hexa-lang origin/main` HEAD
+`24422976`. Selftests T31-T41 form the cond-mux primitive's
+regression net. Next session's two real blockers are
+**dynamic indexing** and **function-call inline** — both multi-day
+work for a dedicated future session.

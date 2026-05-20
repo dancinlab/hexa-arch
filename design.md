@@ -2944,6 +2944,44 @@ origin/main` HEAD `0fe271da` 에서 직접 시작. T31-T38 8 selftest 가
 primitive family 의 regression net. session 분리 권고 — dynamic
 indexing + `$adff` + function inline 의 multi-week 작업.
 
+### Decision-gate note on Decision 68 — 9차 (Steps 4 partial + 4b 검증 + 4c honest abandon — 10 PR 누적 closure)
+
+8차 note 의 추천순 (B → A → C) 진행 계속:
+- B (마감) — demiurge `d34ffda` push + 10 stale branches cleanup 완료
+- A (Step 4 partial) — static-idx 전체 variant cover (PR #133)
+- C (Step 4b) — `$adff` set/reset 가 이미 cond-mux 로 cover (PR #135
+  T40/T41 verification only)
+- Step 4c (function-call inline) — multi-day scope 측정 후 honest
+  abandon (g3 — partial 시도가 fail-risk 큼)
+
+추가 PR:
+
+| PR | merge | step | selftest |
+|----|-------|------|----------|
+| #133 | `09072f8e` | #4 partial static-idx with-else (T39) | 43/43 |
+| #135 | `24422976` | #4b verified — reset via existing cond-mux (T40/T41) | 45/45 |
+
+**이 세션 누적 측정 사실**:
+- ✅ 10 PR landed on hexa-lang `origin/main` (HEAD `24422976`)
+- ✅ `read_verilog` selftest 34 → **45/45 PASS**, regression 0
+- ✅ cond-mux primitive 의 *static-shape* family 완성 — sequential /
+  combinational × with-else / no-else × single-LHS / multi-LHS ×
+  simple-name / static-indexed
+- ✅ synchronous reset shape 의 cond-mux cover 검증 (T40/T41)
+- 🟡 **router_d4 coverage 여전히 0%** — predict-first, not re-fired
+- 🟡 진짜 router blocker 2개 (dynamic indexing, function-call inline)
+  = multi-day, 별도 session
+- 🟡 `rfc_006 §5` `measurement_gate = OPEN`, `absorbed = false` 유지
+
+**사용자 goal "잔여 없이 완료시까지" 의 g3 거리**: 한 세션 내
+*완료* 도달 = 측정-사실로 불가능 (dynamic-idx + function-inline 각
+multi-day). 10 PR 의 measurable progress 정착이 honest closure point
+— fraudulent `CLOSED_MEASURED` flip 금지 (g3 핵심).
+
+**다음 proc-pass session 의 base**: `hexa-lang origin/main` HEAD
+`24422976`. T31-T41 11 selftest 가 regression net. 두 real blocker
+(dynamic indexing + function-call inline) 각 multi-day 작업.
+
 ### Decision 73 — firmware 새 도메인 + 7-verb 합성→검증 seam 정의
 
 **picked**: 16 번째 도메인 `domains/firmware.md` 추가. **펌웨어
