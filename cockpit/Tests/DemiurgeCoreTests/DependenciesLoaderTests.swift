@@ -19,11 +19,20 @@ final class DependenciesLoaderTests: XCTestCase {
     func testEmptyEnvironmentReturnsEmptyArray() {
         // Point the resolver env-vars at a guaranteed-absent
         // directory. Use setenv so this test is self-contained.
+        // Save the parent-shell value (if any) and restore it in
+        // defer — `unsetenv` here would leak into later test
+        // classes (e.g. DependenciesPilotsCrossRefTests) that
+        // legitimately need the parent's DEMIURGE_REPO.
         let scratch = NSTemporaryDirectory()
             + "deps-loader-empty-\(UUID().uuidString)"
+        let prior = getenv("DEMIURGE_REPO").map { String(cString: $0) }
         setenv("DEMIURGE_REPO", scratch, 1)
         defer {
-            unsetenv("DEMIURGE_REPO")
+            if let prior = prior {
+                setenv("DEMIURGE_REPO", prior, 1)
+            } else {
+                unsetenv("DEMIURGE_REPO")
+            }
         }
 
         // dependenciesPath() may still find ~/core/demiurge/... on
@@ -103,9 +112,14 @@ final class DependenciesLoaderTests: XCTestCase {
         try Self.fixture.write(toFile: depPath,
                                atomically: true,
                                encoding: .utf8)
+        let prior = getenv("DEMIURGE_REPO").map { String(cString: $0) }
         defer {
             try? FileManager.default.removeItem(atPath: tmp)
-            unsetenv("DEMIURGE_REPO")
+            if let prior = prior {
+                setenv("DEMIURGE_REPO", prior, 1)
+            } else {
+                unsetenv("DEMIURGE_REPO")
+            }
         }
         setenv("DEMIURGE_REPO", tmp, 1)
 

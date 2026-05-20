@@ -3690,6 +3690,66 @@ g3 — 새 SSOT 추가만, 기존 record / gate / absorbed schema 변경 0.
 sibling 5 repo 는 100% READ-ONLY (FileManager + String contents only,
 write/edit 0).
 
+### Decision 98 — `DEPENDENCIES.demi ↔ PILOTS.demi` dual-source consistency CI
+
+**picked**: 양 SSOT 사이 cross-ref drift 를 자동 alert 하는 신규
+test class `DependenciesPilotsCrossRefTests` (3 XCTest method) — D97
+의 sibling link-integrity verifier 와 같은 형태로, demiurge 내부 두
+.demi SSOT 의 정합 자체를 CI gate 로 끌어올림. 데이터 = 기존 두
+.demi 파일 그대로; 신규 코드 = 검증 logic 만 (type / loader 변경 0,
+D86 g_no_hardcoded_data 보존).
+
+**rationale**:
+- D88 (DEPENDENCIES.demi 이동) + D90 (PILOTS.demi 8-field) + D93
+  (pattern-pilot.md 양쪽 유지 mutual cross-link) 이후 양 SSOT 가
+  drift 할 수 있는 표면이 3 개 — already-ported deps 가 pilot row 가
+  없거나, pilot kernel_path 가 hexa-lang 디스크에 없거나, pilot 의
+  8-field 가 비거나. 사람 audit 만으로는 안전하지 않다 (D97 의 추론
+  과 동일 — drift 감지 자동, 해소는 사람 결정).
+- D80 honesty floor — file 부재 / non-main hexa-lang branch / clone
+  부재 시 XCTSkip 으로 명시적 surface (XCTFail false-positive 0,
+  silent pass 0). 기존 DependenciesLoaderTests / PilotLoaderTests 의
+  `setenv` defer 이 부모-shell DEMIURGE_REPO 를 unset 하던 hygiene
+  bug 도 동일 PR 에서 save+restore 로 교정.
+- D86 (`g_no_hardcoded_data`) — 두 SSOT 의 row 모두 declarative .demi,
+  Swift 신규 코드 = 검증 logic 만. 새 row 추가 = .demi 한 section,
+  Swift 변경 0.
+
+**적용**:
+1. `cockpit/Tests/DemiurgeCoreTests/DependenciesPilotsCrossRefTests.
+   swift` (신규) — 3 XCTest method:
+   * `testEveryAlreadyPortedDependencyHasMatchingPilot` —
+     DEPENDENCIES.demi 의 `portable_status="already-ported"` × `kind=
+     "kernel"` row 가 PILOTS.demi 에서 (id-suffix 매칭 `kernel-<X>`
+     ↔ `pilot-<X>` OR path-directory 매칭) 발견되어야. allowlist:
+     `kernel-logic_synth` (Yosys 흡수가 D90 PILOTS.demi seed 이전).
+     FAIL with concrete row id list.
+   * `testEveryPilotKernelPathExistsAsHexaLangFile` — PILOTS.demi 의
+     each `kernel_path` + `parity_test` 가 sibling hexa-lang clone
+     디스크에 존재. env priority: `$HEXA_LANG_REPO` →
+     `$DEMIURGE_HEXA_LANG` → `~/core/hexa-lang`. clone non-main
+     branch / 부재 시 XCTSkip (working-tree 가 origin/main 과 다를
+     수 있다 — PILOTS.demi 는 origin/main anchor 이므로 unfair). FAIL
+     with concrete missing path list otherwise.
+   * `testEveryPilotSchemaHasAllRequiredFields` — PILOTS.demi 의 each
+     row 가 D90 8-field 모두 보유 (kernel_path / parity_test /
+     parity_method / parity_tolerance / parity_status / hexa_lang_sha
+     / algorithm_ref non-empty + hexa_lang_sha 가 7-12 char hex);
+     `scope_notes` 만 soft (empty → stderr warn, XCTFail 안 함).
+2. `cockpit/Tests/DemiurgeCoreTests/DependenciesLoaderTests.swift` +
+   `PilotLoaderTests.swift` (수정) — fixture-driven test 의 `defer
+   { unsetenv("DEMIURGE_REPO") }` 를 save+restore 로 교정. test-
+   class 간 env-leak 차단 (D80 test-hygiene). type / loader 변경 0.
+3. swift build PASS / swift test PASS (31/31; CrossRef 3/3 —
+   DEMIURGE_REPO + HEXA_LANG_REPO 설정 + hexa-lang on main 시 3/3
+   real walk 통과; 미설정 / non-main branch 시 3/3 XCTSkip + 명시적
+   sliver — silent pass 0).
+
+g3 — 검증 logic 신규, 두 .demi 파일 변경 0, 기존 type / loader 변경
+0. hexa-lang sibling 100% READ-ONLY (FileManager + String contents
+only). Yosys/ABC `kernel-logic_synth` 가 PILOTS.demi 에 row 없음 = 알려진
+gap (D90 seed 이전 흡수); allowlist 로 surface, 향후 PR 로 정합화.
+
 ### Decision 99 — cockpit `HexaNativeParityChip` 시각화 (D86 정합, render-only)
 
 **picked**: 5 cell record (Ufo / Fusion / Energy / Aura / ChipAnalyze)

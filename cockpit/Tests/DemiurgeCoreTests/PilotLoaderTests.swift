@@ -20,8 +20,12 @@ final class PilotLoaderTests: XCTestCase {
         // directory. Use setenv so this test is self-contained.
         let scratch = NSTemporaryDirectory()
             + "pilot-loader-empty-\(UUID().uuidString)"
+        let prior = getenv("DEMIURGE_REPO").map { String(cString: $0) }
         setenv("DEMIURGE_REPO", scratch, 1)
-        defer { unsetenv("DEMIURGE_REPO") }
+        defer {
+            if let prior = prior { setenv("DEMIURGE_REPO", prior, 1) }
+            else { unsetenv("DEMIURGE_REPO") }
+        }
 
         // pilotsPath() may still find ~/core/demiurge/... on a dev
         // box. The honest assertion is "either nil OR a path that
@@ -80,7 +84,10 @@ final class PilotLoaderTests: XCTestCase {
     """
 
     /// Helper: write fixture to tmp + point DEMIURGE_REPO at it,
-    /// return loaded rows.
+    /// return loaded rows. Caller MUST `restoreDemiurgeRepoEnv()`
+    /// in a defer block — bare `unsetenv` would leak parent-shell
+    /// DEMIURGE_REPO to later test classes.
+    nonisolated(unsafe) private static var priorDemiurgeRepoSnapshot: String?? = nil
     private func loadFixture() throws -> [PilotEntry] {
         let tmp = NSTemporaryDirectory()
             + "pilot-loader-fix-\(UUID().uuidString)"
@@ -92,12 +99,21 @@ final class PilotLoaderTests: XCTestCase {
         try Self.fixture.write(toFile: demiPath,
                                atomically: true,
                                encoding: .utf8)
+        Self.priorDemiurgeRepoSnapshot =
+            getenv("DEMIURGE_REPO").map { String(cString: $0) }
         setenv("DEMIURGE_REPO", tmp, 1)
         return PilotLoader.loadAll()
     }
 
+    private func restoreDemiurgeRepoEnv() {
+        guard let snap = Self.priorDemiurgeRepoSnapshot else { return }
+        if let v = snap { setenv("DEMIURGE_REPO", v, 1) }
+        else { unsetenv("DEMIURGE_REPO") }
+        Self.priorDemiurgeRepoSnapshot = nil
+    }
+
     func testFixtureParsesThreeRowsWith8FieldsEach() throws {
-        defer { unsetenv("DEMIURGE_REPO") }
+        defer { restoreDemiurgeRepoEnv() }
         let rows = try loadFixture()
         XCTAssertEqual(rows.count, 3,
             "fixture has 3 rows; loader read \(rows.count)")
@@ -131,7 +147,7 @@ final class PilotLoaderTests: XCTestCase {
     }
 
     func testFindByKernelPathExactMatch() throws {
-        defer { unsetenv("DEMIURGE_REPO") }
+        defer { restoreDemiurgeRepoEnv() }
         let rows = try loadFixture()
 
         // exact-match path → row returned
@@ -148,7 +164,7 @@ final class PilotLoaderTests: XCTestCase {
     }
 
     func testFindByIdExactMatch() throws {
-        defer { unsetenv("DEMIURGE_REPO") }
+        defer { restoreDemiurgeRepoEnv() }
         let rows = try loadFixture()
 
         let hit = PilotLoader.find(id: "pilot-event_queue", in: rows)
