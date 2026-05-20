@@ -7,15 +7,21 @@
 > (entries (o)-(u) 누적, 측정-fact 적재 SSOT)
 > **governance**: g3 — 측정 전엔 `CLOSED_MEASURED` flip 금지
 
-## Status (snapshot 2026-05-20)
+## Status (snapshot 2026-05-20, post-(x))
 
 - `measurement_gate = OPEN`
 - `absorbed = false`
 - gate target area ∈ [58,675, 64,851] µm² (±5 % of oracle 61,762.99)
-- oracle 재현 procedure pinned (substrate yosys 0.65 `synth` macro +
-  flat_v2k/router_d4.v + SKY130 tt-corner Liberty)
-- hexa-native vs substrate gap on same input file = **12,070 cells (99.7 %)**
-  — 거의 다 sequential (DFF + MUX)
+- both oracles bit-exact reproducible (d4 61,762.99 / d6 93,608.53 / ratio 1.5156×)
+- hexa-native cell-tally on flat_v2k/router_d4.v:
+  - post-#4g landing: **55 cells (was 35), all combinational, 0 sequential**
+  - gap to substrate: **12,050 cells (99.5 %)**, 100 % of sequential gap remains
+
+**closure path (per g3):** measurement_gate 는 hexa-native end-to-end
+synth → area 가 [58,675, 64,851] µm² 안에 들어와야 close. 현재
+hexa-native 는 sequential cells = 0, 즉 cell-emit 의 ~21 % 만 도달
+(comb-only 부분 일부). 100 % closure 까지 multi-day work — 다음
+sub-steps 가 incremental gap 축소.
 
 ## Checklist
 
@@ -42,6 +48,7 @@
   - file: `self/codegen_c2.hexa` L1278 + L1338 + L7899 + L7935
   - effect: sed workaround 제거, multi-file driver pattern 기본 지원
   - signal: 기존 1500+ selftest 영향 0 (within-TU rename), 새 multi-file link 가 sed 없이 동작
+  - blocker: codegen 변경은 hexa-cc binary rebuild 필요 (bootstrap chain). multi-session.
 - [x] **#4g function-body preceding-stmts inline** ✓ LANDED (hexa-lang PR #202 `41c7b1fc`)
   - new helper `_rv_collapse_func_body_with_prefix` (~50 lines) — handles reg/integer/wire decls + begin/end wrap + blocking-assigns + SSA-style substitution into existing cascaded-if collapse
   - T50 selftest: route_xy-shaped body inlines to `$mux(S=$gt(h,0), A=0, B=1, Y=r)` — exact-count 1 × $gt + 1 × $mux
@@ -49,17 +56,29 @@
   - call-site `grant_out = route_xy(...)` now inlines; emit unblocks once #4h bridges the LHS-indexing gap
 - [ ] **#4h multi-LHS body dyn-idx emit** (router L99-100 reset-cascade의 indexed LHS)
   - signal: sequential cells > 0 (always@posedge body 시작)
+  - sub-steps:
+    - **#4h-a**: multi-LHS path 에 indexed-LHS (static const idx) 인식 (~50 line, L3074 honest gap 메우기)
+    - **#4h-b**: dyn-idx LHS (wire-indexed) multi-LHS — PR #174 single-stmt 의 multi-LHS context 확장
+    - **#4h-c**: for-in-always static unroll (router L101+L108+L115 의 `for (pp=0; pp<P; pp=pp+1)` 처리)
+    - **#4h-d**: nested-if inside always-body multi-stmt (router L109 `if (in_valid[pp] && !fifo_full[pp])`)
 - [ ] **#4i with-else dyn-idx emit** (L98-123 with-else reset structure)
   - signal: sequential cells ≈ N × P (P-fold sequential emit)
-- [ ] **write_verilog chain via yosys.c dispatcher link**
-  - 3-file static collision 패턴 (rv + rtlil + yosys + write_verilog) 모두 sed-rename
-  - signal: hexa-native 의 RTLIL → substrate yosys 가 read 가능한 Verilog
+  - dependency: #4h sub-steps all landed first
+- [~] **write_verilog chain via driver link** — partial (callable + output 생성 OK, substrate-compat 아님)
+  - 4-file link 검증: drv + rv + rtlil + wv + runtime → exit=0
+  - 출력 router_d4_hexa_out.v 219 lines 생성
+  - **블로커**: width range 처리 안 됨 (`wire [;`, `wire :;`, `wire 0;` 등 invalid tokens) — substrate yosys 가 read 못 함
+  - 별도 fix 필요: stdlib/kernels/logic_synth/write_verilog.hexa 의 wire-emit 가 width [hi:lo] 정확히 emit + name escape
 - [ ] **share/freduce 또는 ABC -dff 옵션 통합** (comb-side oracle parity)
   - oracle 의 12k 차이 = `synth` macro 의 logic-sharing optimizations
   - 옵션: hexa-native passes 가 자체 share/freduce 구현 · 또는 substrate yosys 에 defer
+  - dependency: #4h/#4i landed + write_verilog wire emit fix (substrate handoff 가능해야 함)
 - [ ] **re-measure router_d4 area on flat_v2k via hexa-native end-to-end**
   - target: ∈ [58,675, 64,851] µm² (±5 % of 61,762.99)
+  - dependency: all above. multi-day work — 위 sub-steps 들 landed 후만 가능
+  - alt: substrate-yosys-as-tail-pass (hexa-native frontend → substrate `synth` macro tail) — bridges share/freduce parity 자동
 - [x] **router_d6 oracle bit-exact 재현** ✓: 93,608.528000 µm² · ratio 1.5156× (oracle 일치) — substrate measurement reference 완전 fixed
+- [x] **cell-tally re-measure post-#4g** ✓ (handoff (x)): 35 → 55 cells (+20 comb), sequential still 0, gap 99.5%
 - [ ] **§5 measurement_gate = CLOSED_MEASURED · absorbed=true** (g3 — only after measurement passes)
 
 ## Schedule (rough)
