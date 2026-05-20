@@ -963,12 +963,13 @@ demiurge = domain-shared (도메인 1개 + 프로젝트 N 개 포인터). 시뮬
 rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkeeping 정직성
 표면.
 
-### 11.4 G1–G8 implementation checklist
+### 11.4 G1–G12 implementation checklist
 
-> 모두 미진행 (`[ ]`). 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry
-> + design.md D-block + 영향 파일 commit 으로 묶을 것. 라운드 단위
-> 묶음 commit 가능 (G1+G3+G5 한 commit, G2+G7 한 commit, G4+G6+G8
-> 한 commit).
+> G1–G8 라운드 1–3 (`fundamental` / `honesty surface` / `cross-domain
+> audit`) 는 κ-62 (3322523) 에서 전부 `[x]` 완료. G9–G12 라운드 4
+> (`hexa-native parity surface` — D80 sweep) 는 κ-65 (5e9f6dea) 에서
+> 진행. 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md
+> D-block + 영향 파일 commit 으로 묶을 것.
 
 **라운드 1 — fundamental (D78 + sibling + falsifier schema)**
 
@@ -1173,6 +1174,90 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - alien-disc-mk1 + aura-clip-mk1 둘 다 `σ·φ = 24` PASS
       (hexa-ufo / hexa-aura README 의 invariant 자동 검증)
 
+**라운드 4 — hexa-native parity surface (D80 sweep, κ-65)**
+
+- [x] **G9.** `HexaNativeParityRef` 8-field schema (D80 §4.1 contract)
+  - **κ-65** (5e9f6dea): `UfoVerifyRecord.swift` 의 `HexaNativeParityRef`
+    가 connection-plan §4.1 의 8-field shape 으로 확장 — `kernelPath` /
+    `parityTest` / `parityMethod` (7-case enum: substrateToSubstrate /
+    analyticOracle / pythonCompanionSeedMatch / roundtripIdentity /
+    heapqOracleExact / handMirroredPython / other) / `parityTolerance`
+    (+non-numeric oracle note field) / `parityStatus` / `hexaLangSHA` /
+    `scopeNotes` / `relErr`. 기존 (ref / relErr / tolerance) trio 는
+    on-disk JSON consumer 부재 audit 후 retire.
+  - deps: G5 (`FalsifierEntry` typed Codable pattern 전례)
+  - carriers (5):
+    - `UfoVerifyRecord` (선행 보유 — schema upgraded inline)
+    - `EnergyVerifyRecord` (solar pilot, pvlib_clearsky path)
+    - `FusionVerifyRecord` (mc_transport pilot, illustrative MC)
+    - `AuraVerifyRecord` (dft_naive pilot)
+    - `ChipAnalyzeRecord` (event_queue future consumer, noc_sim)
+  - exit:
+    - 5 cell-record carrier 모두 8-field shape 으로 compile PASS
+    - `swift test` 3/3 PASS (DependenciesLoaderTests)
+
+- [x] **G10.** `DependenciesLoader` — 44-row cross-repo SSOT consumer
+  - **κ-65** (5e9f6dea): `Loaders/DependenciesLoader.swift` 신규 —
+    `hexa-lang/domains/DEPENDENCIES.demi` (44-row audit SSOT) 를
+    `DemiParser` 로 읽어 typed `DependencyEntry` 로 project. `Weight` /
+    `PortableStatus` / `Kind` enum 이 `.demi` vocab mirror.
+    `inferGateType(for:)` 가 §3.1/§3.2 contract 구현 (nonportable →
+    `hexaNativeAbsent`, heavy-port → `hexaNativeFuture`). Path resolver
+    는 `DEMIURGE_HEXA_LANG` → `DEMIURGE_REPO/../hexa-lang` →
+    `~/core/hexa-lang` 순. Honesty floor: SSOT 부재 시 빈 array +
+    stderr warning (no Swift hardcoded fallback, D86 g_no_hardcoded_data
+    준수, `ProducerLoader` 패턴 일치).
+  - deps: G2 (`GateType` 분류) + D85 `ProducerLoader` 패턴 + D86
+  - new files:
+    - `cockpit/Sources/DemiurgeCore/Loaders/DependenciesLoader.swift` (~230 LOC)
+    - `cockpit/Tests/DemiurgeCoreTests/DependenciesLoaderTests.swift` (3 cases)
+  - reference SHA pin: hexa-lang origin/main =
+    `1a55599c42513d58fb503c1876441e6665413b64` (κ-65 시점 fetch read-only)
+  - exit:
+    - `testEmptyEnvironmentReturnsEmptyArray` / `testFixtureParsesFourRows
+      WithEnumsAndKindSplit` / `testGateTypeInferenceContract` PASS
+
+- [x] **G11.** `GateType.hexaNativeFuture` (heavy-port bucket)
+  - **κ-65** (5e9f6dea): `GateType.swift` 에 `hexaNativeFuture` case
+    추가 — 기존 `hexaNativeAbsent` (영구 부재) 와 분리. `hexaNativeFuture`
+    는 "포팅 예정, 무게 큼" (heavy-port) bucket — `DependenciesLoader.
+    inferGateType(for:)` 가 `PortableStatus.heavyPort` row 를 여기로
+    매핑. `hexaNativeBlocked` predicate 가 두 case 모두 cover (G6/D80
+    cascade 의 honest cap). SkippedCellsDashboard color map: yellow
+    (future) / orange (absent) — exhaustive switch 갱신.
+  - deps: G7 (`GateType` enum) + G2 (`SkippedCellsDashboard` exhaustive)
+  - edit:
+    - `Models/GateType.swift` — case + Korean label "hexa-native 포트
+      예정 (heavy-port)" + `hexaNativeBlocked` 확장
+    - `Views/SkippedCellsDashboard.swift` — exhaustive switch color
+  - exit:
+    - `swift build` PASS — exhaustive switch 누락 없음
+
+- [x] **G12.** hexa-lang substrate fix — codegen param-shadow + `wrap_pi`
+  - **a272c9c4** (hexa-lang): `self/codegen_c2.hexa` 의 fn-ref auto-wrap
+    5 sites (sort_by arg ×2, struct field, user-fn call arg, indirect-
+    call arg) 가 local lexical scope 무시하고 stdlib top-level fn 만
+    체크 → param `e: float` 등 collide name 이 broken C emit
+    (`hexa_fn_new((void*)e, 0)`) 으로 clang error. Centralized
+    `_gen2_should_autowrap_fnref(name)` 헬퍼가 current-fn params/lets
+    체크. Sibling: `stdlib/core/math/wrap_pi.hexa` 신규 primitive
+    (Python `math.fmod` parity, ±π 보존) + 12-case unit test PASS.
+    Orbital Kepler pilot (#5b inbox/notes) 의 workaround `e → ecc`
+    rename 회수 가능.
+  - **4389da0c** (hexa-lang): inbox pilot-pattern 표가 codegen-gotcha-A
+    discovery 통합 — cross-repo pilot 패턴 SSOT 갱신.
+  - deps: 없음 (sibling-repo PR-only fix, demiurge consumer 변경 0)
+  - new files (hexa-lang):
+    - `stdlib/core/math/wrap_pi.hexa` (primitive)
+    - `stdlib/core/math/wrap_pi_test.hexa` (12 falsifiers)
+    - `inbox/notes/2026-05-20-codegen-gotcha-A-…` (post-mortem)
+  - edit (hexa-lang):
+    - `self/codegen_c2.hexa` (helper + 5 wrap-site replacement)
+    - `stdlib/kernels/orbital/kepler_2body_kernel.hexa` (use stdlib wrap_pi)
+  - exit:
+    - hexa-lang `hexa_v2` byte-stable fixpoint regen PASS
+    - `wrap_pi` 12-case unit test 12/12 PASS
+
 ---
 
 ## Log
@@ -1200,3 +1285,12 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
   provisionally requires the hexa-native parity port. cern+synth
   (κ-51) reclassified as *provisional* (scope_caveats 이미 명시 한
   형식의 typed 화는 후속 phase).
+- 2026-05-20 — §11.4 G1–G8 → G1–G12 확장. κ-62 (3322523) 에서 G1–G8
+  all `[x]` 마감 완료 audit, 헤딩 노트 갱신. κ-65 D80 sweep
+  (5e9f6dea) 산출물 cover 를 위한 Round 4 (G9–G12) 추가: G9
+  `HexaNativeParityRef` 8-field schema + 5 cell-record carrier, G10
+  `DependenciesLoader` 의 44-row cross-repo SSOT consumer (DEPENDENCIES.
+  demi), G11 `GateType.hexaNativeFuture` (heavy-port bucket, exhaustive
+  switch 갱신), G12 hexa-lang sibling-repo fix (a272c9c4 codegen
+  param-shadow + `stdlib/core/math/wrap_pi.hexa` primitive · 4389da0c
+  pilot-pattern reconcile).
