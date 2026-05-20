@@ -79,7 +79,7 @@ sub-steps 가 incremental gap 축소.
 - [x] **#4h-a multi-LHS body static-idx LHS** ✓ LANDED (PR #216 `2bcb8b72`, selftest 65/65 PASS) — first sequential emit primitive
 - [x] **첫 sequential cells emit 확인** ✓: `test_4h_a.v` (multi-LHS no-else indexed-LHS) → 4 cells: 2×$mux + 2×$dff (handoff (aa) measurement)
 - [x] **#4h-b multi-LHS body dyn-idx LHS** ✓ LANDED (PR #220 `85bea9a5`) — per-element ($eq+$and+$mux+$dff)×bound chain in multi-LHS context. T52 selftest: 4×$eq + 4×$and + 4×$mux + 4×$dff for 2 statements × bound=2
-- [~] **write_verilog $dff behavioural emit** — in-tree verified (selftest 13/13 PASS), PR #219 OPEN with conflict — 다음 session resolve
+- [x] **write_verilog $dff behavioural emit** ✓ LANDED (PR #219 `c20b30b4`, selftest 13/13, conflict resolved + admin-merge) — substrate handoff complete for $dff sequential cells
 - [ ] **§5 measurement_gate = CLOSED_MEASURED · absorbed=true** (g3 — only after measurement passes)
 
 ## Schedule (rough)
@@ -101,6 +101,7 @@ sub-steps 가 incremental gap 축소.
 
 (append-only, latest 위에)
 
+- 2026-05-20 — PR #219 landed: hexa-lang `c20b30b4` (write_verilog $dff behavioural emit, sibling conflict resolved). **9 PRs cumulative**. substrate handoff complete for $dff sequential cells
 - 2026-05-20 — #4h-b landed: hexa-lang PR #220 `85bea9a5` (multi-LHS body dyn-idx LHS + T52, per-element $eq+$and+$mux+$dff chain). 8 PRs cumulative
 - 2026-05-20 — #4h-a landed: hexa-lang PR #216 `2bcb8b72` (multi-LHS body static-idx LHS + T51, selftest 65/65). First sequential emit primitive
 - 2026-05-20 — sequential emit confirmed: test_4h_a.v (multi-LHS indexed-LHS) → 2×$mux + 2×$dff cells. milestone
