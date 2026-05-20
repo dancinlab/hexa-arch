@@ -39,6 +39,8 @@ struct RtscScene: NSViewRepresentable {
         // Rings are drawn inner → outer so RealityKit's transparent
         // pass renders the cryostat last; the inner solid rings
         // become visible through the translucent shell + bore.
+        // The HTS Coil ring is rendered translucent (forced to 0.40)
+        // so the helix winding inside is visible.
         for ring in geometry.rings {
             let rOuter = Float(ring.outerRadiusMM) * mmToM
             let rInner = Float(ring.innerRadiusMM) * mmToM
@@ -59,9 +61,13 @@ struct RtscScene: NSViewRepresentable {
                 || ring.material.contains("stainless")
                 || ring.material.contains("REBCO")
             material.metallic = .init(floatLiteral: isMetal ? 0.85 : 0.1)
-            if ring.opacity < 0.999 {
+            // The HTS Coil ring is forced translucent so the helix
+            // winding inside it is visible.
+            let isHTSCoil = ring.name == "HTS Coil"
+            let effectiveOpacity: Double = isHTSCoil ? 0.40 : ring.opacity
+            if effectiveOpacity < 0.999 {
                 material.blending = .transparent(
-                    opacity: .init(floatLiteral: Float(ring.opacity)))
+                    opacity: .init(floatLiteral: Float(effectiveOpacity)))
             }
             let entity = ModelEntity(mesh: mesh, materials: [material])
             entity.position = [0, 0, 0]
@@ -70,6 +76,34 @@ struct RtscScene: NSViewRepresentable {
             entity.transform.rotation = simd_quatf(
                 angle: .pi / 2, axis: [0, 0, 1])
             root.addChild(entity)
+
+            // Render the helix winding inside the HTS Coil ring.
+            if isHTSCoil {
+                let pathRadius = 0.5 * (rOuter + rInner)
+                let tubeRadius: Float = 0.002    // 2 mm REBCO-tape proxy
+                let turns = Float(geometry.turns)
+                let helixMesh = MeshResource.generateHelixTube(
+                    pathRadius: pathRadius,
+                    tubeRadius: tubeRadius,
+                    height: length,
+                    turns: turns,
+                    pathSegments: max(48, Int(turns * 8)),
+                    tubeSegments: 8)
+                var helixMat = PhysicallyBasedMaterial()
+                // Bright gold-copper — distinct from the translucent
+                // HTS Coil sleeve so the wire reads as the actual
+                // current path.
+                helixMat.baseColor = .init(tint:
+                    NSColor(hexString: "#F2C66B"))
+                helixMat.metallic = .init(floatLiteral: 0.95)
+                helixMat.roughness = .init(floatLiteral: 0.20)
+                let helix = ModelEntity(
+                    mesh: helixMesh, materials: [helixMat])
+                helix.position = [0, 0, 0]
+                helix.transform.rotation = simd_quatf(
+                    angle: .pi / 2, axis: [0, 0, 1])
+                root.addChild(helix)
+            }
         }
 
         // Camera frame + orbit.
@@ -263,6 +297,78 @@ private extension MeshResource {
         descriptor.normals = MeshBuffer(normals)
         descriptor.primitives = .triangles(indices)
         return try! MeshResource.generate(from: [descriptor])
+    }
+
+    /// Build a helix tube — the HTS coil winding — as a single mesh.
+    ///
+    /// The helix path lives on a cylinder of radius `pathRadius`,
+    /// axially spanning [-height/2, +height/2], with `turns` full
+    /// revolutions. The wire's circular cross-section has radius
+    /// `tubeRadius`. `pathSegments` controls path resolution;
+    /// `tubeSegments` controls cross-section resolution.
+    static func generateHelixTube(
+        pathRadius: Float,
+        tubeRadius: Float,
+        height: Float,
+        turns: Float,
+        pathSegments: Int,
+        tubeSegments: Int
+    ) -> MeshResource {
+        var positions: [SIMD3<Float>] = []
+        var normals: [SIMD3<Float>] = []
+        var indices: [UInt32] = []
+        let twoPi: Float = 2.0 * .pi
+        let halfH = height * 0.5
+        let nPath = max(pathSegments, 16)
+        let nTube = max(tubeSegments, 4)
+
+        for i in 0...nPath {
+            let t = Float(i) / Float(nPath)
+            let theta = t * turns * twoPi
+            let y = -halfH + t * height
+            let cx = pathRadius * cos(theta)
+            let cz = pathRadius * sin(theta)
+            let center = SIMD3<Float>(cx, y, cz)
+            // Helix tangent — d(center)/dt.
+            let tangent = simd_normalize(SIMD3<Float>(
+                -pathRadius * sin(theta) * turns * twoPi,
+                height,
+                pathRadius * cos(theta) * turns * twoPi))
+            // Outward radial direction in the X-Z plane.
+            let outward = simd_normalize(SIMD3<Float>(cx, 0, cz))
+            // Binormal & corrected normal (Frenet-ish; outward picked
+            // as reference to keep the cross-section consistently
+            // oriented around the cylinder).
+            let binormal = simd_normalize(simd_cross(tangent, outward))
+            let normal = simd_normalize(simd_cross(binormal, tangent))
+            // Cross-section ring around the helix path.
+            for j in 0...nTube {
+                let phi = Float(j) / Float(nTube) * twoPi
+                let off = normal * cos(phi) + binormal * sin(phi)
+                let pos = center + off * tubeRadius
+                positions.append(pos)
+                normals.append(simd_normalize(off))
+            }
+        }
+
+        // Stitch triangles between consecutive cross-section rings.
+        let M = UInt32(nTube + 1)
+        for i in 0..<nPath {
+            for j in 0..<nTube {
+                let i0 = UInt32(i) * M + UInt32(j)
+                let i1 = i0 + 1
+                let i2 = i0 + M
+                let i3 = i2 + 1
+                indices.append(contentsOf: [i0, i2, i1])
+                indices.append(contentsOf: [i1, i2, i3])
+            }
+        }
+
+        var d = MeshDescriptor(name: "rtsc_helix_tube")
+        d.positions = MeshBuffer(positions)
+        d.normals = MeshBuffer(normals)
+        d.primitives = .triangles(indices)
+        return try! MeshResource.generate(from: [d])
     }
 }
 
