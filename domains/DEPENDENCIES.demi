@@ -172,7 +172,7 @@ domain           = "fem"
 external_imports = ["skfem", "numpy", "gmsh"]
 weight           = "heavy"
 portable_status  = "heavy-port"
-notes            = "Sparse linear-algebra solver + meshing — a full FEM port is multi-month. A 1-D bar / 2-D triangle stiffness-matrix demo is a feasible pilot slice for the next round."
+notes            = "Sparse linear-algebra solver + meshing — a full FEM port is multi-month. D80 pilot #10 landed 2026-05-20 (hexa-lang c9ca39e7) — bar1d_kernel.hexa ports the SMALLEST FEM subset (< 5% of skfem surface): 2-node linear bar element stiffness (Hughes §1.6) + direct-stiffness global assembly (Cook §2.3) + Thomas tridiagonal solve for fixed-free axial-load case (Burden & Faires §6.6 Alg. 6.7). 53/53 PASS at rel_err = 0.0 against (a) Python math libm transliteration + (b) closed-form mechanics-of-materials oracle u(x)=P*x/(E*A) independent of discretisation. portable_status STAYS heavy-port — the full 2-D/3-D element families + sparse linalg + gmsh-replacement meshing + thermal coupling + nonlinear elasticity remain unported (multi-round / multi-month / multi-year scope)."
 
 ## ── domain producers (stdlib/<domain>/*.py) — ①b adapter layer ────────
 

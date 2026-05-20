@@ -149,3 +149,13 @@ parity_status     = "24/24 PASS at rel_err = 0.0"
 hexa_lang_sha     = "b1745c3a"
 algorithm_ref     = "Burden & Faires, Numerical Analysis 10th ed. §4.3 — Composite Trapezoidal Rule (non-uniform partition); UL 489I + IEC 60947-2 §4.3 — breaker figures-of-merit (I_peak, I²t, t_clear at 1% threshold, clearing energy)"
 scope_notes       = "absorbed=true NOT flipped — ngspice CLI orchestration + netlist generator + wrdata CSV parser still .py; real-ngspice-trace parity round + accredited-lab UL 489I type-test for the SSCB cell are multi-month"
+
+[pilot-fem_bar1d_subset]
+kernel_path       = "stdlib/kernels/fem/bar1d_kernel.hexa"
+parity_test       = "stdlib/kernels/fem/bar1d_kernel_test.hexa"
+parity_method     = "Python math libm transliteration (bar1d_oracle.py, bit-exact) + closed-form mechanics-of-materials oracle u(x)=P*x/(E*A) for fixed-free uniform-bar tip-load (independent of FEM discretisation), 4 meshes (uniform N=4 / non-uniform N=4 / single-element N=2 / uniform N=8) x 2-9 nodes + 3 invariants (K symmetric, row sums = 0, BC u[0]=0)"
+parity_tolerance  = "rel_err = 0.0 (literal IEEE-754 bit-exact; ceiling 1e-10)"
+parity_status     = "53/53 PASS at rel_err = 0.0"
+hexa_lang_sha     = "c9ca39e7"
+algorithm_ref     = "Hughes, The Finite Element Method (Dover 2000) §1.6 — 2-node linear bar element k_e = (E*A/L)*[[1,-1],[-1,1]]; Cook/Malkus/Plesha/Witt, Concepts and Applications of FEA 4th ed. §2.3 — direct-stiffness global assembly; Burden & Faires, Numerical Analysis 10th ed. §6.6 Alg. 6.7 — Crout/Thomas tridiagonal solve"
+scope_notes       = "PARTIAL PORT — < 5% of skfem surface (1-D linear 2-node bar elements only; no 2-D/3-D element families, no sparse linalg, no gmsh meshing, no thermal coupling, no nonlinear elasticity). kernel-fem in DEPENDENCIES.demi stays portable_status=heavy-port. absorbed=true NOT flipped — component+verify / rtsc / sscb-femmt cells remain GATE_OPEN until heavier FEM primitives land (multi-round / multi-month)"
