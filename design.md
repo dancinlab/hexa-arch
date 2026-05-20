@@ -3143,3 +3143,72 @@ preference) 가 absolute endpoint 로 격상.
 
 g3 — 측정 record 변경 0 (D80 자체는 governance 추가). cern+synth
 의 provisional flag 화는 후속 phase (record schema 변경 + 점진 적용).
+
+### Decision 81 — chem + bio + ufo 도메인 추가 (16 → 19)
+
+**picked**: 3 도메인 추가. **명칭은 짧게** (다른 16 도메인 일관) —
+`chem` (화학 / 반응 / 촉매), `bio` (분자생물 / 단백질 / DNA / RNA),
+`ufo` (HEXA-Disc 7-stage propulsion). 모두 demiurge 측 `domains/<id>.md`
++ `DomainCatalog` 등록; substrate SSOT 는 sibling repo (`~/core/hexa-
+chem/`, `~/core/hexa-bio/`, `~/core/hexa-ufo/`) 또는 hexa-lang/stdlib/
+(D17 precedent). (Rejected: `chemistry / biology / unidentified-aerial`
+full-form — 다른 16 짧은 명칭과 일관성 깨짐; sub-domain 세분
+`protein / dna / rna / pharma` — cell-level specify 단계로 충분.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "물질, 바이오, 화학 도메인 추가" + 명칭
+  A (짧은 이름) picked.
+- GOAL.md 의 NOT 섹션이 이미 cite — "물질/분자 계산기 아님, 그건
+  hexa-matter (물질) · hexa-bio (분자)" — sibling repo 가 이미
+  존재하거나 가까운 형태로 cited. demiurge domain 명칭은 *짧은*
+  pointer 로 등록.
+- 16 도메인 일관성: chip / component / matter / sscb / bot / aura
+  / brain / cern / energy / fusion / grid / mobility / rtsc / scope
+  / space / firmware (D73 신규 16번째). 18·19번째 cohort 도 같은
+  짧은-id 정책.
+- ufo 의 multi-level DAG prerequisite chain (D82 graph rule) 이
+  존재하므로 demiurge 측 domain 등록 필수 — sibling repo `~/core/
+  hexa-ufo/` 가 7-stage propulsion + 13 falsifier preregister 가짐.
+
+**적용**: `domains/chem.md` + `domains/bio.md` + `domains/ufo.md`
+skeleton (7-verb 1:1 표 + cited sources + § 6 workbench shelf).
+`DomainCatalog.all` 에 3 entries (id / label / canvasMode / keywords).
+ABSORPTION.md ② DOMAIN_MAP "16 도메인" → "19 도메인" 갱신.
+시뮬레이션 (ARCH.md §11) 의 alien-disc-mk1 / aura-clip-mk1 이
+이 3 도메인 직접 활용.
+
+### Decision 82 — 도메인 graph DAG + multi-facet tag (Option 3)
+
+**picked**: Domain catalog 가 평면 list 가 아니라 **DAG (Directed
+Acyclic Graph)**. 각 도메인이 `prerequisites: [DomainID]` direct edge
+명시; transitive closure 는 graph traversal 이 계산 (저장 안 함, DRY
+— g_ssot_single_source D50). 동시에 각 도메인이 `facets: { scale,
+cluster, hostility }` **multi-tag** (partition 아님 — 한 도메인이
+여러 cluster 에 속할 수 있음). (Rejected: (1) strict 4-tier partition
++ multi-tag — partition 강제는 cross-cutting 도메인 (bio+chem, protein
++matter) 의 자연 표현 막음; (2) Graph DAG only, 카테고리 폐기 —
+facet filter 가 user-experience 에 유용; (4) discipline 4-tier
+partition — same partition issue.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — "도메인이 모두 연결되어 있어야 함 +
+  프로젝트는 포인터 + 도메인은 프로젝트 소유 아님" → graph 모델 직접
+  지시. partition 옵션 (B) 거부 후 graph (3) 선택.
+- 실제 cross-cutting 예시: 약물 = bio + chem + matter + component;
+  단백질 = bio + matter; UFO = fusion + antimatter + rtsc; 모두
+  partition 으로 표현 불가능.
+- N+M 재사용 패턴 가시: rtsc 가 두 시뮬레이션 (alien-disc-mk1, aura-
+  clip-mk1) 의 공통 foundation — 도메인 graph 공유 = 다중 프로젝트
+  포인터 정확히 작동.
+- D72 kernel layer (math 재사용) 와 D82 domain graph (도메인 재사용)
+  가 다른 axis 의 같은 N+M 원리 — 둘 다 single source, 다중 consumer.
+- Project model 자연 매핑: `Project.startDomain + walk: [DomainID]`
+  (transitive closure topologically sorted). 도메인 ≠ project,
+  project 는 graph 위 walk pointer.
+
+**적용**: `Domain.swift` 에 `prerequisites: [String]` + `facets:
+DomainFacets` fields 추가. `DomainGraph.swift` 신규 — BFS
+`transitiveClosure(id)`, `topologicalSort(domains)`, `byFacet(scale|
+cluster)`. `DomainCatalog.all` 16 entries 에 prereq + facet 박음 (조사
+한 cross-link 표 그대로) + chem/bio/ufo 3 entries 신규 = 19. 시뮬레이션
+(ARCH.md §11) 이 직접 검증.

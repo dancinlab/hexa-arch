@@ -80,9 +80,11 @@ N×M 폭발을 막기 위해 **2-layer** — 같은 FEM·MC·graph 커널을 도
 - **무엇이 들어가나**: §1 deliverable · §2 도구맵 · §5 인용 자료 ·
   §6 workbench shelf 옵션
 - **예**: `chip.md` · `component.md` · `brain.md` · `sscb.md` ·
-  `energy.md` · `firmware.md` ·  …(16 도메인, 2026-05-20 firmware
-  added — 7-verb 합성→검증 seam = signed firmware image →
-  QEMU/Renode/HIL 측정)
+  `energy.md` · `firmware.md` · `chem.md` · `bio.md` · `ufo.md` ·
+  …(19 도메인 — 2026-05-20 D73 firmware 16번째 + D81 chem/bio/ufo
+  17·18·19번째. D82 graph DAG: 도메인 = node, prerequisites = edges,
+  facets = multi-tag scale/cluster/hostility. 프로젝트는 그래프 위
+  walk pointer — domain ≠ project)
 - **누가 만드나**: domain expert + AI 합작, cited research 동반.
 
 ### ③ RECORD — typed interface
@@ -514,3 +516,30 @@ local mac │ -       │ pool 호스트 다운시 fallback (swift run)
   12.78%, tol 50%). absorbed=true flip 권고 NO — D75 가 풀어준
   honesty blocker 1개, 나머지 2 caveats 잔존 (measured optics deck,
   hexa-native FFT IEEE-754).
+- 2026-05-20 — **κ-56 — Round 1 phase A: D81 + D82 (chem/bio/ufo
+  도메인 추가 + graph DAG 모델 land)**. 사용자 게이트 "Round 1 go"
+  + ufo/aura 시뮬레이션 통과 후. 변경:
+  (1) D81 chem + bio + ufo 도메인 (16→19) — short-id naming;
+      `domains/chem.md` + `domains/bio.md` + `domains/ufo.md`
+      skeleton (deliverable / 7-verb 1:1 표 / cited sources / D72
+      kernel mapping / cross-domain).
+  (2) D82 graph DAG + multi-facet tag — `Domain.swift` 에
+      prerequisites + DomainFacets fields 추가. `DomainGraph.swift`
+      신규: transitiveClosure BFS / topologicalSort Kahn /
+      byScale / byCluster / roots / leaves.
+  (3) `DomainCatalog.all` 19 entries — 16 기존 + 3 신규. 각 entry
+      에 prerequisites + facets (scale / clusters / hostility) +
+      optional substrateSSOT 박음. ufo prereq = [fusion, antimatter,
+      rtsc]; bio prereq = [chem, matter]; aura prereq = [rtsc, chip,
+      brain, bio, firmware]; fusion prereq = [antimatter, cern,
+      energy, rtsc]; 등 시뮬레이션 chain 직접 반영.
+  (4) `FalsifierEntry.swift` 신규 (G5 — typed monotone OPEN /
+      CONFIRMED / DEMOTED + demotedIf for G6 cascade).
+  (5) `SiblingRepoSpawner.swift` 신규 (G3 — D17 sibling-repo
+      standardized spawn pattern; matter / ufo / aura / bio / chem /
+      cern / antimatter / fusion / rtsc / space / brain / scope 의
+      ~/core/hexa-<id>/ entrypoint 자동 resolve).
+  build: xcrun swift build --product DemiurgeCLI OK (3.49s).
+  g3 — type-layer + 도메인 메타데이터 추가만, 측정 record / gate /
+      absorbed 변경 0. INDEX.demi parser (D83) + cockpit NewProjectSheet
+      UI 갱신 (G1 UI 부분) 은 후속 phase B.

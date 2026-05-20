@@ -972,7 +972,13 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
 
 **라운드 1 — fundamental (D78 + sibling + falsifier schema)**
 
-- [ ] **G1.** cockpit `NewProjectSheet` — facet → DAG 인지
+- [~] **G1.** cockpit `NewProjectSheet` — facet → DAG 인지
+  - **κ-56 — partial**: `Domain.swift` 에 prerequisites + facets fields
+    추가. `DomainGraph.swift` 신규 (transitiveClosure / topologicalSort /
+    byScale / byCluster / roots / leaves). DomainCatalog 19 entries
+    에 prereq + facet 박음. **남은 부분**: D83 .demi parser
+    (INDEX.demi 가 runtime SSOT 가 되는 phase) + NewProjectSheet UI
+    갱신 (facet filter → DAG closure preview → confirm).
   - deps: D78 graph + `.demi` parser + `DomainGraph.transitiveClosure`
   - new files:
     - `cockpit/Sources/DemiurgeCore/Models/Domain.swift` (refactor — type 만)
@@ -988,7 +994,10 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - `DemiurgeCLI action list-domains --facet cluster=propulsion` 작동
     - cockpit 새 wizard 3-step 매뉴얼 검증
 
-- [ ] **G3.** sibling-repo pointer pattern 표준화 (matter / ufo / aura)
+- [~] **G3.** sibling-repo pointer pattern 표준화 (matter / ufo / aura)
+  - **κ-56 — partial**: `SiblingRepoSpawner.swift` 신규 (D17 entrypoint
+    resolver + uniform spawn). MatterAnalyzer 의 기존 D17 spawn 패턴
+    refactor (그 위에 helper 호출로 전환) 는 다음 commit.
   - deps: G1 (DomainLoader 의 substrate_ssot 필드 읽기)
   - new file:
     - `cockpit/Sources/DemiurgeCore/Loaders/SiblingRepoSpawner.swift`
@@ -1001,7 +1010,11 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - matter+analyze 가 기존과 byte-identical record (회귀 0)
     - 새 도메인이 sibling-repo 포인터 등록할 때 코드 1줄 (`SiblingRepoSpawner.spawn(.aura)`)
 
-- [ ] **G5.** `FalsifierEntry` 가 record schema typed field
+- [~] **G5.** `FalsifierEntry` 가 record schema typed field
+  - **κ-56 — partial**: `FalsifierEntry.swift` 신규 (typed monotone
+    OPEN/CONFIRMED/DEMOTED + demotedIf for G6 cascade). 기존
+    `UfoVerifyRecord` / `AuraVerifyRecord` 에 `[FalsifierEntry]?`
+    삽입은 다음 commit (해당 cell wiring 라운드 시).
   - deps: 없음 (Codable schema 확장만)
   - new files:
     - `cockpit/Sources/DemiurgeCore/Models/FalsifierEntry.swift` (new)

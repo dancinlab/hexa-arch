@@ -3872,3 +3872,32 @@
   g3 — governance 추가, 측정 record 0 변경. cern+synth typed
   provisional flag 화 + Record schema `hexa_native_parity` 필드 추가
   는 후속 phase.
+- 2026-05-20 — **phase κ-56 — Round 1 phase A: D81 + D82 land**.
+  사용자 게이트 "Round 1 go" + ufo/aura 시뮬레이션 (ARCH §11) 통과
+  후. type-layer + 도메인 메타데이터 land:
+  - **D81 chem + bio + ufo 도메인 추가 (16 → 19)**: `domains/chem.md`
+    + `domains/bio.md` + `domains/ufo.md` skeleton (7-verb 1:1 표 +
+    cited sources + D72 kernel mapping + cross-domain). 짧은-id
+    naming (D81-A picked).
+  - **D82 graph DAG + multi-facet tag (Option 3)**: `Domain.swift`
+    extension — `prerequisites: [String]` + `facets: DomainFacets`
+    (scale + clusters + hostility 의 multi-tag). `DomainGraph.swift`
+    신규 — `transitiveClosure(of:)` BFS, `topologicalSort([id])`
+    Kahn, `byScale(_:)` / `byCluster(_:)` / `roots()` / `leaves()`.
+  - `DomainCatalog.all` 19 entries 에 prereq + facet 박음 — 시뮬레이션
+    chain 직접 반영: ufo→{fusion,antimatter,rtsc}; aura→{rtsc,chip,
+    brain,bio,firmware}; fusion→{antimatter,cern,energy,rtsc}; bio→
+    {chem,matter}; chem→{matter}; antimatter→{matter,space} 등.
+  - G3 부분: `SiblingRepoSpawner.swift` 신규 (D17 entrypoint resolver
+    + uniform spawn pattern; matter/ufo/aura/bio/chem 등 hexa-<id>
+    sibling repo 자동 resolve).
+  - G5 부분: `FalsifierEntry.swift` 신규 (typed monotone OPEN/CONFIRMED/
+    DEMOTED + demotedIf for G6 cascade).
+  - design.md D81 / D82 audit-trail (각 rationale 5 bullets).
+  - ABSORPTION.md ② DOMAIN_MAP 16 → 19 갱신.
+  - ARCH.md §11.4 G1/G3/G5 항목 [~] partial 마크 + 남은 부분 명시.
+  build: xcrun swift build --product DemiurgeCLI OK (3.49s).
+  g3 — type-layer + 도메인 metadata 추가만, 측정 record / gate /
+  absorbed 변경 0. 다음 phase B = D83 .demi parser + INDEX.demi
+  runtime SSOT 전환 + NewProjectSheet UI 갱신 (facet filter → DAG
+  closure preview).
