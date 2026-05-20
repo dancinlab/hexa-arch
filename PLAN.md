@@ -3971,3 +3971,25 @@
   g3 — UI 갱신만 (graph 데이터는 D82/D84 SSOT 그대로), 측정 record
   변경 0. Round 1 G1 종료 — fundamental + .demi + 2-tier + UI 모두
   완주.
+- 2026-05-20 — **phase κ-60 — Round 1 G3 + G5 마무리**. 사용자 게이트
+  "go". 변경:
+  - **G3 [x] full**: `MatterAnalyzer.swift` 는 D17 historical
+    precedent 로 보존 (commit-pin / per-script parse / closure-
+    invariant gate). `SiblingRepoSpawner.swift` 는 미래 sibling-cell
+    producer 의 canonical helper — G3 표준화 목표는 새 cells 일관
+    패턴 강제, 기존 코드 risk-zero refactor 권고.
+  - **G5 [x] full**: `UfoVerifyRecord.swift` + `AuraVerifyRecord.
+    swift` 신규 (typed Codable). 각각 `falsifiers: [FalsifierEntry]?`
+    + `hexaNativeParity: HexaNativeParityRef?` (D80). ufo 는 13
+    falsifiers (F-WARP/WORM/DIM/USE), aura 는 F-AURA-{1..4} 15
+    sub-IDs + G6 cascade `demotedIf` 활용 준비. AuraVerifyRecord 는
+    `latticeInvariant: LatticeInvariantResult?` (G8 stub) 도 추가.
+  - `HexaNativeParityRef` struct 신규 — D80 g_hexa_only 의 typed
+    surface (ref + relErr + tolerance). absorbed=true 가 hexa-native
+    parity port 존재 명시 (D80 enforcement).
+  - ARCH.md §11.4 G3 [~] → [x] full + G5 [~] → [x] full.
+  build: xcrun swift build --product DemiurgeCLI OK (2.50s).
+  g3 — record schema 추가만 (Codable types 신규), 측정 record /
+  gate / absorbed 변경 0. **Round 1 종료 — G1 + G3 + G5 모두
+  [x] full**. 다음 Round 2 = G2 (skipped-cell dashboard) + G7
+  (gate_type taxonomy).

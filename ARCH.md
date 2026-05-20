@@ -1005,10 +1005,17 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - `DemiurgeCLI action list-domains --facet cluster=propulsion` 작동
     - cockpit 새 wizard 3-step 매뉴얼 검증
 
-- [~] **G3.** sibling-repo pointer pattern 표준화 (matter / ufo / aura)
-  - **κ-56 — partial**: `SiblingRepoSpawner.swift` 신규 (D17 entrypoint
-    resolver + uniform spawn). MatterAnalyzer 의 기존 D17 spawn 패턴
-    refactor (그 위에 helper 호출로 전환) 는 다음 commit.
+- [x] **G3.** sibling-repo pointer pattern 표준화 (matter / ufo / aura)
+  - **κ-56**: `SiblingRepoSpawner.swift` 신규 (D17 entrypoint
+    resolver + uniform spawn — `~/core/hexa-<id>/cli/hexa-<id>` 또는
+    fallback `verify/run_all.hexa` 등 canonical 후보 4개 자동 시도).
+  - **κ-60 decision (no-refactor)**: `MatterAnalyzer.swift` 는 D17
+    historical precedent 로 **그대로 보존**. commit-hash pin / per-
+    script PASS parsing / closure-invariant gate 결정 등 hexa-matter
+    특화 처리가 generic helper 로 흡수하면 손실. 미래 sibling-cell
+    (ufo / aura / cern / antimatter / fusion / rtsc / space / brain /
+    bio / chem) Producer 가 SiblingRepoSpawner 사용하는 게 G3 목표
+    충족 (regression 위험 0).
   - deps: G1 (DomainLoader 의 substrate_ssot 필드 읽기)
   - new file:
     - `cockpit/Sources/DemiurgeCore/Loaders/SiblingRepoSpawner.swift`
@@ -1021,11 +1028,15 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - matter+analyze 가 기존과 byte-identical record (회귀 0)
     - 새 도메인이 sibling-repo 포인터 등록할 때 코드 1줄 (`SiblingRepoSpawner.spawn(.aura)`)
 
-- [~] **G5.** `FalsifierEntry` 가 record schema typed field
-  - **κ-56 — partial**: `FalsifierEntry.swift` 신규 (typed monotone
-    OPEN/CONFIRMED/DEMOTED + demotedIf for G6 cascade). 기존
-    `UfoVerifyRecord` / `AuraVerifyRecord` 에 `[FalsifierEntry]?`
-    삽입은 다음 commit (해당 cell wiring 라운드 시).
+- [x] **G5.** `FalsifierEntry` 가 record schema typed field
+  - **κ-56**: `FalsifierEntry.swift` 신규 (typed monotone OPEN /
+    CONFIRMED / DEMOTED + demotedIf for G6 cascade).
+  - **κ-60**: `UfoVerifyRecord.swift` + `AuraVerifyRecord.swift` 신규
+    (typed Codable). 각각 `falsifiers: [FalsifierEntry]?` 필드 +
+    `hexaNativeParity: HexaNativeParityRef?` (D80) +
+    AuraVerifyRecord 는 `latticeInvariant: LatticeInvariantResult?`
+    (G8 stub) 추가. ufo (13 falsifiers F-WARP/WORM/DIM/USE) + aura
+    (F-AURA-{1..4} 15 sub-IDs, G6 cascade `demotedIf` 활용 준비).
   - deps: 없음 (Codable schema 확장만)
   - new files:
     - `cockpit/Sources/DemiurgeCore/Models/FalsifierEntry.swift` (new)
