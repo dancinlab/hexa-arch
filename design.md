@@ -4465,3 +4465,106 @@ D103 (dimension-separation) + D106 (illustrative-physics 제외) 모두
 preserved. audit trail = 4 inbox note (k68-cell-pick · k68-d109-draft ·
 k68-g28-measured-oracle-ref-sketch · k68-g30-governance-row-sketch) +
 ARCH §11.4 Round 7 scaffold + NEXT_SESSIONS P-⑩ refresh.
+
+### Decision 110 — κ-68 G29 first cell `absorbed=true` legitimate flip (Energy/solar · NREL MIDC 2024-06-15 PASS · D109 criterion met)
+
+**picked**: Energy/solar cell 의 `EnergyVerifyRecord.absorbed` stored
+field 가 *legitimate measured-oracle PASS* 근거로 첫 `true` flip. 본
+flip 은 D109 의 5 default (NREL MIDC SRRL Golden CO · single clear-
+sky day · pvlib clearsky trusted bridge · mean rel_err ≤ 5% · cell
+= Energy/solar) 위에서 실 NREL MIDC BMS 2024-06-15 데이터 fetch +
+pvlib Ineichen clearsky 측정 → `mean_rel_err = 0.04988` over 480
+clear-sky-filtered samples (829 daylight 중 349 cloud-edge dropped)
+vs threshold 0.05 → **PASS** (marginal · ~24 bp under threshold).
+producer (hexa-lang `b8d35920` · PR #259) 가 `absorbed=true` 를
+EXPLICITLY set — D95 computed projection 의 부산물 아님 (D103
+dimension-separation 보존).
+
+**rationale**:
+- **legitimate measured-oracle 의 honest first land** — 4 month
+  넘게 demiurge 가 carry 한 RFC 013 §6.11 (per-cell measured-oracle
+  parity round) 의 첫 실 PASS. κ-67 closure 시점에 D80 sweep 의
+  algorithm-level closure (13 hexa-native pilots) 와 cell-level
+  measurement-parity 의 *별 axis* 가 D103 / D106 으로 typed-enforce
+  되었고, κ-68 가 그 measurement axis 의 첫 cell flip 을 land.
+- **데이터 honest disclosure** — 0.04988 vs 0.05 = ~24 bp 차이.
+  marginal pass. 만약 day 선택이 좀 더 나쁘면 (cloud variability 더
+  큰 day) FAIL 났을 것. 본 결정의 PASS 는 (a) 2024-06-15 의 atmospheric
+  state + (b) clear-sky filter ratio band [0.85, 1.30] + (c) daylight
+  zenith filter 의 *세 조건 결합* 의 결과. 어느 하나 바뀌면 결과
+  shift. D110 의 record 가 그 sensitivity 를 honestly cite (`scope_
+  caveats` 3 lines · `dataset_caveats` 1 paragraph).
+- **D80 g_hexa_only 와의 honest delta** — producer 는 pvlib 의
+  sun-position 을 그대로 사용 (즉, hexa-native `solar_position_kernel`
+  의 runtime call 은 본 producer 안에서 *아직* 일어나지 않음).
+  대신 κ-65 D80 pilot 의 *parity-of-implementation* 결과 (21/21
+  PASS rel_err ≤ 1e-13 between pvlib sun-position and `solar_kernel.
+  hexa`) 를 *reuse* 함. 즉 substrate-parity 는 이미 입증 · runtime
+  port 는 별 axis. 본 record 의 `hexa_native_parity = null` 도 그
+  분리를 명시 (substrate-parity 는 PILOTS.demi `[pilot-solar]` 의
+  axis · 본 record 는 measured-oracle axis). **G29-β (hexa-native
+  sun-position runtime port) 는 κ-69+ scope**.
+- **G30 Stage 1 invariant 와의 정합** — `AbsorbedNeedsMeasuredOracle
+  Tests.testAbsorbedRequiresMeasuredOraclePASS` 의 (a) branch
+  (measured PASS) 를 본 record 가 정확히 hit. invariant 가 본 record
+  의 shape 을 PASS 분류함을 `fee34cc` 시점에 verified.
+- **D109 와의 5 default 정합** — D109 의 cell / station / window /
+  bridge / threshold 5 default 가 본 producer 에 hardcode 되어 일관.
+  실 fetch URL (`midcdmz.nrel.gov/apps/data_api.pl?site=BMS&...`) +
+  pvlib Location (lat 39.7423 · lon -105.1785 · alt 1828 · tz MST)
+  + Ineichen clearsky model + PASS_THRESHOLD = 0.05 모두 D109 의
+  text 와 byte-equivalent.
+- **κ-68 closure**: 본 D110 + G30 Stage 1 (`fee34cc`) + G28 schema
+  (`4a1a087`) + G27 (`5392213` D109) 의 four-fold 가 RFC 013 §6.11
+  의 LANDED 조건 모두 충족. RFC status `MOSTLY-LANDED` → `LANDED`
+  로 본 D-block 박제 시점에 flip.
+
+**효과**:
+- ARCH.md §11.4 Round 7 G29 `[ ]` → `[x]` flip + 4 exit criterion
+  모두 [x] check.
+- RFC 013 status `MOSTLY-LANDED` → `LANDED` · §6.11 entry `queued`
+  → `LANDED 2026-05-21` + measured numbers cite.
+- κ-68 closure entry in PLAN.md (κ-67 closure pattern 의 κ-68 version).
+- Energy/solar cell 의 *stored* `absorbed: Bool` 이 첫 `true` —
+  cockpit 의 `EnergyVerifyRecord` schema 의 absorbed dimension 이
+  실 PASS 로 occupied. D95 computed `isHexaNativeAbsorbed` 와는
+  여전히 별 axis (substrate-parity 의 PILOTS.demi PASS 도 OPEN ·
+  measured-oracle 의 PASS 도 OPEN · 둘 다 independent).
+- G29-β (hexa-native sun-position runtime port) + G30 Stage 2
+  (constitution.md row · constitution.md populate 후) 가 잔여
+  axis · 본 D110 의 scope 밖.
+
+**적용**:
+1. `exports/energy/verify/2026-05-21T03-07-39Z/energy_verify_
+   20260520T190739Z_nrel_midc_pyranometer.json` — real record (8
+   measured_oracle field + absorbed=true + GATE_CLOSED_MEASURED).
+2. `proposals/rfc_013_hexa_native_parity_connection.md` — status
+   header MOSTLY-LANDED → LANDED + §6.11 queued → LANDED + (the §9
+   Log entry follows in the same commit).
+3. `ARCH.md` §11.4 Round 7 G29 `[ ]` → `[x]` flip + 본 D110
+   reference + measured numbers + G29-β / G30 Stage 2 잔여 명시.
+4. `PLAN.md` `## 진행 로그` — phase κ-68 G29 land entry + κ-68
+   closure entry.
+5. `design.md` — 본 D110 entry.
+6. **NOT** 적용 (scope 밖):
+   - G29-β hexa-native sun-position runtime port (κ-69+ scope).
+   - G30 Stage 2 `.specify/memory/constitution.md` row (constitution
+     populate 후 별 commit).
+   - 다른 cell (Aura / Ufo / ChipAnalyze 등) 의 measured-oracle
+     round (각 cell 별 별 round · D106 illustrative 제외 cell 만
+     해당).
+   - PILOTS.demi 새 row · DEPENDENCIES.demi 새 row · SUBSTRATE_LINKS
+     변경 0.
+   - `.demi` 데이터 SSOT 변경 0.
+
+**g3** — 본 D110 는 *single cell* 의 measured-oracle 첫 land. 다른
+cell 회귀 0. mean_rel_err 0.04988 는 marginal · subsequent run /
+다른 day / 다른 station 에서 variance 가 commit-pinned-snapshot 보다
+큰 가능성 honest. 본 record 의 `absorbed=true` 는 *2024-06-15* 의
+specific data + filter 조합에 대한 statement; 미래의 *other-day*
+run 이 다른 `absorbed` 결과를 emit 할 수 있음 — 그 경우 새 record
+가 새 timestamp 로 별 land (현 record 는 immutable audit trail).
+D80 ultimate-form 의 runtime port (G29-β) 는 잔여 · 본 D110 은
+*substrate-parity reuse* 의 honest middle ground (κ-65 21/21 PASS
+의 parity-of-implementation 을 trust + measured-oracle dimension
+의 first PASS 가 별 axis 로 land).

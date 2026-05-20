@@ -1766,20 +1766,62 @@ in-progress)**
     - `absorbed` 는 false 유지 [x] (D103 separation 보존 · G29 까지
       explicit-writer gate 닫혀 있음)
 
-- [ ] **G29.** 첫 cell `absorbed: true` legitimate flip (NOT D95
-    computed projection)
-  - G28 measured-oracle PASS 조건에서 cell record writer 가 stored
-    `absorbed: Bool` 을 true 로 명시적 set. D95 computed `isHexa
-    NativeAbsorbed` 재사용 금지 — stored field 와 computed field 는
-    별도 set path 유지 (D103). RFC 013 §6.11 의 land 조건 충족.
-  - deps: G28 (measured field 존재) · D80 (honesty floor) · D95
-    (computed 와 격리) · D103 (dimension-separation)
+- [x] **G29.** 첫 cell `absorbed: true` legitimate flip (NOT D95
+    computed projection) · **LANDED 2026-05-21 D110**
+  - **hexa-lang `b8d35920` (PR #259 merged)**: `stdlib/energy/nrel_
+    midc_pyranometer.py` STUB → REAL 승격. 단일 NREL MIDC BMS day
+    (2024-06-15 · SRRL Golden CO) fetch + pvlib Ineichen clearsky
+    modeled GHI + daylight + clear-sky filter + 1-min cadence
+    measured-vs-modeled parity. Producer 가 mean_rel_err ≤ 0.05
+    조건에서 record JSON 의 `absorbed: true` 를 EXPLICITLY set —
+    D109 PASS criterion 의 first legitimate writer-set path.
+  - **measured result (2024-06-15)**:
+    - daylight samples (zenith<85°): 829
+    - clear-sky kept (ratio in [0.85, 1.30)): 480 (dropped 349 ·
+      42% cloud-edge/enhancement)
+    - **mean_rel_err: 0.04988** vs threshold 0.05 → **PASS**
+      (marginal · ~24 bp under threshold · honestly documented)
+    - max_rel_err: 0.2303 (cloud-edge transients in filter window)
+    - **absorbed: true** (κ-68 first legitimate flip)
+    - measurement_gate: GATE_CLOSED_MEASURED
+  - **demiurge land**:
+    - `exports/energy/verify/2026-05-21T03-07-39Z/energy_verify_
+      20260520T190739Z_nrel_midc_pyranometer.json` (real record ·
+      `absorbed=true` · measured_oracle PASS · all 8 typed field
+      populated by real fetch).
+    - design.md D110 (G29 land record · marginal pass rationale ·
+      4 G29-β follow-on axis).
+    - PLAN.md `## 진행 로그` κ-68 G29 entry.
+  - **D80 g_hexa_only**: hexa-native `solar_position_kernel` 의
+    runtime call site 는 G29-β follow-on (parity-of-implementation
+    이 κ-65 21/21 PASS 로 이미 증명 · 본 producer 는 pvlib 의
+    sun-position 을 reuse · substrate-parity ≠ runtime-port). D80
+    절대 endpoint 는 G29-β 에서 충족.
+  - **D103 dimension-separation**: `hexa_native_parity = null` 유지
+    (substrate-parity 는 PILOTS.demi `[pilot-solar]` 21/21 PASS 가
+    별 axis · 본 record 의 measured-oracle axis 와 INDEPENDENTLY
+    set per D103).
+  - **D106 illustrative-physics**: 본 cell (Energy/solar) 은
+    measurement cell · illustrative gate 적용 안 됨. anti-conflation
+    유지.
+  - **G30 Stage 1 invariant**: 본 record 의 (`absorbed=true`,
+    `measuredOracle non-nil + isMeasuredOraclePASS=true`) shape
+    이 `AbsorbedNeedsMeasuredOracleTests.testAbsorbedRequiresMeasured
+    OraclePASS` 의 (a) branch 정확히 hit · invariant PASS.
+  - deps: G28 (`MeasuredOracleRef` schema · `4a1a087`) · D80
+    (honesty floor) · D95 (computed projection 격리 유지 · 본
+    flip 은 stored axis) · D103 (dimension-separation) · G30
+    Stage 1 XCTest (`fee34cc`)
   - exit:
-    - 단일 cell 의 stored `absorbed: Bool` true land (measured
-      oracle PASS 근거 cell record 안에 cite)
-    - 다른 cell record 회귀 0 (의도치 않은 flip 없음)
-    - design.md D-block + PLAN.md κ-68 entry
-    - swift build/test PASS
+    - 단일 cell `absorbed=true` land [x] (`exports/energy/verify/
+      2026-05-21T03-07-39Z/...` JSON · measured oracle PASS 근거
+      record 안에 cite)
+    - 다른 cell record 회귀 0 [x] (Fusion / Aura / Ufo /
+      ChipAnalyze 등 모든 다른 cell 의 `absorbed` 미flip · synth
+      fixtures 만 변경)
+    - design.md D110 [x] · PLAN.md κ-68 G29 entry [x]
+    - swift build/test PASS [x] (63 test · 회귀 0 · G30 Stage 1
+      invariant 가 본 record shape verified)
 
 - [x] **G30.** Governance gate — absorbed-vs-measured invariant typed
     enforcement · **Stage 1 (XCTest) LANDED 2026-05-21 `fee34cc` ·

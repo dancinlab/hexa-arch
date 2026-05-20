@@ -4302,3 +4302,97 @@
   새 PILOTS row 0 · `.demi` 변경 0. 다음 axis (κ-69) = G29 real
   measurement + G30 Stage 2 (constitution.md populate 후) + κ-68
   closure 박제 (RFC 013 §6.11 status `queued` → `LANDED` flip).
+
+- 2026-05-21 — **phase κ-68 — G29 first cell absorbed=true legitimate
+  flip LANDED (D110 · hexa-lang `b8d35920` PR #259 + demiurge record)**.
+  사용자 게이트 "all go". Energy/solar cell 의 `EnergyVerifyRecord.
+  absorbed` stored field 가 *legitimate measured-oracle PASS* 근거로
+  첫 `true` flip — 4 month carry 된 RFC 013 §6.11 (per-cell measured-
+  oracle parity round) 의 첫 실 PASS.
+  - **measurement (2024-06-15 SRRL BMS Golden CO · NREL MIDC fetch
+    + pvlib Ineichen clearsky)**:
+    - daylight (zenith<85°): 829 samples
+    - clear-sky (ratio in [0.85, 1.30)): 480 samples (349 cloud-edge
+      dropped · 42% of daylight)
+    - **mean_rel_err: 0.04988** vs threshold 0.05 → **PASS** (marginal
+      · ~24 bp under)
+    - max_rel_err: 0.2303 (cloud-edge transients in filter window)
+    - **absorbed: true** · measurement_gate: GATE_CLOSED_MEASURED
+  - **hexa-lang `b8d35920` (PR #259 merged)**: `stdlib/energy/nrel_
+    midc_pyranometer.py` STUB → REAL 승격 · 단일 NREL MIDC day fetch +
+    pvlib clearsky modeled + daylight + clear-sky filter + producer
+    가 mean_rel_err ≤ threshold 시 absorbed=true EXPLICITLY set
+    (D95 computed projection 재사용 0 · D103 separation 보존).
+  - **demiurge land** — `exports/energy/verify/2026-05-21T03-07-39Z/
+    energy_verify_20260520T190739Z_nrel_midc_pyranometer.json` (real
+    record · 8 measured_oracle field 모두 real fetch 결과 populated).
+    `proposals/rfc_013_hexa_native_parity_connection.md` status
+    `MOSTLY-LANDED` → `LANDED` · §6.11 queued → LANDED · §9 Log entry
+    (별도 commit 또는 본 commit 안). `ARCH.md` §11.4 G29 `[ ]` → `[x]`
+    flip · 4 exit criterion 모두 [x]. `design.md` D110 박제.
+  - **G29-β follow-on (κ-69+ scope · NOT in this phase)**: hexa-native
+    `solar_position_kernel` 의 runtime call site port. κ-65 의
+    parity-of-implementation (21/21 PASS rel_err ≤ 1e-13 between
+    pvlib sun-position and solar_kernel.hexa) 결과 본 producer 가
+    *reuse* — D80 ultimate-form 의 runtime port 는 별 axis.
+  - **G30 Stage 2 follow-on (constitution.md populate 후)**:
+    `.specify/memory/constitution.md` governance row · constitution.
+    md template-only 인 동안 deferred. G30 Stage 1 XCTest invariant
+    (`fee34cc`) 는 이미 본 record 의 shape 을 PASS 분류함을 verified.
+  g3 — 본 phase 의 κ-68 closure 조건 충족: G27 (`5392213` D109) +
+  G28 (`4a1a087` G28a schema + PR #248 STUB) + G29 (D110 · `b8d35920`
+  REAL + record) + G30 Stage 1 (`fee34cc` XCTest invariant) 모두
+  [x]. RFC 013 §6.11 status `queued` → `LANDED` flip 동반. 단일
+  cell (Energy/solar) 의 *single-day* measured-oracle PASS 가
+  honest first land — marginal pass (0.0499 vs 0.05) 는 dataset_
+  caveats / scope_caveats 에 honestly cite · subsequent day / 다른
+  station 의 variance 는 future record 가 별 timestamp 로 emit.
+  다른 cell (Aura / Ufo / ChipAnalyge 등) 의 measured-oracle round
+  은 별 round · D106 illustrative 제외 cell 만. 다음 κ-69 reserved =
+  G29-β (hexa-native sun-position runtime port) + 다른 cell 의
+  measured-oracle round + G30 Stage 2 (constitution populate 후).
+- 2026-05-21 — **phase κ-68 CLOSURE 박제 (RFC 013 §6.11 LANDED ·
+  D109..D110 + G27..G30 Stage 1 누적)**. 사용자 게이트 "all go".
+  κ-68 (per-cell measured-oracle parity round) 의 *4-fold full
+  land* 가 한 사이클로 마감:
+  - **G27 (D109 · `5392213`)** — cell + oracle source 결정 (Energy/
+    solar + NREL MIDC SRRL Golden CO + single clear-sky day +
+    pvlib trusted bridge + mean rel_err ≤ 5%). 5 default lock-in.
+  - **G28 (G28a `4a1a087` + G28b PR #248 STUB MERGED)** — schema-
+    half: `MeasuredOracleRef` typed struct (8 field · isMeasured
+    OraclePASS computed) + `EnergyVerifyRecord.measuredOracle`
+    field + 7 XCTest. hexa-lang STUB producer (60-sample synthetic
+    clear-sky) 가 schema half end-to-end emit→decode 입증.
+  - **G29 (D110 · hexa-lang `b8d35920` PR #259 REAL MERGED + demiurge
+    record)** — first cell `absorbed=true` legitimate flip (mean_rel_
+    err 0.0499 vs 0.05 PASS · 480 clear-sky samples · 2024-06-15
+    SRRL BMS). RFC 013 §6.11 의 LANDED 조건 충족.
+  - **G30 Stage 1 (`fee34cc`)** — XCTest invariant load-bearing land
+    (3 test method · D103 dimension-separation typed enforcement ·
+    D95 computed projection 부산물 차단 · D106 illustrative exempt).
+  - **RFC 013** status `MOSTLY-LANDED` → `LANDED` · §6.11 entry
+    refresh · §9 Log new entry. κ-67 의 PARTIAL → MOSTLY land
+    cycle 의 κ-68 mirror (per-cell measured-oracle axis 의 first
+    land).
+  - **누적 commits** (κ-68 lifetime · demiurge 측):
+    `5392213` (D109) · `0c92645` (drafts + INDEX) · `4a1a087`
+    (G28a Swift) · `de9cd5d` (G28 [x] flip) · `6d42ddd` (G30 sketch
+    supersede) · `fee34cc` (G30 Stage 1 XCTest) · `05c4a9f`
+    (G30 [x] flip) · [본 commit] (G29 [x] flip + D110 + RFC
+    LANDED + κ-68 closure). hexa-lang 측 commits: G28b STUB PR #248
+    (merged) · G29 REAL PR #259 (`b8d35920` merged).
+  - **G29-β + G30 Stage 2 잔여**: hexa-native sun-position runtime
+    port (κ-69+) · constitution.md row (constitution.md populate
+    후). 본 closure 박제는 κ-68 의 4-fold full land 만 — 잔여 axis
+    는 별 phase boundary.
+  g3 — κ-68 closure 박제는 새 측정 0, 새 cell flip 0, 새 SSOT 0 —
+  *결정-감사추적의 phase boundary* 만 명시. κ-68 의 4-fold land
+  fact 는 이미 D109/D110/G27/G28/G29/G30 + RFC 013 + ARCH §11.4
+  + commit 본문에 존재; 본 entry 는 그것이 한 phase 의 closure
+  였다는 사실을 *PLAN.md κ-진행로그* 에서 박제. κ-67 ↔ κ-68
+  boundary: κ-67 = substrate-parity axis 의 RFC 013 §6.1..6.10 + 6.12
+  land · κ-68 = measurement-parity axis 의 RFC 013 §6.11 land ·
+  두 axis 가 D103 dimension-separation 으로 typed-enforce. 다음
+  κ-69 reserved = G29-β (hexa-native sun-position runtime port) +
+  다른 cell measured-oracle round (Aura / Ufo / ChipAnalyge 등 ·
+  D106 illustrative 제외).

@@ -1,0 +1,33 @@
+{
+  "absorbed": true,
+  "citations": [
+    "demiurge design.md D109 \u2014 Energy/solar cell + NREL MIDC pyranometer GHI direction (\u03ba-68 G27)",
+    "demiurge proposals/rfc_013_hexa_native_parity_connection.md \u00a76.11 \u2014 per-cell measured-oracle parity round",
+    "https://midcdmz.nrel.gov/apps/sitehome.pl?site=BMS",
+    "pvlib python 0.13.0"
+  ],
+  "domain": "energy",
+  "hexa_native_parity": null,
+  "kernel_reuse": "pvlib clearsky/transposition trusted bridge (substrate-parity proven on stdlib/kernels/solar/pvlib_kernel.py)",
+  "kind": "solar_clearsky_ghi_measured_oracle",
+  "measured_oracle": {
+    "dataset_caveats": "daylight samples (zenith<85.0\u00b0): 829; clear-sky kept (ratio in [0.85,1.3)): 480; dropped cloudy/cloud-enhanced: 349. modeled = pvlib 0.13.0 Ineichen clearsky (Linke-turbidity climatology \u00b7 D80 substrate-parity PASS at \u03ba-65). measured side = research-grade vented + thermally corrected CMP22 pyranometer.",
+    "dataset_citation": "https://midcdmz.nrel.gov/apps/sitehome.pl?site=BMS",
+    "max_rel_err": 0.23032116993142007,
+    "mean_rel_err": 0.049879613122235274,
+    "oracle_source": "NREL MIDC BMS (SRRL Golden CO) \u00b7 pyranometer GHI Global CMP22 (vent/cor) \u00b7 2024-06-15 \u00b7 1-min cadence",
+    "sample_count": 480,
+    "threshold": 0.05,
+    "unit": "W/m^2"
+  },
+  "measurement_gate": "GATE_CLOSED_MEASURED",
+  "producer": "nrel_midc_pyranometer",
+  "scope_caveats": [
+    "single clear-sky day (2024-06-15); mean rel_err over 480 clear-sky-filtered samples vs pvlib Ineichen clearsky modeled GHI.",
+    "modeled stack uses pvlib clearsky (Ineichen) + sun position; the latter has D80 substrate-parity vs hexa-native `solar_position_kernel` (\u03ba-65 21/21 PASS at rel_err <= 1e-13) \u2014 the hexa-native call site is a G29-\u03b2 follow-on (substrate-parity already proven, runtime port is the next axis).",
+    "Linke-turbidity climatology assumption inherent in Ineichen \u2014 not site-specific aerosol retrieval."
+  ],
+  "skipped_reason": null,
+  "stamp": "20260520T190739Z",
+  "verb": "verify"
+}

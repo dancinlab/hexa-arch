@@ -1,17 +1,23 @@
 # RFC 013 — Hexa-native parity connection (D80 substrate ↔ demiurge cell-record wiring)
 
-> Status: **MOSTLY-LANDED** (schema half κ-66 `5e9f6dea` · producer
-> wire T7 `efa4afe` · D95 computed cell-flip `a5d12d2` · D99 chip UI
+> Status: **LANDED** (schema half κ-66 `5e9f6dea` · producer wire T7
+> `efa4afe` · D95 computed cell-flip `a5d12d2` · D99 chip UI
 > `f036f6f` · D96+D100 19/19 narrative `47bf504` + `e451037` · D97
 > 3-tier link-integrity `74a1b92` · D98 cross-ref CI `384101b` ·
 > D101 env-fallback deprecation `8fc0862` · D103 dimension-separation
 > docstring `105315e` · D102 chem first PILOTS row `a033def` · D106
-> illustrative-physics gate first-class; 13/15
-> D80 pilots in `domains/PILOTS.demi` — only the per-cell measured-
-> oracle parity round remains as P-⑩ ① queued follow-on) · Created:
-> 2026-05-20 · Last status refresh: 2026-05-20 (D105 sweep) ·
-> **κ phase: κ-67** (promotion of κ-65 connection-plan note to formal
-> RFC; PARTIAL-LAND → MOSTLY-LANDED via D94..D103 sweep).
+> illustrative-physics gate first-class · **D109 cell pick + 5 default
+> lock-in** (Energy/solar + NREL MIDC SRRL Golden CO · κ-68 G27) ·
+> **D110 first cell legitimate `absorbed=true` flip** (Energy/solar
+> 2024-06-15 · mean_rel_err 0.04988 vs 0.05 threshold · PASS ·
+> hexa-lang `b8d35920` real producer + demiurge `exports/energy/
+> verify/2026-05-21T03-07-39Z/` record · κ-68 G29) · G30 Stage 1
+> XCTest invariant `fee34cc`). Created: 2026-05-20 · Last status
+> refresh: 2026-05-21 (κ-68 closure) · **κ phase: κ-68** (per-cell
+> measured-oracle parity round — G27 land D109, G28 schema-half
+> `4a1a087` + STUB PR #248, G29 first legitimate flip D110 + REAL
+> PR #259, G30 Stage 1 invariant `fee34cc`; only G30 Stage 2
+> constitution.md row deferred until populate decision).
 > Promotes: `inbox/notes/hexa-native-connection-plan-2026-05-20.md`
 > (the κ-65 audit-round SHAPE note). The note remains in place as
 > audit trail; this RFC supersedes its `κ-? RFC` placeholder.
@@ -365,14 +371,26 @@ external oracle yet — formula IS the algorithm).
 Stage-0 seed + `pilot-mc_transport` illustrative-physics gate; 375
 cumulative assertions across rows that carry parity tests).
 
-### 6.11 Remaining queued — P-⑩ ① measured-oracle per-cell parity
+### 6.11 LANDED 2026-05-21 — per-cell measured-oracle parity (κ-68)
 
-The single remaining follow-on from the original §6 is the per-cell
-*measured-oracle* parity round: producer authors wire substrate
-adapter PASS-N/M into cell-side measurement records that flip the
-stored `absorbed: Bool` legitimately (NOT via D95 computed
-projection). NEXT_SESSIONS P-⑩ ① queues this; D103 docstring guards
-against accidental auto-flip during that round.
+The κ-68 per-cell measured-oracle parity round is LANDED. cell pick
++ decision gate at D109 (`5392213`) — Energy/solar + NREL MIDC SRRL
+Golden CO pyranometer GHI + single clear-sky day · 1-min cadence +
+pvlib clearsky trusted bridge + mean rel_err ≤ 5% PASS criterion.
+G28 schema-half land at `4a1a087` (demiurge `MeasuredOracleRef.swift`
++ `EnergyVerifyRecord.measuredOracle` field + 7 XCTest) + PR #248
+STUB producer. G29 first cell legitimate `absorbed=true` flip at
+D110 — hexa-lang `b8d35920` (PR #259) REAL producer fetches NREL
+MIDC BMS data for 2024-06-15, applies clearsky filter, computes
+`mean_rel_err = 0.04988` over 480 samples vs `threshold = 0.05` →
+PASS (marginal · ~24 bp under). The producer EXPLICITLY sets
+`absorbed=true` (NOT via D95 computed projection · D103 separation
+preserved). Record at `exports/energy/verify/2026-05-21T03-07-39Z/
+energy_verify_20260520T190739Z_nrel_midc_pyranometer.json` (demiurge).
+G30 Stage 1 XCTest invariant at `fee34cc` enforces (absorbed=true ⇒
+measured_oracle PASS OR D106 illustrative exempt). G30 Stage 2
+constitution.md row deferred until `.specify/memory/constitution.md`
+populate (separate decision · κ-68 G30 scope 밖).
 
 ### 6.12 `gate_type = "illustrative-physics"` first-class — LANDED (D106)
 
