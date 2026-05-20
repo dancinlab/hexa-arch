@@ -963,7 +963,7 @@ demiurge = domain-shared (도메인 1개 + 프로젝트 N 개 포인터). 시뮬
 rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkeeping 정직성
 표면.
 
-### 11.4 G1–G24 implementation checklist
+### 11.4 G1–G30 implementation checklist
 
 > G1–G8 라운드 1–3 (`fundamental` / `honesty surface` / `cross-domain
 > audit`) 는 κ-62 (3322523) 에서 전부 `[x]` 완료. G9–G12 라운드 4
@@ -975,9 +975,13 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
 > closure pilot #13` — D102..D108 + geodesy) 는 같은 2026-05-20 cycle
 > 후반에 chem 첫 PILOTS row + dimension docstring + RFC 013 MOSTLY-
 > LANDED + illustrative-physics gate + spawner 5th fallback + κ-67
-> closure + geodesy WGS84 14th pilot 로 마감. 각 항목 진행하면 `[x]`
-> 로 박고 PLAN κ-entry + design.md D-block + 영향 파일 commit 으로
-> 묶을 것.
+> closure + geodesy WGS84 14th pilot 로 마감. **G27–G30 라운드 7
+> (`κ-68 per-cell measured-oracle parity round` — RFC 013 §6.11 ·
+> in-progress)** 는 stored `absorbed: Bool` 의 첫 legitimate flip 을
+> cell-side measured oracle 로 트리거 (NOT D95 computed projection)
+> 하는 round — pre-code 시점에 4 G-item placeholder 로 scaffold.
+> 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md D-block +
+> 영향 파일 commit 으로 묶을 것.
 
 **라운드 1 — fundamental (D78 + sibling + falsifier schema)**
 
@@ -1677,6 +1681,82 @@ geodesy WGS84, 2026-05-20)**
     - inbox/INDEX.md 27 entries 도달
     - swift build/test 무관 (doc-only)
 
+**라운드 7 — κ-68 per-cell measured-oracle parity round (RFC 013 §6.11 ·
+in-progress)**
+
+> stored `absorbed: Bool` 의 첫 legitimate flip 을 cell-side measured
+> oracle 로 트리거 (NOT D95 computed projection from substrate-parity).
+> D103 docstring 이 가드하는 axis 의 첫 실 land — substrate-parity ≠
+> measurement-parity 의 honest floor 를 처음으로 measured 쪽에서 land.
+> 4 placeholder G-item — 진행되면 `[x]` 로 박고 PLAN κ-68 entry +
+> design.md D-block + 영향 파일 commit 으로 묶는다. illustrative-
+> physics gate (D106) 가 적용된 cell 은 본 round 의 absorbed flip
+> 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
+
+- [ ] **G27.** Cell + measured-oracle source 선정 (κ-68 R7 pre-code
+    decision gate)
+  - 18 cell × 7 verb 중 첫 measured-oracle flip 후보 1개 선정 + 외부
+    oracle 출처 (NIST / pyranometer / Geant4 stopping-power / … ) +
+    PASS 기준 (`rel_err ≤ ?`) 사전 선언. 조건: (a) 기존 hexa-native
+    pilot 보유 (PILOTS.demi row 존재), (b) 외부 oracle 실 데이터
+    접근 가능 (URL / archive / 측정 record), (c) D103 dimension-
+    separation 명확 (substrate-parity 와 measurement-parity 가 독립
+    측정 가능), (d) D106 illustrative-physics 가 적용된 cell 제외.
+  - deps: G19..G26 누적 · RFC 013 §6.11 · D80 (honesty floor) ·
+    D95 (computed projection 격리) · D103 (dimension-separation
+    docstring) · D106 (illustrative-physics 제외)
+  - exit:
+    - design.md 단일 D-block (cell + oracle 출처 + 기준 + 회피
+      후보 rationale)
+    - 새 code 0 (decision-only 단계 — D-block 박제까지)
+
+- [ ] **G28.** Producer wire — substrate adapter 가 measured-oracle
+    field 를 cell record 에 emit (`absorbed` 미flip)
+  - 선정 cell 의 substrate adapter (hexa-lang 또는 sibling repo) 가
+    verify record JSON 에 typed measured block (측정값 · external
+    reference · rel_err · threshold · oracle source ref) inject.
+    `hexa_native_parity` 와 별도 axis 의 새 field set. `absorbed:
+    Bool` 은 false 유지 (D103 separation — schema half 만 land).
+  - deps: G27 (cell choice) · D86 (no hardcoded data) · D103
+    (dimension-separation)
+  - exit:
+    - cell record schema 1개 확장 (`<X>VerifyRecord.swift` typed
+      `measuredOracle: MeasuredOracleRef?` 후보)
+    - exports/ 에 measured block 보유 record JSON ≥ 1 land
+    - XCTest ≥ 1 (decode + measured field 존재 검증)
+    - `absorbed` 는 false 유지 (cell-flip 분리)
+
+- [ ] **G29.** 첫 cell `absorbed: true` legitimate flip (NOT D95
+    computed projection)
+  - G28 measured-oracle PASS 조건에서 cell record writer 가 stored
+    `absorbed: Bool` 을 true 로 명시적 set. D95 computed `isHexa
+    NativeAbsorbed` 재사용 금지 — stored field 와 computed field 는
+    별도 set path 유지 (D103). RFC 013 §6.11 의 land 조건 충족.
+  - deps: G28 (measured field 존재) · D80 (honesty floor) · D95
+    (computed 와 격리) · D103 (dimension-separation)
+  - exit:
+    - 단일 cell 의 stored `absorbed: Bool` true land (measured
+      oracle PASS 근거 cell record 안에 cite)
+    - 다른 cell record 회귀 0 (의도치 않은 flip 없음)
+    - design.md D-block + PLAN.md κ-68 entry
+    - swift build/test PASS
+
+- [ ] **G30.** Governance gate — absorbed-vs-measured invariant typed
+    enforcement (D103 docstring → compiler-checkable)
+  - AGENTS.tape `@D` 후보 1 row (이름 G27 단계에서 결정 — 예:
+    `g_absorbed_needs_measured_oracle`) + cockpit XCTest 가
+    "measured field 부재 시 stored `absorbed: Bool` true 면 FAIL"
+    invariant enforcement. D103 docstring 의 semantic gate 를
+    test-level guard 로 격상. D106 illustrative-physics case 는
+    invariant 에서 제외 (anti-conflation 유지).
+  - deps: G29 (첫 land 사례 존재) · D103 (docstring gate) · D106
+    (illustrative-physics 제외)
+  - exit:
+    - XCTest invariant PASS
+    - `AGENTS.tape` `@D` 1 row land
+    - 기존 cell record (illustrative-physics 등) 회귀 0
+    - swift build/test PASS
+
 ---
 
 ## Log
@@ -1746,3 +1826,14 @@ geodesy WGS84, 2026-05-20)**
   note (1f9f934 · cold-start anchor · inbox/INDEX 27 entries).
   헤딩 노트 G1–G24 로 갱신 (G25/G26 는 Round 6 안 post-closure
   bracket).
+- 2026-05-20 — §11.4 G1–G24 → G1–G30 확장. **Round 7 scaffold**
+  (`κ-68 per-cell measured-oracle parity round` — RFC 013 §6.11 ·
+  in-progress) 4 placeholder G-item 박음 (G27 cell + oracle 선정
+  pre-code gate · G28 producer wire `absorbed` 미flip · G29 첫
+  cell `absorbed: true` legitimate flip NOT D95 computed · G30
+  governance invariant typed enforcement). pre-code 단계 — code
+  변경 0, ARCH narrative 만 확장. stored `absorbed: Bool` 의 첫
+  legitimate flip 을 cell-side measured oracle 로 트리거하는
+  round 의 frame 을 박은 것. illustrative-physics gate (D106) 적용
+  cell 은 본 round 의 flip 대상에서 제외 (RFC 013 §6.12 anti-
+  conflation 유지).

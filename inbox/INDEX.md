@@ -1,6 +1,6 @@
 # inbox/INDEX.md — cross-session pickup SSOT
 
-> Updated 2026-05-20 (post κ-67 RFC 013 promotion of hexa-native connection plan).
+> Updated 2026-05-21 (κ-67 closure + ARCH §11.4 Round 7 scaffold + κ-68 cell pick).
 > Status SSOT for every `inbox/notes/*.md` entry. Each entry keeps
 > its own body intact; this file is the at-a-glance index.
 
@@ -12,7 +12,7 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (27 entries)
+## Index (28 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
@@ -30,6 +30,7 @@
 | `hexa-native-port-pattern-pilot-mc-transport.md` | pickup-open | (D80 g_hexa_only pilot) | Minimum-viable hexa-native mc_transport 1-D slab pilot — port without OpenMC / Geant4 / nuclear-data |
 | `hexa-lang-stdlib-full-consolidation-2026-05-20.md` | resolved | κ-45 | 15 domain modules consolidated to hexa-lang origin/main |
 | `kernel-extraction-pickup.md` | resolved | κ-45 | All 13 D72 kernels landed on hexa-lang origin/main |
+| `k68-cell-pick-2026-05-21.md` | pickup-open | κ-68 / G27 / RFC 013 §6.11 | κ-68 첫 measured-oracle absorbed flip 의 cell pick — Energy (solar) + NREL MIDC pyranometer GHI direction. 5 open sub-decisions (station / window / bridge trust / PASS criterion / D-number) queued for G27 D-block (D109 후보). 회피 후보: Fusion (D106 illustrative) · ChipAnalyze (YOSYS 별 세션) · Aura (heavy oracle infra) · Ufo (closed-form only). |
 | `openmc-install-blocker-2026-05-20.md` | pickup-blocked | (Track D / H-3) | OpenMC + ENDF/B-VIII.0 install fails on osx-arm64 + Linux pool unreachable — k-eff measurement deferred |
 | `openmdao-kernel-promotion-pickup.md` | pickup-open | (2nd consumer) | OpenMDAO 2 consumers (scope+space) — promote to kernels/mdo/ |
 | `parity_attempt_bot_synth_2026-05-20.md` | resolved | κ-50 | Pinocchio rel err 0.04% / 0.0003% vs Spong; flip NO (URDF hermetic) |
@@ -46,7 +47,7 @@
 
 ## Open pickup count
 
-- **pickup-open**: 3 (`openmdao-kernel-promotion-pickup.md` 2nd MDO consumer · `rfc006-s5-area-oracle-parity-handoff.md` next-session entry = §5 gate refined to [58,675, 64,851] µm² with oracle 61,762.99 reproducible; sub-steps #4g/#4h/#4i + hexa-cc strlit-init PR + sv2v pre-step · `hexa-native-port-pattern-pilot-mc-transport.md` D80 hexa-native mc_transport 1-D pilot)
+- **pickup-open**: 4 (`openmdao-kernel-promotion-pickup.md` 2nd MDO consumer · `rfc006-s5-area-oracle-parity-handoff.md` next-session entry = §5 gate refined to [58,675, 64,851] µm² with oracle 61,762.99 reproducible; sub-steps #4g/#4h/#4i + hexa-cc strlit-init PR + sv2v pre-step · `hexa-native-port-pattern-pilot-mc-transport.md` D80 hexa-native mc_transport 1-D pilot · `k68-cell-pick-2026-05-21.md` κ-68 cell pick anchor — Energy/solar + NREL MIDC direction, 5 sub-decisions queued)
 - **pickup-blocked**: 2 (`hexa-lang-branch-consolidation-2026-05-20.md` cross-session live-tree alignment · `openmc-install-blocker-2026-05-20.md` osx-arm64 + Linux pool unreachable)
 
 ## Cross-references
@@ -55,7 +56,7 @@
 - design.md D1..D108 (decision audit-trail SSOT · D104 reserved)
 - NEXT_SESSIONS.md (handoff prompts for cross-session work)
 - proposals/rfc_013_hexa_native_parity_connection.md (κ-67 promotion target · MOSTLY-LANDED per D105)
-- ARCH.md §11.4 G1..G24 Round 1-6 (+ G25/G26 post-closure bracket)
+- ARCH.md §11.4 G1..G30 Round 1-7 (+ G25/G26 post-closure bracket · Round 7 G27..G30 scaffold `[ ]` placeholder · κ-68 per-cell measured-oracle round)
 
 ## Maintenance
 

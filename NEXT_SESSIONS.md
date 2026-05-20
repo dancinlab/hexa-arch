@@ -16,10 +16,11 @@
 >
 > **P-* (design / build sessions)** — P-⑤ ✅ DONE; P-②③ / P-④ cross-
 > repo / heavy; P-⑥ closed; P-⑦ workbench follow-ups; P-⑧ / P-⑨
-> post-completion / producer; **P-⑩ (κ-67 producer-emit / live
-> mirror, RFC 013 §6)**, **P-⑪ (bio D80 pilot full sweep · T3
-> in-progress)**, **P-⑫ (Q3 advisory cross-cohort follow-up + chem
-> substrate seed watch)** — new 2026-05-20.
+> post-completion / producer; **P-⑩ (κ-68 per-cell measured-oracle
+> parity round, RFC 013 §6.11)** ← κ-67 ①②③ LANDED, §6.11 only
+> queued; **P-⑪ (bio D80 pilot full sweep · T3 in-progress)**,
+> **P-⑫ (Q3 advisory cross-cohort follow-up + chem substrate
+> seed watch)** — new 2026-05-20.
 >
 > **H-* (heavy-substrate measurement sessions, new 2026-05-20)** —
 > H-1 unblocks all (hexa-lang live-tree re-align); H-2..H-7 each
@@ -519,100 +520,102 @@ Exit criterion (any one ends honestly):
 
 ---
 
-## P-⑩ — κ-67 producer-emit + live-mirror round (RFC 013 §6 follow-on)
+## P-⑩ — κ-68 per-cell measured-oracle parity round (RFC 013 §6.11 follow-on · post-κ-67)
 
-**Use this when:** you continue the κ-67 RFC 013 (PARTIAL-LAND) work
-— the schema half landed at demiurge `5e9f6dea` (κ-66) plus the
-RFC promotion at `cea3c66` (κ-67), but no producer actually writes
-`hexa_native_parity` into a record yet, and `SkippedCellsDashboard`
-still colors chips from the static `GateType` enum (not the live
-44-row `DEPENDENCIES.demi` audit).
+**κ-67 close (2026-05-20)**: ① producer-emit (LANDED · `efa4afe` D94),
+② live mirror (LANDED · `47bf504` D96 + `e451037` D100), ③
+illustrative-physics gate (LANDED · `f9a9a90` D106). RFC 013
+PARTIAL-LAND → MOSTLY-LANDED (`943a5b8` D105) → κ-67 closure
+(`eea2804` D108). **Remaining queued = RFC 013 §6.11 only — per-cell
+measured-oracle parity round (κ-68).**
+
+**Use this when:** every D80 / RFC 013 §6.1..§6.10 / §6.12 follow-on
+has landed; stored `absorbed: Bool` 의 첫 legitimate flip 을 cell-
+side measured oracle 로 트리거하는 round 가 queued. ARCH.md §11.4
+Round 7 (G27..G30) scaffold 가 `[ ]` placeholder 로 박힘 — 본 prompt
+가 그 4 항목을 `[x]` 로 가져간다. cell pick = Energy/solar
+(`inbox/notes/k68-cell-pick-2026-05-21.md` · 5 open sub-decisions
+queued).
 
 ```
-demiurge κ-67 producer-emit + live-mirror session.
-Repo: ~/core/demiurge · branch from origin/main (currently
-`f28c1b0`). Read first:
-  - proposals/rfc_013_hexa_native_parity_connection.md (RFC 013;
-    §2 schema landed, §4 8-pilot wiring, §6 follow-on triage)
-  - inbox/notes/hexa-native-connection-plan-2026-05-20.md (the
-    κ-65 SHAPE note RFC 013 superseded — kept as audit trail)
-  - design.md D80 (g_hexa_only), D86 (g_no_hardcoded_data), D87..
-    D100 (`.demi` SSOT consolidation — DO NOT re-litigate these)
-  - domains/PILOTS.demi (13 rows · hexa-lang origin/main SHAs)
-  - domains/DEPENDENCIES.demi (44-row audit · portable_status
-    ladder)
-  - PLAN.md κ-66 / κ-67 entries (sweep close + RFC promotion)
+demiurge κ-68 per-cell measured-oracle parity round session.
+Repo: ~/core/demiurge · branch from origin/main. Read first:
+  - ARCH.md §11.4 Round 7 (G27..G30 placeholder `[ ]`)
+  - proposals/rfc_013_hexa_native_parity_connection.md §6.11
+    (per-cell measured-oracle round queued · MOSTLY-LANDED 상태)
+  - inbox/notes/k68-cell-pick-2026-05-21.md (cell = Energy/solar,
+    NREL MIDC pyranometer GHI direction · 5 sub-decisions open)
+  - design.md D80 (g_hexa_only) · D86 (no hardcoded data) · D95
+    (computed projection 격리) · D103 (dimension-separation) ·
+    D106 (illustrative-physics gate) · D108 (κ-67 closure) — DO
+    NOT re-litigate
+  - domains/PILOTS.demi `[pilot-solar]` (21 PASS · 8 sub-kernel ·
+    hexa-lang `stdlib/kernels/solar/`)
 
-Three jobs (do them in order; each is independently shippable):
+Four jobs (do them in order — G27 → G28 → G29 → G30):
 
-① Producer-side emit (RFC 013 §6.1) — 5 PR first wave.
-   For each of pilot #1 (solar) / #6 (dft_naive) / #7 (event_queue)
-   — the cell-direct consumers per RFC §4.2 — make the substrate
-   adapter actually inject the `hexa_native_parity` 8-field block
-   into the emitted record JSON. The kernel + test SHA + PASS-N/M
-   come from PILOTS.demi (PilotLoader.find(id:) per D94). Producer
-   = the existing Python adapter under `~/core/hexa-lang/stdlib/
-   <domain>/<adapter>.py`. The adapter MUST NOT hardcode the SHA
-   — re-read it from PILOTS.demi at emit time (D86 floor).
-   Pilots #2 (mc_transport) and #5 / #5b ride the
-   `gate_type = "illustrative-physics"` track (RFC §4.2 / §6.3) —
-   do NOT wire mc_transport to `.hexaNativeFuture` (that would
-   conflate substrate pattern-proof with measurement parity).
+G27. Cell + measured-oracle source decision (pre-code gate).
+   Cell = Energy/solar (이미 결정 · k68-cell-pick anchor). Oracle
+   direction = NREL MIDC pyranometer GHI (단일 clear-sky day ·
+   SRRL Golden CO 후보). 5 open sub-decisions (station / window /
+   bridge trust / PASS criterion / D-number = D109 후보) 답한 뒤
+   design.md 에 단일 D-block 박제 — cell + oracle dataset + PASS
+   기준 + 회피 후보 rationale. Code 변경 0 (decision-only).
 
-② Live DEPENDENCIES.demi mirror in cockpit (RFC 013 §6.2) — 1 PR.
-   Wire `DependenciesLoader` into the cockpit warm-start path so
-   `SkippedCellsDashboard` derives `hexaNativeAbsent` /
-   `hexaNativeFuture` buckets from the 44-row audit at load time.
-   Today the chip color is static enum-driven; per D86 it should
-   project the live row's `portable_status` instead. No new SSOT;
-   one PR + ≥2 XCTest covering both `nonportable` and `heavy-port`
-   row classification.
+G28. Producer wire — substrate adapter emits measured-oracle field
+   into cell record. Cell record schema 확장 — typed
+   `MeasuredOracleRef` (measured · reference · rel_err · threshold ·
+   oracleSource). `hexa_native_parity` 와 별도 axis 의 새 field
+   set. `absorbed: Bool` 미flip (D103 separation — schema half 만
+   land). XCTest ≥ 1 · `EnergyVerifyRecord` 의 field 1개 추가 ·
+   exports/ 에 PASS record JSON ≥ 1 land.
 
-③ illustrative-physics gate first-class (RFC 013 §6.3) — 1 PR.
-   `GateType` currently has `.absorbed / .hexaNativeAbsent /
-   .hexaNativeFuture / .openGate …`. Add `.illustrativePhysics` as
-   a peer case; mc_transport-driven verify records pin it. Update
-   `HexaNativeParityChipModel` (D99) to render a 4th tone (e.g.
-   blue) for this case — DO NOT reuse the green "absorbed" tone.
+G29. First cell `absorbed: true` legitimate flip — NOT D95 computed
+   projection. Cell record writer (producer 또는 cockpit producer
+   adapter) 가 measured-oracle PASS 조건에서 stored `absorbed: Bool`
+   을 true 로 명시적 set. D95 computed `isHexaNativeAbsorbed` 재사용
+   금지 — stored field 와 computed field 는 별도 set path 유지.
+   단일 cell 만 (Energy/solar). PLAN.md κ-68 entry + design.md
+   D-block.
+
+G30. Governance gate — absorbed-vs-measured invariant typed
+   enforcement. AGENTS.tape `@D g_absorbed_needs_measured_oracle`
+   (이름 후보 · G27 D-block 단계에서 finalize) 1 row + cockpit
+   XCTest 가 "measured field 부재 시 absorbed=true 면 FAIL"
+   invariant enforce. D106 illustrative-physics case 는 invariant
+   에서 제외 (anti-conflation 유지). 기존 cell record 회귀 0.
 
 Gate (g3 — REQUIRED):
-   ① is "producer-emit landed" only when at least one cell's
-   `exports/<domain>/verify/<id>.json` carries a NON-nil
-   `hexa_native_parity` block, parsed back by the cockpit, and
-   rendered by HexaNativeParityChip as `.provisional` (yellow) —
-   NOT `.absorbed` (green). Substrate-parity ≠ measurement-parity
-   (RFC 013 §4.3 + D80). Until a measured oracle wires in, the
-   cell record carries `provisional = true`.
-   ② is "live mirror" only when removing a row from PILOTS.demi
-   (revert a pilot) demonstrably flips the cockpit chip color
-   without code edit. Verify with an XCTest that scripts the
-   removal.
-   ③ landed when a single mc_transport-driven record renders the
-   new tone and an XCTest covers the 4-case branch (RFC 013 §6.3
-   anti-conflation).
+   - G27 land = design.md D-block 박제 만 (code 0).
+   - G28 land = cell record schema 확장 + producer wire + XCTest;
+     `absorbed: Bool` 은 여전히 false 유지.
+   - G29 land = 단일 cell 의 stored `absorbed: Bool` true · measured
+     oracle PASS 근거 record 안에 cite · 다른 cell 회귀 0.
+   - G30 land = invariant XCTest PASS + AGENTS.tape `@D` 1 row;
+     기존 illustrative-physics cell (Fusion 등) 회귀 0.
 
 NOT (g3 — non-negotiable):
-   - Do NOT flip any cell-record `absorbed = true` from
-     substrate-parity alone. The 13 pilots are substrate-side
-     measured fact; cell-level absorbed flip requires a measured
-     oracle (per-cell parity round, NOT this session).
-   - Do NOT hardcode the SHA / parity_status in the producer
-     adapter — re-read from PILOTS.demi every emit (D86 floor).
-   - Do NOT add UI that implies hexa-native cells are absorbed —
-     the chip MUST stay `.provisional` (yellow) until the measured
-     round runs.
-   - Do NOT touch `~/core/hexa-lang` stdlib (this is a demiurge-
-     only session; hexa-lang substrate work goes in P-⑪ or its own
-     hexa-lang session).
+   - Do NOT trigger `absorbed=true` from D95 computed projection
+     (이전 round 의 자동-flip path 재사용 금지). stored `absorbed:
+     Bool` 은 항상 명시적 writer-set (D103 separation).
+   - Do NOT include illustrative-physics cells (Fusion mc_transport
+     등) 을 본 round 의 flip 대상에 포함 — D106 anti-conflation.
+   - Do NOT hardcode oracle dataset path in producer adapter —
+     D86 no-hardcoded-data floor 유지.
+   - Do NOT touch chip §B path (YOSYS.md 다른 세션 작업 중) —
+     ChipAnalyze cell 은 본 round 의 flip 대상에서 명시 제외.
+   - Do NOT extend the round to multiple cells in one session —
+     단일 cell (Energy/solar) 의 honest land 가 우선; 다중 cell
+     은 후속 round.
 
 Exit criterion (any one ends honestly):
-   (a) ① landed + ② landed + ③ landed + RFC 013 status updated
-       from PARTIAL-LAND to LANDED + κ-68 PLAN.md entry, OR
-   (b) ① landed alone with ② / ③ deferred + honest "next pickup"
-       note appended + RFC 013 status updated to reflect partial
-       progress (the schema half + first producer-emit PR), OR
-   (c) Scope-bounded sub-progress + RFC 013 unchanged + honest
-       next-pickup note in this P-⑩ section.
+   (a) G27..G30 모두 `[x]` + RFC 013 §6.11 LANDED + 단일 cell 의
+       stored `absorbed: true` 가 measured oracle PASS 근거로 land
+       + PLAN.md κ-68 entry + design.md D-block, OR
+   (b) G27 만 land (D-block 박제 · code 0) + G28..G30 deferred +
+       honest next-pickup note + RFC 013 §6.11 unchanged, OR
+   (c) Scope-bounded sub-progress (예: G27+G28 만) + RFC 013 §6.11
+       unchanged + next-pickup note in this P-⑩ section.
 ```
 
 ---
@@ -1349,12 +1352,16 @@ session per task.
   `f28c1b0` · hexa-lang `170f74af`). State summary at H-* branch-
   out refreshed — H-2 / H-6 first substrate records cited, H-3
   blocked note added. Three new prompts:
-  * **P-⑩** — κ-67 producer-emit + live mirror (RFC 013 §6) — three
-    sub-jobs: producer adapter writes `hexa_native_parity` for #1/
-    #6/#7 (1st wave), live DependenciesLoader cockpit wire, and
-    `.illustrativePhysics` gate first-class. g3 floor: chip stays
-    `.provisional` (yellow) — no `absorbed=true` from substrate-
-    parity alone.
+  * **P-⑩** — *originally* κ-67 producer-emit + live mirror (RFC 013
+    §6) — three sub-jobs all LANDED (① producer-emit `efa4afe`,
+    ② live mirror `47bf504`/`e451037`, ③ `.illustrativePhysics`
+    gate `f9a9a90`). κ-67 closure `eea2804` D108. **Refreshed
+    (post-κ-67) to κ-68 — per-cell measured-oracle parity round
+    (RFC 013 §6.11)** · four steps G27..G30 (ARCH §11.4 Round 7
+    scaffold). cell = Energy/solar (`inbox/notes/k68-cell-pick-
+    2026-05-21.md`). g3 floor: stored `absorbed: Bool` 의 첫
+    legitimate flip 은 cell-side measured oracle PASS 근거로만 —
+    D95 computed projection 재사용 금지 (D103 separation).
   * **P-⑪** — bio domain D80 pilot full sweep. bio is the ONE
     demiurge domain still mid-port (D100 "D80 pilot WEAVE"
     narrative) — T3 `.py → .hexa` per `hexa-lang/stdlib/PLAN.md`;
