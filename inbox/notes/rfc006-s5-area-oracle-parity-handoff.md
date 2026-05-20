@@ -713,3 +713,84 @@ to track sequential-cell emergence.
 - Next chain: #4g (read_verilog.hexa preceding-stmt inline) →
   #4h (multi-LHS dyn-idx) → #4i (with-else dyn-idx) → rebuild +
   re-run cell-tally → ABC tech-map area vs oracle ±5 %.
+
+## UPDATE 2026-05-20 (q) — hexa-cc PR design + #4g entry-scope captured (no code change this turn)
+
+After (p), inspected the hexa-cc strlit-init emission point and the
+read_verilog inline preprocessor to size the two remaining next-session
+work items honestly. Neither lands in this turn — both need their own
+session — but the design is fixed so resumption is precise.
+
+**Item A — hexa-cc strlit-init unique-emit PR (proper fix for #4j)**
+
+Emission site is `self/codegen_c2.hexa`:
+
+- L1264-1284 (path-A, the common codegen path used for rv.c / rtlil.c
+  / driver TUs).
+- L7882-7900 (path-B `codegen_c2_full`, the full-AST variant — same
+  shape, same fix needed).
+- L1338 main-prologue caller (`parts.push("    __hexa_strlit_init();\n")`).
+
+The PR:
+
+1. Plumb a TU identifier into `codegen_c2(ast)` — either ast carries
+   a `source_path` / `module_name` field already, or add a thread-local
+   string set by the build driver before `codegen_c2()` call. Inspect
+   `_hexa_cert_module_name()` at L8042 — that helper *may* already
+   carry the answer for path-A.
+2. Replace `__hexa_strlit_init` → `__hexa_strlit_init__<TU>` and
+   `__hexa_strlit_init_<N>` → `__hexa_strlit_init__<TU>_<N>` at all
+   five emit sites (L1270, L1278, L1281, L1338, L7887, L7894, L7897).
+3. Drop `static` on the public aggregator (`__hexa_strlit_init__<TU>`)
+   so external TUs can call it. Keep `static` on the per-chunk inner
+   `_N` helpers (they're internal to the file).
+
+Selftest risk: stage0/stage1 bootstrap and ~1500 `test_*.hexa` cases
+all build single-TU + self-call the aggregator from their own main —
+unaffected (caller and emit site rename together within the same TU).
+The win: external multi-file driver pattern (the one #4j needed) works
+without sed. Verify on demiurge/ubu-2 by rebuilding rv.c/rtlil.c
+without the sed step + linking drv.c against them.
+
+**Item B — #4g read_verilog.hexa preceding-stmt inline**
+
+Router_d4's `route_xy` function body shape (measured from
+`archive/comb/rtl/router_d4.v`):
+
+```verilog
+function automatic [WX-1:0] route_xy(input [W-1:0] hdr);
+    reg [WX-1:0] dst_x;             // local reg decl
+    reg [WX-1:0] dst_y;             // local reg decl
+    dst_x = hdr[7:0];               // blocking assign 1
+    dst_y = hdr[15:8];              // blocking assign 2
+    if (dst_x > my_x)
+        route_xy = 4'd1;            // east
+    else if (dst_x < my_x) ...      // cascaded-if-via-funcname
+endfunction
+```
+
+PR #172's `_rv_collapse_cascaded_if_body` handles `cascaded-if-via-
+funcname → nested-ternary` for *bare* function bodies. #4g extends it
+to also fold a *preceding-statement prefix* (local reg decl ×N +
+blocking assign ×M before the cascaded-if). Strategy: inline-
+substitute the blocking-assigned wires into the cascaded-if branch
+exprs (single-static-assignment substitution on the linear prefix),
+then run the existing collapse. Local reg decls become substitution
+slots — no RTLIL wire emit needed since the function inlines at the
+expression site.
+
+T47 selftest: feed router-shaped `function automatic` body and
+assert the call-site `route_xy(hdr)` expands to a nested-ternary
+expression tree (no `name not found` fallback).
+
+**Resumption order suggestion for next session**:
+
+1. (smaller, safer) Item A — hexa-cc strlit-init PR → removes sed
+   workaround; cell-tally driver rebuilds without sed manipulation.
+2. (then) Item B — #4g, ladders into #4h/#4i then the cell-tally
+   rerun (expect sequential cells to appear: `$mux`, `$dff`, `$adff`).
+3. (then) ABC tech-map area measurement once cell-tally shows non-
+   zero sequential — that's when oracle-parity becomes meaningful.
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
+flip; this turn added measurement + design, not absorption).
