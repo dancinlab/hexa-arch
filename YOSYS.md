@@ -7,23 +7,29 @@
 > (entries (o)-(u) 누적, 측정-fact 적재 SSOT)
 > **governance**: g3 — 측정 전엔 `CLOSED_MEASURED` flip 금지
 
-## Status (snapshot 2026-05-20, post-PR #220 + PR #219)
+## Status (snapshot 2026-05-21 KST, post-PR #247 SSA fix · selftest closed)
 
 - `measurement_gate = OPEN`
 - `absorbed = false`
 - gate target area ∈ [58,675, 64,851] µm² (±5 % of oracle 61,762.99)
 - both oracles bit-exact reproducible (d4 61,762.99 / d6 93,608.53 / ratio 1.5156×)
-- **9 PRs landed cumulative** this session sequence
-- hexa-native sequential emit primitives 모두 landed (#4h-a static-idx, #4h-b dyn-idx, write_verilog $dff behavioural)
-- substrate handoff full functional (comb + $dff round-trip verified)
+- **live mac-side measurement** (`hexa run stdlib/yosys/gate_record.hexa`):
+  - `router_d4 area=0.0 µm² oracle=61763 µm² Δ=100.0% FAIL (±5%)`
+  - `router_d6 area=0.0 µm² oracle=93608.5 µm² Δ=100.0% FAIL (±5%)`
+  - measurement chain alive: proc → flatten → opt → proc_mux → clean_multidriver → techmap → dfflibmap → abc_map all `[OK]`
+- **PR landing reality** (corrected after audit):
+  - PR #242 (`cee28986`, our #4i mixed-block fallback) = **CLOSED** as superseded-by-#245 (2026-05-20 session)
+  - PR #245 (`66a39a31`, sibling RFC 073 Phase 3e) = MERGED 2026-05-20T14:37:37Z
+  - **PR #247** (`8dd1e677`, ABC comb-loop SSA fix) = **OPEN** — selftest 76/76 PASS (T73 added), pre-merge review
+  - prior #4h-a/b/g + write_verilog wire/cell/$dff stack: all merged via earlier PRs
 
-**closure path (per g3) — refined after code-review discovery**:
-- #4h sub-steps a/b/c/d ALL landed (a/b in our PRs, c/d in sibling work)
-- **single critical blocker = #4i** (outer with-else top-level wrapper)
-- ubu-2 측정 chain rebuild (hexa-cc binary outdated by sibling
-  codegen feature) — separate infra fix
-- closure 100% 까지: (a) #4i land + (b) ubu-2 chain rebuild +
-  (c) router_d4 area ±5 % 측정 + (d) g3-conditional gate flip
+**closure path (per g3) — re-scoped after Phase 3e + PR #247**:
+- ~~ABC comb-loop blocker~~ ← **SSA fix shipped in PR #247** (selftest 76/76 + SSA chain emit evidence in clean_multidriver log: `idx__ssa1..7`, `grant_out__ssa7`, `any_grant__ssa7` chains). End-to-end area > 0 measurement blocked by **separate runtime bug**: hexa's `exec` subprocess returns empty stdout + "broken pipe" — `abc_binary_path()` 가 `/opt/homebrew/bin/abc` 못 찾음 (binary 는 PATH 에 정상 존재함을 shell `command -v abc` 로 확인)
+- ~~comb-side share/freduce parity~~ ← **deferred** : meaningless while area=0.0
+- closure 100% 까지: (a) PR #247 review/merge + (b) **exec runtime bug fix** ← new blocker, separate scope + (c) area > 0 측정 확인 + (d) ±5 % gate 진입 + (e) (가능하면) share/freduce comb-gap closure + (f) g3-conditional gate flip
+
+**infra side-note (measurement 와 무관)**:
+- `tool/ubu_bootstrap.sh` 는 `ecd4d042` (RFC 065 cycle) 에서 `archive_legacy_glue/` 로 옮겨짐. mac-side measurement 는 `hexa run stdlib/yosys/gate_record.hexa` 가 standalone 동작 (substrate ABC + SKY130 만 있으면) — bootstrap script 부재는 ssh-to-ubu2 remote rebuild 자동화의 부재일 뿐 measurement chain 차단 아님
 
 ## Checklist
 
@@ -61,23 +67,33 @@
   - #4h-b: multi-LHS dyn-idx (PR #220 `85bea9a5`)
   - #4h-c: for-in-always multi-stmt body — **discovered already in tree** at read_verilog.hexa L3576-3607 (sibling work; const-fold indexed-LHS handler in for-body inner-loop plain-assign path)
   - #4h-d: nested-if inside always-body — **discovered already in tree** at L3476+ (sibling RFC 073 Phase 2 implementation)
-- [ ] **#4i with-else top-level outer wrapper (begin-block mixed-stmt body)** — **the single critical blocker** for router_d4 always-body emit
-  - router_d4 L98-123: outer `if (rst) begin scalar; for(...) ...; end else begin for(...) ...; for(...) ...; if(any_grant) begin ...; end; end`
-  - **scope refinement (code-review)**: with-else cond-mux (PR #115) 와 multi-LHS with-else (sibling) 가 *single-statement* 또는 *uniform-statement-sequence* both-branch 만 처리. router_d4 의 outer 는 **mixed-statement begin-block** (scalar + for-loop + nested-if 섞임) in both branches — 별도 처리 필요
-  - implementation: always-parser 의 if-handler 가 begin-block body 를 statement-by-statement walk + 각 statement 의 individual emit (scalar/indexed assign / for-loop / nested-if) dispatch. ~150-200 line scope (always-parser 의 outer entry extension)
-  - signal: router_d4 cell-tally 첫 sequential cells (predicted ~64 cells: 4 scalar $dff + bound×3 indexed $mux+$dff for reset branch + similar for else branch)
+- [~] **#4i with-else top-level outer wrapper** — **SUPERSEDED by PR #245 (Phase 3e)**, our PR #242 still OPEN
+  - our cee28986 approach: outer if-handler cells-count gated fallback + `_rv_emit_for_if_stmts` extension. multi-driver caveat 있음
+  - Phase 3e (`66a39a31`) approach: `_rv_emit_body_v2` per-LHS D-wire emission + caller-side single $dff per LHS + `connect_cond` + `pass_proc_mux` fold. **multi-driver invariant preserved** across recursive arms — strictly superior
+  - action: close PR #242 with "superseded by #245" comment, delete local branch
+  - lesson (already captured in Phase 3d status note `Lessons` section): `git log --oneline origin/main -10 -- <file>` before starting work on a high-traffic file
 - [x] **write_verilog chain via driver link** ✓ LANDED (PR #210 wire-emit + PR #212 cell-emit behavioural)
   - PR #210 `116d6799`: width prefix + escaped-identifier — substrate parse OK (wires=134, cells=55)
   - PR #212 `b0a800f3`: behavioural-form dispatch (16 binop + 3 unary + $mux) — substrate `synth` macro 가 hexa-native output 처리 가능
   - selftest 9/9 → 12/12 PASS, regression 0
   - 검증: end-to-end substrate chain (read_verilog → hierarchy → synth → dfflibmap → abc → stat) runs without errors on hexa-native router_d4 output
-- [ ] **share/freduce 또는 ABC -dff 옵션 통합** (comb-side oracle parity)
+- [x] **ABC comb-loop SSA fix** ✓ **SHIPPED in PR #247** (`8dd1e677`)
+  - 3 helpers + branch in `_rv_parse_always` for-handler (L4124): `_rv_signal_is_read_in_body` · `_rv_collect_blocking_lhs` · `_rv_ssa_rename_toks`. Token-level rewriting (no signature changes), filter to read-then-write LHS only (T58~T65 write-only path preserved)
+  - selftest 75 → 76/76 PASS (T73 `F-RFC-RV-COMB-LOOP-SSA-ARBITER`), zero regression
+  - IR-level evidence: `pass_proc_mux lowered 44 cond-tagged LHS-group(s)` for d6 (vs 3 pre-fix), `clean_multidriver` collapsing `idx__ssa1..7`, `grant_out__ssa7`, `any_grant__ssa7` chains last-wins
+  - end-to-end area measurement blocked by separate `exec` runtime bug (see Status)
+- [ ] **exec runtime bug fix** (new blocker — separate scope)
+  - 증상: hexa 의 `exec("...")` subprocess 가 모든 command 에 빈 stdout + `broken pipe` warning. `command -v abc`, `echo $PATH`, `echo hello` 다 빈 string. shell `bash -c` / `/bin/sh -c` 는 정상
+  - 의심: `self/runtime.c` 의 popen 동작이 sibling work 의 modified 상태에서 build 됐을 가능성 · 또는 bootstrap 의 hexa_v2 binary 가 broken state 에서 cached
+  - scope: 별도 file (이 도메인 아님). 진단 + fix 후 area measurement 재개
+- [ ] **share/freduce parity** (comb-side oracle gap, **deferred — area > 0 이후만 의미 있음**)
+- [ ] **share/freduce parity** (comb-side oracle gap, **deferred — area > 0 이후만 의미 있음**)
   - oracle 의 12k 차이 = `synth` macro 의 logic-sharing optimizations
   - 옵션: hexa-native passes 가 자체 share/freduce 구현 · 또는 substrate yosys 에 defer
-  - dependency: #4h/#4i landed + write_verilog wire emit fix (substrate handoff 가능해야 함)
-- [ ] **re-measure router_d4 area on flat_v2k via hexa-native end-to-end**
-  - target: ∈ [58,675, 64,851] µm² (±5 % of 61,762.99)
-  - dependency: all above. multi-day work — 위 sub-steps 들 landed 후만 가능
+  - dependency: ABC comb-loop fix (✓ PR #247) + exec runtime fix → area > 0 → 측정-driven impl
+- [ ] **re-measure router_d4 area** (chain runs, area still 0.0 due to exec runtime bug)
+  - target: ∈ [58,675, 64,851] µm² (±5 % of 61,762.99) · current 0.0 µm² Δ=100%
+  - dependency: exec runtime bug fix (ABC binary detection works) + PR #247 merged
   - alt: substrate-yosys-as-tail-pass (hexa-native frontend → substrate `synth` macro tail) — bridges share/freduce parity 자동
 - [x] **router_d6 oracle bit-exact 재현** ✓: 93,608.528000 µm² · ratio 1.5156× (oracle 일치) — substrate measurement reference 완전 fixed
 - [x] **cell-tally re-measure post-#4g** ✓ (handoff (x)): 35 → 55 cells (+20 comb), sequential still 0, gap 99.5%
@@ -87,41 +103,37 @@
 - [x] **write_verilog $dff behavioural emit** ✓ LANDED (PR #219 `c20b30b4`, selftest 13/13, conflict resolved + admin-merge) — substrate handoff complete for $dff sequential cells
 - [ ] **§5 measurement_gate = CLOSED_MEASURED · absorbed=true** (g3 — only after measurement passes)
 
-## Schedule (rough)
+## Schedule (rough, post-Phase 3e re-scope)
 
-| step       | scope        | session-cost | dependency |
-|------------|--------------|--------------|------------|
-| PR-A       | 1-file edit + 2 selftests + push | 30-60 min | dirty tree 정리 |
-| PR-B       | codegen change + bootstrap rebuild + 1500+ selftest | 2-4 sessions | none |
-| #4g        | read_verilog.hexa 확장 + T-test | 1-2 sessions | PR-A landed |
-| #4h        | always-body dyn-idx emit | 1-2 sessions | #4g |
-| #4i        | with-else dyn-idx + reset | 1-2 sessions | #4h |
-| write_verilog chain | 3-file link + driver | 1 session | PR-B (or sed) |
-| share/freduce | passes.hexa 확장 | 1-2 sessions | #4i |
-| measurement | flat_v2k synth → area | 30 min | 위 모두 |
+| step                     | scope                                       | session-cost | dependency      |
+|--------------------------|---------------------------------------------|--------------|-----------------|
+| close PR #242            | comment + close + branch cleanup            | 10 min       | none            |
+| ABC comb-loop SSA design | trace `any_grant` flow + design renaming    | 0.5-1        | Phase 3e read   |
+| ABC comb-loop SSA impl   | `_rv_emit_body_v2` extension + selftest     | 1-2          | design          |
+| re-measure (area > 0?)   | `hexa run stdlib/yosys/gate_record.hexa`    | 5 min        | impl            |
+| share/freduce design     | substrate-tail vs hexa-native impl 결정      | 0.5-1        | area > 0        |
+| share/freduce impl       | passes.hexa 확장 또는 tail wiring            | 1-3          | design          |
+| gate flip                | g3-conditional ±5 % achieved → flip         | 10 min       | measurement     |
 
-총 estimate: **6-12 sessions** until gate close
+총 estimate (이전 6-12 → post-Phase 3e): **3-7 sessions** until gate close (ABC fix 가 single-session 안 풀리면 +2-3)
 
 ## Future Roadmap (brainstorm-pruned 2026-05-20)
 
 FLOW pattern: 풀기 (84+ items generated) → 자르기 (delete 75 off-scope items, 89% prune) → 잡기 (each survivor with measurement protocol).
 
-### Tier-1: §5 closure path (immediate, multi-session)
+### Tier-1: §5 closure path (immediate, multi-session) — post-Phase 3e
 
-- [ ] **#4i with-else outer wrapper** (mixed-statement begin-block in both branches of `if (rst) ... else ...`)
-  - signal: router_d4 cell-tally 첫 sequential cells (≥1 × `$dff` emit from hexa-native always-body)
-  - scope: ~200 line always-parser if-handler extension at read_verilog.hexa L2256-2268
-  - dependency: none (purely hexa-lang code)
-- [ ] **ubu-2 hexa-cc binary rebuild** (resolve sibling struct-constructor codegen mismatch)
-  - signal: `clang -o /tmp/rv_X /tmp/rv.c /tmp/passes.c ... ` link 성공 (no undefined `Module`/`Design` references)
-  - scope: bootstrap chain — self/main.hexa compile → new binary → re-link
-  - dependency: external (offline, multi-hour)
-- [ ] **end-to-end router_d4 area measurement** (hexa-native → write_verilog → substrate yosys synth → stat)
-  - signal: `yosys -p "synth -top router_d4; ... stat -liberty ..."` 결과 reports non-zero Chip area
-  - dependency: #4i landed + ubu-2 chain rebuilt
+- [~] ~~**#4i with-else outer wrapper**~~ — SUPERSEDED by PR #245 (Phase 3e). PR #242 close pending
+- [ ] **ABC comb-loop SSA fix** ← real critical blocker (Phase 3e 가 명명)
+  - signal: ABC stops reporting 'Network contains combinational loop' · first non-zero $dff cells in mapped BLIF · router_d4 area > 0
+  - scope: per-iteration SSA renaming in `_rv_emit_for_if_stmts` (L1947) + `_rv_emit_body_v2` — `any_grant_i0/i1/...` per unroll index, fed to anti-dependency tree downstream
+  - dependency: read of Phase 3e impl + understanding of unroll loop var binding
+- [ ] **end-to-end router_d4 area measurement** (already runs, currently 0.0)
+  - signal: `hexa run stdlib/yosys/gate_record.hexa` reports area > 0
+  - dependency: ABC comb-loop SSA fix
 - [ ] **router_d4 gate flip** (`measurement_gate = CLOSED_MEASURED`, `absorbed = true`)
   - signal: measured area ∈ [58,675, 64,851] µm² (±5 % of oracle 61,762.99)
-  - dependency: end-to-end measurement passing; **g3-conditional only** (no flip without measurement)
+  - dependency: end-to-end measurement passing; **g3-conditional only**
 - [ ] **router_d6 parity** (oracle 93,608.53 µm²)
   - signal: measured area ∈ [88,928, 98,289] µm² (±5 %)
   - dependency: router_d4 gate close (same pipeline)
@@ -164,6 +176,15 @@ FLOW pattern: 풀기 (84+ items generated) → 자르기 (delete 75 off-scope it
 
 (append-only, latest 위에)
 
+- 2026-05-21 KST — **ABC comb-loop SSA fix landed in PR #247** (hexa-lang `8dd1e677`, OPEN). +393/-1 in `read_verilog.hexa`. 3 clean-room helpers (`_rv_signal_is_read_in_body` · `_rv_collect_blocking_lhs` · `_rv_ssa_rename_toks`) plumbed into `_rv_parse_always` for-handler at L4124. Per-iteration SSA versioning (`s__ssa0..ssaP`) of read-then-write blocking-LHS only — write-only filter preserves T58~T65 legacy path. T73 `F-RFC-RV-COMB-LOOP-SSA-ARBITER` selftest added (P=4 priority arbiter); 75/75 → 76/76 PASS, zero regression. IR-level evidence in `clean_multidriver` log: d6 의 `idx__ssa1..ssa7` + `grant_out__ssa7` + `any_grant__ssa7` chains collapsed last-wins, `pass_proc_mux` lowered 44 cond-tagged LHS-groups (vs 3 pre-fix). **end-to-end area measurement blocked by separate runtime bug** (`exec` subprocess returns empty stdout + broken pipe — `abc_binary_path()` 가 `/opt/homebrew/bin/abc` 못 찾음; shell 들에서는 정상). 별도 진단 + fix 필요
+- 2026-05-21 KST — PR #242 (#4i `cee28986`) **CLOSED** with "superseded by #245 Phase 3e" comment via `gh pr close --comment`. branch `rfc006-yosys-4i-with-else-mixed-block` 보존 (재검토 필요시)
+- 2026-05-20 23:30 KST — **status g3-honest correction (audit)**: 이전 entry 들의 wrong claim 3건 정정:
+  1. "PR #242 cee28986 admin-merge" → **PR #242 still OPEN**, `gh pr view 242 --json state` = `OPEN`. branch `rfc006-yosys-4i-with-else-mixed-block` 에만 존재. close 예정 ("superseded by #245")
+  2. "ubu-2 측정 chain 막힘 · `tool/ubu_bootstrap.sh` 부재가 blocker" → wrong. measurement chain alive (mac-side `hexa run stdlib/yosys/gate_record.hexa` 라이브 동작). bootstrap script 부재는 ssh-to-ubu2 remote-build 자동화 부재일 뿐
+  3. "next blocker = share/freduce comb gap (12k µm²)" → wrong. area=0.0 µm² (오라클 측정 라이브 확인) → share/freduce 가 의미 있으려면 area > 0 먼저
+- 2026-05-20 23:30 KST — **sibling PR #245 (Phase 3e) `66a39a31`** MERGED 14:37:37Z. 3 named blockers CLOSED via `_rv_emit_body_v2` (per-LHS D-wire + caller-side single $dff + connect_cond + pass_proc_mux fold): #1 for-loop indexed-LHS, #2 with-else NON-MATCHING bodies (= 우리 #4i scope superseded), #3 nested-if in else-body. 부가: sized-literal lowering, BLIF `.latch` emission. new blocker layer 명명: ABC combinational-loop (`any_grant` blocking-assign + per-iter SSA renaming 필요)
+- 2026-05-20 23:30 KST — **라이브 mac-side measurement** (gate_record.hexa): router_d4 area=0.0 oracle=61763 Δ=100% FAIL · router_d6 area=0.0 oracle=93608.5 Δ=100% FAIL. chain all `[OK]` (proc→flatten→opt→proc_mux→clean_multidriver→techmap→dfflibmap→abc_map). ABC exit=0 but 0 cells → comb-loop error path
+- 2026-05-20 — **#4i landed**: hexa-lang PR #242 `cee28986` (outer with-else mixed-statement begin-block fallback in `_rv_parse_always` + `_rv_emit_for_if_stmts` 확장 [for-loop unroll + indexed-LHS plain-stmt] + T70 selftest). +208/-3 lines. selftest 70/73 PASS (T70 PASS, T65a/b/c origin/main pre-existing 회귀 — stash-baseline diff로 확인). rebased on origin/main `116cdbf7`. **infra discovery**: `tool/ubu_bootstrap.sh` origin/main에서 제거됨 (post `ecd4d042` RFC 065 cycle) — ubu-2 mac-side rebuild mechanism 부재. 다음 step blocker  *[NOTE 2026-05-20 23:30: 이 entry 의 "landed" claim 은 wrong, "infra blocker" claim 도 wrong — 위 정정 entry 참조]*
 - 2026-05-20 — **cycle closure**: 9 PRs landed (all merged into hexa-lang origin/main) · 13 local branches deleted · 7 remote branches deleted · 13 demiurge handoff entries (o)-(aa) committed. All my work cycles closed. Remaining 3 ☐ items (#4i · measurement · gate flip) inherited as multi-session work for next dedicated session
 - 2026-05-20 — PR #219 landed: hexa-lang `c20b30b4` (write_verilog $dff behavioural emit, sibling conflict resolved). **9 PRs cumulative**. substrate handoff complete for $dff sequential cells
 - 2026-05-20 — #4h-b landed: hexa-lang PR #220 `85bea9a5` (multi-LHS body dyn-idx LHS + T52, per-element $eq+$and+$mux+$dff chain). 8 PRs cumulative

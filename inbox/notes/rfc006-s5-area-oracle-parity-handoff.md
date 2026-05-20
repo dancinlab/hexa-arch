@@ -1561,3 +1561,194 @@ closure 100% 까지 6 ☐ items remain. multi-day:
 `rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — chain
 functional + first sequential emit measured, gate close requires
 router_d4 area measurement passing ±5% — needs #4h-b/c/d + #4i).
+
+## UPDATE 2026-05-21 (bb) — ABC comb-loop SSA fix shipped (PR #247) · g3-honest status audit + measurement chain re-verified
+
+This session opened with an audit of prior claims in YOSYS.md and
+ran headlong into three g3-honest corrections, then landed the
+real next blocker named by PR #245 (RFC 073 Phase 3e) commit body.
+
+### g3-honest corrections (audit, before any new work)
+
+YOSYS.md previously claimed:
+
+1. **"PR #242 cee28986 admin-merge"** → wrong.
+   `gh pr view 242 --json state` reported `OPEN` (not MERGED).
+   PR #245 (Phase 3e) MERGED at 2026-05-20T14:37:37Z had already
+   landed the same scope via the v2 helper, superseding our PR #242.
+   Closed PR #242 with `gh pr close 242 --comment "superseded by
+   #245"` and noted in YOSYS.md.
+
+2. **"ubu-2 측정 chain 막힘 · `tool/ubu_bootstrap.sh` 부재가 blocker"** →
+   wrong. mac-side `hexa run stdlib/yosys/gate_record.hexa` runs
+   end-to-end fine: proc → flatten → opt → proc_mux →
+   clean_multidriver → techmap → dfflibmap → abc_map. The bootstrap
+   script archive (in `archive_legacy_glue/`) is for ssh-to-ubu2
+   remote rebuild automation only — measurement chain is local.
+
+3. **"next blocker = share/freduce comb gap (12k µm²)"** → wrong.
+   Live measurement shows `router_d4 area=0.0 µm² Δ=100% FAIL`.
+   share/freduce is meaningless while area=0.0; the REAL next blocker
+   (named by Phase 3e commit body) is the ABC `Network contains
+   combinational loop` error from router_d4's `always @*` priority
+   arbiter at L80-94 of comb/rtl/router_d4.v.
+
+All three corrections recorded in YOSYS.md Log + Status sections
+(2026-05-20 23:30 KST audit entry).
+
+### Real next blocker — ABC comb-loop (Phase 3e named it)
+
+```verilog
+// router_d4.v L80-94 — combinational priority arbiter
+always @* begin
+  any_grant = 1'b0;
+  for (i = 0; i < P; i = i + 1) begin
+    idx = (rr_ptr + i) % P;
+    if (!any_grant && !fifo_empty[idx]) begin         // READ any_grant
+      grant_out = route_xy(fifo_peek[idx]);
+      if (out_ready[grant_out]) begin
+        any_grant = 1'b1;                              // WRITE any_grant
+        grant_in  = idx[2:0];
+      end
+    end
+  end
+end
+```
+
+Verilog blocking-assign semantics: each iter k's read of `any_grant`
+should see iter k-1's write. The hexa-native unroller (pre-PR #247)
+emitted iter k+1's read AND iter k's write on the SAME wire
+`any_grant`, so the flat netlist had `any_grant → any_grant`
+self-edge. ABC's flatten-net cycle detection saw the cycle and
+emitted `Network contains combinational loop` + 0 sequential cells
+→ `router_d4 area=0.0 µm²`.
+
+### Fix — per-iter SSA versioning (PR #247 `8dd1e677`)
+
+Per-iteration versioning: each tracked `s` gets
+`s__ssa0` (loop entry value) →
+`s__ssa1` (after iter 0) → … →
+`s__ssaP` (final, published).
+Reads in iter k substitute `s → s__ssa<k>`; writes go to
+`s__ssa<k+1>` (cond-tagged via `connect_cond`). Unconditional
+default-hold `connect(s__ssa<k+1>, s__ssa<k>)` provides the no-write
+fallback; `pass_clean_multidriver` last-wins folds writes over the
+default-hold.
+
+Crucial filter: **only signals that are BOTH read AND written**
+are SSA-tracked. Write-only signals (e.g. T58 `idx = i;` where
+`idx` is not read elsewhere in the body) pass through to the legacy
+`pass_proc_mux` path. Without this filter, 14 selftests (T58-T65)
+regressed — caught + fixed mid-implementation.
+
+Implementation: three clean-room helpers in `read_verilog.hexa`:
+- `_rv_signal_is_read_in_body(toks, name) -> int` — RHS-read
+  detection via `[...]` skip + `=` lookahead with `==` exclusion.
+- `_rv_collect_blocking_lhs(toks) -> [str]` — walk for-body tokens,
+  dedup blocking-LHS-base names at paren-depth 0.
+- `_rv_ssa_rename_toks(toks, tracked, k_read, k_write) -> [str]` —
+  two-pass token rewrite (blanket read-sub + LHS-position write-
+  redirect, position discovery on ORIGINAL stream so positions
+  align 1:1 with the Pass-1-rewritten output).
+
+Plumbed into `_rv_parse_always` for-handler at L4124 — branch
+fires when `is_clocked == 0` AND ≥1 read-then-write signal AND
+pre-flight `_rv_emit_for_if_stmts` accepts renamed first iter.
+On any failure, falls through to legacy PState walk (no module
+change).
+
+### Acceptance evidence
+
+**Selftest**: 75/75 baseline → 76/76 PASS (T73 added). Zero regression
+after the read-then-write filter fix.
+
+T73 `F-RFC-RV-COMB-LOOP-SSA-ARBITER`: minimal P=4 priority arbiter
+falsifier `for (i=0..3) if (!pick && r[i]) begin g = i[1:0]; pick =
+1'b1; end`. Acceptance: 5 wires `pick__ssa0..pick__ssa4` PLUS
+final publish `connect(pick, pick__ssa4)` unconditional.
+
+**IR-level live measurement** (`hexa run stdlib/yosys/gate_record.hexa`,
+2026-05-21):
+- d6 `pass_proc_mux`: lowered **44 cond-tagged LHS-group(s)** (vs 3
+  pre-fix — 14× increase from SSA chain emit).
+- d6 `pass_clean_multidriver` log:
+  ```
+  net=idx__ssa1 collapsed 2 drivers → 1 kept=$rvexpr$36 dropped=[idx__ssa0]
+  net=idx__ssa2 collapsed 2 drivers → 1 kept=$rvexpr$42 dropped=[idx__ssa1]
+  ... (idx__ssa3..ssa7 same pattern)
+  net=grant_out collapsed 2 drivers → 1 kept=grant_out__ssa7 dropped=[$const_0]
+  net=any_grant collapsed 2 drivers → 1 kept=any_grant__ssa7 dropped=[$const_0]
+  ```
+  ↑ Direct evidence of the SSA chain firing in router_d6's actual
+  arbiter pattern. `idx__ssa<k+1>` collapses with `idx__ssa<k>`
+  (default-hold + uncond write) per iteration; `any_grant__ssa7`
+  publishes to outer `any_grant`, dropping the base init `$const_0`
+  per Verilog §10.4.2 last-write-wins.
+- d4: 32 cond-tagged groups lowered (similar pattern, fewer SSA
+  versions because P=4 in d4 vs P=8 in d6).
+
+### Blocker — end-to-end area > 0 measurement requires separate fix
+
+`hexa run stdlib/yosys/gate_record.hexa` post-fix reports
+`router_d4 area=0.0 µm² Δ=100% FAIL` STILL, but for a different
+reason than pre-fix:
+
+```
+[abc_map] binary=
+[abc_map] script-size=...
+[abc_map] exit=missing
+[FAIL] d4:abc_map — D18 fail-loud: `abc` binary not on PATH
+```
+
+`abc_binary_path()` (`exec("command -v abc 2>/dev/null || true")`)
+returns empty string. But shell-side `command -v abc` returns
+`/opt/homebrew/bin/abc` correctly (verified in bash + /bin/sh).
+Minimal probe:
+
+```hexa
+fn main() {
+    let r = exec("echo hello")
+    println("r='" + to_string(r).trim() + "'")
+}
+```
+
+Output:
+```
+sh: line 0: echo: write error: Broken pipe
+r=''
+```
+
+→ **hexa's `exec` subprocess runtime is broken** in the current
+build — ALL shell commands return empty + broken-pipe warning.
+This is a separate `self/runtime.c` (popen / pipe handling) issue,
+NOT in PR #247's scope. Filed for separate diagnosis + fix.
+
+Tried abc_map.hexa fallback (absolute-path test -x probe) — also
+failed because EVERY exec call returns empty under this bug.
+Reverted; PR #247 ships pure read_verilog.hexa changes.
+
+### Status
+
+- PR #242 (`cee28986`, #4i) — CLOSED as superseded-by-#245.
+- PR #245 (`66a39a31`, Phase 3e) — MERGED, on origin/main.
+- PR #247 (`8dd1e677`, ABC comb-loop SSA fix) — OPEN, awaiting
+  review/merge. Selftest 76/76 PASS, IR evidence in
+  clean_multidriver log.
+- exec runtime bug — separate scope. Once fixed, re-run
+  `hexa run stdlib/yosys/gate_record.hexa` to confirm
+  `router_d4 area > 0`.
+- share/freduce parity — deferred (still meaningless while area=0).
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3).
+Real critical-path blockers now: (1) PR #247 merge, (2) exec
+runtime bug fix, (3) end-to-end area measurement re-run with both
+landed, (4) ±5 % gate check, (5) g3-conditional flip.
+
+**Session-cost re-estimate** (was 3-7 in YOSYS.md after Phase 3e):
+- PR #247 merge: trivial (review only)
+- exec runtime fix: unknown scope (separate domain, runtime/popen
+  layer — could be 0.5-3 sessions)
+- area measurement re-run: 5 min once runtime fixed
+- share/freduce: 1-3 sessions if needed (or substrate-tail-pass alt)
+
+Total: **2-6 sessions** depending on runtime bug depth.
