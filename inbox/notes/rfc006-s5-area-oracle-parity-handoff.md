@@ -209,3 +209,31 @@ ABC produces a non-empty mapped BLIF whose SKY130 area is within
 ratio 1.5156×). Branch ref `rfc006-yosys-rv-scope` is restored to
 `389a6d92` (had been pruned by a sibling-session reset) so the 13
 landed commits remain reachable for the proc-pass session resumption.
+
+## UPDATE 2026-05-20 (g) — 13-commit yosys scope merged into hexa-lang origin/main (PR #107)
+
+The 13 yosys commits were extracted from the sibling-interleaved
+`rfc006-yosys-rv-scope` branch (which mixed yosys with FIRMWARE / RFC
+065 / compiler-perf sibling work) into a clean replay branch
+`rfc006-yosys-rv-scope-clean` off `origin/main` HEAD `763dc9b5`. All
+13 cherry-picks were conflict-free (single file: `stdlib/yosys/
+read_verilog.hexa`; no overlap with sibling commits).
+
+PR <https://github.com/dancinlab/hexa-lang/pull/107> opened with an
+honest scope body (4 ✅ constructs · 1 🟡 always-body with explicit
+if-skip honest gap · 2 ❌ multi-D memory + signed arith) and merged
+into `origin/main` at `fb73c4b2` on 2026-05-20T04:50:20Z (admin-merge,
+since the bootstrap CI is presently infrastructure-failing on all
+recent main commits — not PR-specific). Merge commit preserves the
+13 individual commits as linear history (`d9b5d328` … `c320e795`) so
+the proc-pass session can read incremental progress.
+
+Effect on the proc-pass resumption point — **the next session starts
+from `origin/main` directly, not from `rfc006-yosys-rv-scope`**. The
+synth pipeline (read_verilog → passes → abc_map → area) is reachable
+out-of-the-box on `origin/main` for `router_d4.v`; the next blocker
+remains the always-body proc-pass core (cond-mux + LHS signal
+tracking + nested-if collapse + for-in-always integration + `$dff`
+set/reset port hookup). §5 gate stays OPEN until that lands and ABC
+emits a non-empty mapped BLIF whose SKY130 area is within ±5 % of
+the cited oracle.

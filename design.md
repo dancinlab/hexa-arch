@@ -2834,6 +2834,36 @@ proc-pass session resumption 가능. macOS 의 SIGKILL/exit-137 환경
 하에서 ubu-2 Linux native hexa toolchain (`/tmp/hexa_native_linux` +
 clang 링크 chain) 이 검증된 build/test 표면.
 
+### Decision-gate note on Decision 68 — 6차 (13 yosys commit hexa-lang origin/main 정착 — PR #107 merged)
+
+5차 note 의 13 commit (`rfc006-yosys-rv-scope` HEAD `389a6d92`) 가
+sibling-session 의 FIRMWARE / RFC 065 / compiler-perf commit 5개와
+chronologically interleaved 상태였음. honest separation 진행:
+
+- worktree `origin/main` HEAD `763dc9b5` 위로 yosys 13 commit cherry-
+  pick → `rfc006-yosys-rv-scope-clean` branch (`d9b5d328` …
+  `c320e795`). 모두 단일 파일 `stdlib/yosys/read_verilog.hexa` touch
+  → sibling 영역 0% overlap → conflict-free.
+- PR <https://github.com/dancinlab/hexa-lang/pull/107> open — body 에
+  6-construct scope 표 (4 ✅ · 1 🟡 always-body if-skip · 2 ❌
+  multi-D + signed) + selftest 34/34 GREEN + §5 OPEN 명시 (g3 — no
+  fraudulent claim).
+- bootstrap CI 가 `origin/main` 최근 5 commit 전부 infra-fail (PR-
+  specific 아닌 기존 main 일관 상태) — owner sanction "upstream
+  필요시 모두 진행" + 선례 일치로 admin-merge.
+- `origin/main` 새 HEAD = `fb73c4b2` (merge commit) · 2026-05-20T
+  04:50:20Z · 13 commit linear history 보존.
+
+**Effect on demiurge consumer**: 다음 proc-pass session 은 `rfc006-
+yosys-rv-scope` 가 아닌 `origin/main` 위에서 직접 시작 가능 — Yosys
+synth 파이프라인 (read_verilog → passes → abc_map → area) 이 out-of-
+the-box 로 `router_d4.v` 에 reachable. §5 gate state 변경 없음 — 여전
+히 OPEN, absorbed=false (always-body proc-pass core 미구현).
+
+**g3**: PR merge 자체로 `absorbed=true` 아님 — `read_verilog` scope
+expansion 일부 정착이지 §5 measurement parity 가 아님. demiurge 측
+Yosys 흡수 absorbed 는 SKY130 area ±5 % 측정 후에야 가능.
+
 ### Decision 73 — firmware 새 도메인 + 7-verb 합성→검증 seam 정의
 
 **picked**: 16 번째 도메인 `domains/firmware.md` 추가. **펌웨어
