@@ -3993,3 +3993,25 @@
   gate / absorbed 변경 0. **Round 1 종료 — G1 + G3 + G5 모두
   [x] full**. 다음 Round 2 = G2 (skipped-cell dashboard) + G7
   (gate_type taxonomy).
+- 2026-05-20 — **phase κ-61 — Round 2: G2 + G7 land**. 사용자 게이트
+  "go". 정직성 표면 두 piece.
+  - **G7 [x] full**: `GateType.swift` 신규 enum — `installGated` /
+    `platformGated` / `dataGated` / `regulatoryGated` /
+    `proprietaryOnly` / `hexaNativeAbsent` (D80 surface) /
+    `producerAbsent` / `unspecified` 8 case. predicates:
+    `userResolvable` (설치/플랫폼/데이터 = user 가 자력 해소) /
+    `hexaNativeBlocked` (G6/D80 cascade). Korean label 보유.
+    substrate 측 typed emit 은 점진 (G2 가 heuristic fallback 보유).
+  - **G2 [x] full**: `SkippedCellsAggregator.swift` 신규 (DemiurgeCore,
+    Foundation only) — `exports/` 디렉토리 scan + 모든 JSON 의
+    `skipped_reason` field 수집 + GateType 자동 추정 fallback.
+    `byGateType` / `byDomain` grouping helper.
+    `SkippedCellsDashboard.swift` 신규 (CockpitApp) — gate-type chip
+    summary + clickable filter + 셀 list + "내가 풀 수 있는 갭" count.
+    매 17+ dispatched cell 통일 dashboard 안에 visible.
+  - ARCH.md §11.4 G2 [x] + G7 [x].
+  build: xcrun swift build --product CockpitApp OK (4.45s).
+  g3 — UI + classification taxonomy 추가만, 측정 record / gate /
+  absorbed 변경 0. **Round 2 종료**. 다음 Round 3 = G4 (sibling-repo
+  dispatch in ProducerRegistry) + G6 (cascade falsifier) + G8 (n=6
+  lattice invariant audit engine).

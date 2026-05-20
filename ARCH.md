@@ -1061,7 +1061,14 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
 
 **라운드 2 — 정직성 표면**
 
-- [ ] **G2.** cell-skipped 일관 보고 UI
+- [x] **G2.** cell-skipped 일관 보고 UI
+  - **κ-61**: `SkippedCellsAggregator.swift` 신규 (Foundation only,
+    `exports/` 디렉토리 scan + 모든 JSON 의 `skipped_reason` field
+    수집 + GateType 자동 추정 fallback heuristic).
+    `SkippedCellsDashboard.swift` 신규 (SwiftUI) — gate-type chip
+    summary + filter + 셀 list + "내가 풀 수 있는 갭" count
+    (userResolvable). 모든 17+ dispatched cell 이 통일 dashboard 안에
+    visible.
   - deps: G1 부분 (DomainGraph 가 cell coverage 알아야)
   - runtime artifact:
     - 각 project 의 `exports/<domain>/skipped.summary.json` —
@@ -1074,7 +1081,15 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
     - alien-disc-mk1 / aura-clip-mk1 모두 dashboard 에 skipped 이유
       clean 표시 (29/27 cell 중 X 가 install-gated, Y 가 platform-blocked)
 
-- [ ] **G7.** `gate_type` 구분 (install / platform / regulatory / proprietary)
+- [x] **G7.** `gate_type` 구분 (install / platform / regulatory / proprietary)
+  - **κ-61**: `GateType.swift` 신규 — `installGated` / `platformGated`
+    / `dataGated` / `regulatoryGated` / `proprietaryOnly` /
+    `hexaNativeAbsent` (D80 surface) / `producerAbsent` /
+    `unspecified` 8 case. `userResolvable` predicate (user 설치/다운로드
+    로 풀 수 있는 갭) + `hexaNativeBlocked` predicate (G6/D80 cascade).
+    각 case 가 Korean label 보유 (cockpit ProvenanceBanner + G2
+    dashboard 사용). substrate 측 typed emit 점진 적용 — 그 동안
+    G2 aggregator 가 skipped_reason text 에서 heuristic fallback.
   - deps: G5 (Record schema 변경 같이 가는 게 효율)
   - edit:
     - `F1F2Record.swift` 의 `MeasurementGate` enum 에 `gate_type`
