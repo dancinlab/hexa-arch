@@ -3689,3 +3689,59 @@ audit — drift 감지 0.)
 g3 — 새 SSOT 추가만, 기존 record / gate / absorbed schema 변경 0.
 sibling 5 repo 는 100% READ-ONLY (FileManager + String contents only,
 write/edit 0).
+
+### Decision 99 — cockpit `HexaNativeParityChip` 시각화 (D86 정합, render-only)
+
+**picked**: 5 cell record (Ufo / Fusion / Energy / Aura / ChipAnalyze)
+가 D87..D95 sweep 으로 보유한 `hexaNativeParity: HexaNativeParityRef?`
++ computed `isHexaNativeAbsorbed: Bool` 을 cockpit SkippedCellsDashboard
+의 cell row 마다 **3-case chip** (회색 "no hexa-native" / 녹색
+"hexa-native ✓ <SHA>" / 노랑 "hexa-native (provisional)") 으로
+visualize. 새 SwiftUI view `CockpitApp/Views/HexaNativeParityChip.swift`
++ 새 DemiurgeCore render-model `Models/HexaNativeParityChipModel.swift`
+(label / tone / tooltip / accessibilityID 의 순수 3-case 분기 — SwiftUI
+의존성 0, test target 에서 branch-test 가능). SkippedCellEntry 에
+optional `hexaNativeParity` 필드 1개 추가 (lax decode — legacy record =
+nil = 회색).
+
+**rationale**:
+- D86 (`g_no_hardcoded_data`) — chip 은 render-only. SSOT 는 record 의
+  `hexa_native_parity` JSON object 와 PILOTS.demi `parity_status` 문자열
+  뿐. chip 은 0 byte 추가 데이터 없이 두 SSOT 를 그림으로 비춤.
+- D80 (g_hexa_only) honesty floor — ref 첨부 ≠ 흡수. PASS 토큰이 없으면
+  반드시 노랑 (provisional) 으로, 절대 녹색 아님. 분석가가 "기획만 됐
+  지만 parity 미통과" 인 kernel 을 흡수된 것으로 오인할 수 없도록 색
+  강제.
+- D95 (cell-record isHexaNativeAbsorbed = computed) 의 자연스러운 시각
+  표면화 — 같은 predicate 가 boolean → chip color 로 한 번 더 노출.
+- SwiftUI view 의 unit test 가 까다로워, label / tone / tooltip /
+  accessibilityID 의 분기 결정은 DemiurgeCore 의 pure-data struct
+  `HexaNativeParityChipModel` 로 분리. test target 은 SwiftUI 의존성
+  없이 3 case 분기 + accessibility-ID distinctness 만 검증 (4 test).
+
+**적용**:
+1. `cockpit/Sources/DemiurgeCore/Models/HexaNativeParityChipModel.swift`
+   (신규) — 3-case render model (`Tone.absent / .absorbed / .provisional`
+   + label / tooltip / accessibilityID), `from(_ ref:)` pure projection.
+2. `cockpit/Sources/CockpitApp/Views/HexaNativeParityChip.swift` (신규)
+   — SwiftUI view, model.tone → SwiftUI Color 매핑은 view 측에서만
+   (Color.gray / .green / .yellow opacity tinted), `.help(tooltip)` +
+   `.accessibilityIdentifier(...)` 부여.
+3. `cockpit/Sources/DemiurgeCore/Loaders/SkippedCellsAggregator.swift`
+   — `SkippedCellEntry` 에 optional `hexaNativeParity: HexaNativeParity
+   Ref?` 필드 1개 추가, `SkippedCellStub` 에 `hexa_native_parity` 디
+   코드 라인 1개 추가 (lax — 부재 시 nil).
+4. `cockpit/Sources/CockpitApp/Views/SkippedCellsDashboard.swift` —
+   `SkippedCellRow` (line 152..) HStack 안에 `HexaNativeParityChip(ref:
+   entry.hexaNativeParity)` 1줄 통합 (line 169).
+5. `cockpit/Tests/DemiurgeCoreTests/HexaNativeParityChipTests.swift`
+   (신규) — 4 XCTest (absent / absorbed / provisional + accessibility-ID
+   distinctness), pure-data branch coverage only.
+6. swift build PASS · swift test PASS (32/32; +4 신규 chip test, 기존
+   28 통과 유지).
+
+g3 — 새 SSOT 0, 새 stored data 0, schema 변경 0. chip 의 데이터 흐름은
+PILOTS.demi → producer 가 record 에 inject 한 `hexa_native_parity` →
+SkippedCellEntry decode → HexaNativeParityChipModel.from → SwiftUI
+view 로 100% 일방향, 어디서도 boolean 을 새로 저장하지 않음.
+

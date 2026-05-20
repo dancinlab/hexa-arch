@@ -163,6 +163,10 @@ private struct SkippedCellRow: View {
                     .padding(.horizontal, 6).padding(.vertical, 1)
                     .background(accent.opacity(0.18))
                     .cornerRadius(3)
+                // D99 — hexa-native parity chip (3-case: nil / absorbed
+                // / provisional). Gray for the common skipped-row case
+                // where no kernel is attached.
+                HexaNativeParityChip(ref: entry.hexaNativeParity)
                 Spacer()
                 if !entry.producer.isEmpty {
                     Text(entry.producer)

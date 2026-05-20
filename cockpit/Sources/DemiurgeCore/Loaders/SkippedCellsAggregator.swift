@@ -11,6 +11,12 @@
 import Foundation
 
 /// One row in the dashboard: a single skipped cell record.
+///
+/// D99 — `hexaNativeParity` carries the cell's optional parity ref so
+/// the dashboard's `HexaNativeParityChip` can paint "no hexa-native /
+/// hexa-native \u{2713} / hexa-native (provisional)" per row. Decoded
+/// laxly via `SkippedCellStub`; missing field = `nil` (no crash on
+/// legacy records emitted before D80).
 public struct SkippedCellEntry: Sendable, Equatable {
     public let domain: String
     public let verb: String
@@ -19,10 +25,16 @@ public struct SkippedCellEntry: Sendable, Equatable {
     public let gateType: GateType
     public let skippedReason: String
     public let recordPath: String
+    /// D99 — optional hexa-native parity ref (lifted from the same
+    /// record JSON the stub already decoded). `nil` ⇒ chip paints gray
+    /// "no hexa-native"; non-nil with PASS status ⇒ green; non-nil
+    /// without PASS ⇒ yellow "provisional".
+    public let hexaNativeParity: HexaNativeParityRef?
 
     public init(domain: String, verb: String, stamp: String,
                 producer: String, gateType: GateType,
-                skippedReason: String, recordPath: String) {
+                skippedReason: String, recordPath: String,
+                hexaNativeParity: HexaNativeParityRef? = nil) {
         self.domain = domain
         self.verb = verb
         self.stamp = stamp
@@ -30,6 +42,7 @@ public struct SkippedCellEntry: Sendable, Equatable {
         self.gateType = gateType
         self.skippedReason = skippedReason
         self.recordPath = recordPath
+        self.hexaNativeParity = hexaNativeParity
     }
 }
 
@@ -44,6 +57,10 @@ private struct SkippedCellStub: Decodable {
     let skipped_reason: String?
     let gate_type: String?
     let measurement_gate: String?
+    /// D99 — surface the cell's parity ref to the dashboard. Lax decode
+    /// (nested optional) — any record that lacks the field just leaves
+    /// the chip gray.
+    let hexa_native_parity: HexaNativeParityRef?
 }
 
 public enum SkippedCellsAggregator {
@@ -94,7 +111,8 @@ public enum SkippedCellsAggregator {
                 producer: stub.producer ?? "",
                 gateType: gate,
                 skippedReason: reason,
-                recordPath: url.path))
+                recordPath: url.path,
+                hexaNativeParity: stub.hexa_native_parity))
         }
         return result
     }
