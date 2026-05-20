@@ -199,6 +199,15 @@ public enum ChipAnalyzer {
             measurementGate: gate,
             scopeCaveats: caveats)
 
+        // D80 / D94 / T7 — Producer ↦ PilotLoader.find(id:) auto-lookup.
+        // chip+analyze's primary hexa-native pilot is the event_queue
+        // kernel (stdlib/kernels/noc_sim/event_queue.hexa, 36/36 PASS
+        // event-for-event vs python heapq) — the forward-compatible
+        // pointer for the event-driven NoC sim path (see ChipAnalyze
+        // Record.swift L86-92 for rationale). nil-on-absent is honest:
+        // PILOTS.demi missing → ref nil → gate unchanged (D80).
+        let parity = PilotLoader.parityRef(forId: "pilot-event_queue")
+
         let record = ChipAnalyzeRecord(
             interface: "demiurge:chip:noc:analyze-leighton",
             schemaVersion: "1.0",
@@ -208,7 +217,8 @@ public enum ChipAnalyzer {
             bounds: parsed.bounds,
             derivationCite: parsed.cite,
             exitCode: Int(exitCode),
-            provenance: provenance)
+            provenance: provenance,
+            hexaNativeParity: parity)
 
         // Persist under exports/chip/noc/analyze/<recordId>.json.
         do {

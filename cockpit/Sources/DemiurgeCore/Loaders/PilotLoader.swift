@@ -186,4 +186,195 @@ public enum PilotLoader {
         let rows = entries ?? loadAll()
         return rows.first(where: { $0.id == id })
     }
+
+    /// D94 / T7 — convenience: lookup a `PilotEntry` by id and project
+    /// it to a `HexaNativeParityRef` ready for injection into a cell
+    /// record. Returns nil if the id is absent OR if the .demi file
+    /// is missing (D80 honesty: no silent fallback).
+    ///
+    /// This is the canonical Producer-side wire — every cell-record
+    /// `+verify` / `+analyze` producer that has a primary pilot in
+    /// `domains/PILOTS.demi` calls `PilotLoader.parityRef(forId:)`
+    /// right before emitting its record, then assigns the result to
+    /// the record's `hexaNativeParity` field. No producer hardcodes
+    /// the parity-status / hexa-lang SHA / algorithm-ref strings.
+    public static func parityRef(forId id: String,
+                                 in entries: [PilotEntry]? = nil)
+        -> HexaNativeParityRef?
+    {
+        guard let entry = find(id: id, in: entries) else { return nil }
+        return entry.toParityRef()
+    }
+
+    /// D94 / T7 — same as `parityRef(forId:)` but keyed by the kernel
+    /// file path (the `kernel_path` column in PILOTS.demi). Use this
+    /// when the Producer already speaks in `stdlib/kernels/<X>/…`
+    /// paths; use `parityRef(forId:)` when the Producer knows the
+    /// short pilot id (`pilot-solar` …).
+    public static func parityRef(forKernelPath kernelPath: String,
+                                 in entries: [PilotEntry]? = nil)
+        -> HexaNativeParityRef?
+    {
+        guard let entry = find(kernelPath: kernelPath, in: entries)
+            else { return nil }
+        return entry.toParityRef()
+    }
+}
+
+// MARK: - PilotEntry → HexaNativeParityRef projection (D94 / T7)
+
+extension PilotEntry {
+
+    /// Project a `PilotEntry` (8 free-text fields, 1:1 with PILOTS.demi)
+    /// into a `HexaNativeParityRef` (9 fields, typed enum for method +
+    /// `Double?` for numeric tolerance) — the wire that lets every
+    /// `+verify` / `+analyze` Producer emit a fully-typed cell-record
+    /// `hexa_native_parity` block without hardcoding any of the parity
+    /// strings in Swift (D86 g_no_hardcoded_data).
+    ///
+    /// Heuristics (D94 honesty floor — when a heuristic is ambiguous
+    /// we prefer `.other` + a `scopeNotes` carry-over over a wrong-
+    /// looking enum value):
+    ///   * `parityMethod` enum derived first by id-prefix lookup
+    ///     (the 10 kernel pilots have stable ids), then by free-text
+    ///     keyword in the method string.
+    ///   * `parityTolerance` (Double) extracted from the leading
+    ///     `<=Xe-Y` / `~Xe-Y` / `rel_err = 0.0` patterns; the raw
+    ///     string survives in `parityToleranceNote` for non-numeric
+    ///     cases (exact discrete, event-for-event match).
+    ///   * `relErr` left nil — pilots report `parityStatus` summary,
+    ///     not a single rel-err number; downstream producers can
+    ///     override per-call when they know the exact observed gap.
+    public func toParityRef() -> HexaNativeParityRef {
+        let method = Self.deriveParityMethod(id: id, freeText: parityMethod)
+        let (numeric, note) = Self.deriveTolerance(parityTolerance)
+        return HexaNativeParityRef(
+            kernelPath: kernelPath,
+            parityTest: parityTest,
+            parityMethod: method,
+            parityTolerance: numeric,
+            parityToleranceNote: note,
+            parityStatus: parityStatus,
+            hexaLangSHA: hexaLangSha,
+            scopeNotes: scopeNotes.isEmpty
+                ? "see \(parityTest) for parity gate scope"
+                : scopeNotes,
+            relErr: nil)
+    }
+
+    /// id-first, free-text-second derivation of the `ParityMethod`
+    /// enum. The 10 landed pilots map deterministically by id; new
+    /// pilots fall through to a keyword scan; final fallback is
+    /// `.other` (caller's `scopeNotes` carries the rationale).
+    static func deriveParityMethod(id: String,
+                                   freeText: String)
+        -> HexaNativeParityRef.ParityMethod
+    {
+        // Stable id-based mapping (D91 — id convention is the contract).
+        switch id {
+        case "pilot-solar":                return .substrateToSubstrate
+        case "pilot-mc_transport":         return .pythonCompanionSeedMatch
+        case "pilot-neural_lif":           return .substrateToSubstrate
+        case "pilot-graph_bfs":            return .substrateToSubstrate
+        case "pilot-urdf_fk_2link":        return .substrateToSubstrate
+        case "pilot-plasma_metrics":       return .handMirroredPython
+        case "pilot-orbital_kepler":       return .handMirroredPython
+        case "pilot-dft_naive":            return .roundtripIdentity
+        case "pilot-event_queue":          return .heapqOracleExact
+        case "pilot-transport_kinematics": return .handMirroredPython
+        default: break
+        }
+        // Free-text keyword scan for new pilots.
+        let t = freeText.lowercased()
+        if t.contains("heapq")                 { return .heapqOracleExact }
+        if t.contains("round-trip")
+            || t.contains("roundtrip")         { return .roundtripIdentity }
+        if t.contains("same lcg seed")
+            || t.contains("same-rng-seed")
+            || t.contains("python-companion") {
+            return .pythonCompanionSeedMatch
+        }
+        if t.contains("analytic oracle")
+            || t.contains("beer-lambert")
+            || t.contains("analytic spectra") {
+            return .analyticOracle
+        }
+        if t.contains("hand-mirrored")
+            || t.contains("libm closed-form") {
+            return .handMirroredPython
+        }
+        if t.contains("substrate parity")
+            || t.contains("companion parity")
+            || t.contains("numpy")
+            || t.contains("networkx") {
+            return .substrateToSubstrate
+        }
+        return .other
+    }
+
+    /// Extract a numeric tolerance from a free-text string. Returns
+    /// `(numeric, note)`:
+    ///   * If a leading `<=Xe-Y` / `~Xe-Y` / `rel_err = N` is found,
+    ///     `numeric` is set and `note` is the full original string
+    ///     (so the caveat survives — D80 honesty over numeric reduction).
+    ///   * If no numeric pattern is recognisable (e.g. "exact (discrete
+    ///     algorithm — node-order match)"), `numeric` is nil and the
+    ///     whole string lands in `note`.
+    static func deriveTolerance(_ raw: String) -> (Double?, String?) {
+        let trimmed = raw.trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty { return (nil, nil) }
+
+        // "rel_err = 0.0 ..." special-case (bit-exact pilots).
+        let lower = trimmed.lowercased()
+        if lower.contains("rel_err = 0") || lower.contains("rel_err=0") {
+            return (0.0, trimmed)
+        }
+
+        // Scan for the first scientific-notation token like 1e-13,
+        // 2e-15, 1e-3 — accept optional leading <=, <, ~.
+        let scalars = Array(trimmed)
+        var i = 0
+        while i < scalars.count {
+            let c = scalars[i]
+            // Look for a digit (start of a number).
+            if c.isNumber {
+                var j = i
+                // Walk digits and decimals.
+                while j < scalars.count, (scalars[j].isNumber
+                                           || scalars[j] == ".") {
+                    j += 1
+                }
+                // Optional 'e' / 'E' + optional sign + digits.
+                if j < scalars.count,
+                   scalars[j] == "e" || scalars[j] == "E" {
+                    var k = j + 1
+                    if k < scalars.count,
+                       scalars[k] == "+" || scalars[k] == "-" {
+                        k += 1
+                    }
+                    var sawDigit = false
+                    while k < scalars.count, scalars[k].isNumber {
+                        sawDigit = true
+                        k += 1
+                    }
+                    if sawDigit {
+                        let token = String(scalars[i..<k])
+                        if let d = Double(token) {
+                            return (d, trimmed)
+                        }
+                    }
+                }
+                // Bare decimal (e.g. "0.0").
+                let token = String(scalars[i..<j])
+                if let d = Double(token), token.contains(".") {
+                    return (d, trimmed)
+                }
+                i = max(j, i + 1)
+                continue
+            }
+            i += 1
+        }
+        // No numeric tolerance — return the raw string as a note.
+        return (nil, trimmed)
+    }
 }
