@@ -183,6 +183,15 @@ weight           = "trivial"
 portable_status  = "already-ported"
 notes            = "Born hexa-native — D80 pilot #11 landed 2026-05-20 (hexa-lang 170f74af; chronological #11; demiurge:PILOTS.demi[pilot-autodiff_dual_forward]). Forward-mode automatic differentiation via dual numbers, the smallest cited slice of the (multi-month) autodiff stack scope_openmdao_sizing needs. Surface: 5 arithmetic primitives (d_add/d_sub/d_mul/d_div/d_neg) + 6 transcendental/power primitives (d_sin/d_cos/d_exp/d_log/d_sqrt/d_pow_int). Provenance: Griewank & Walther 2008 §3.1 + Rall 1981 (LNCS 120) + Wengert 1964 (Comm. ACM 7(8)) — clean-room, no JAX/PyTorch/Autograd/OpenMDAO/Tapenade/ADOL-C source-code inspection. 48/48 PASS at the D80 1e-10 ceiling: analytic-derivative tier abs <=7e-16 across 9 elementary functions + Python math libm companion tier (dual_oracle.py) rel_err = 0.0 bit-exact. PARTIAL PORT — forward mode only (no reverse/adjoint), scalar-in / scalar-out (no vector seeds, no Jacobians/Hessians), no control-flow capture, integer pow only — real-exponent pow as caller-composed d_exp(d_mul(p, d_log(u))). MDAO ①b adapter (scope_openmdao_sizing) stays heavy-port until a gradient-based optimiser wires this kernel into a real design loop."
 
+[kernel-bio_align]
+path             = "stdlib/kernels/bio_align/needleman_wunsch_kernel.hexa"
+kind             = "kernel"
+domain           = "bio_align"
+external_imports = []
+weight           = "trivial"
+portable_status  = "already-ported"
+notes            = "Born hexa-native — D80 pilot #12 landed 2026-05-20 (hexa-lang d73a2cbf; chronological #12; demiurge:PILOTS.demi[pilot-bio_align_nw]). FIRST kernel in the bio domain family (bio added in D81; hexa-bio sibling SSOT exists but no hexa-native substrate before this pilot — the G report 'T3 in-progress' substrate). Needleman-Wunsch global pairwise sequence alignment via integer dynamic-programming. Surface: `score_only` + `align` + `gap_symbol`. Provenance: Needleman & Wunsch 1970 (J. Mol. Biol. 48(3):443-453) + Durbin et al. 1998 §2.3 — clean-room, no Biopython/EMBOSS/parasail/SeqAn/ssw/scikit-bio source-code inspection. 36/36 PASS at the D80 1e-10 ceiling: pure-integer DP collapses to rel_err = 0 trivially. 7 textbook sequence pairs (Durbin §2.3 sequences with simple scoring, Wikipedia GATTACA/GCATGCU, identity ACGT, empty/L, disjoint AAAA/TTTT, EDNAFULL-style DNA +5/-3/-4, single-insertion AT/ACT) + 5 invariants (self-alignment = len*match, symmetry, empty/empty=0, gap-stripped rows recover originals). PARTIAL PORT — linear gap only (Gotoh affine gap is a separate pilot), simple match/mismatch scoring (BLOSUM62/PAM250 substitution matrix is queued as the first real ①b adapter consumer), global alignment only (Smith-Waterman local alignment is a separate pilot), alphabet-agnostic integer encoding (no FASTA / UniProt parser). bio ①b adapter `stdlib/bio/needleman_wunsch.hexa` does not exist yet — the kernel is the substrate floor for the bio family."
+
 ## ── domain producers (stdlib/<domain>/*.py) — ①b adapter layer ────────
 
 [domain-aura_mne]
