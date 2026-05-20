@@ -1,8 +1,8 @@
 # inbox/INDEX.md — cross-session pickup SSOT
 
-> Updated 2026-05-20 (κ-53 D-track). Status SSOT for every
-> `inbox/notes/*.md` entry. Each entry keeps its own body intact;
-> this file is the at-a-glance index.
+> Updated 2026-05-20 (post κ-54 + 15-PR rfc_006 §5 primitive landing).
+> Status SSOT for every `inbox/notes/*.md` entry. Each entry keeps
+> its own body intact; this file is the at-a-glance index.
 
 ## Legend
 
@@ -12,7 +12,7 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (20 entries)
+## Index (23 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
@@ -31,18 +31,19 @@
 | `parity_attempt_bot_synth_2026-05-20.md` | resolved | κ-50 | Pinocchio rel err 0.04% / 0.0003% vs Spong; flip NO (URDF hermetic) |
 | `parity_attempt_cern_synth_2026-05-20.md` | resolved | κ-51 | xsuite FODO rel err 1e-10; **absorbed=true flip executed** |
 | `parity_attempt_energy_synth_2026-05-20.md` | resolved | κ-50 | PyPSA rel err 6e-6 vs scipy LP; flip NO (data-honesty gate) |
-| `parity_attempt_scope_synth_2026-05-20.md` | superseded | κ-53 B-track | FAIL @ 87-94% — see v2 note from κ-53 metric fix |
+| `parity_attempt_scope_synth_2026-05-20.md` | superseded | v2 (κ-53 B-track) | FAIL @ 87-94% — superseded by v2 after κ-53 metric fix |
+| `parity_attempt_scope_synth_2026-05-20-v2.md` | resolved | κ-53 B-track | Hex-pack area 100% (3 shelves, trivial by construction); flip NO (3 other v1 caveats unchanged) |
 | `parity_attempt_scope_verify_2026-05-20.md` | superseded | v3 / D75 | v1 — 4/5 PASS (WebbPSF env missing) |
 | `parity_attempt_scope_verify_2026-05-20-v2.md` | superseded | v3 / D75 | v2 — 4/5 PASS (WebbPSF env installed, λ-mismatch design flaw surfaced + 4 options) |
 | `parity_attempt_scope_verify_2026-05-20-v3.md` | resolved | κ-54 / D75 | 5/5 PASS after same-wavelength split; flip still NO (other caveats) |
 | `parity_attempt_space_synth_2026-05-20.md` | resolved | κ-50 | Tsiolkovsky rel err ≤1e-4; flip NO (SLSQP bound) |
-| `rfc006-s5-area-oracle-parity-handoff.md` | pickup-blocked | (hexa-lang session) | Yosys read_verilog 6-construct multi-week expansion |
+| `rfc006-s5-area-oracle-parity-handoff.md` | pickup-open | (next session) | 15 PR landed on hexa-lang `origin/main` `c0ec08a1` (cond-mux + ternary + cascaded-if + dyn-idx primitive family · T31-T46 net · selftest 54/54); next: SEGFAULT regression debug + sub-steps #4g/#4h/#4i + ABC tech-map area parity |
 | `yosys-dispatcher-use-integration-compile-fail.md` | resolved | (mis-diagnosis) | No action needed, kept as resolution audit |
 
 ## Open pickup count
 
-- **pickup-open**: 1 (`openmdao-kernel-promotion-pickup.md` — promotion at 2nd MDO consumer; condition met by κ-47 space+synth + scope+synth, awaits a κ-N kernel extraction round)
-- **pickup-blocked**: 2 (`hexa-lang-branch-consolidation-2026-05-20.md` cross-session live-tree alignment + `rfc006-s5-area-oracle-parity-handoff.md` multi-week hexa-lang Yosys session)
+- **pickup-open**: 2 (`openmdao-kernel-promotion-pickup.md` — promotion at 2nd MDO consumer; condition met by κ-47 space+synth + scope+synth, awaits a κ-N kernel extraction round · `rfc006-s5-area-oracle-parity-handoff.md` — next-session entry-point is router_d4 read_verilog_file SEGFAULT debug, then sub-steps #4g preceding-stmts / #4h multi-LHS dyn-idx / #4i with-else dyn-idx, then ABC tech-map area parity verification)
+- **pickup-blocked**: 1 (`hexa-lang-branch-consolidation-2026-05-20.md` cross-session live-tree alignment)
 
 ## Cross-references
 
