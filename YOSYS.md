@@ -24,7 +24,7 @@
 
 **post-audit closure path (per g3, honest)** — 2026-05-21 measurement-verified:
 
-0. **#0 underlying blocker (NEW, supersedes everything below)**: `exec()` runtime broken in current `origin/main` (`9f2da3f6`). `exec("echo hello")` returns "" — both popen and posix_spawnp paths. Bisect points at libc-unhook cycles 61-65 (`f1487c14` … `54970996`). All subprocess-dependent stdlib is gated by this. inbox patch filed at `hexa-lang/inbox/patches/yosys-exec-runtime-regression-cycles-61-64.md`. **Until this is fixed, NO yosys measurement is real** — every gate_record run reports stale-file false positives or empty-binary fail-loud.
+0. ~~**#0 underlying blocker (exec() runtime)**~~ ← **upstream PR #251 cycle 66 (`8ea4b75e`) MERGED** explicitly closes both inbox patches. Waiting for mac binary release (local hexa.real stale). Once new binary lands, gate_record measurement chain is testable again. Earlier framing: `exec("echo hello")` returned "" (both popen + spawn paths) due to libc-unhook cycles 61-65; cycle 66 restored stubs as targeted revert. inbox patch filed via PR #249.
 1. ~~ABC binary detection blocker~~ ← **fixed in PR #247 `f4c3c493`** (`which abc` instead of meta-bearing `command -v abc 2>/dev/null || true`). Workaround was correct for the cycle 60 era, but cycles 61-65 broke even the meta-free `which abc` path
 2. ~~ABC comb-loop SSA blocker (idx / grant_out / any_grant)~~ ← **fixed in PR #247 `8dd1e677`** (per-iter SSA renaming). IR-level evidence in clean_multidriver log
 3. **measured-but-currently-unreachable blocker** (manually verified with substrate `abc -c`): ABC `read_blif` rejects both d4 and d6 with `Network "router_d{4,6}" contains combinational loop!` — cycle terminating at CO `rr_ptr__d`. Path traverses `n272..n608..n272` (d4) and `n372..n830..n372` (d6). Confirmed by manual invocation:
@@ -40,12 +40,12 @@
 5. ~~`str(float)` runtime bug~~ — **NOT reproducible** in current build. `area=0.0` / `oracle=61763` / `Δ=100.0%` all print fine. Reframe: anima `train_s185_psicouple.hexa` blocker filed at `hexa-lang/inbox/patches/stdlib-print-float-emits-type-tag-not-value.md` may be build-state-specific (not yosys-blocker)
 6. ~~comb-side share/freduce parity~~ ← **deferred** : meaningless while area=0.0
 
-**closure 100% needs** (revised after deeper audit):
-- (0) **`exec()` runtime restore** (hexa-lang RUNTIME.md cycle 61-65 regression) — gates everything else. Targeted revert (option 1 in inbox patch) is the smallest path
+**closure 100% needs** (revised after deeper audit + cycle 66 close):
+- (0) ~~**`exec()` runtime restore**~~ ✓ MERGED upstream `8ea4b75e` (PR #251 cycle 66) — explicitly closes both inbox patches (yosys + pool). **WAITING for mac binary rebuild** — local hexa.real still stale, fresh build/hexa_cli_driver compiles but `run` smoke fails on bootstrap dependency. Once mac release lands, measurement chain is finally testable
 - (a) ~~PR #247 review/merge~~ ✓ merged 2026-05-21 as `cdfa8d46`
-- (b) abc_map.hexa: detect stale `_out.blif` → fail-loud (currently false-positive)
+- (b) ~~abc_map.hexa: detect stale `_out.blif` → fail-loud~~ ✓ submitted **PR #255** (rfc006-yosys-abc-map-honest, `e149900f`) — truncate-before-exec + `combinational loop` stdout pattern + T8 selftest. zero regression
 - (c) ~~abc_map.hexa: reorder script to `read_lib` BEFORE `read_blif`~~ ✓ already in PR #247 (logic_synth/abc_map.hexa L478-486)
-- (d) fix `rr_ptr__d` comb-loop OR detect ABC's "combinational loop" error in stdout (latter is a 1-line addition)
+- (d) fix `rr_ptr__d` comb-loop (cross-iteration arbiter-state feedback after PR #247 fixed intra-iteration) — next priority once measurement is testable
 - (e) emit `fifo_mem[*]` as RTLIL Memory cells (was Tier-2, now reframed as Tier-1 blocker for area > 0 on these designs)
 - (f) re-measure: area > 0 → ±5 % gate → g3-conditional flip
 
@@ -223,6 +223,11 @@ FLOW pattern: 풀기 (84+ items generated) → 자르기 (delete 75 off-scope it
 
 (append-only, latest 위에)
 
+- 2026-05-21 KST — **upstream cycle 66 (#251) CLOSED 진단된 exec() regression** + 추가 honest-guard PR 제출
+  - upstream PR #251 (`8ea4b75e` "fix(runtime): RUNTIME.md cycle 66 — restore exec/popen/env stubs") MERGED · 명시적으로 inbox patches `yosys-exec-runtime-regression-cycles-61-64.md` + `runtime-env-and-exec-capture-stubs-block-cli-tools.md` 둘 다 CLOSED 로 명명. 부분적인 옵션 1 (target revert) 채택 결과
+  - 다만 mac-side hexa.real 바이너리는 stale (mtime 2026-05-20 06:58, cycle 66 commit 은 2026-05-21 03:37) — `tool/build_hexa_cli.sh` 로 fresh build/hexa_cli_driver 빌드는 성공 (599K→624K) 하지만 `run` smoke 가 hexa_v2/aprime_cc 의존성 때문에 즉시 동작 안 함. upstream 측 bootstrap chain 후 mac binary release 기다림 → 그 후 실측정 가능
+  - 보완 PR 제출: **PR #255** (`e149900f`) — abc_map.hexa 의 stale `_out.blif` truncate-before-exec + `combinational loop` stdout 패턴 detection. selftest 9/9 PASS (T8 추가) · round_trip 12/12 · read_verilog 77/77 · zero regression. exec restore 가 land 한 후 chain 이 false-positive 대신 honest fail/PASS 보고
+  - 사이드: 같은 hexa-lang worktree 에 다른 자동 에이전트 들이 평행 활동 (RUNTIME.md cycles 22-30 차례, `fix/or-and-keyword-alias`, `fix/runtime-getenv-stub`) — branch swap 중 commit `70964f13` 가 잘못된 컨텍스트에서 push 됨 (메시지: 내 abc_map · 내용: self/lexer.hexa or-and-alias). upstream maintainer 가 별도 cleanup 가능 (이번 세션 scope 외)
 - 2026-05-21 KST — **deeper audit · `exec()` runtime regression 이 진짜 #1 blocker**. PR #247 (`cdfa8d46`) 가 main 에 squash-merged. 새 branch (`rfc006-yosys-abc-map-script-order`) 에서 `gate_record.hexa` 재측정 시도:
   1. `[abc_map] binary=` empty — `abc_binary_path()` 의 `exec("which abc")` 가 "" 반환
   2. 격리 테스트 `exec("echo hi")` 도 "" 반환 — popen 뿐 아니라 spawn 도 broken
