@@ -933,3 +933,67 @@ reports non-zero sequential cells.
 `rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
 flip; this turn pinned the oracle's measurement procedure and
 exposed the comb-side `synth`-macro dependency).
+
+## UPDATE 2026-05-20 (t) — parser-gap asymmetry: hexa-native & substrate yosys read disjoint Verilog dialects
+
+Tried the obvious next bridge — feed `flat_v2k/router_d4.v` (the sv2v
+output that substrate yosys synthesises to oracle) through hexa-native
+`read_verilog_file` for cross-check. Result:
+
+```
+canonical archive/comb/rtl/router_d4.v (unpacked-array module ports):
+  hexa-native read_verilog: ok=yes ✓   (measured, handoff (o))
+  yosys 0.65 read_verilog : syntax error at L18 ✗ (-sv/-formal too)
+
+flat_v2k/router_d4.v (sv2v'd: packed arrays, V2K-style `parameter`):
+  hexa-native read_verilog: "unsupported construct `parameter`" ✗
+  yosys 0.65 read_verilog : synth → 61,762.99 µm² ✓ (handoff (s))
+```
+
+The two parsers handle **disjoint** subsets of the Verilog dialect
+space. Specifically:
+
+- yosys 0.65 misses *unpacked-array module ports* (SV-2009+ feature,
+  `[W-1:0] in_data [0:4]` in the port list).
+- hexa-native misses *V2K-style bare `parameter`* (vs. `localparam`,
+  which the cond-mux/parameter PR family on origin/main handles).
+  `parameter` is essentially `localparam` minus the local-scope rule,
+  trivial syntactically — small one-off `_rv_parse_param` extension.
+
+**Implication for §5 chain options:**
+
+1. **Canonical-path-end-to-end (was implicit assumption):** hexa-native
+   reads canonical → produces RTLIL → … → substrate measures. Blocked
+   on the *writer side*: stdlib/yosys/write_verilog.hexa must emit
+   yosys-0.65-parseable Verilog (no SV-only constructs) for the hand-
+   off to work. Today's read_verilog also can't read flat_v2k so a
+   round-trip via flat_v2k is not viable either.
+2. **Flat-path-end-to-end (small new prereq):** add `parameter`
+   support to hexa-native read_verilog → it can read flat_v2k directly
+   → run hexa-native passes/abc_map → measure. The "small fix" path,
+   one selftest case.
+3. **Substrate-only baseline (no hexa-native dependence):** keep using
+   substrate yosys + flat_v2k for oracle; hexa-native parity is
+   demonstrated by matching cell-tally + area on the partial elaborations
+   that *are* reachable. The §5 gate becomes "hexa-native cells/areas
+   reach within ±5 % of substrate-via-flat_v2k for the constructs
+   hexa-native does support."
+
+Option (2) is the cheapest and unblocks measurement chain on the
+already-parseable side (canonical), since router_d4.v itself can be
+trivially sv2v'd and the only hexa-native gap on the sv2v output
+is `parameter`.
+
+**Refined chain (next session, ordered):**
+
+a. Add `parameter` parser to read_verilog.hexa — single PR, T48
+   selftest. Unblocks flat_v2k input for hexa-native.
+b. Re-run cell-tally driver on flat_v2k input — expect 35 cells (or
+   close — packed-array form may emit slightly different RTLIL).
+c. #4g/#4h/#4i sequential emit (still the central blocker — 79% of
+   oracle area is sequential).
+d. write_verilog stage exercise via yosys.c dispatcher link chain
+   (multi-file static collision sed already understood from (o)).
+e. Re-measure parity against [58,675, 64,851] µm² gate.
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false`.
