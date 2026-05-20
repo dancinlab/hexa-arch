@@ -240,6 +240,20 @@ public enum ActionDispatch {
             return runMobilityVerify()
         case (.verify, "antimatter"):
             return runAntimatterVerify()
+        case (.specify, "firmware"):
+            return runFirmwareSpecify()
+        case (.structure, "firmware"):
+            return runFirmwareStructure()
+        case (.design, "firmware"):
+            return runFirmwareDesign()
+        case (.analyze, "firmware"):
+            return runFirmwareAnalyze()
+        case (.synthesize, "firmware"):
+            return runFirmwareSynthesize()
+        case (.verify, "firmware"):
+            return runFirmwareVerify()
+        case (.handoff, "firmware"):
+            return runFirmwareHandoff()
         default:
             let prompt = actionPrompt(verb: verb)
             let reply = askClaude(prompt: prompt, context: context)
@@ -1203,6 +1217,77 @@ public enum ActionDispatch {
     /// D72: `kernels/mc_transport/` 4th consumer — clearest N+M payoff.
     private static func runAntimatterVerify() -> ActionResult {
         let r = AntimatterVerifyProducer.runVerify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    // ── firmware domain (D73, 16th domain) — Track A 7-verb dispatch ──
+    // SSOT = ~/core/hexa-lang/stdlib/firmware/<verb>.py per D61.
+    // D72: firmware = adapter-only (build/run/sign orchestration, no
+    // shared math kernel). Reference target = QEMU mps2-an385 (Cortex-M3,
+    // zero hardware dependency per domains/firmware.md §1).
+    // g3: every cell records GATE_OPEN / absorbed=false; QEMU / west /
+    // arm-none-eabi-gcc / clang-tidy / imgtool absence → honest install-
+    // gated skip (never silent success).
+
+    /// `firmware + specify` engine tool — requirements.json template.
+    private static func runFirmwareSpecify() -> ActionResult {
+        let r = FirmwareSpecifyProducer.runSpecify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + structure` engine tool — Zephyr/FreeRTOS task tree
+    /// arch.json + west version probe.
+    private static func runFirmwareStructure() -> ActionResult {
+        let r = FirmwareStructureProducer.runStructure()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + design` engine tool — arm-none-eabi-gcc probe +
+    /// CMake / hello.c scaffolding emit.
+    private static func runFirmwareDesign() -> ActionResult {
+        let r = FirmwareDesignProducer.runDesign()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + analyze` engine tool — clang-tidy + cppcheck probes,
+    /// analysis.json skeleton.
+    private static func runFirmwareAnalyze() -> ActionResult {
+        let r = FirmwareAnalyzeProducer.runAnalyze()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + synthesize` engine tool — arm-none-eabi-gcc Cortex-M3
+    /// cross-compile of hello.c → firmware.elf + firmware.bin.
+    private static func runFirmwareSynthesize() -> ActionResult {
+        let r = FirmwareSynthesizeProducer.runSynthesize()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + verify` engine tool — QEMU mps2-an385 boot smoke of
+    /// the synthesize-cell firmware.bin (Cortex-M3 reference target).
+    private static func runFirmwareVerify() -> ActionResult {
+        let r = FirmwareVerifyProducer.runVerify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `firmware + handoff` engine tool — CycloneDX SBOM skeleton +
+    /// release.tar.gz bundle + MCUboot imgtool probe.
+    private static func runFirmwareHandoff() -> ActionResult {
+        let r = FirmwareHandoffProducer.runHandoff()
         return ActionResult(text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],
             usedEngineTool: true, engineToolSucceeded: r.ok)
