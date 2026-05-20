@@ -201,8 +201,13 @@ final class DependenciesPilotsCrossRefTests: XCTestCase {
     //
     // Env vars consulted (first match wins):
     //   1. $HEXA_LANG_REPO          — explicit sibling repo override
-    //   2. $DEMIURGE_HEXA_LANG      — alternative explicit override
-    //   3. ~/core/hexa-lang/         — dev-box default location
+    //   2. ~/core/hexa-lang/         — dev-box default location
+    //
+    // D101 (this PR): the legacy `$DEMIURGE_HEXA_LANG` fallback was
+    // removed. After D3/D88 made demiurge the SSOT for `.demi` files,
+    // the demiurge codebase no longer needs a demiurge-prefixed env
+    // var to reach hexa-lang — the canonical, non-prefixed
+    // `HEXA_LANG_REPO` is the single cross-repo override.
     //
     // Tier ① of D97 already covers the 5 substrate-bearing siblings
     // (rtsc / cern / antimatter / fusion / ufo); this test is the
@@ -212,8 +217,6 @@ final class DependenciesPilotsCrossRefTests: XCTestCase {
     private func hexaLangRepoPath() -> String? {
         let env = ProcessInfo.processInfo.environment
         if let p = env["HEXA_LANG_REPO"],
-           FileManager.default.fileExists(atPath: p) { return p }
-        if let p = env["DEMIURGE_HEXA_LANG"],
            FileManager.default.fileExists(atPath: p) { return p }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let homePath = "\(home)/core/hexa-lang"
@@ -282,7 +285,7 @@ final class DependenciesPilotsCrossRefTests: XCTestCase {
             throw XCTSkip(
                 "hexa-lang sibling repo not reachable on this "
                 + "host (tried $HEXA_LANG_REPO, "
-                + "$DEMIURGE_HEXA_LANG, ~/core/hexa-lang) — "
+                + "~/core/hexa-lang) — "
                 + "kernel_path on-disk check is vacuous; "
                 + "skipping (D80).")
         }

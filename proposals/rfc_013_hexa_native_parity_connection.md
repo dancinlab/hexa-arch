@@ -100,19 +100,21 @@ dashboard color map:
 
 ### 2.4 `DependenciesLoader` (Loaders/DependenciesLoader.swift)
 
-Reads `hexa-lang/domains/DEPENDENCIES.demi` (the 44-row audit SSOT)
-via `DemiParser` and projects to typed `DependencyEntry` with
+Reads `demiurge/domains/DEPENDENCIES.demi` (the 44-row audit SSOT —
+relocated to demiurge by D88, formerly under hexa-lang) via
+`DemiParser` and projects to typed `DependencyEntry` with
 `Weight / PortableStatus / Kind` enums mirroring the `.demi`
 vocabulary.
 
 **Honesty floor (D86):** missing SSOT → empty array + stderr warning.
 **No hardcoded fallback dict.** Matches the `ProducerLoader` pattern.
 
-Path resolver order:
+Path resolver order (post-D88 + D101 — demiurge-local only, no
+cross-repo `hexa-lang` env-var fallback):
 
-1. `DEMIURGE_HEXA_LANG` env override (CI / sandbox)
-2. `DEMIURGE_REPO/../hexa-lang` (sibling-checkout default)
-3. `~/core/hexa-lang` (user-global wilson layout)
+1. `$DEMIURGE_REPO/domains/DEPENDENCIES.demi` (CI / sandbox override)
+2. `$PWD/domains/DEPENDENCIES.demi` (invocation-from-repo default)
+3. `~/core/demiurge/domains/DEPENDENCIES.demi` (user-global wilson layout)
 
 Inference helper `inferGateType(for:)` implements the §3.1 / §3.2
 contract — see §3 below. Tests: 3 cover loader OK / loader-missing-
@@ -322,8 +324,8 @@ need this gate. Queued as a small follow-up.
 - hexa-lang reconcile: **`4389da0c`** (this RFC's §5.3).
 - hexa-lang pilot pattern rolling table:
   `hexa-lang/inbox/notes/hexa-native-port-pattern-pilot.md`.
-- hexa-lang audit SSOT: `hexa-lang/domains/DEPENDENCIES.demi`
-  (44 sections).
+- audit SSOT: `demiurge/domains/DEPENDENCIES.demi`
+  (44 sections — relocated from `hexa-lang/` to `demiurge/` by D88).
 - demiurge governance: `AGENTS.tape @D g_hexa_only` (D80),
   `@D g_no_hardcoded_data` (D86),
   `@D substrate_in_hexa_lang_only` (D61),

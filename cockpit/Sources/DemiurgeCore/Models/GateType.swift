@@ -54,7 +54,7 @@ public enum GateType: String, Codable, Sendable, CaseIterable {
     /// port but tractable). Marked permanent so the G2 dashboard
     /// stops re-asking "why hasn't X been absorbed?".
     ///
-    /// Driven by `hexa-lang/domains/DEPENDENCIES.demi` rows where
+    /// Driven by `demiurge/domains/DEPENDENCIES.demi` rows where
     /// `portable_status = "nonportable"`. See `DependenciesLoader`.
     case hexaNativeAbsent = "hexa-native-absent"
 
@@ -64,7 +64,7 @@ public enum GateType: String, Codable, Sendable, CaseIterable {
     /// `absorbed=true` on the transitional substrate AND tracked as
     /// future-portable so the G2 dashboard surfaces the port queue.
     ///
-    /// Driven by `hexa-lang/domains/DEPENDENCIES.demi` rows where
+    /// Driven by `demiurge/domains/DEPENDENCIES.demi` rows where
     /// `portable_status = "heavy-port"`. See `DependenciesLoader`.
     case hexaNativeFuture = "hexa-native-future"
 

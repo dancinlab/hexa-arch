@@ -3846,3 +3846,52 @@ component · bot · chem · bio · energy · grid · mobility · scope ·
 space). 1 신규 skeleton (`domains/chip.md` — deep-domain pointer).
 1 pointer-file 갱신 (`domains/matter/README.md`). 그 외 변경 0.
 branch `14-domain-audit`, FF push to `origin/main`.
+
+### Decision 101 — `DEMIURGE_HEXA_LANG` env-var deprecation (D3/D88 follow-up)
+
+**picked**: D3 (DEPENDENCIES.demi → demiurge SSOT) + D88 (relocation
+landed at 2d07fd8) 후속 정리. `DependenciesPilotsCrossRefTests.swift`
+의 `hexaLangRepoPath()` resolver 에서 `$DEMIURGE_HEXA_LANG` 환경 변수
+fallback 1줄 제거 — sibling hexa-lang clone 발견은 이제 canonical
+`$HEXA_LANG_REPO` (non-prefixed) + `~/core/hexa-lang` dev-default 2단
+계로 단순화. `DependenciesLoader.swift` 자체는 이미 D88 시점에 demiurge-
+local resolver (`$DEMIURGE_REPO/domains` → `$PWD/domains` →
+`~/core/demiurge/domains`) 로 전환되어 있어 변경 0.
+
+**rationale**:
+- D3 정신: demiurge `.demi` 는 demiurge 가 own. demiurge-prefixed
+  env var (`DEMIURGE_HEXA_LANG`) 가 cross-repo path lookup 에 쓰이는
+  건 D3 이전 표면. demiurge SSOT 가 된 이상 demiurge 코드베이스는
+  자체 prefix env var 로 hexa-lang 을 찾을 필요가 없다 — 외부 clone
+  은 외부 이름 (`HEXA_LANG_REPO`) 으로.
+- D86 (`g_no_hardcoded_data`) 와 정합: env-var surface 가 줄면 hardcoded
+  fallback 경로의 가짓수도 줄어, "어디서 SSOT 를 찾는가" 의 inference
+  표면이 더 좁아진다.
+- D80 honesty floor 유지: clone 부재 시 XCTSkip + 명시적 stderr 메시지
+  (이전과 동일 shape, env-var 목록만 1개 감소).
+
+**적용**:
+1. `cockpit/Tests/DemiurgeCoreTests/DependenciesPilotsCrossRefTests.
+   swift` — `hexaLangRepoPath()` 의 `env["DEMIURGE_HEXA_LANG"]` 분기
+   2줄 제거. XCTSkip 메시지의 env-var 목록도 동기화 (`HEXA_LANG_REPO,
+   ~/core/hexa-lang`). 헤더 주석 블록은 "env vars consulted" 2-tier
+   로 갱신 + D101 deprecation 메모 inline.
+2. `proposals/rfc_013_hexa_native_parity_connection.md` §2.4 path
+   resolver 블록 동기화 — DependenciesLoader 의 현재 demiurge-local
+   3단 resolver 를 정확히 반영. §8 cross-ref 의 "hexa-lang audit SSOT"
+   문구도 "audit SSOT (relocated from hexa-lang/ to demiurge/ by D88)"
+   로 정정.
+3. `cockpit/Sources/DemiurgeCore/Models/GateType.swift` 두 doc 주석의
+   `hexa-lang/domains/DEPENDENCIES.demi` → `demiurge/domains/
+   DEPENDENCIES.demi` 정정 (D88 이후 정확한 SSOT 경로).
+4. `cockpit/Sources/DemiurgeCore/Models/EnergyVerifyRecord.swift` 의
+   `~/core/hexa-lang/domains/DEPENDENCIES.demi` 한 줄 → `~/core/
+   demiurge/domains/DEPENDENCIES.demi` 정정.
+5. swift build PASS · swift test PASS (35 tests; CrossRefTests 3/3 —
+   `testEveryPilotKernelPathExistsAsHexaLangFile` 는 dev-box hexa-lang
+   clone 의 non-main branch 로 인해 XCTSkip, 변경 무관).
+
+g3 — `.demi` 데이터 SSOT 무변경. `DependenciesLoader.swift` 무변경
+(이미 D88 시점에 정리됨). 변경된 surface = 단 1개 test resolver +
+3개 stale doc/comment 정정 + 본 D101 entry. 새 SSOT 0, 새 stored
+data 0, schema 변경 0.

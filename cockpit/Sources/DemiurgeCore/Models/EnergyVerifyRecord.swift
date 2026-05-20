@@ -29,7 +29,7 @@ public struct EnergyVerifyRecord: Codable, Equatable, Sendable {
     /// D80 — hexa-native parity port pointer (nil = provisional /
     /// no port yet). Populated for the solar-clearsky path; nil for
     /// the OpenMC k-eff path (heavy-port — see
-    /// `~/core/hexa-lang/domains/DEPENDENCIES.demi`
+    /// `~/core/demiurge/domains/DEPENDENCIES.demi`
     /// `[domain-energy_openmc_keff]` portable_status = "heavy-port").
     public let hexaNativeParity: HexaNativeParityRef?
 
