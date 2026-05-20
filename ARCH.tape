@@ -51,10 +51,8 @@
   comb_needs = "T1 NoC sim (F1/F2) · T2 RTL+cycle sim · T3 tapeout-ready 설계 (fab X)"
 
 @D d_nongoal := "non-goals" :: governance [required d=2026-05-19 active]
-  no_fab = "실제 fab/FPGA 안 함 — 설계 산출물만"
-  no_overclaim = "측정 게이트 전 'absorbed/parity/resolved' 주장 금지 (g3 · AGENTS.tape `g3_no_over_claim` · `@F f2/f4`)"
-  hexa_native = "외부도구 흡수는 hexa intrinsics 로 (g5). 재도출 모듈은 hexa-lang/stdlib/ 행(D15 · `@F f1`). bounded-subprocess 예외 = rfc_048-precedented, D18(Yosys ABC) 활성 선례."
-  no_bigbang = "증분·도메인별 absorption-RFC. D10 design-only 비목표는 D12로 RESCIND — 풀스코프 허용, 게이트 규율이 진정성을 강제."
+  do   = "design 산출물 · 측정 gate 후 결과 단언 · hexa intrinsics 흡수 · 증분 RFC · 재도출 모듈 = hexa-lang/stdlib/"
+  dont = "실제 fab/FPGA · gate 전 absorbed/parity/resolved 주장 · shell-out (rfc_048 bounded subprocess 예외) · big-bang land"
 
 @N related := "관련 repo / 표면" :: note [d=2026-05-19 active]
   hexa_lang = "~/core/hexa-lang — substrate + **stdlib SSOT (D15)**; comb/ 첫 소비자; 흡수-RFC 패턴 출처. 재도출 모듈 호스트: stdlib/booksim/(rfc_003, commit d5a63a82 미push) · stdlib/yosys/(rfc_006 §4 미구현, D19 hexa-lang 세션 몫)."
