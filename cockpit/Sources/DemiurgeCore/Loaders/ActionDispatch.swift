@@ -203,8 +203,11 @@ public enum ActionDispatch {
             return runAuraAnalyze()
         case (.analyze, "scope"):
             return runScopeAnalyze()
-        case (.analyze, "cern"):
-            return runCernAnalyze()
+        // (.analyze, "cern") — handled by ProducerRegistry (D74).
+        // Kept here as a comment so the switch's domain coverage is
+        // still readable; the early-return above means this case is
+        // unreachable. runCernAnalyze (pylhe) is still invoked via
+        // the `pylhe` variant entry in the registry.
         case (.synthesize, "sscb"):
             return runSSCBSynth()
         case (.verify, "sscb"):

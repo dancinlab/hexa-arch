@@ -90,14 +90,31 @@ phase 같은 수치의 SSOT 는 `design.md` / `PLAN.md` (g_ssot_single_source):
   줄 import. demiurge 측 producer 무변경 (D61 pointer-only). g3 —
   구조 재배치, 측정/gate/absorbed 변경 0; absorbed=true flip 은
   여전히 측정 후 (제1 원칙 — 모든 커널 ultimate form 은 hexa-native).
+- ✅ **빈-셀 sweep ROI 1→18 17 cell dispatch + cern+synth dynamic
+  flip (D73·D74)** — κ-47..κ-51. firmware 16번째 도메인 추가 +
+  ROI 1→10 (κ-47/48) + ROI 11→18 (κ-49) substrate landed (heavy
+  install-gated honest skips 포함). κ-50 7 parity attempt 노트 (5
+  cell measure-but-don't-flip, 1 ⭐ flip 후보). κ-51 에서 cern+synth
+  absorbed=true 두 번째 *동역학* 흡수 (β_x_max rel err 2.57e-14 ·
+  Q_x rel err 4.11e-14 vs Wiedemann/Lee thick-quad twiss closed
+  form, 1e-6 tol 의 8 orders 안쪽; chip §B+§D 이후 첫 새 도메인
+  dynamic). ProducerRegistry (D74) 도입 — cells with alternative
+  producers, 첫 적용 = `(cern, analyze)` = {xsuite-tracking default,
+  pylhe legacy}. mc_transport kernel = 4 consumer = D72 N+M payoff
+  실증. **honest 갭**: 7 parity attempt 중 1 flip · 4 측정만-flip
+  보류 · 2 fail; D73 firmware reference target QEMU mps2-an385 은
+  dispatch wiring 후속; ProducerRegistry typed Codable Record 후속
+  phase.
 - 🟡 **engine tool — chip / cohort 다수 라이브, 측정 도구 점증** —
-  θ-2 가 돌릴 실제 producer 가 κ-34~47 로 다수 wired (chip+verify
-  sweep_oracle_parity 가 첫 *동역학* 측정; matter·chip-analyze 는
-  static absorbed). seam records 0 (rfc_007/008 v0 의도적 빈칸 =
-  g3 위조 0) 는 유지. Yosys §4 모듈은 여전히 hexa-lang 세션 항목.
-  빈-셀 measurement 라운드 (sscb·scope·cern·component synth/verify
-  per `inbox/notes/absorption-empty-cells-research-2026-05-20.md`)
-  는 hexa-lang live-tree cross-session 정렬 후 진행.
+  θ-2 가 돌릴 실제 producer 가 κ-34~49 로 다수 wired (chip+verify
+  sweep_oracle_parity 가 첫 *동역학* 측정; cern+synth κ-51 이 두
+  번째; matter·chip-analyze 는 static absorbed). seam records 0
+  (rfc_007/008 v0 의도적 빈칸 = g3 위조 0) 는 유지. Yosys §4 모듈은
+  여전히 hexa-lang 세션 항목. heavy candidates (Geant4/CARLA/Drake/
+  OpenMC nuclear data) 별 세션 install + 측정 라운드 대기. cross-
+  session 차단점: `~/core/hexa-lang` live tree 가 concurrent session
+  branch → demiurge spawn 이 default xsuite-tracking substrate 못
+  봄 (origin/main 에는 있음).
 
 > GOAL 한 줄(north-star)은 불변 — 달성 주장 아님, 측정 거리 명시.
 
@@ -160,3 +177,13 @@ phase 같은 수치의 SSOT 는 `design.md` / `PLAN.md` (g_ssot_single_source):
   `inbox/notes/absorption-empty-cells-research-2026-05-20.md`) 는
   hexa-lang live-tree cross-session 정렬 후로 미룸 (demiurge 세션
   자율 해소 불가 — concurrent session uncommitted 보존).
+- 2026-05-20 — 빈-셀 sweep ROI 1→18 (κ-47..κ-49 17 cell dispatch +
+  firmware 16번째 도메인 D73) + parity round 7 attempt (κ-50, 5
+  measure-only · 1 flip 후보) + cern+synth absorbed=true 동역학 흡수
+  (κ-51, β/Q rel err 1e-14 vs Wiedemann/Lee) + ProducerRegistry D74
+  (cells with alternatives, first cell `(cern, analyze)` = xsuite-
+  tracking | pylhe). 새 측정 fact: chip §B+§D 이후 두 번째 *동역학*
+  absorbed=true. D72 N+M payoff 가시화 — kernels/mc_transport/ 가
+  4 consumer 보유 (antimatter+analyze · fusion+verify · energy+verify
+  · antimatter+verify). 카테고리 서술 갱신만 — north-star 불변,
+  진행 SSOT = PLAN κ-47..κ-51 (g_ssot_single_source).

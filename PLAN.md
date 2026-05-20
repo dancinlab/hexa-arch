@@ -3769,3 +3769,23 @@
   build: xcrun swift build --product DemiurgeCLI OK (2.03s).
   g3 — cern+synth flip 만 진짜 GATE_CLOSED_MEASURED·absorbed=true;
   registry 자체는 측정 없음, 두 variant 다 GATE_OPEN 유지.
+- 2026-05-20 — **phase κ-52 — safe reconcile pass (GOAL/ABSORPTION/
+  dispatch cleanup + CernAnalyzeXsuiteRecord typed Codable)**.
+  사용자 게이트 "안전하게 검토 후 진행". 3-묶음 작업, 측정 record
+  변경 0:
+  (A) GOAL.md "현재 정직한 위치" 갱신 — κ-47..κ-51 측정 fact 반영
+      (16번째 firmware 도메인, ROI 1→18 17-cell sweep, cern+synth
+      두 번째 동역학 absorbed=true, ProducerRegistry D74). Log entry
+      추가.
+  (B) ABSORPTION.md Log — 빈-셀 sweep κ-47..κ-49 + cern+synth κ-51
+      flip + D74 ProducerRegistry 2 entry 추가.
+  (C) ActionDispatch.swift dead `case (.analyze, "cern")` cleanup —
+      ProducerRegistry 가 우선 처리하므로 unreachable, comment 로
+      treatment 명시 (cleanliness only, behavior 변경 0).
+  (D) CernAnalyzeXsuiteRecord.swift (신규) — typed Codable mirror
+      of elegant_tracking.py JSON schema. cockpit RecordView 가
+      raw-json 대신 typed display 가능. D74 phased rollout 의 다음
+      단계.
+  build: xcrun swift build --product DemiurgeCLI OK (1.71s).
+  worktree clean · origin in sync. g3 — 측정 / gate / absorbed
+  변경 0; documentation reconcile + cleanliness 작업.

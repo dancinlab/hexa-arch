@@ -471,3 +471,27 @@ local mac │ -       │ pool 호스트 다운시 fallback (swift run)
   흡수가 가능했기 때문 (당초 가정 = docker 필수). SECOND
   D61-compliant-from-birth producer (script SSOT = `~/core/hexa-lang/
   stdlib/component/gmsh_skfem.py`).
+- 2026-05-20 — **빈-셀 sweep ROI 1→18 17 cell + firmware 도메인
+  추가 (κ-47..κ-49, D73)**. 8 parallel agent + main session direct
+  로 sscb/scope/energy/space/bot synth + scope/sscb verify (ROI
+  1-10) + 7 verify (ROI 11-18 fusion/energy/bot/space/rtsc/mobility/
+  antimatter) substrate landed; demiurge 측 17 cell dispatch wiring.
+  honest install-gated / platform-gated skip 패턴 — OpenMC nuclear
+  data 3GB · Drake multi-GB · CARLA Unreal · Geant4 multi-hour build
+  · CalculiX / GetDP 부재 시 GATE_OPEN + absorbed=false 명시 skip
+  record (silent pass 금지). D72 N+M payoff 실현: kernels/
+  mc_transport/ 4 consumer (antimatter+analyze, fusion+verify,
+  energy+verify, antimatter+verify). cern+analyze 는 substrate 2개
+  (pylhe legacy + xsuite-tracking κ-49) — ProducerRegistry D74 로
+  routing.
+- 2026-05-20 — **cern+synth κ-51 absorbed=true 흡수 + ProducerRegistry
+  D74 도입**. cern+synth 가 chip §B+§D (κ-43) 이후 두 번째 *동역학*
+  흡수: substrate `xsuite_optics.py` 에 `_analytic_fodo_twiss` (pure-
+  Python Wiedemann §6.2 + §7.4 closed-form) 내장 → Xsuite 결과와
+  rel err ≤ 1e-6 비교, 통과 시 GATE_CLOSED_MEASURED + absorbed=true.
+  관측 parity: β_x_max rel err 2.57e-14, Q_x rel err 4.11e-14 (8
+  orders 안쪽). scope_caveats 가 "ALGORITHM-level closure (Xsuite ⇄
+  Wiedemann/Lee), NOT measured-lattice closure" 명시 (g3 — flip 의
+  의미가 좁음을 정직히 박음). ProducerRegistry (D74) — cells with
+  alternatives, `(cern, analyze)` = xsuite-tracking (default) | pylhe
+  (legacy). 다른 cell 은 hardcoded switch 그대로 — additive.
