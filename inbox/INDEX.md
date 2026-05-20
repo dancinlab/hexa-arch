@@ -12,7 +12,7 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (26 entries)
+## Index (27 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
@@ -23,6 +23,7 @@
 | `cohort-pickup-bot-urdf-producer.md` | resolved | κ-37 / D58 | bot+structure URDF producer landed |
 | `cohort-pickup-grid-networkx-producer.md` | resolved | κ-36 | grid+structure networkx producer landed |
 | `cohort-pickup-rtsc-femm-producer.md` | resolved | κ-48 + κ-49 | pyfemm rtsc+analyze (κ-48) + GetDP rtsc+verify (κ-49) substrates landed |
+| `d80-sweep-close-2026-05-20.md` | archive | D87..D106 / κ-67 / RFC 013 | D80 sweep close — 2026-05-20 single-session digest (15 PILOTS rows · 14 kernel folders · 5 .demi SSOT · 5 cockpit Loader · 4-case chip · 19/19 도메인 narrative · D104 reserved · RFC 013 MOSTLY-LANDED); self-contained cold-start anchor for next session / external reviewer |
 | `hexa-8domain-measurement-stack-2026-05-20.md` | resolved | κ-47..κ-49 | 8-domain stack survey consumed by empty-cell sweep |
 | `hexa-lang-branch-consolidation-2026-05-20.md` | pickup-blocked | (cross-session) | hexa-lang live tree alignment to origin/main — concurrent session blocker |
 | `hexa-native-connection-plan-2026-05-20.md` | resolved | RFC 013 / κ-67 | SHAPE note promoted to `proposals/rfc_013_hexa_native_parity_connection.md` — wiring from hexa-lang substrate parity to demiurge `absorbed` flag |
