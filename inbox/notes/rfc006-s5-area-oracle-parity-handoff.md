@@ -794,3 +794,65 @@ expression tree (no `name not found` fallback).
 
 `rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
 flip; this turn added measurement + design, not absorption).
+
+## UPDATE 2026-05-20 (r) — cell-name dump: source-level mapping of the 35 emitted cells
+
+Extended the cell-tally driver to also dump per-cell name. Pattern:
+
+```
+cells [0..24]:  ($eq, $eq, $ne, $logic_and, $logic_not) × 5 reps
+cells [25..34]: ($add, $mod) × 5 reps
+```
+
+Mapped to source (`archive/comb/rtl/router_d4.v` L48-55):
+
+```verilog
+genvar p;
+generate for (p = 0; p < P; p = p + 1) begin : g_fifo  // P=5
+    assign fifo_empty[p] = (fifo_head[p] == fifo_tail[p]);              // 1× $eq
+    assign fifo_full [p] = ((tail[FIFO_LD-1:0] == head[FIFO_LD-1:0])
+                          && (tail[FIFO_LD]    != head[FIFO_LD]));      // 1× $eq, 1× $ne, 1× $logic_and
+    assign fifo_peek [p] = fifo_mem[p][fifo_head[p][FIFO_LD-1:0]];      // dyn-idx — 0 cells
+    assign in_ready  [p] = !fifo_full[p];                               // 1× $logic_not
+end endgenerate
+// per-iter: 5 cells × 5 iters = 25 cells ✓
+```
+
+The 10 `$add + $mod` cells (× 5 reps) are the `(... + 1) % P` rotation
+expressions that appear in the always-bodies at 5 sites — the
+*expression* lowering fires (binop cell-emit primitive works), but
+the **assignment-into-LHS** never lands because the always-body
+cond-mux / dyn-idx / multi-LHS emit paths are gaps. The 25 generate-
+for cells are L50-54's `assign`-statement lowerings (one per non-
+dyn-idx assign × 5 iters); L53's `fifo_peek` dyn-idx fails silently
+(0 cells), confirming PR #163's `_rv_array_bound` infra alone is
+insufficient — the emit-chain that consumes it is incomplete on the
+generate-for-body path too.
+
+**Refined gap list (priority-ordered for next session):**
+
+1. **dyn-idx emit inside generate-for body** — L53 `fifo_peek[p] =
+   fifo_mem[p][fifo_head[p][...]]` would contribute 5 RTLIL Memory-
+   read cells (`$memrd` or `$shiftx` per yosys idiom). This is the
+   #4d/#4h variant *for assign-context*, not just always-context.
+2. **always @* body cond-mux emit** (L80-94) — multi-stmt nested if,
+   includes the `(idx + 1) % P` expressions that already lower as
+   standalone cells but aren't wired to any LHS. Needs sub-step #4g
+   (route_xy preceding-stmt inline) for `grant_out = route_xy(...)`
+   to elaborate at all.
+3. **always @(posedge clk) body** (L98-123) — with-else reset
+   structure + dyn-idx LHS (`fifo_head[grant_in] <= ...`) + nested
+   if. #4h (multi-LHS dyn-idx) + #4i (with-else dyn-idx). Will
+   contribute `$adff` / `$dff` + `$mux` sequential cells once landed.
+
+Order rationale: (1) is single-site, single-shape (assign-context
+dyn-idx read) — smallest cell-emit primitive. (2) depends on the
+#4g function-inline preceding-stmt expansion. (3) is the largest
+(reset + dyn-idx LHS write + multi-LHS).
+
+**Cell-name driver is now the per-session measurement primitive** —
+each new emit primitive can be verified by re-running `/tmp/drv_exec
+/tmp/router_d4.v` and watching the cell list grow toward
+proc-pass-complete (sequential cells appear).
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false`.
