@@ -106,11 +106,19 @@ public struct Domain: Identifiable, Sendable {
 /// The domain catalog — the one place domain metadata is defined
 /// (D82 graph DAG + multi-facet tag).
 public enum DomainCatalog {
-    /// 19 domains — 16 original + 3 from D81 (chem · bio · ufo).
-    /// `prerequisites` edges sourced from each `domains/<id>.md` §6
-    /// cross-references + the explicit research scan recorded in PLAN
-    /// κ-55 (rtsc-foundation chain discovery).
-    public static let all: [Domain] = [
+    /// 19 domains — runtime-loaded from `domains/INDEX.demi` (D83
+    /// SSOT) with a hardcoded fallback in case the file is missing or
+    /// malformed. `DomainLoader.loadAllOrFallback` is the canonical
+    /// entry. The hardcoded `allHardcoded` array below is the
+    /// dev-fallback and must be kept in sync with `INDEX.demi`.
+    public static let all: [Domain] =
+        DomainLoader.loadAllOrFallback(allHardcoded)
+
+    /// Hardcoded polyfill — kept in sync with `domains/INDEX.demi`.
+    /// `DomainCatalog.all` prefers the `.demi` runtime-load; this is
+    /// only used when the file is missing or fails to parse (test
+    /// rigs, embedded uses, dev mode).
+    public static let allHardcoded: [Domain] = [
         // Device tier
         Domain(id: "chip", label: "칩 설계", canvasMode: .chip,
                keywords: ["칩", "반도체", "chip", "soc", "asic", "프로세서", "cpu", "gpu", "noc"],

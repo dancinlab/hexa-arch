@@ -3901,3 +3901,31 @@
   absorbed 변경 0. 다음 phase B = D83 .demi parser + INDEX.demi
   runtime SSOT 전환 + NewProjectSheet UI 갱신 (facet filter → DAG
   closure preview).
+- 2026-05-20 — **phase κ-57 — Round 1 phase B: D83 `.demi` format
+  + runtime SSOT 전환**. 사용자 게이트 "next go". 도메인 metadata
+  를 hardcoded array 에서 `.demi` declarative SSOT 로 분리:
+  - `domains/INDEX.demi` (신규 SSOT) — 19 `[<id>]` records,
+    TOML-풍 section-oriented. id / label / canvas_mode /
+    prerequisites / facets.scale / facets.cluster / facets.hostility
+    / substrate_ssot / keywords.
+  - `DemiParser.swift` (신규, ~170 LOC, Foundation only) — TOML-풍
+    section + scalar + list + dotted-key + comment parser. tolerant
+    (malformed line → log + skip).
+  - `DomainLoader.swift` (신규, ~110 LOC) — DemiParser → [Domain]
+    projection. `indexPath()` resolver (DEMIURGE_REPO env → cwd
+    fallback → ~/core/demiurge fallback). `loadAllOrFallback`
+    helper.
+  - `Domain.swift`: `DomainCatalog.all` 가 `DomainLoader.
+    loadAllOrFallback(allHardcoded)` runtime-load. 기존 hardcoded
+    19 entries 는 `allHardcoded` polyfill 로 rename.
+  - design.md D83 audit-trail (TOML-풍 picked over `.dgraph` /
+    YAML / .tape 직접 사용).
+  - ARCH.md §11.4 G1 [~] partial 마크 갱신 (UI 부분만 남음).
+  build: xcrun swift build --product DemiurgeCLI OK (2.96s).
+  smoke test: `DEMIURGE_REPO=$PWD ./DemiurgeCLI action analyze chem`
+  + `action verify ufo` — 둘 다 dispatch 인식 (INDEX.demi load
+  성공), LLM honest-gap path 정상 작동 (g3, no over-claim).
+  도메인 추가 이제 = `.demi` 한 section 추가 (Swift 코드 변경 0).
+  g3 — data format 분리만, 측정 record / gate / absorbed 변경 0.
+  다음 phase C = NewProjectSheet UI 갱신 (facet filter → DAG
+  closure preview).

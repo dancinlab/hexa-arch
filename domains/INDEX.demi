@@ -1,0 +1,230 @@
+# domains/INDEX.demi — demiurge domain SSOT (D83, `.demi` v1)
+#
+# This is the canonical machine-readable source for the 19-domain graph.
+# Cockpit + DemiurgeCLI both load this via DemiParser → DomainLoader.
+# To add a domain: add one `[<id>]` section here + create
+# `domains/<id>.md` for the narrative (D17 sibling-repo pointer is
+# optional via `substrate_ssot`).
+#
+# Syntax (TOML-풍 section-oriented):
+#   - line `[<id>]`        — start a new domain record
+#   - `key = value`         — scalar (quoted-string or bare-word)
+#   - `key = [a, b, c]`     — list (comma-separated, brackets)
+#   - `key.subkey = ...`    — dotted-key for nested facets
+#   - `#` to end-of-line    — comment
+#   - blank lines OK
+#
+# Graph (D82): direct prerequisites only; transitive closure computed
+# by `DomainGraph.transitiveClosure`. Facets (D82) are multi-tag, NOT
+# a partition.
+
+# ─────────────────────────────────────────────────────────────────
+# Device tier
+# ─────────────────────────────────────────────────────────────────
+
+[chip]
+label = "칩 설계"
+canvas_mode = "chip"
+prerequisites = []
+facets.scale = "device"
+facets.cluster = ["physical", "engineering"]
+facets.hostility = "macos-clean"
+keywords = ["칩", "반도체", "chip", "soc", "asic", "프로세서", "cpu", "gpu", "noc"]
+
+[firmware]
+label = "펌웨어"
+canvas_mode = "cohort"
+prerequisites = ["chip"]
+facets.scale = "device"
+facets.cluster = ["engineering"]
+facets.hostility = "macos-clean"
+keywords = ["펌웨어", "firmware", "embedded", "mcu", "zephyr", "qemu"]
+
+[sscb]
+label = "솔리드스테이트 차단기"
+canvas_mode = "cohort"
+prerequisites = ["chip", "brain"]
+facets.scale = "device"
+facets.cluster = ["engineering", "physical"]
+facets.hostility = "macos-clean"
+keywords = ["차단기", "sscb", "interrupter", "차단"]
+
+[rtsc]
+label = "초전도 코일"
+canvas_mode = "cohort"
+prerequisites = []
+facets.scale = "device"
+facets.cluster = ["physical"]
+facets.hostility = "macos-partial"
+substrate_ssot = "~/core/hexa-rtsc/"
+keywords = ["초전도", "rtsc", "코일", "권선", "rebco", "hts"]
+
+[brain]
+label = "뇌·신경"
+canvas_mode = "cohort"
+prerequisites = ["bio"]
+facets.scale = "device"
+facets.cluster = ["life", "sensing"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-brain/"
+keywords = ["뇌", "brain", "신경", "neuro", "인지", "bci", "전극"]
+
+[aura]
+label = "청각 웨어러블 BCI"
+canvas_mode = "cohort"
+prerequisites = ["rtsc", "chip", "brain", "bio", "firmware"]
+facets.scale = "component"
+facets.cluster = ["sensing", "life", "engineering"]
+facets.hostility = "macos-partial"
+substrate_ssot = "~/core/hexa-aura/"
+keywords = ["청각", "귀", "이어", "aura", "eeg", "웨어러블", "보청", "bci"]
+
+# ─────────────────────────────────────────────────────────────────
+# Component tier
+# ─────────────────────────────────────────────────────────────────
+
+[component]
+label = "부품 설계"
+canvas_mode = "component"
+prerequisites = ["chip", "space"]
+facets.scale = "component"
+facets.cluster = ["engineering", "physical"]
+facets.hostility = "macos-clean"
+keywords = ["부품", "component", "기구", "케이스", "enclosure", "패키지", "heatsink", "방열"]
+
+[bot]
+label = "로봇"
+canvas_mode = "cohort"
+prerequisites = ["mobility"]
+facets.scale = "component"
+facets.cluster = ["engineering"]
+facets.hostility = "macos-clean"
+keywords = ["로봇", "robot", "bot", "매니퓰레이터", "구동", "actuator"]
+
+# ─────────────────────────────────────────────────────────────────
+# Molecular tier (matter, chem, bio — D81 신규 chem + bio)
+# ─────────────────────────────────────────────────────────────────
+
+[matter]
+label = "물질·재료"
+canvas_mode = "matter"
+prerequisites = []
+facets.scale = "molecular"
+facets.cluster = ["matter", "physical"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-matter/"
+keywords = ["물질", "재료", "material", "합금", "분자", "matter", "소재"]
+
+[chem]
+label = "화학·반응"
+canvas_mode = "cohort"
+prerequisites = ["matter"]
+facets.scale = "molecular"
+facets.cluster = ["chem", "matter"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-chem/"
+keywords = ["화학", "chem", "반응", "촉매", "synthesis", "합성"]
+
+[bio]
+label = "생물·분자"
+canvas_mode = "cohort"
+prerequisites = ["chem", "matter"]
+facets.scale = "molecular"
+facets.cluster = ["bio", "chem", "life"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-bio/"
+keywords = ["생물", "bio", "단백질", "protein", "dna", "rna", "drug", "molecule"]
+
+# ─────────────────────────────────────────────────────────────────
+# System tier
+# ─────────────────────────────────────────────────────────────────
+
+[energy]
+label = "에너지"
+canvas_mode = "cohort"
+prerequisites = ["grid"]
+facets.scale = "system"
+facets.cluster = ["engineering", "physical"]
+facets.hostility = "macos-clean"
+keywords = ["에너지", "배터리", "energy", "태양", "solar", "전력", "발전", "원자로"]
+
+[grid]
+label = "AI 데이터센터·전력망"
+canvas_mode = "cohort"
+prerequisites = ["cern", "rtsc"]
+facets.scale = "system"
+facets.cluster = ["engineering", "physical"]
+facets.hostility = "macos-clean"
+keywords = ["데이터센터", "grid", "데이터", "서버", "랙", "fabric"]
+
+[mobility]
+label = "자율주행"
+canvas_mode = "cohort"
+prerequisites = ["fusion"]
+facets.scale = "system"
+facets.cluster = ["engineering"]
+facets.hostility = "macos-blocked"
+keywords = ["자율주행", "mobility", "자동차", "차량", "자율", "운전"]
+
+[scope]
+label = "망원경·광학"
+canvas_mode = "cohort"
+prerequisites = ["space"]
+facets.scale = "system"
+facets.cluster = ["physical", "sensing"]
+facets.hostility = "macos-clean"
+keywords = ["망원경", "scope", "거울", "광학", "telescope"]
+
+[space]
+label = "우주·항공"
+canvas_mode = "cohort"
+prerequisites = []
+facets.scale = "system"
+facets.cluster = ["physical", "engineering"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-space/"
+keywords = ["우주", "위성", "space", "로켓", "궤도", "satellite", "항공"]
+
+[cern]
+label = "가속기·입자"
+canvas_mode = "cohort"
+prerequisites = ["chip"]
+facets.scale = "system"
+facets.cluster = ["physical"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-cern/"
+keywords = ["가속기", "cern", "입자", "빔", "beamline", "lattice"]
+
+[antimatter]
+label = "반물질·트랩"
+canvas_mode = "cohort"
+prerequisites = ["matter", "space"]
+facets.scale = "system"
+facets.cluster = ["physical"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-antimatter/"
+keywords = ["반물질", "antimatter", "positron", "penning", "트랩", "pet"]
+
+[fusion]
+label = "핵융합"
+canvas_mode = "cohort"
+prerequisites = ["antimatter", "cern", "energy", "rtsc"]
+facets.scale = "system"
+facets.cluster = ["physical"]
+facets.hostility = "macos-partial"
+substrate_ssot = "~/core/hexa-fusion/"
+keywords = ["핵융합", "fusion", "플라즈마", "토카막", "plasma", "tokamak"]
+
+# ─────────────────────────────────────────────────────────────────
+# Integration apex — D81 신규 ufo (HEXA-Disc 7-stage propulsion)
+# ─────────────────────────────────────────────────────────────────
+
+[ufo]
+label = "UFO·디스크 추진"
+canvas_mode = "cohort"
+prerequisites = ["fusion", "antimatter", "rtsc"]
+facets.scale = "system"
+facets.cluster = ["physical", "propulsion"]
+facets.hostility = "macos-clean"
+substrate_ssot = "~/core/hexa-ufo/"
+keywords = ["ufo", "uap", "디스크", "propulsion", "warp", "wormhole"]

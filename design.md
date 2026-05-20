@@ -3212,3 +3212,44 @@ DomainFacets` fields 추가. `DomainGraph.swift` 신규 — BFS
 cluster)`. `DomainCatalog.all` 16 entries 에 prereq + facet 박음 (조사
 한 cross-link 표 그대로) + chem/bio/ufo 3 entries 신규 = 19. 시뮬레이션
 (ARCH.md §11) 이 직접 검증.
+
+### Decision 83 — `.demi` data format (demiurge family 자체 규격)
+
+**picked**: 도메인 graph + facet metadata 의 SSOT 를 **`.demi` 자체
+규격** (TOML-풍 section-oriented) 으로 분리. `domains/INDEX.demi` 가
+runtime-load source, Swift `Domain.swift` 는 type 만, hardcoded
+`DomainCatalog.all` 19 entries 는 polyfill / dev-fallback. `.demi`
+syntax: section header `[<domain-id>]` + key-value pairs + dotted-key
+nested (`facets.scale`, `facets.cluster`). (Rejected: (A) `.dgraph` +
+brace 자유 syntax — TOML 보다 less-familiar; (C) YAML — indentation-
+fragile + 외부 dep 또는 큰 parser; .tape 직접 사용 — wilson family
+agent-execution scope 와 책임 혼합.)
+
+**rationale**:
+- 사용자 게이트 2026-05-20 — ".tape 처럼 자체 규격 + cockpit·CLI
+  활용" + ".demi" ext 충돌 없음 확인. demiurge family 명확한 ext.
+- TOML-풍 syntax — 사람·기계 둘 다 즉시 읽힘, Swift Foundation
+  만으로 parser ~100 LOC. dotted-key 가 nested facet 표현 깔끔.
+- D50 g_ssot_single_source — 도메인 metadata 한 곳 (`INDEX.demi`),
+  cockpit + CLI 같은 parser 사용. 도메인 추가 = `.demi` 한 줄 추가
+  (Swift 코드 변경 0).
+- 사용자 명시 "도메인은 모두 domains/* 안에 보유" + "프로젝트는
+  포인터" — `.demi` 가 그 SSOT 의 machine-readable 표면.
+- 점진 전환 안전 — phase A 의 hardcoded `DomainCatalog.all` 19
+  entries 는 polyfill / dev-fallback 으로 잔류. Loader 가 `.demi`
+  load 성공하면 그것을 사용, 실패하면 fallback.
+
+**적용**:
+1. `domains/INDEX.demi` (신규 SSOT) — 19 `[<id>]` records (id /
+   label / canvas_mode / prerequisites / facets.scale / facets.cluster /
+   facets.hostility / substrate_ssot / keywords).
+2. `cockpit/Sources/DemiurgeCore/Loaders/DemiParser.swift` (신규,
+   ~150 LOC) — TOML-풍 line-by-line parser (Foundation only).
+3. `cockpit/Sources/DemiurgeCore/Loaders/DomainLoader.swift` (신규,
+   ~80 LOC) — DemiParser → [Domain] in-memory.
+4. `DomainCatalog.all` runtime-load 전환 — `DomainLoader.loadAll()`
+   호출, 실패 시 hardcoded fallback. cockpit + CLI 둘 다 자동 활용.
+5. ARCH.md §11.4 G1 [~] → [x] partial 진전 마크 (UI 부분만 남음).
+
+g3 — data format 분리, 측정 record 변경 0. UI 갱신 (NewProjectSheet
+facet filter → DAG closure preview) 은 별도 phase C.

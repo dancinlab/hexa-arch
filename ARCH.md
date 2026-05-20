@@ -976,9 +976,14 @@ rtsc 공유로 직접 입증. monolithic CAD 가 못 하는 cross-domain bookkee
   - **κ-56 — partial**: `Domain.swift` 에 prerequisites + facets fields
     추가. `DomainGraph.swift` 신규 (transitiveClosure / topologicalSort /
     byScale / byCluster / roots / leaves). DomainCatalog 19 entries
-    에 prereq + facet 박음. **남은 부분**: D83 .demi parser
-    (INDEX.demi 가 runtime SSOT 가 되는 phase) + NewProjectSheet UI
-    갱신 (facet filter → DAG closure preview → confirm).
+    에 prereq + facet 박음.
+  - **κ-57 — partial**: D83 `.demi` format + `domains/INDEX.demi` (19
+    `[<id>]` records) + `DemiParser.swift` + `DomainLoader.swift` 신규.
+    `DomainCatalog.all` 가 runtime-load (loadAllOrFallback) — INDEX.demi
+    가 SSOT, hardcoded `allHardcoded` 가 polyfill. 도메인 추가는 이제
+    `.demi` 한 section 추가 (Swift 코드 변경 0).
+  - **남은 부분**: NewProjectSheet UI 갱신 (facet filter → DAG closure
+    preview → confirm) — 별도 phase C.
   - deps: D78 graph + `.demi` parser + `DomainGraph.transitiveClosure`
   - new files:
     - `cockpit/Sources/DemiurgeCore/Models/Domain.swift` (refactor — type 만)
