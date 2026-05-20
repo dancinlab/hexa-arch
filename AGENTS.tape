@@ -26,6 +26,9 @@
 # @F forbidden                — hard denies f1..f6 (stdlib tree, over-claim, RE, silent-skip, early-tombstone, chat-claim)
 # @N ssot                     — pointer map: where governance + decisions + arch + progress live
 # @N n_cockpit_ar_target      — cockpit 3D viewer uses RealityKit to port to AR / visionOS spatial rendering    (D35)
+# @N n_cern_producer_alternatives — cern + analyze first ProducerRegistry user; default xsuite-tracking         (D74)
+# @N n_d80_sweep_closure      — D80 g_hexa_only 12-pilot sweep 종결 + 5 .demi SSOT 통합 + D87..D100             (D80+D87..D100)
+# @N n_rfc_013_kappa_67       — RFC 013 hexa-native parity connection (κ-67, PARTIAL-LAND, demiurge 5e9f6dea)   (D80)
 # the entries themselves are SSOT; this index is a derived pointer table per @D g_ssot_single_source / D50.
 
 @D g_hexa_only := "ultimate form = hexa-native" :: governance [required d=2026-05-20 active]
@@ -152,3 +155,15 @@
   default_producer = "xsuite-tracking — promotes the κ-49 substrate (real Xsuite particle tracking) over the legacy pylhe round-trip toy, per user gate 2026-05-20."
   decision_ref = "design.md D74 · inbox/notes/cern_analyze_producer_alternative_decision_2026-05-20.md"
   user_directive = "2026-05-20 — 'Option C — ProducerRegistry; defaults Q2 xsuite-tracking, Q3 CLI-only, Q4 governance line YES'"
+
+@N n_d80_sweep_closure := "D80 g_hexa_only 12-pilot sweep 종결 + 5 .demi SSOT 통합" :: note [d=2026-05-20 active]
+  text = "D80 g_hexa_only ultimate-form sweep closed at 12 hexa-native kernel pilots / 291 cumulative parity assertions across `solar · mc_transport · neural_lif · graph_bfs · urdf_fk_2link · plasma_metrics · orbital_kepler · dft_naive · event_queue · transport_kinematics · breaker_trace_reduce · fem_bar1d_subset`. Declarative SSOT layer consolidated to 5 `.demi` files under `domains/` (INDEX · DEPENDENCIES · PRODUCERS · PILOTS · SUBSTRATE_LINKS) — every kernel · producer · dependency · pilot · cross-substrate link now reads from declarative SSOT via DemiParser loaders (D86 g_no_hardcoded_data 정합). Audit trail: design.md D87..D100 — `.demi` location (D87) · DEPENDENCIES.demi move (D88) · allHardcoded fallback removal (D89) · PILOTS.demi 8-field schema (D90) · row=kernel granularity (D91) · flat dir layout (D92) · pattern-pilot ↔ PILOTS dual-source (D93) · parity_ref = PilotLoader.find (D94) · isHexaNativeAbsorbed computed (D95) · sibling sub-domain narrative (D96) · 3-tier link-integrity verifier (D97) · DEPENDENCIES ↔ PILOTS dual-source CI (D98) · cockpit HexaNativeParityChip (D99) · non-sibling narrative reverse (D100). cell-level absorbed-flip round is queued (κ-67 RFC 013) — pilots are substrate-side measured fact; demiurge cells still ride `gate=hexaNativeFuture` until per-cell parity records emit."
+  measured_fact = "12 pilots · 291 assertions · all PASS (rel_err ranging 0.0 IEEE-754 bit-exact through ≤1e-12). 5 .demi SSOTs DemiParser-loaded by demiurge (PilotLoader · DependenciesLoader · ProducerRegistry · DomainCatalog · SubstrateLinkLoader). hexa-lang tip: `a272c9c4` (sweep close commit on origin/main per PLAN κ-66)."
+  decision_ref = "design.md D80 · D87..D100 · PLAN κ-66"
+  user_directive = "2026-05-20 — 'D80 sweep 종결 박제' (κ-66 consolidation gate)"
+
+@N n_rfc_013_kappa_67 := "RFC 013 hexa-native parity connection (κ-67, PARTIAL-LAND)" :: note [d=2026-05-20 active]
+  text = "RFC 013 (`proposals/rfc_013_hexa_native_parity_connection.md`) formalises the substrate ↔ demiurge cell-record wiring promised by D80. Status: PARTIAL-LAND — schema half landed by demiurge `5e9f6dea` (HexaNativeParityRef 8-field + 5 cell-record carriers Ufo + Energy + Fusion + Aura + ChipAnalyze + DependenciesLoader + GateType.hexaNativeFuture); producer-side emit + live-mirror queued (per-cell `parity_ref = PilotLoader.find(kernelPath:)` injection, D94 T7 phase). Promotes the κ-65 connection-plan inbox note into a formal RFC; the note remains in place as audit trail. κ phase: κ-67 (pilot-driven demiurge cell absorbed-flip round)."
+  source_decisions = "D61 (substrate in hexa-lang only) · D72 (2-layer stdlib extraction) · D80 (g_hexa_only ultimate-form) · D85 (PRODUCERS.demi) · D86 (g_no_hardcoded_data)"
+  decision_ref = "proposals/rfc_013_hexa_native_parity_connection.md · design.md D80 / D94 · PLAN κ-65..κ-67"
+  user_directive = "2026-05-20 — 'D80 sweep 종결 마일스톤 entry 추가' (κ-67 RFC promotion)"
