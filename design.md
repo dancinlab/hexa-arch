@@ -3895,3 +3895,71 @@ g3 — `.demi` 데이터 SSOT 무변경. `DependenciesLoader.swift` 무변경
 (이미 D88 시점에 정리됨). 변경된 surface = 단 1개 test resolver +
 3개 stale doc/comment 정정 + 본 D101 entry. 새 SSOT 0, 새 stored
 data 0, schema 변경 0.
+
+### Decision 103 — cell `absorbed` vs `isHexaNativeAbsorbed` = 2 orthogonal dimensions (κ-67 producer-trigger 명시화)
+
+**picked**: 5 cell record 의 두 absorbed-shaped 표면 — 기존 stored
+`absorbed: Bool` (LEGACY / 측정-oracle dimension) 과 D95 가 추가한
+computed `isHexaNativeAbsorbed: Bool` (substrate-parity dimension) —
+이 **별도 dimension** 임을 docstring 으로 명시화. 코드 변경 0 (dimension
+은 이미 코드상 분리되어 있음); docstring + header comment 만 보강.
+새 typed enum (Option B) 도입 거절 — 새 stored field 는 D86
+`g_no_hardcoded_data` 위반이고, dimension 자체가 SSOT 둘 (cell-측정
+oracle vs PILOTS.demi substrate-parity) 이 이미 분리되어 있어 enum
+은 duplicate truth.
+
+**rationale**:
+- NEXT_SESSIONS P-⑩ g3 floor: "Do NOT flip any cell-record
+  `absorbed = true` from substrate-parity alone. The 13 pilots are
+  substrate-side measured fact; cell-level absorbed flip requires
+  a measured oracle (per-cell parity round, NOT this session)."
+  코드는 이미 그대로지만 (4 cell record 의 stored `absorbed: Bool`
+  는 producer 가 직접 set; D95 computed property 는 strict projection
+  of `hexaNativeParity?.isHexaNativeAbsorbed`), stored field 에
+  docstring 이 0줄이라 P-⑩ ① producer-emit PR 작성자가 substrate-
+  parity PASS 를 보고 `absorbed = true` 로 자동 flip 시킬 위험.
+- D86 (`g_no_hardcoded_data`): stored bool 신설 = duplicate truth.
+  두 dimension 의 SSOT 는 이미 분리:
+  - 측정 dimension SSOT = 각 cell 의 measured-oracle 결과 (per-cell
+    parity round; 현재 13 pilot 어느 것도 cell-level 측정 oracle
+    완성 안 됨 → 모든 stored `absorbed` 는 producer 가 정직하게 set).
+  - substrate-parity dimension SSOT = `domains/PILOTS.demi →
+    parity_status` (D86 / D90 / D95).
+- D80 honesty: "substrate-parity ≠ measurement-parity" (RFC 013
+  §4.3). docstring 이 둘의 차이를 명시화하면 producer 작성자가
+  잘못된 conflation 을 만들지 않는다 — 컴파일러는 잡을 수 없는
+  semantic gate 를 코멘트로 enforce.
+
+**적용**:
+1. `cockpit/Sources/DemiurgeCore/Models/UfoVerifyRecord.swift` —
+   stored `absorbed: Bool` 에 dimension-separation docstring 추가
+   (D103 / D80 honesty floor / RFC 013 §4.3 cross-ref). `HexaNative
+   ParityRef` struct doc 의 "Honesty (D80 g_hexa_only)" 블록 바로
+   아래에 "D103 dimension separation" 단락 (2-axis 정책 명시 +
+   producer 가 두 axis 를 INDEPENDENTLY set 해야 함을 못박음).
+   `isHexaNativeAbsorbed` computed property 의 docstring 도 D103
+   cross-ref + UI 가 두 dimension 을 conflate 하지 못함을 명시.
+2. `cockpit/Sources/DemiurgeCore/Models/EnergyVerifyRecord.swift`,
+   `FusionVerifyRecord.swift`, `AuraVerifyRecord.swift` — 동일
+   shape 의 stored `absorbed: Bool` docstring 추가 + computed
+   `isHexaNativeAbsorbed` 의 docstring 에 D103 cross-ref (Ufo 헤더의
+   2-axis 정책을 가리킴; FusionVerifyRecord 는 mc_transport pilot 의
+   illustrative-physics 성격 때문에 doubly-true — 측정 dimension 뿐
+   아니라 substrate-parity dimension 까지 provisional 임을 추가 명시).
+3. `cockpit/Sources/DemiurgeCore/Models/ChipAnalyzeRecord.swift` —
+   `isHexaNativeAbsorbed` docstring 에 D103 cross-ref. 이 record 는
+   `absorbed` 가 nested `ChipAnalyzeProvenance.absorbed` 에 있고
+   D17 (hexa-native-as-producer) 정당화로 이미 `true` 일 수 있음.
+   docstring 이 두 dimension 의 정당화가 서로 다르고 (D17 vs
+   substrate-parity), 한쪽 PASS 가 다른 쪽 flip 을 자동화하지 않음을
+   명시.
+4. swift build PASS (55s · 기존 warning 외 새 warning 0).
+   swift test PASS (35 tests, 3 XCTSkip — D101 과 동일 baseline).
+
+**g3**: `.demi` 데이터 SSOT 무변경. 5 cell record 의 schema /
+JSON wire shape / `CodingKeys` / `init` signature 모두 byte-unchanged.
+새 stored field 0, 새 typed enum 0, 새 producer trigger API 0.
+변경된 surface = 5 파일의 docstring + header comment만 (record
+struct API 표면은 1글자도 안 바뀜). κ-67 PARTIAL-LAND → LAND 경로의
+P-⑩ ① 직전 가드 — producer-emit 작성자가 두 dimension 을 자동으로
+conflate 할 risk 가 docstring 으로 차단됨.

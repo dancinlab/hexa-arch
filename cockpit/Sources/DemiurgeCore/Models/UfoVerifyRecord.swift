@@ -19,6 +19,13 @@ public struct UfoVerifyRecord: Codable, Sendable, Equatable {
     public let stamp: String
     public let producer: String
     public let measurementGate: F1F2Record.MeasurementGate
+    /// Cell-level absorbed flag (LEGACY / measured-oracle dimension —
+    /// distinct from `isHexaNativeAbsorbed` below). Producer policy
+    /// (D103): a substrate-parity PASS on the linked `hexaNativeParity`
+    /// kernel MUST NOT auto-flip this to `true`. Cell-level absorbed
+    /// requires a measured oracle for THIS cell's outputs (per-cell
+    /// parity round), not substrate kernel parity (D80 honesty floor +
+    /// RFC 013 §4.3 substrate-parity ≠ measurement-parity).
     public let absorbed: Bool
     public let scopeCaveats: [String]
     public let citations: [String]
@@ -46,6 +53,13 @@ public struct UfoVerifyRecord: Codable, Sendable, Equatable {
     /// D95 — derived absorbed flag (computed, NOT stored).
     /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
     /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    ///
+    /// D103 dimension separation — this is the HEXA-NATIVE-PORT
+    /// dimension (substrate kernel parity), NOT the cell-level measured
+    /// dimension. UI MUST NOT conflate the two: D99 chip renders
+    /// `.provisional` (yellow) when this is `true` AND
+    /// `absorbed == false`, and only `.absorbed` (green) when the
+    /// cell's stored `absorbed` itself is `true` from a measured oracle.
     public var isHexaNativeAbsorbed: Bool {
         return hexaNativeParity?.isHexaNativeAbsorbed ?? false
     }
@@ -67,6 +81,18 @@ public struct UfoVerifyRecord: Codable, Sendable, Equatable {
 /// `absorbed` by itself — the cell-side absorbed gate stays capped
 /// at provisional until the kernel's parity test runs green AND
 /// the demiurge cell consumes the kernel (not just points at it).
+///
+/// D103 dimension separation — TWO orthogonal axes:
+///   1. Cell-level measured absorbed (`<Record>.absorbed: Bool`,
+///      stored) — flips on a measured oracle for the cell's own
+///      outputs. Producer trigger = per-cell measurement round.
+///   2. Substrate kernel parity (this struct's `isHexaNativeAbsorbed`,
+///      computed from `parityStatus`) — flips on the hexa-native port
+///      passing parity vs the transitional substrate. Producer trigger
+///      = PILOTS.demi row with PASS-shaped `parity_status` (D86 / D90).
+/// Producers (RFC 013 §6.1) MUST set these two axes INDEPENDENTLY.
+/// Conflation would let a substrate-parity PASS silently flip the
+/// measured dimension — exactly what NEXT_SESSIONS P-⑩ g3 forbids.
 public struct HexaNativeParityRef: Codable, Sendable, Equatable {
 
     /// How the parity claim was established.

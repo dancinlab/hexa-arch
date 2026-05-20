@@ -144,6 +144,14 @@ public struct ChipAnalyzeRecord: Codable, Equatable, Sendable {
     /// D95 — derived absorbed flag (computed, NOT stored).
     /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
     /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    ///
+    /// D103 dimension separation — this projects the substrate-parity
+    /// axis (event_queue kernel parity vs python heapq). It is
+    /// orthogonal to `provenance.absorbed` above, which carries the
+    /// D17 hexa-native-as-producer claim for the Leighton bound. Both
+    /// may legitimately be `true` here (different reasons), but a
+    /// substrate-parity PASS does not by itself justify flipping
+    /// `provenance.absorbed`.
     public var isHexaNativeAbsorbed: Bool {
         return hexaNativeParity?.isHexaNativeAbsorbed ?? false
     }

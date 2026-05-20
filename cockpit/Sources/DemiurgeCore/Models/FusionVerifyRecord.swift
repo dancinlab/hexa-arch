@@ -22,6 +22,14 @@ public struct FusionVerifyRecord: Codable, Equatable, Sendable {
     public let stamp: String
     public let producer: String
     public let measurementGate: F1F2Record.MeasurementGate
+    /// Cell-level absorbed flag (LEGACY / measured-oracle dimension —
+    /// distinct from `isHexaNativeAbsorbed` below). Producer policy
+    /// (D103): a substrate-parity PASS on the linked `hexaNativeParity`
+    /// kernel MUST NOT auto-flip this to `true`. Doubly-true for fusion:
+    /// the mc_transport pilot is illustrative-physics (RFC 013 §6.3),
+    /// so even the substrate-parity dimension carries provisional
+    /// semantics — see header. Cell-level absorbed requires a measured
+    /// oracle for THIS cell's outputs.
     public let absorbed: Bool
     public let scopeCaveats: [String]
     public let citations: [String]
@@ -46,6 +54,11 @@ public struct FusionVerifyRecord: Codable, Equatable, Sendable {
     /// D95 — derived absorbed flag (computed, NOT stored).
     /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
     /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    ///
+    /// D103 dimension separation — see `HexaNativeParityRef` (Ufo
+    /// VerifyRecord.swift) header for the two-axis policy. This is the
+    /// substrate-parity dimension; `absorbed` above is the measured
+    /// dimension. Producers set them independently.
     public var isHexaNativeAbsorbed: Bool {
         return hexaNativeParity?.isHexaNativeAbsorbed ?? false
     }
