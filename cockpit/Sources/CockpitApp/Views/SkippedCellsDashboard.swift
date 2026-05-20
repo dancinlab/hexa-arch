@@ -142,6 +142,7 @@ struct SkippedCellsDashboard: View {
         case .regulatoryGated:   return .red
         case .proprietaryOnly:   return .pink
         case .hexaNativeAbsent:  return .orange
+        case .hexaNativeFuture:  return .yellow
         case .producerAbsent:    return .gray
         case .unspecified:       return .secondary
         }

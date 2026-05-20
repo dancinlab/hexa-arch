@@ -67,6 +67,11 @@ let package = Package(
             name: "DemiurgeCLI",
             dependencies: ["DemiurgeCore"],
             path: "Sources/DemiurgeCLI"
+        ),
+        .testTarget(
+            name: "DemiurgeCoreTests",
+            dependencies: ["DemiurgeCore"],
+            path: "Tests/DemiurgeCoreTests"
         )
     ]
 )

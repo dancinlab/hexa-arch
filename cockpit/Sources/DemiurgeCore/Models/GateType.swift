@@ -48,11 +48,25 @@ public enum GateType: String, Codable, Sendable, CaseIterable {
     /// not installed).
     case proprietaryOnly = "proprietary-only"
 
-    /// D80 — substrate measured + passed but no hexa-native parity
-    /// port exists yet. `absorbed=true` is cap'd at *provisional* per
-    /// `@D g_hexa_only`; flips to non-provisional only when the
-    /// hexa-native kernel lands.
+    /// D80 — substrate is permanently nonportable (no hexa-native
+    /// kernel will ever land — CARLA, Drake, Geant4, GMAT, FEMM
+    /// proprietary stacks). Distinct from `hexaNativeFuture` (heavy-
+    /// port but tractable). Marked permanent so the G2 dashboard
+    /// stops re-asking "why hasn't X been absorbed?".
+    ///
+    /// Driven by `hexa-lang/domains/DEPENDENCIES.demi` rows where
+    /// `portable_status = "nonportable"`. See `DependenciesLoader`.
     case hexaNativeAbsent = "hexa-native-absent"
+
+    /// D80 — substrate has a multi-round port horizon (FFT, sparse
+    /// FEM linear-algebra, autodiff, MGXS). Distinct from
+    /// `hexaNativeAbsent` (permanent): the cell is provisionally
+    /// `absorbed=true` on the transitional substrate AND tracked as
+    /// future-portable so the G2 dashboard surfaces the port queue.
+    ///
+    /// Driven by `hexa-lang/domains/DEPENDENCIES.demi` rows where
+    /// `portable_status = "heavy-port"`. See `DependenciesLoader`.
+    case hexaNativeFuture = "hexa-native-future"
 
     /// Substrate spec exists but no producer has been wired yet
     /// (cell is "honest-gap LLM fallback path"). Counts under "still
@@ -72,14 +86,18 @@ public extension GateType {
         switch self {
         case .installGated, .platformGated, .dataGated: return true
         case .regulatoryGated, .proprietaryOnly,
-             .hexaNativeAbsent, .producerAbsent,
-             .unspecified: return false
+             .hexaNativeAbsent, .hexaNativeFuture,
+             .producerAbsent, .unspecified: return false
         }
     }
 
     /// True when the gate requires a demiurge-side hexa-native port
     /// to flip from provisional → non-provisional absorbed=true.
-    var hexaNativeBlocked: Bool { self == .hexaNativeAbsent }
+    /// Covers both the permanent (`hexaNativeAbsent`) and the
+    /// future-portable (`hexaNativeFuture`) buckets.
+    var hexaNativeBlocked: Bool {
+        self == .hexaNativeAbsent || self == .hexaNativeFuture
+    }
 
     /// Korean label for the cockpit ProvenanceBanner and G2 dashboard.
     var label: String {
@@ -89,7 +107,8 @@ public extension GateType {
         case .dataGated:         return "데이터 누락"
         case .regulatoryGated:   return "규제 인증 필요"
         case .proprietaryOnly:   return "상용 전용 (오픈 부재)"
-        case .hexaNativeAbsent:  return "hexa-native 포트 부재"
+        case .hexaNativeAbsent:  return "hexa-native 포트 부재 (영구)"
+        case .hexaNativeFuture:  return "hexa-native 포트 예정 (heavy-port)"
         case .producerAbsent:    return "producer 미작성"
         case .unspecified:       return "분류 안 됨"
         }

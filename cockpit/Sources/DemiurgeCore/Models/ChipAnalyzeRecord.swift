@@ -79,6 +79,17 @@ public struct ChipLeightonBounds: Codable, Equatable, Sendable {
 /// `gate_closed_measured` IS legitimate here (analytic verification),
 /// but the scope_caveats clarify the bound is mathematical — NOT a
 /// substitute for cmd_measure's full-curve wire-latency parity.
+///
+/// D80 (g_hexa_only): also the future consumer cell for the
+/// noc_sim event_queue pilot (`stdlib/kernels/noc_sim/event_queue.hexa`,
+/// 36/36 PASS event-for-event vs python heapq). Per the
+/// connection-plan §2.4, NO cell currently uses event-driven NoC
+/// simulation — the analytic Leighton path is what chip+analyze
+/// emits today. The `hexaNativeParity` field below carries the
+/// event-driven kernel ref when (and only when) a future event-
+/// driven flit tracker is wired in. Today: nil on every emitted
+/// record. Field added so the schema is forward-compatible without
+/// a Codable migration when that wiring lands.
 public struct ChipAnalyzeRecord: Codable, Equatable, Sendable {
     public let interface: String
     public let schemaVersion: String
@@ -94,12 +105,17 @@ public struct ChipAnalyzeRecord: Codable, Equatable, Sendable {
     /// Hexa runtime exit code (0 = oracle dispatch + selftest passed).
     public let exitCode: Int
     public let provenance: ChipAnalyzeProvenance
+    /// D80 — hexa-native parity port pointer for an event-driven
+    /// NoC sim path (`event_queue.hexa`). Nil today; populated by a
+    /// future event-driven flit-tracker producer.
+    public let hexaNativeParity: HexaNativeParityRef?
 
     public init(interface: String, schemaVersion: String,
                 recordId: String, producedAtUtc: String,
                 nNodes: Int, bounds: [ChipLeightonBounds],
                 derivationCite: String, exitCode: Int,
-                provenance: ChipAnalyzeProvenance) {
+                provenance: ChipAnalyzeProvenance,
+                hexaNativeParity: HexaNativeParityRef? = nil) {
         self.interface = interface
         self.schemaVersion = schemaVersion
         self.recordId = recordId
@@ -109,6 +125,7 @@ public struct ChipAnalyzeRecord: Codable, Equatable, Sendable {
         self.derivationCite = derivationCite
         self.exitCode = exitCode
         self.provenance = provenance
+        self.hexaNativeParity = hexaNativeParity
     }
 
     enum CodingKeys: String, CodingKey {
@@ -121,5 +138,6 @@ public struct ChipAnalyzeRecord: Codable, Equatable, Sendable {
         case derivationCite = "derivation_cite"
         case exitCode = "exit_code"
         case provenance
+        case hexaNativeParity = "hexa_native_parity"
     }
 }
