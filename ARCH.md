@@ -1732,21 +1732,39 @@ in-progress)**
     - 새 code 0 · 새 stored field 0 · 새 `.demi` row 0
     - PLAN.md κ-68 opening entry · ARCH §11.4 G27 `[ ]` → `[x]`
 
-- [ ] **G28.** Producer wire — substrate adapter 가 measured-oracle
-    field 를 cell record 에 emit (`absorbed` 미flip)
-  - 선정 cell 의 substrate adapter (hexa-lang 또는 sibling repo) 가
-    verify record JSON 에 typed measured block (측정값 · external
-    reference · rel_err · threshold · oracle source ref) inject.
-    `hexa_native_parity` 와 별도 axis 의 새 field set. `absorbed:
-    Bool` 은 false 유지 (D103 separation — schema half 만 land).
-  - deps: G27 (cell choice) · D86 (no hardcoded data) · D103
-    (dimension-separation)
+- [x] **G28.** Producer wire — substrate adapter 가 measured-oracle
+    field 를 cell record 에 emit (`absorbed` 미flip) · **schema-half
+    LANDED 2026-05-21**
+  - **4a1a087** (G28a · demiurge main): `MeasuredOracleRef.swift`
+    신규 (Codable Sendable Equatable · 8 field — oracle_source ·
+    unit · sample_count · mean_rel_err · max_rel_err · threshold ·
+    dataset_caveats · dataset_citation · `isMeasuredOraclePASS`
+    computed predicate) + `EnergyVerifyRecord.measuredOracle:
+    MeasuredOracleRef?` field 추가 + `MeasuredOracleRefTests.swift`
+    (7 method · Codable round-trip · snake_case JSON wire ·
+    `isMeasuredOraclePASS` 3 branch · `EnergyVerifyRecord` nil/non-
+    nil decode + D103 invariant). swift test **60/60 PASS** ·
+    기존 53 test 회귀 0.
+  - **hexa-lang PR #248** (G28b · branch `g28-measured-oracle-
+    producer` · commit `9b39f335` on `origin/main` base): STUB
+    producer `stdlib/energy/nrel_midc_pyranometer.py` 신규. 60 1-min
+    synthetic clear-sky · mean_rel_err 0.013 · max_rel_err 0.020 ·
+    threshold 0.05 · would_pass=true · absorbed=false. 명시 STUB ·
+    NOT real NREL MIDC data — real fetch + pvlib stack 은 G29 scope.
+  - **Multi-repo discipline**: hexa-lang 측 작업은 별도 worktree
+    (`/Users/ghost/core/hexa-lang-g28` 임시 · origin/main 기반 ·
+    branch `g28-measured-oracle-producer`). 다른 세션의 rfc006-yosys-
+    abc-map-script-order branch (`~/core/hexa-lang`) 미접촉 — 양
+    session 의 git index 완전 분리.
+  - deps: G27 (D109 cell choice) · D86 (no hardcoded data) · D103
+    (dimension-separation) · D106 (illustrative-physics 제외)
   - exit:
-    - cell record schema 1개 확장 (`<X>VerifyRecord.swift` typed
-      `measuredOracle: MeasuredOracleRef?` 후보)
-    - exports/ 에 measured block 보유 record JSON ≥ 1 land
-    - XCTest ≥ 1 (decode + measured field 존재 검증)
-    - `absorbed` 는 false 유지 (cell-flip 분리)
+    - cell record schema 1개 확장 [x] `MeasuredOracleRef.swift`
+    - exports/ 에 measured block 보유 record JSON ≥ 1 [x] (smoke test
+      `/tmp/g28b-stub-test/energy_verify_<stamp>_*.json`)
+    - XCTest ≥ 1 [x] `MeasuredOracleRefTests` 7 method PASS
+    - `absorbed` 는 false 유지 [x] (D103 separation 보존 · G29 까지
+      explicit-writer gate 닫혀 있음)
 
 - [ ] **G29.** 첫 cell `absorbed: true` legitimate flip (NOT D95
     computed projection)

@@ -4226,3 +4226,39 @@
   는 후속 phase. G28 의 6 open Q · G30 의 5 open Q 는 그 round 가
   land 시 결정될 자연 axis — 본 phase 에서 lock-in 한 default 는
   D109 의 5 default 뿐.
+- 2026-05-21 — **phase κ-68 — G28 schema-half LANDED (G28a demiurge
+  Swift `4a1a087` + G28b hexa-lang STUB PR #248)**. 사용자 게이트
+  "all go" + "demiurge multi-repo session 으로 진입". 양측 land:
+  - **G28a (demiurge main `4a1a087`)** — `MeasuredOracleRef.swift`
+    (Codable Sendable Equatable · 8 field · `isMeasuredOraclePASS`
+    computed predicate · D80/D103/D106 honesty doc-comment) +
+    `EnergyVerifyRecord.measuredOracle: MeasuredOracleRef?` field +
+    `MeasuredOracleRefTests.swift` (7 method). swift test 60/60 PASS
+    · 기존 53 test 회귀 0.
+  - **G28b (hexa-lang PR #248 · branch `g28-measured-oracle-
+    producer` · commit `9b39f335` on origin/main base)** —
+    `stdlib/energy/nrel_midc_pyranometer.py` STUB. 60 1-min synthetic
+    clear-sky · mean_rel_err 0.013 vs 0.05 threshold · would_pass=
+    true · absorbed=false. 명시 STUB (oracle_source 안에 "NOT real
+    NREL MIDC data" 박힘) · real fetch+pvlib stack 은 G29 scope.
+  - **Multi-repo discipline** — `/Users/ghost/core/hexa-lang-g28`
+    worktree (origin/main 기반) 가 본 session 의 hexa-lang 작업장.
+    다른 세션의 rfc006-yosys-abc-map-script-order branch
+    (`~/core/hexa-lang`) 미접촉 — 양 session 의 git index 완전 분리.
+  - **ARCH §11.4 G28** `[ ]` → `[x]` flip + 4a1a087 + PR #248
+    reference + multi-repo discipline note.
+  g3 — schema-half **만** LANDED. 어떤 cell 의 stored `absorbed:
+  Bool` 도 flip 안 됨 — Energy/solar 의 `EnergyVerifyRecord.absorbed`
+  는 여전히 false (G29 의 explicit-writer gate 닫혀 있음). RFC 013
+  §6.11 status 는 여전히 `queued` (schema-half + stub producer 만 ·
+  real measurement oracle PASS gate 는 G29). PR #248 STUB 의
+  `oracle_source` 는 "STUB · NOT real NREL MIDC data" 로 loud-label
+  · downstream conflation 차단. D106 illustrative-physics cells
+  (Fusion mc_transport) 은 본 field 의 carrier 아님 (G30 governance
+  invariant 가 명시 exclude). 다음 κ-69 reserved = G29 (real NREL
+  MIDC fetch + pvlib stack + 첫 cell `absorbed=true` legitimate flip)
+  + G30 (XCTest invariant). G30 의 governance row target 은 `.specify/
+  memory/constitution.md` (bd28631 의 AGENTS.tape → constitution
+  redirect 후) — XCTest 가 load-bearing enforcement, constitution
+  row 는 doc-shaped audit (현재 constitution.md template-only ·
+  populate 시점 별도 결정 · .tape format 1a620ad 로 dormant).
