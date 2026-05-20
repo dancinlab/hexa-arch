@@ -997,3 +997,99 @@ d. write_verilog stage exercise via yosys.c dispatcher link chain
 e. Re-measure parity against [58,675, 64,851] µm² gate.
 
 `rfc_006 §5 measurement_gate = OPEN`, `absorbed = false`.
+
+## UPDATE 2026-05-20 (u) — 2-line read_verilog dispatch fix → flat_v2k parses through hexa-native (cells=35 = same as canonical), substrate parity gap is now directly measurable
+
+The (t) option (2) approach succeeded as a 2-line dispatch change in
+`stdlib/kernels/logic_synth/read_verilog.hexa`:
+
+```diff
+-                                    if bt == "localparam" {
++                                    if bt == "localparam" || bt == "parameter" {
+                                         let rl = _rv_parse_localparam(st, tab)
+```
+(L580 and L1766 — module-body and generate-body dispatchers.)
+
+```diff
+-                                                    if bt == "genvar" {
++                                                    if bt == "genvar" || bt == "initial" {
+                                                     // skip-only treatment (genvar decl /
+                                                     // sv2v `initial _sv2v_0 = 0;` artifact)
+```
+(L620 — same skip-to-`;` body fits both constructs.)
+
+**Selftest (in-tree on ubu-2 worktree):** 54/54 PASS — zero regression.
+`parameter` dispatches into the existing `_rv_parse_localparam` body
+(takes any keyword token as the first action, error message harmlessly
+refers to "localparam"). `initial` follows genvar's skip-to-`;` path.
+Neither affects any of T31-T46 cond-mux / function-inline / dyn-idx
+primitive selftests.
+
+**flat_v2k/router_d4.v via hexa-native (measured, fresh build):**
+
+```
+modules=1, wires=96, cells=35
+  35 cells: same distribution as canonical (10×$eq, 5×$ne, 5×$logic_and,
+            5×$logic_not, 5×$add, 5×$mod) — bit-exact same generate-for
+            elaboration
+  wire delta: 119 (canonical, unpacked-array ports) vs 96 (flat_v2k,
+              packed-array form) — sv2v consolidates port-list signal
+              declarations; cell count is invariant
+```
+
+**Direct substrate-vs-hexa-native comparison on the SAME input file**
+(`flat_v2k/router_d4.v`):
+
+| stage                           | substrate yosys 0.65    | hexa-native      |
+|---------------------------------|-------------------------|------------------|
+| read_verilog + proc (post-elab) | 12,105 cells            | 35 cells         |
+| pre-techmap breakdown           | 1530 $_AND_, 1129 $_OR_, 222 $_NOT_, 198 $_XOR_, 1624 $_DFFE_PP_, 18 $_SDFFE_PP0P_, 5 $_SDFF_PP0_, 7379 $_MUX_ | 10 $eq, 5 $ne, 5 $logic_and, 5 $logic_not, 5 $add, 5 $mod |
+| sequential cells                | 1647                    | 0                |
+| mux cells                       | 7379                    | 0                |
+| comb gates                      | 3079                    | 35               |
+
+**Gap = 12,070 cells (99.7%).** The 35 hexa-native cells = the
+generate-for-body lowerings only. Everything else — the 7379 $_MUX_
++ 1647 DFF/SDFF + the ~3000 fine-grained AND/OR/NOT/XOR gates that
+yosys gets from collapsing always-bodies + the `synth`-macro
+share/freduce passes — is missing on the hexa-native side. #4g/#4h/
+#4i (sequential emit) plus the proc-pass cond-mux + the share/freduce
+parity all live in this gap.
+
+This is the first *direct, same-input* gap measurement between the
+two flows on §5's target file. Prior handoff entries (e/m/p/r)
+estimated coverage as 0 % and later as 35-cell-only; (u) pins the
+absolute scale (12,070 missing cells → ~80 % sequential).
+
+**PR candidate (hexa-lang origin/main, ready to land):**
+
+Title: `feat(stdlib/yosys/read_verilog): dispatch `parameter` and skip
+`initial` — 2-line +1 selftest`
+
+Body:
+- 2-line dispatch additions at L580 (+L1766) and L620 of
+  `stdlib/kernels/logic_synth/read_verilog.hexa`.
+- T48 selftest: `module pm ; parameter integer W = 8 ; endmodule`
+  parses ok + W=8 in tab.
+- T49 selftest: `module ii ; initial xx = 0 ; endmodule` parses ok
+  (initial skipped).
+- Selftest 54/54 → 56/56 PASS, regression 0 (in-tree measured on
+  ubu-2 worktree).
+- Unblocks the §5 measurement chain: hexa-native can now read the
+  same flat_v2k/router_d4.v input form that substrate yosys + SKY130
+  uses for oracle parity (61,762.985600 µm²).
+
+**Refined chain (next session, ordered post-(u)):**
+
+a'. Land the (u) 2-line PR + T48/T49 → hexa-lang origin/main.
+b. Cell-tally vs substrate is now apples-to-apples on flat_v2k;
+   the 12,070-cell gap quantifies the proc-pass deficit.
+c. #4g/#4h/#4i + the share/freduce / abc -dff parity passes are the
+   path forward — each landed primitive should reduce the gap by a
+   measurable cell count.
+d. Re-measure area when sequential cells appear.
+
+`rfc_006 §5 measurement_gate = OPEN`, `absorbed = false` (g3 — no
+flip; this turn landed an in-tree fix on ubu-2 worktree, measured
+54/54 selftest preservation, and quantified the absolute gap to
+oracle).
