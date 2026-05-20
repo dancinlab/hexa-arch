@@ -43,4 +43,11 @@ public struct EnergyVerifyRecord: Codable, Equatable, Sendable {
         case kernelReuse = "kernel_reuse"
         case hexaNativeParity = "hexa_native_parity"
     }
+
+    /// D95 — derived absorbed flag (computed, NOT stored).
+    /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
+    /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    public var isHexaNativeAbsorbed: Bool {
+        return hexaNativeParity?.isHexaNativeAbsorbed ?? false
+    }
 }

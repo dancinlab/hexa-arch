@@ -37,6 +37,13 @@ public struct AuraVerifyRecord: Codable, Sendable, Equatable {
         case latticeInvariant = "lattice_invariant"
         case skippedReason = "skipped_reason"
     }
+
+    /// D95 — derived absorbed flag (computed, NOT stored).
+    /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
+    /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    public var isHexaNativeAbsorbed: Bool {
+        return hexaNativeParity?.isHexaNativeAbsorbed ?? false
+    }
 }
 
 /// G8 — n=6 lattice invariant audit result. hexa-aura / hexa-ufo /

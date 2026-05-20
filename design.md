@@ -3566,3 +3566,45 @@ parity_status string X — loader 가 SSOT.
 struct 신규 + 각 Producer 의 record-emit path 에 `PilotLoader.
 find` 호출 inject. 이 task 의 T1+T3 가 그 phase 의 입력 데이터
 구조 + loader API 를 완성한다.
+
+### Decision 95 — cell-record `isHexaNativeAbsorbed` = computed (NOT stored)
+
+**picked**: 5 cell record (`UfoVerifyRecord`, `EnergyVerifyRecord`,
+`FusionVerifyRecord`, `AuraVerifyRecord`, `ChipAnalyzeRecord`) +
+`HexaNativeParityRef` 에 `isHexaNativeAbsorbed: Bool` **computed
+property** 추가. 데이터 신설 0 — predicate 는 `HexaNativeParityRef.
+parityStatus` (이미 PILOTS.demi 의 `parity_status` projection)
+한 줄 분석. record 측 computed = `hexaNativeParity?.
+isHexaNativeAbsorbed ?? false`.
+
+predicate (`HexaNativeParityRef.isPassStatus(_:)`):
+- contains "PASS" (ALLCAPS — PILOTS.demi convention) AND
+- no "FAIL" / "SKIP" / "ERROR" marker AND
+- leading `"<num>/<den>"` 가 있다면 `num == den` (partial PASS
+  배제).
+
+PILOTS.demi 의 현재 10 row parity_status 표현 4 가지 (`"NN/NN
+PASS at rel_err …"`, `"PASS (concurrent branch, ...)"`,
+`"NN/NN PASS exact"`, `"NN/NN PASS at rel_err = 0.0"`) 모두 → `true`;
+실제 측정 결과: pilot-solar / pilot-mc_transport / pilot-neural_lif
+/ pilot-graph_bfs / pilot-urdf_fk_2link / pilot-plasma_metrics /
+pilot-orbital_kepler / pilot-dft_naive / pilot-event_queue /
+pilot-transport_kinematics — 10/10 absorbed=true 판정 (예상대로).
+
+**rationale**:
+- D86 (`g_no_hardcoded_data`) — stored boolean `absorbed: Bool`
+  추가 = 새 데이터 dimension + duplicate truth. parity_status 가
+  SSOT 인데 Swift literal 이 그 사실을 두 번 표현. computed
+  property 는 데이터 0 추가, 매번 SSOT 재투영.
+- producer 가 record emit 시 `absorbed` 를 직접 set 하면 PILOTS.
+  demi 와 producer 코드 두 곳을 sync 해야 함 — exactly D86 가
+  막는 패턴.
+- record 측 computed 은 `hexaNativeParity` (D80 / D94 가 깐 ref)
+  의 strict projection — record schema 갱신 0, JSON wire shape
+  byte-unchanged, Codable migration 없음.
+
+**적용**: κ-67 (pilot-driven cell absorbed flip round) — UI 변경
+보류 (SkippedCellsDashboard / cockpit view 노출 없이 model API
+만 expose). dashboard chip 추가는 차회 round 의 옵션. 8 unit
+test (HexaNativeAbsorbedTests) — 10 PASS 표현 전부 + 7 negative
+case + 5 record reflection. swift build / swift test 22/22 PASS.

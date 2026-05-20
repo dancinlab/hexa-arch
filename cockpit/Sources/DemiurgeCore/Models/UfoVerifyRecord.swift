@@ -42,6 +42,13 @@ public struct UfoVerifyRecord: Codable, Sendable, Equatable {
         case alienIndex = "alien_index"
         case skippedReason = "skipped_reason"
     }
+
+    /// D95 — derived absorbed flag (computed, NOT stored).
+    /// Reflects `hexaNativeParity?.isHexaNativeAbsorbed`; SSOT is
+    /// `domains/PILOTS.demi → parity_status` (D86 / D90).
+    public var isHexaNativeAbsorbed: Bool {
+        return hexaNativeParity?.isHexaNativeAbsorbed ?? false
+    }
 }
 
 /// D80 — pointer to the hexa-native kernel that proves parity for a
@@ -150,5 +157,76 @@ public struct HexaNativeParityRef: Codable, Sendable, Equatable {
         case hexaLangSHA         = "hexa_lang_sha"
         case scopeNotes          = "scope_notes"
         case relErr              = "rel_err"
+    }
+
+    /// D95 — derived absorbed flag (computed, NOT stored).
+    ///
+    /// SSOT for "did this kernel's hexa-native port pass parity?" is
+    /// `domains/PILOTS.demi → parity_status` (D86 / D90). This Swift
+    /// flag is a strict projection of that string — a stored boolean
+    /// would duplicate the truth and violate D86 `g_no_hardcoded_data`.
+    ///
+    /// Conservative predicate (matches every PASS phrasing observed
+    /// in the 10 seeded rows — `"21/21 PASS at rel_err <=1e-13"`,
+    /// `"PASS (concurrent branch, ...)"`, `"36/36 PASS exact"`,
+    /// `"41/41 PASS at rel_err = 0.0"`):
+    ///
+    ///   * `parityStatus` contains the token `PASS` (case-sensitive
+    ///     — PILOTS.demi 의 convention 은 ALLCAPS), AND
+    ///   * `parityStatus` contains no `FAIL` / `SKIP` / `ERROR`
+    ///     marker, AND
+    ///   * the leading `<num>/<den>` pair (when present) is `num
+    ///     == den` (full PASS, not partial).
+    ///
+    /// All other shapes (nil-like inputs are unrepresentable — the
+    /// record-side computed uses `?? false`) collapse to `false`,
+    /// honoring D80 g3 honesty floor.
+    public var isHexaNativeAbsorbed: Bool {
+        return HexaNativeParityRef.isPassStatus(parityStatus)
+    }
+
+    /// D95 — pure predicate over a `parity_status` string. Exposed
+    /// `static` so tests can exercise it without constructing a full
+    /// `HexaNativeParityRef`.
+    public static func isPassStatus(_ status: String) -> Bool {
+        let s = status.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !s.isEmpty else { return false }
+        // Must contain the PASS token (ALLCAPS — PILOTS.demi
+        // convention).
+        guard s.contains("PASS") else { return false }
+        // Negative markers veto.
+        if s.contains("FAIL") { return false }
+        if s.contains("SKIP") { return false }
+        if s.contains("ERROR") { return false }
+        // If a leading "<num>/<den>" pair is present, require equality
+        // (full PASS, not partial). Free-text statuses without that
+        // shape (e.g. "PASS (concurrent branch ...)") are accepted on
+        // the PASS-token check alone.
+        if let pair = leadingFractionPair(s) {
+            return pair.num == pair.den
+        }
+        return true
+    }
+
+    /// Parses an optional `"<num>/<den> ..."` prefix into a numeric
+    /// pair. Returns `nil` when the string does not start with that
+    /// shape — caller treats absence as "no fraction constraint."
+    private static func leadingFractionPair(_ s: String)
+        -> (num: Int, den: Int)?
+    {
+        // Find first whitespace to bound the prefix token.
+        let head: String
+        if let sp = s.firstIndex(where: { $0.isWhitespace }) {
+            head = String(s[..<sp])
+        } else {
+            head = s
+        }
+        let parts = head.split(separator: "/")
+        guard parts.count == 2,
+              let num = Int(parts[0]),
+              let den = Int(parts[1]) else {
+            return nil
+        }
+        return (num, den)
     }
 }
