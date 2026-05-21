@@ -1,8 +1,9 @@
 # NEXT_SESSIONS — copy-paste session-pickup prompts
 
 > 2026-05-22 · demiurge origin/main (κ-69 R8 4/4 CLOSURE +
-> κ-70 R9 opening · ARCH §11.5 신설 · G35 candidate-research
-> LANDED) · 직전 cycle: κ-68 closure + κ-69 opening + ARCH §12
+> κ-70 R9 2/4 LANDED · ARCH §11.5 신설 · G35 candidate-research +
+> G36 D118 3rd cell pick (Ufo/plasma Stage-2) LANDED same-cycle) ·
+> 직전 cycle: κ-68 closure + κ-69 opening + ARCH §12
 > 신설 + R8 2/4 LANDED (G31 full + G34 governance row) +
 > hexa-lang PR #263 MERGED `8eec8e7` (G31a wrapper + G31b producer
 > integration same-cycle) + R8 4/4 CLOSURE (D115 G32 cell pick + D117
@@ -31,10 +32,16 @@
 > D117 G33 second cell `absorbed=true` legitimate flip · Aura/EEG ·
 > historical reference); **P-⑭ (κ-70 third-cell measured-oracle
 > round, ARCH §11.5 Round 9 G35..G38)** ← κ-70 opening 2026-05-22 ·
-> **R9 1/4 LANDED** (G35 candidate-research note `inbox/notes/
+> **R9 2/4 LANDED** (G35 candidate-research note `inbox/notes/
 > 2026-05-22-k70-horizon-candidate-research.md` · 3 finalist: Ufo/
-> plasma Stage-2 · Energy/wind · Bio/ECG) · **G36 / G37 / G38 still
-> open**.
+> plasma Stage-2 · Energy/wind · Bio/ECG · #1 ranked default 채택 ·
+> G36 D118 3rd cell pick LANDED 2026-05-22 same-cycle · Ufo/plasma
+> Stage-2 · JET open-pulse archive mid-Ohmic single shot · λ_D Debye
+> length axis · `pilot-plasma_metrics` 41/41 bit-exact substrate-
+> parity floor · Stage-4..7 D106 illustrative carve-out 명시 박제) ·
+> **G37 / G38 still open** (G37 = 3rd cell first-flip · 1-3 session
+> est · 3rd record-type instance · `invariantHolds` record-type-
+> agnostic audit 의 strongest evidence).
 >
 > **H-* (heavy-substrate measurement sessions, new 2026-05-20)** —
 > H-1 unblocks all (hexa-lang live-tree re-align); H-2..H-7 each
@@ -770,12 +777,17 @@ Exit criterion (any one ends honestly):
 
 **κ-70 opening (2026-05-22 · 같은 cycle as κ-69 R8 4/4 CLOSURE)**: ARCH
 §11.5 Round 9 (G35..G38) 박힘 + 3-candidate research note 동시 land
-(`inbox/notes/2026-05-22-k70-horizon-candidate-research.md`). **R9 1/4
+(`inbox/notes/2026-05-22-k70-horizon-candidate-research.md`). **R9 2/4
 LANDED same-cycle**: G35 candidate-research 박제 (Ufo/plasma Stage-2 ·
-Energy/wind · Bio/ECG 3 finalist · ranking advisory · code 0). Remaining
-open: **G36 cell pick** (D118 decision · code 0 · research note 3 finalist
-중 1 pick) · **G37 first-flip** (G36 cell measured-oracle PASS · κ-68 G29
-/ κ-69 G33 mirror · 3rd record-type invariant audit) · **G38 closure**
+Energy/wind · Bio/ECG 3 finalist · ranking advisory · code 0) +
+**G36 D118 3rd cell pick LANDED 2026-05-22 same-cycle** (Ufo/plasma
+Stage-2 · #1 ranked default 채택 · JET open-pulse archive mid-Ohmic
+single shot · λ_D Debye length axis · `pilot-plasma_metrics` 41/41
+bit-exact substrate-parity floor · 5-fold lock-in · `UfoVerifyRecord`
+1-field 확장 = κ-69 G33 mirror · Stage-4..7 D106 illustrative carve-
+out 명시 박제 · code 0). Remaining open: **G37 first-flip** (G36 cell
+Ufo/plasma measured-oracle PASS · κ-68 G29 / κ-69 G33 mirror · 3rd
+record-type invariant audit · 1-3 session est) · **G38 closure**
 (R9 4/4 박제 · κ-69 R8 closure entry mirror).
 
 **Use this when:** you continue κ-70 R9 work. ARCH.md §11.5 Round 9 는
@@ -808,37 +820,48 @@ independent gates, except G37 depends on G36):
 
 (a) G35 — **LANDED 2026-05-22** (candidate-research note 박제 ·
     `inbox/notes/2026-05-22-k70-horizon-candidate-research.md`).
-    Historical reference for G36 pickup — superseded by (b) for
-    next pickup.
+    Historical reference for G36/G37 pickup — superseded by (b)/(c).
 
-(b) G36 — 3rd cell pick + measured-oracle source decision (κ-70 R9
-    pre-code decision gate). G27 (κ-68 D109) / G32 (κ-69 D115) 와
-    동형 — 5-fold lock-in (cell · external oracle · bridge stack ·
-    hexa-native scope · PASS criterion) decision-only · code 0.
-    후보 cluster (G35 research note 의 3 finalist · ranking
-    advisory):
-    - #1 Ufo/plasma Stage-2 (UfoVerifyRecord · pilot-plasma_metrics
-      41/41 bit-exact · Stage-4..7 D106 carve-out 명시 필요)
-    - #2 Energy/wind (EnergyVerifyRecord or 새 EnergyWindVerifyRecord ·
-      substrate kernel 신설 1-3 session · HSDS token)
-    - #3 Bio/ECG (새 BioVerifyRecord ~40 line · PhysioNet MIT-BIH
-      anonymous wget · NEW DOMAIN signal)
-    avoid: D106 illustrative-physics gate cell · D95 computed-projection
-    only cell · ChipAnalyze (chip §B substrate-axis 별 axis 활성). 
-    design.md D118 record + exit criterion 박제.
-    est: 0.3-0.5 session. code 0.
+(b) G36 — **LANDED 2026-05-22 same-cycle · D118 박제** (3rd cell pick +
+    measured-oracle source decision · κ-70 R9 pre-code decision gate ·
+    κ-68 G27 (D109) / κ-69 G32 (D115) 동형 mirror · code 0). #1 ranked
+    default 채택 = **Ufo/plasma Stage-2** · 5-fold lock-in:
+    - cell: `UfoVerifyRecord` (1-field 확장 · κ-69 G33 mirror)
+    - external oracle: JET open-pulse archive mid-Ohmic single shot
+      (n_e + T_e timeseries · anonymous access)
+    - bridge stack: (신설) `stdlib/fusion/jet_pulse_fetcher.py` →
+      hexa-native `plasma_metrics_kernel.hexa` (`pilot-plasma_metrics`
+      41/41 bit-exact substrate-parity floor)
+    - hexa-native scope: `plasma_metrics_kernel.hexa` · λ_D Debye
+      length axis (NRL Formulary p.34)
+    - PASS criterion: `mean_rel_err ≤ 0.05` over N=50 JET pulse mid-
+      Ohmic stationary timesteps (G29 / G33 5% threshold mirror)
+    Stage-4..7 (warp/wormhole/dim/use) D106 illustrative carve-out
+    명시 박제 (G37 의 `UfoVerifyRecord.scopeCaveats` array obligation).
+    Historical reference — superseded by (c) for next pickup.
 
-(c) G37 — G36 cell 의 첫 `absorbed=true` legitimate flip (κ-68 G29
-    / κ-69 G33 mirror · 세번째 cell measurement-parity land).
-    `MeasuredOracleRef` schema 재사용 + picked record type 에 field
-    instantiate (1-field 확장 if Ufo · 새 record if Energy/wind 또는
-    Bio) + 외부 dataset fetch + PASS criterion 측정 + g3-honest flip.
+(c) G37 — G36 cell (Ufo/plasma Stage-2) 의 첫 `absorbed=true`
+    legitimate flip (κ-68 G29 / κ-69 G33 mirror · 세번째 cell
+    measurement-parity land). **D118 5-fold lock-in 위 build**:
+    `MeasuredOracleRef` schema 재사용 + `UfoVerifyRecord` 1-field
+    확장 (`measuredOracle: MeasuredOracleRef?` · κ-69 G33
+    AuraVerifyRecord 1:1 mirror) + `scopeCaveats` Stage-4..7 carve-
+    out entry 박제 + JET pulse archive fetcher 신설
+    (`stdlib/fusion/jet_pulse_fetcher.py` · anonymous HTTPS · D86
+    CLI/env-var) + `plasma_metrics_kernel.hexa` 재사용 (41/41 PASS
+    이미 land · 새 substrate kernel 0) + λ_D PASS measurement +
+    g3-honest flip.
     G30 Stage 1 XCTest invariant 가 새 cell 에도 auto-extend 적용
-    audit (3rd record-type · invariant helper code 변경 0 의
-    record-type-agnostic 설계의 strongest evidence).
-    deps: G36 (decision · D118) · G28 (schema 재사용) · G30 Stage 1
-    (invariant pattern · 2nd carrier 까지 audited).
-    est: 1-3 session (G36 picked cell candidate 에 의존).
+    audit (`testUfoVerifyRecordCoveredByInvariantNoCodeChange` 추가 ·
+    3rd record-type · invariant helper code 변경 0 의 record-type-
+    agnostic 설계의 **strongest evidence cycle**).
+    deps: G36 (decision · D118 LANDED) · G28 (schema 재사용) · G30
+    Stage 1 (invariant pattern · 2nd carrier 까지 audited).
+    est: 1-3 session (Ufo = 1 session est · research note critical-
+    path estimate).
+    prediction-shape honest disclosure (D119 의 body 박제 obligation):
+    formula evaluation axis (D117 G33 numeric-equivalence mirror ·
+    D110 G29 predict-vs-measure shape 아님) · `scopeCaveats` 박제.
 
 (d) G38 — κ-70 R9 closure 박제 (4/4 LANDED · κ-69 R8 closure entry
     mirror). G35 + G36 + G37 누적 LANDED 시 land · partial-land
@@ -846,11 +869,15 @@ independent gates, except G37 depends on G36):
     est: 0.3-0.5 session.
 
 Gate (g3 — REQUIRED for remaining open axes):
-  - G36 land = design.md D118 박제 (5-fold sub-decision · code 0 ·
-    회피 후보 reject rationale 명시).
+  - G36 land = **CLOSED 2026-05-22 same-cycle** (design.md D118 박제 ·
+    Ufo/plasma Stage-2 5-fold lock-in · code 0 · 회피 후보 reject
+    rationale 명시 · Stage-4..7 D106 illustrative carve-out 박제).
   - G37 land = stored `absorbed: Bool` true · measured oracle PASS
     근거 record cite · 다른 cell (Energy/solar Aura/EEG) 회귀 0 ·
-    XCTest 3rd carrier auto-extension audit confirmed.
+    XCTest 3rd carrier auto-extension audit confirmed
+    (`testUfoVerifyRecordCoveredByInvariantNoCodeChange` 추가) ·
+    `UfoVerifyRecord.scopeCaveats` Stage-4..7 D106 carve-out entry
+    박제 (D118 의 cross-link gate).
   - G38 land = R9 4/4 박제 + `next horizon (κ-71+)` placeholder.
 
 NOT (g3 — non-negotiable):
@@ -869,12 +896,16 @@ NOT (g3 — non-negotiable):
   - Do NOT skip G35 research note cite in D118 body — decision
     rationale 가 G35 ranking 위 build.
 
-Exit criterion (any one ends honestly):
-  (α) G36 LANDED (D118 박제 · code 0) + scope-bounded next-pickup
-      note + ARCH §11.5 G36 `[x]` flip, OR
+Exit criterion (any one ends honestly · G36 CLOSED 2026-05-22 same-
+cycle · remaining exits below):
+  (α) ~~G36 LANDED (D118 박제 · code 0) + scope-bounded next-pickup
+      note + ARCH §11.5 G36 `[x]` flip~~ — **CLOSED 2026-05-22 same-
+      cycle · historical reference**, OR
   (β) G37 LANDED (세번째 cell first-flip · measured-oracle PASS) +
-      ARCH §11.5 G37 `[x]` flip + invariant 3rd-carrier audit, OR
-  (γ) G36 + G37 묶음 land + κ-70 closure (R9 4/4 LANDED via G38), OR
+      ARCH §11.5 G37 `[x]` flip + invariant 3rd-carrier audit
+      (`testUfoVerifyRecordCoveredByInvariantNoCodeChange`) +
+      `UfoVerifyRecord.scopeCaveats` Stage-4..7 carve-out 박제, OR
+  (γ) G37 + G38 묶음 land + κ-70 closure (R9 4/4 LANDED via G38), OR
   (δ) Scope-bounded sub-progress + honest next-pickup note in this
       P-⑭ section + ARCH §11.5 partial flag (`[~]`) update.
 ```

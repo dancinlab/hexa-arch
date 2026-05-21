@@ -5313,3 +5313,286 @@ fold contract (D115) 의 measurement-axis 박제 + κ-69 R8 4/4
 closure (G31+G32+G33+G34 all `[x]`). 다음 lowest-friction path =
 κ-70 horizon (open · TBD — Hann/Welch hexa-native port, 다른 cell
 measured-oracle round, chip §B substrate-axis Tier-1/2/3 잔여).
+
+
+### Decision 118 — κ-70 R9 G36 — 3rd cell pick (Ufo/plasma Stage-2 · JET pulse archive λ_D) 5-fold lock-in (D109 / D115 mirror)
+
+**picked**: κ-70 R9 G36 (3rd cell pick · pre-code decision gate ·
+κ-68 G27 (D109) / κ-69 G32 (D115) 의 동형 mirror) 의 세번째 cell =
+**Ufo / sister-substrate fusion plasma diagnostic (Stage-2)** ·
+cockpit `UfoVerifyRecord` carrier + hexa-lang `stdlib/kernels/
+plasma/plasma_metrics_kernel.hexa` substrate. 외부 measured oracle =
+**JET open-pulse archive mid-Ohmic single shot** (electron density
+n_e + electron temperature T_e timeseries · anonymous access ·
+solar G29 의 single clear-sky day / Sleep-EDF G33 의 single subject
+mirror). bridge stack = **신설 `stdlib/fusion/jet_pulse_fetcher.py`
+(HTTP + parse · D86 floor 위 CLI/env-var)** → bridge-trusted ITER
+IMAS-like shape adapter → hexa-native `plasma_metrics_kernel.hexa`
+(`pilot-plasma_metrics` 41/41 PASS bit-exact IEEE-754). hexa-native
+scope = **`stdlib/kernels/plasma/plasma_metrics_kernel.hexa` (NRL
+Formulary p.34 · 41/41 PASS @ rel_err = 0.0)** · 측정 axis =
+**λ_D = sqrt(ε₀ k_B T_e / (n_e e²))** (Debye length · 측정 n_e /
+T_e 입력 → modeled λ_D output 의 measured-oracle 일치). PASS
+criterion = **`mean_rel_err ≤ 0.05` over N=50 JET pulse mid-Ohmic
+stationary timesteps** (solar G29 / Aura G33 의 5% threshold mirror).
+**Stage-4..7 (warp / wormhole / dim / use) D106 illustrative-
+physics carve-out 명시 박제** — 본 land 는 *Stage-2 sister-substrate
+fusion cross-link axis 만* · RFC 013 §6.12 anti-conflation 유지 ·
+G37 시 `UfoVerifyRecord.scopeCaveats` (or 동등 field) array 에 명시.
+본 D-block 은 **decision-only · code 0** — G37 (3rd cell first-
+flip) 이 본 결정 위에서 build.
+
+**5-fold lock-in (G27/D109 + G32/D115 pattern · κ-68 / κ-69 mirror)**:
+
+| dimension | G36 lock-in (Ufo/plasma Stage-2) | κ-69 G32 reference (Aura/EEG · D115) | κ-68 G27 reference (Energy/solar · D109) |
+|---|---|---|---|
+| cell | `UfoVerifyRecord` (cockpit · 이미 존재 · `hexaNativeParity` carrier · `measuredOracle` field 추가 G37 scope 1줄 schema-half · κ-69 G33 AuraVerifyRecord 1:1 mirror) + `domains/ufo.md` Stage-2 sister-substrate fusion cross-link 경로 (Stage-4..7 D106 carve-out 명시) | `AuraVerifyRecord` + `domains/aura.md` EEG signal-proc 경로 | `EnergyVerifyRecord` + `domains/energy.md` solar 경로 |
+| external oracle | **JET open-pulse archive mid-Ohmic single shot** (n_e + T_e timeseries · anonymous access · solar G29 single-day / Sleep-EDF G33 single-subject mirror · CLI/env-var dataset path · D86 floor) | PhysioNet **Sleep-EDF Expanded** (CC-BY · 153 PSG · 100 Hz EEG Fpz-Cz/Pz-Oz · 30-s epochs · anonymous wget) | NREL MIDC SRRL Golden CO pyranometer GHI · 2024-06-15 · 1-min · clear-sky day |
+| bridge stack | (신설) `stdlib/fusion/jet_pulse_fetcher.py` (HTTP + parse · IMAS-like shape adapter) → hexa-native `plasma_metrics_kernel.hexa` (`pilot-plasma_metrics` 41/41 PASS bit-exact = substrate-parity floor) | `stdlib/aura/aura_mne.py` (MNE-Python · 이미 존재) → `stdlib/kernels/signal_proc/mne_psd_kernel.py` → hexa-native `dft_naive.hexa` (`pilot-dft_naive` 17/17 PASS) | `stdlib/energy/_solar_position_batch.hexa` (G31) → `pvlib_clearsky.py` Ineichen (substrate-parity trusted) → `nrel_midc_pyranometer.py` (fetch + filter) |
+| hexa-native scope | `stdlib/kernels/plasma/plasma_metrics_kernel.hexa` (NRL Formulary p.34 · `pilot-plasma_metrics` 41/41 PASS @ rel_err = 0.0 IEEE-754 bit-exact substrate-parity floor) · 측정 axis = **λ_D = sqrt(ε₀ k_B T_e / (n_e e²))** (Debye length) | `stdlib/kernels/signal_proc/dft_naive.hexa` (17/17 PASS @ rel_err ≤ 1e-12) · 측정 axis = alpha-band (8-13 Hz) integrated PSD | `stdlib/kernels/solar/solar_kernel.hexa` (21/21 PASS · sun-position axis) |
+| PASS criterion | `mean_rel_err ≤ 0.05` over N=50 JET pulse mid-Ohmic stationary timesteps (solar G29 / Aura G33 5% threshold mirror · single-shot default) | `mean_rel_err ≤ 0.05` on alpha-band integrated power across N=100 30-s eyes-closed REM/Wake epochs (solar G29 5% mirror) | `mean_rel_err ≤ 0.05` (clear-sky daylight filter · D110 = 0.04967 PASS) |
+
+**rationale**:
+
+- **cell 선정 (Ufo/plasma Stage-2)** — `inbox/notes/2026-05-22-k70-
+  horizon-candidate-research.md` (191 line · 3 finalist 분석 · 본
+  D118 의 load-bearing audit trail) 의 #1 ranked pick (default
+  채택 path · 5 dimension "이미 있음" check 가 가장 깔끔):
+  - substrate kernel ✓ (`pilot-plasma_metrics` 41/41 bit-exact ·
+    `pilot-dft_naive` 17/17 보다 더 강한 substrate-parity floor)
+  - cockpit record ✓ (`UfoVerifyRecord` 이미 존재 · κ-69 G33
+    AuraVerifyRecord 의 1-field 확장 pattern 1:1 mirror)
+  - bridge stack partial ✓ (kernel 존재 · fetcher 신설만 필요 ·
+    Aura G33 sleep_edf_fetcher.py pattern 1:1 mirror · 0.5-1 session)
+  - dataset anonymous-access 가능 (JET open-pulse archive default ·
+    IMAS UDA REST 2025 신규 access 불확실은 reject reason)
+  - G37 schema-extension audit 가 *third record type* 으로 확장 =
+    κ-68 G29 (1st) / κ-69 G33 (2nd) → κ-70 G37 (3rd) 의 `invariant
+    Holds(absorbed, measuredOracle, isIllustrativePhysics)` shape
+    record-type-agnostic 설계의 **3rd instance verification** ·
+    invariant-helper code 변경 0 의 strongest evidence cycle
+  - κ-69 G33 (D117) 의 lowest-friction principle 일관 — schema
+    1-field 확장 = κ-69 mirror 최저 friction.
+- **회피 후보 reject reason** (research note Candidate B/C 분석
+  인용 · 본 D118 body 박제):
+  - **Candidate B (Energy/wind · NREL Wind Toolkit)**: bridge stack
+    + 새 hexa-native kernel **둘 다 신설 필요** (`stdlib/kernels/
+    wind/power_curve_kernel.hexa` · IEC 61400-12 reference power
+    curve · G31 mirror scale 1-3 session) · critical-path length
+    κ-68/κ-69 보다 1-step 길어짐 (G36→substrate kernel land→G37 =
+    3-step) · NREL WTK HSDS API token 필요 = anonymous 아님 ·
+    honesty floor 가 solar MIDC / PhysioNet 보다 한 단계 약함.
+    prediction-shape 가 가장 강함 (G29 mirror)은 *advantage* 이나
+    그 honesty elevate 가 κ-70 의 명시 목표가 아닐 시 비채택.
+  - **Candidate C (Bio/ECG · PhysioNet MIT-BIH 또는 Durbin §2.3)**:
+    cockpit `BioVerifyRecord.swift` **신설** 필요 (~40 line ·
+    EnergyVerifyRecord 1:1 mirror) · κ-68/κ-69 의 "schema 재사용 /
+    1-field 확장" 패턴과 가장 멀리 벗어남 · NEW DOMAIN signal +
+    3-domain progression payoff 강함은 *advantage* 이나 그 추가
+    audit dimension 의 가치가 critical-path length 보다 우선이지
+    않음 (lowest-friction principle 위반). option (i) ECG QRS axis
+    vs (ii) Durbin §2.3 sequence alignment axis 의 bridge axis-
+    match honest split 필요한 추가 disclosure 부담.
+- **Stage-4..7 D106 illustrative carve-out** (본 D118 의 핵심 g3
+  invariant) — `domains/ufo.md` 의 Stage-4 warp / Stage-5 wormhole
+  / Stage-6 dim / Stage-7 use 는 D106 illustrative-physics gate
+  적용 cell · `MeasuredOracleRef` 적용 불가 · RFC 013 §6.12 anti-
+  conflation 유지. 본 land 는 **Stage-2 sister-substrate fusion
+  cross-link axis 만** — plasma diagnostic (λ_D · ω_p · Larmor
+  radius 등 NRL Formulary p.34 의 measurable derived quantities)
+  의 *real measured n_e/T_e 위 formula evaluation* axis. G37 단계
+  의 producer wire + record write 에서 `UfoVerifyRecord.
+  scopeCaveats` (또는 동등 field) array 에 `"Stage-2 sister-
+  substrate fusion plasma diagnostic axis only — Stage-4..7
+  (warp/wormhole/dim/use) excluded per D106 illustrative-physics
+  gate · RFC 013 §6.12 anti-conflation"` entry 박제 필요 (G37 의
+  scope obligation · 본 D118 의 cross-link gate).
+- **bridge-stack trust (`plasma_metrics_kernel.hexa` 41/41 bit-
+  exact)** — 본 round 의 측정 axis 는 *Debye length formula
+  evaluation* (`λ_D = sqrt(ε₀ k_B T_e / (n_e e²))`) single
+  segment. NRL Formulary p.34 의 closed-form 은 community-validated
+  plasma diagnostic reference — substrate-parity 가 별 axis (`pilot-
+  plasma_metrics` 41/41 PASS IEEE-754 bit-exact = κ-65 21/21 sun-
+  position + 17/17 dft_naive 보다 더 강력한 substrate floor). D103
+  dimension-separation 유지 — bridge 의 trust 는 substrate-parity
+  dimension, measured-oracle 은 *measured n_e/T_e (JET pulse) →
+  modeled λ_D (hexa kernel) vs reference λ_D* 의 mean-rel-err.
+- **PASS criterion (mean_rel_err ≤ 0.05)** — solar G29 의 5%
+  threshold (D110 `0.04967` marginal PASS) 및 Aura G33 의 5%
+  threshold (D117 `8.40e-07` comfortable PASS) 와 **동형 임계**.
+  Plasma kernel 의 41/41 bit-exact substrate-parity floor (rel_err
+  = 0.0) 는 *substrate-parity dimension* 의 표면 — 본 PASS 는
+  *measurement-parity dimension* 의 real n_e/T_e 위 확장 evidence.
+  candidate threshold (b) `rel_err ≤ 1e-6` (bit-exact 위 dispersion
+  검증) 또는 (c) `MAE ≤ 10⁻⁵ m` 도 honest 했으나 (a) 가 G29 / G33
+  의 5% 임계와 직접 mirror 되어 invariant audit 의 "동형 cell 의
+  PASS shape 일관성" 가독성 우수.
+- **prediction-shape honesty 약함 (honest disclosure)** — research
+  note 의 critical caveat 박제: 본 PASS shape 은 D110 (G29 solar)
+  의 *predict-vs-measure modeling-error-bounded statement* (modeled
+  Ineichen clearsky GHI vs measured pyranometer GHI · prediction
+  axis) 가 *아님*. 본 PASS = D117 (G33 Aura) 의 *numeric-equivalence
+  statement* (formula evaluation on real-measured inputs · numeric
+  fidelity statement on physically-grounded data) 와 동형 shape ·
+  `λ_D` formula 는 closed-form 이라 *prediction* (modeled future
+  state vs measured ground-truth) 이 아닌 *evaluation* (closed-form
+  on measured inputs · output vs reference) axis. 본 weakness 는
+  acceptable — κ-69 closure entry 가 "κ-70+ prediction-axis elevate
+  path" 를 follow-on horizon line 으로 cite (즉 κ-70 자체는
+  prediction shape elevate 미요구). G37 단계의 `scopeCaveats`
+  array 또는 `UfoVerifyRecord.measuredOracle.predictionShapeHonesty`
+  (or 동등 field) 가 그 disclosure 박제.
+- **default oracle (JET open-pulse archive vs IMAS 2025 vs
+  NSTX-U Langmuir)** — research note open-question 1.i 의 default
+  채택: **JET open-pulse archive mid-Ohmic single shot**. anonymous
+  access 가능 (solar MIDC anonymous wget / PhysioNet anonymous
+  wget 의 동형 floor) + dataset stability 검증된 (multi-decade
+  open archive) + Aura G33 single-subject SC4001E0 / Energy G29
+  single-day 2024-06-15 의 single-shot mirror. IMAS UDA REST
+  (ITER 2025 신규 release) 는 access pattern stability 불확실 ·
+  NSTX-U Langmuir-probe diagnostic 은 single-probe spatial-point
+  data 라 timeseries-axis weakness. JET archive single shot 의
+  *single mid-Ohmic stationary regime* 가 first land 의 honest
+  floor — multi-pulse / multi-regime / IMAS native (post 2025 access
+  stabilization) 는 후속 round (G37 land 이후) horizontal extension.
+- **hexa-native scope = `plasma_metrics_kernel.hexa` 만 (fetcher
+  + adapter 는 bridge)** — research note open-question 의 default
+  채택. `pilot-plasma_metrics` 41/41 PASS @ bit-exact IEEE-754 가
+  본 PASS 의 substrate-parity floor. JET pulse fetch + IMAS-like
+  shape adapter (data-to-kernel-args)는 substrate-parity trusted
+  bridge 로 격리 — solar G29 의 pvlib clearsky bridge / Aura G33
+  의 MNE-Python signal-proc bridge 와 동형 분리.
+- **default sample size (N=50 JET pulse mid-Ohmic stationary
+  timesteps)** — research note open-question 의 default 채택.
+  single-shot first land 의 honest floor (solar G29 의 480-sample
+  clear-sky / Aura G33 의 N=100 30-s epochs 와 magnitude 동등) ·
+  multi-pulse / multi-regime / non-stationary aggregate 는 후속
+  round (G37 land 이후) horizontal extension.
+- **D-number (D118)** — D117 (κ-69 G33 first-flip) 직후 자연
+  순서. ARCH §11.5 G36 exit criterion (line 2363) `### Decision 118`
+  pre-reserved 일치. D-numbering shift trail = D116 (sibling repos =
+  docs only) → D117 (κ-69 G33 D117) → **D118 (κ-70 G36 본 D-block)**
+  → D119 reserved (κ-70 G37 first-flip · D117 mirror).
+- **D95 computed projection 격리** — `UfoVerifyRecord.
+  isHexaNativeAbsorbed` (computed projection · 만약 있다면) 는
+  *substrate-parity* dimension 의 표면. G37 단계의 `absorbed: Bool`
+  (stored) flip 은 producer 가 *명시적* set — D95 computed 의 부산물로
+  일어나지 않음 (D103 docstring + G30 typed enforcement 가드).
+- **D106 illustrative-physics 제외** — Ufo Stage-2 sister-substrate
+  fusion plasma diagnostic 은 D106 illustrative-physics gate 가
+  적용되지 *않음* (real plasma data · NRL Formulary closed-form ·
+  measurable n_e/T_e · falsifier OPEN — λ_D formula 위반 evidence
+  발견 시 reject). Stage-4..7 (warp/wormhole/dim/use) **만**
+  illustrative-physics — 본 D118 의 Stage-2-only carve-out 이
+  anti-conflation 보장.
+
+**효과**:
+
+- ARCH.md §11.5 Round 9 G36 row → `[x]` LANDED (D118 reference + 본
+  audit-trail 인용 · research note cite). G37 의 deps 가 G36
+  decision 이므로 본 D-block 박제로 downstream 1 unblock — G37 (3rd
+  cell `absorbed=true` legitimate flip · κ-68 G29 / κ-69 G33 mirror ·
+  `MeasuredOracleRef` field 가 `UfoVerifyRecord` 에 land = schema
+  generalization audit 의 third record-type instance).
+- κ-70 R9 ledger 갱신: G35 `[x]` (candidate-research) + **G36 `[x]`**
+  (본 D-block) · G37/G38 still `[ ]`. 4 G-item 중 2 closed · 남은
+  2 axis (G37 first-flip · G38 closure) 가 다음 lowest-friction
+  critical-path. R9 = 2/4 LANDED.
+- RFC 013 §6.11 status 변경 0 (`LANDED` 유지 · κ-68 closure 상태 ·
+  κ-69 의 second-cell + κ-70 의 third-cell mirror 는 RFC 013
+  ultimate-form parity follow-on axis 라 RFC status 자체는 미flip ·
+  narrative cross-link만 add via G37 D119).
+
+**적용**:
+
+1. `design.md` — 본 D118 entry 추가 (D117 직후 자연 순서 ·
+   decision SSOT 의 결정 audit-trail 누적 · 본 cycle).
+2. `ARCH.md` §11.5 Round 9 G36 row — `[ ]` → `[x]` flip + D118
+   reference + research note (`inbox/notes/2026-05-22-k70-horizon-
+   candidate-research.md`) cite + 5-fold lock-in 요약. §11.4
+   intro 의 G35..G38 Round 9 status 표면 갱신 (G35 LANDED · G36
+   LANDED · G37/G38 pre-code).
+3. `PLAN.md` `## 진행 로그` — phase κ-70 G36 LANDED entry 박제 +
+   D118 cite + R9 2/4 LANDED 진척 + next pickup = G37 first-flip
+   (3rd cell measured-oracle PASS · `MeasuredOracleRef` 가
+   `UfoVerifyRecord` 에 land = third record-type instance) 명시.
+4. `NEXT_SESSIONS.md` P-⑭ — G36 closure marker 추가 (R9 2/4
+   LANDED · G37 first-flip 가 다음 lowest-friction critical-path).
+   head refresh: R9 1/4 → 2/4 LANDED.
+5. **NOT** 적용 (scope 밖 · code 0 단계):
+   - `UfoVerifyRecord.swift` schema 확장 (`measuredOracle:
+     MeasuredOracleRef?` field 1줄 추가 · G37 scope).
+   - `UfoVerifyRecord.scopeCaveats` (또는 동등 field) Stage-4..7
+     carve-out entry 박제 (G37 scope · 본 D118 의 cross-link gate).
+   - Producer wire (`stdlib/fusion/jet_pulse_fetcher.py` 신설 ·
+     measured-oracle JSON emit · G37 scope).
+   - JET pulse archive fetch infrastructure (G37 의 dataset
+     adapter · D86 floor CLI/env-var only).
+   - `absorbed=true` flip (G37 의 legitimate-flip gate).
+   - XCTest `testUfoVerifyRecordCoveredByInvariantNoCodeChange`
+     추가 (G37 의 3rd record-type audit · invariant helper code
+     변경 0 의 record-type-agnostic 설계 strongest evidence).
+   - PILOTS.demi / DEPENDENCIES.demi / SUBSTRATE_LINKS.demi row
+     변경 0.
+   - hexa-lang 측 변경 0 (`pilot-plasma_metrics` 41/41 PASS 이미
+     land · κ-65 era · 별 round 변경 0).
+
+**avoid** (D109 / D115 mirror invariants):
+
+- D106 illustrative-physics gate 적용 cell — Fusion `mc_transport`
+  (substrate-parity PASS 이나 measurement-parity illustrative ·
+  RFC 013 §6.12 anti-conflation) · **Ufo Stage-4..7 propulsion**
+  (warp/wormhole/dim/use · 본 D118 의 명시 carve-out). 모두
+  `MeasuredOracleRef` 적용 불가.
+- D95 computed-projection 만으로 만족하는 cell — substrate-parity
+  가 아닌 measurement-parity 가 본 round 의 점 (`pilot-plasma_
+  metrics` 41/41 bit-exact 은 substrate-parity floor · 본 D118 의
+  PASS criterion 은 그 위 *real measured n_e/T_e* axis 확장).
+- ChipAnalyze (chip §B substrate-axis · `~/core/hexa-lang` worktree
+  의 다른 agent 활성 작업 중 · §12.1 RTLIL/Yosys 등 · cross-axis
+  충돌 회피).
+- hardcoded JET pulse archive path — D86 floor 위반 (G37 단계의
+  fetcher 가 env var 또는 CLI arg only · 본 D118 single-shot
+  default 의 dataset identifier 만 narrative cite).
+
+**g3** — 본 D-block 의 박제로 어떤 cell 의 `absorbed=true` 도 flip
+되지 않음. RFC 013 §6.11 의 status 는 여전히 `LANDED` (κ-68 closure
+상태 유지 · κ-70 R9 는 same-invariant 의 third-instance generalization
+audit). 새 측정 0, 새 stored field 0, 새 `.demi` row 0, 새 hexa-lang
+artifact 0 — *결정-감사추적 SSOT* 의 single block 만. cell flip
+의 실 honest land 는 G37 (Ufo/plasma producer measured-oracle PASS
+의 cell record write path) 에서 이뤄짐. D80 honesty floor
+(`g_hexa_only`) + D86 (`g_no_hardcoded_data`) + D103 (dimension-
+separation) + D106 (illustrative-physics 제외 · Stage-4..7 carve-
+out) + D114 (stdlib SSOT · hexa-lang only) + D116 (sibling repos =
+docs only) 모두 preserved. audit trail = `inbox/notes/2026-05-22-
+k70-horizon-candidate-research.md` (3 finalist analysis · Ufo/
+plasma Stage-2 #1 ranked · 191 line) + ARCH §11.5 Round 9 scaffold
+(G35 LANDED 2026-05-22) + NEXT_SESSIONS P-⑭ refresh.
+
+**status**: **LANDED 2026-05-22** · κ-70 R9 G36 `[x]` flip + 5-fold
+lock-in committed · R9 = 2/4 LANDED (G35 + G36) · G37 first-flip
+(κ-68 G29 / κ-69 G33 mirror · 3rd record-type instance) 가 다음
+lowest-friction critical-path.
+
+**cross-link**: ARCH §11.5 G36 block · `inbox/notes/2026-05-22-k70-
+horizon-candidate-research.md` (3 finalist analysis · Ufo/plasma
+Stage-2 #1 ranked · 본 D118 의 load-bearing audit trail) · D109
+(κ-68 G27 land · solar · 본 D118 의 grandparent mirror template) ·
+D110 (κ-68 G29 first-flip · D119 reserved 가 그 third-cell mirror
+의 decision gate) · D115 (κ-69 G32 land · Aura · 본 D118 의 직접
+parent mirror template) · D117 (κ-69 G33 first-flip · D119 reserved
+가 그 직접 mirror) · D103 (dimension-separation) · D106 (illustrative-
+physics carve-out · 본 D118 의 Stage-4..7 명시 cross-link gate) ·
+D86 (`g_no_hardcoded_data` · G37 fetcher CLI/env-var only) · D80
+(endpoint rule · `pilot-plasma_metrics` 41/41 bit-exact substrate-
+parity floor) · D114 (stdlib SSOT · hexa-lang only · `stdlib/
+fusion/jet_pulse_fetcher.py` G37 신설 위치) · D116 (sibling repos
+= docs only · `domains/ufo.md` narrative 위 hexa-lang 측 producer
+code) · `PILOTS.demi` `[pilot-plasma_metrics]` (41/41 PASS · Ufo
+bridge substrate-parity floor · κ-65 land) · `cockpit/Sources/
+DemiurgeCore/Models/MeasuredOracleRef.swift` (G28 schema · `4a1a087` ·
+G37 reuse · 3rd record-type instance) · `cockpit/Sources/Demiurge
+Core/Models/UfoVerifyRecord.swift` (G37 carrier · 본 D-block 시점
+`measuredOracle` field 미land) · `domains/ufo.md` (Stage-2 sister-
+substrate fusion narrative · Stage-4..7 D106 illustrative gate).
