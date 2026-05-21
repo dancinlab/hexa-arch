@@ -43,8 +43,12 @@ public enum RtscVerifyProducer {
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let out = String(data: data, encoding: .utf8) ?? ""
         let lines = out.split(separator: "\n").map(String.init)
+        // Producer writes `rtsc_verify_<stamp>.json` directly in `outDir`
+        // (the python script treats a stamped basename as the rec_dir).
         let jsons = (try? FileManager.default.contentsOfDirectory(at: outDir,
-            includingPropertiesForKeys: nil))?.filter { $0.pathExtension == "json" } ?? []
+            includingPropertiesForKeys: nil))?
+            .filter { $0.pathExtension == "json"
+                      && $0.lastPathComponent.hasPrefix("rtsc_verify_") } ?? []
         let recordID = jsons.first?.lastPathComponent.replacingOccurrences(of: ".json", with: "")
         return RtscVerifyResult(ok: proc.terminationStatus == 0,
             lines: lines + ["[rtsc+verify] record dir: \(outDir.path)",
