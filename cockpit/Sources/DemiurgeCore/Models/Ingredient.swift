@@ -46,8 +46,10 @@ public enum IngredientShelf {
             let body = String(line.dropFirst(2))
             guard let colon = body.firstIndex(of: ":") else { continue }
             let lineVerb = body[..<colon].trimmingCharacters(in: .whitespaces)
-            // §6 writes the verb short ("해석"); Verb.canonical is "해석⟲".
-            guard verb.canonical.hasPrefix(lineVerb) else { continue }
+            // §6 writes the verb short ("해석"); Verb.koreanLabel is "해석⟲".
+            // (D112 — `.canonical` is now the English wire form; match
+            // the Korean §6 header against `.koreanLabel`.)
+            guard verb.koreanLabel.hasPrefix(lineVerb) else { continue }
             let rest = String(body[body.index(after: colon)...])
             for groupStr in rest.components(separatedBy: ";") {
                 let parts = groupStr.components(separatedBy: "=")

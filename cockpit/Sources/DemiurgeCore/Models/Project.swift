@@ -11,15 +11,44 @@
 
 import Foundation
 
-/// The 7-verb spine (GOAL.md · design.md D5). `canonical` is the
-/// engineering term; `plain` is the rfc_012 §4 non-expert wording.
+/// The 7-verb spine (GOAL.md · design.md D5).
+///
+/// D112 — `canonical` is the **English wire form** (enum case name) used
+/// for serialization / cell-id dispatch / LLM prompts / any identifier
+/// crossing a process boundary (e.g. Swift → hexa cellrun, JSON exports).
+/// `koreanLabel` is the **Korean display label** used in cockpit chrome,
+/// CLI human output, and chat banners. `plain` is the rfc_012 §4
+/// non-expert Korean wording. Convention: English = wire, Korean =
+/// display, plain = non-expert chat. See `inbox/notes/2026-05-21-d111-
+/// phaseb-bug2-verb-naming-options.md` for the option-α rationale.
 public enum Verb: Int, CaseIterable, Codable, Identifiable, Sendable {
     case specify, structure, design, analyze, synthesize, verify, handoff
 
     public var id: Int { rawValue }
 
-    /// Engineering term (expert mode).
+    /// Engineering wire form — English enum-case name (D112). Stable
+    /// across process boundaries; safe to embed in serialized records,
+    /// LLM prompts, and Swift→hexa dispatch arguments. For UI / CLI
+    /// display in Korean use `koreanLabel`; for the non-expert chat
+    /// register use `plain`.
     public var canonical: String {
+        switch self {
+        case .specify:    return "specify"
+        case .structure:  return "structure"
+        case .design:     return "design"
+        case .analyze:    return "analyze"
+        case .synthesize: return "synthesize"
+        case .verify:     return "verify"
+        case .handoff:    return "handoff"
+        }
+    }
+
+    /// Korean display label (expert-mode UI chrome · CLI rendering ·
+    /// chat banners). D112 — previously the return value of `canonical`;
+    /// split out so identifier sites and display sites can diverge
+    /// cleanly. The `해석⟲` glyph on `.analyze` is intentional — it
+    /// marks the loop-back verb in the recipe-rail rendering.
+    public var koreanLabel: String {
         switch self {
         case .specify:    return "명세"
         case .structure:  return "구조"

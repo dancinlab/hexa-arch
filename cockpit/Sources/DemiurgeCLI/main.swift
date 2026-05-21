@@ -158,7 +158,7 @@ func listProjects() -> Int32 {
     for p in projects {
         let domain = DomainCatalog.domain(for: p.domain)
         let verb = p.currentVerb
-        print("  \(p.name)  —  \(domain.label) · \(verb.rawValue + 1)/7 \(verb.canonical)")
+        print("  \(p.name)  —  \(domain.label) · \(verb.rawValue + 1)/7 \(verb.koreanLabel)")
     }
     return 0
 }
@@ -185,7 +185,7 @@ func showProject(_ name: String) -> Int32 {
         case .visited:  mark = "[~] visited (unmeasured)"
         case .upcoming: mark = "[ ] upcoming"
         }
-        print("  \(verb.rawValue + 1). \(verb.canonical) (\(verb.plain))  \(mark)")
+        print("  \(verb.rawValue + 1). \(verb.koreanLabel) (\(verb.plain))  \(mark)")
     }
     return 0
 }
@@ -200,7 +200,7 @@ func listShelf(_ domain: String) -> Int32 {
         let groups = IngredientShelf.groups(domain: domain, verb: verb)
         guard !groups.isEmpty else { continue }
         any = true
-        print("  \(verb.rawValue + 1). \(verb.canonical):")
+        print("  \(verb.rawValue + 1). \(verb.koreanLabel):")
         for g in groups {
             let tag = g.multiSelect ? " (multi)" : ""
             print("       \(g.title)\(tag) = \(g.options.joined(separator: " / "))")
@@ -251,7 +251,7 @@ func cliAction(_ verbStr: String, _ domainArg: String?,
     let domain = domainArg ?? "general"
     let context = "CLI-invoked action — domain=\(domain)."
     let producerNote = producerArg.map { " · producer=\($0)" } ?? ""
-    print("action: \(verb.canonical) (\(verb.plain)) · domain=\(domain)\(producerNote) — dispatching…")
+    print("action: \(verb.koreanLabel) (\(verb.plain)) · domain=\(domain)\(producerNote) — dispatching…")
     let result = ActionDispatch.runEngineTool(
         verb: verb, domain: domain, context: context,
         producer: producerArg)
