@@ -441,8 +441,10 @@ ActionDispatch.dispatch(verb, domain)                                    [Swift 
   manifest 섹션으로 자연 흡수 (Swift ProducerRegistry class 도
   cellrun.hexa 안 selection logic 으로 흡수)
 
-**Cross-link**: design.md D112 (full rationale + rejected
-alternatives) · D14 / D18 / D74 / D80 / D83 (.demi precedent) ·
+**Cross-link**: design.md D111 (full rationale + rejected
+alternatives + Phase A..E) · D112 (Verb canonical → English wire
+form · bug #2 fix) · D113 (payload flattening · sibling .meta.json
+roll-up) · D14 / D18 / D74 / D80 / D83 (.demi precedent) ·
 CLAUDE.md Principles 1 + 2 + 4 + 5 (ai-native · hexa-first ·
 domain-meta-domain · lattice-as-tool) · ARCH §0 first principle.
 
@@ -2123,7 +2125,7 @@ measurement round (scaffold · pre-code)**
       에는 적용 불가)
     - D95 computed-projection 만으로 만족하는 cell (substrate-
       parity 가 아닌 measurement-parity 가 본 round 의 점)
-  - **exit criterion**: design.md D112 (κ-69 G32 land) record ·
+  - **exit criterion**: design.md D114 (κ-69 G32 land) record ·
     5-fold sub-decision 명시 (cell · external oracle · bridge
     stack · hexa-native scope · PASS criterion) · code 변경 0
   - **deps**: G31 (G29-β 가 우선 land 되어 endpoint pattern 정착)
@@ -2354,6 +2356,42 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **D112 + D113 ratified · Phase B bug #2 (Verb canonical
+  Korean → English wire) + payload flattening 결정 박제 · §11.4 G32
+  D-number reference shift (D112 → D114)**. Phase B agent 의 design
+  note (`inbox/notes/2026-05-21-d111-phaseb-bug2-verb-naming-options.
+  md` 353 line · α 추천) + Phase B post-mortem 의 payload flattening
+  open question 둘 다 doctrinal 로 명문화.
+  - **D112 = bug #2 closure** (Verb.canonical 의미를 English wire form
+    으로 변경 · `koreanLabel` 신규 computed property · naming convention
+    A picked over B). Rationale: `.demi` manifests + hexa stdlib + Swift
+    enum case names 모두 이미 English · `canonical = wire form` software
+    idiom · Wilson Principle 1 ai-native. zero-implementation core
+    (`String(describing:)` 가 이미 영어 case name 반환) · real work =
+    13 display caller redirect. exit Phase A..E (Verb.swift refactor +
+    new koreanLabel + 17 caller audit + CellrunDispatch.englishName()
+    helper 제거 + swift test PASS). est 1 session 40 LOC.
+  - **D113 = payload flattening** (cellrun envelope 가 sibling
+    `<basename>.meta.json::measurements` block 을 `payload.measurements`
+    top-level 로 roll up · sibling .meta.json 그대로 keep · g3 honest
+    disclosure 유지 · `payload.measurements_source` field 가 provenance
+    cite). Rationale: downstream consumer (cockpit chat panel · RTSC
+    view3D 등) legacy producer 의 top-level measurements 패턴 가정 ·
+    Phase C 의 46-cell migration 이 consumer regression 없이 진행 ·
+    flattening scope = measurements only (full meta copy 아님). exit
+    Phase A..D + selftest T10/T11. est 0.3-0.5 session.
+  - **§11.4 G32 D-number shift**: G32 (다음 cell pick · κ-69 R8 user
+    decision territory) 가 design.md D112 reserved 였음 · D111 시점에
+    D112 로 이미 shift · 본 D112+D113 land 로 다시 **D114** 로 shift
+    (2 ARCH §11.4 refs 정정 · §4.5 cross-link line 444 의 D112 는
+    실수 sweep 흔적 · D111 cellrun 으로 정정).
+  - **next exec step**: PR #267 (cellrun scaffold · bug #1 + #3 fix
+    already in) 가 review-mergeable · D112 의 Phase A..E 와 D113 의
+    cellrun.hexa payload roll-up impl 가 next cycle execution territory
+    (별 commit cycle).
+  - **provenance**: 사용자 "모두 완성도 기준진행" 지시 + Phase B
+    agent 의 α 추천 + payload open question 둘 다 본 D-block 으로
+    closure.
 - 2026-05-21 — **D111 estimate honest correction · 10-17 → 15-20
   session per Phase B step 3 observed cost** (3-SSOT synchronized
   update · 본 entry = ARCH side anchor). D111 ratification 같은
@@ -2984,7 +3022,7 @@ landing 시각만 ARCH `## Log` 에 박제.
     decision (G27 mirror · D106 illustrative gate 제외 · D95
     computed-projection 만족 cell 제외). 후보 cluster = Aura
     soft-biology (PhysioNet) · Ufo non-illustrative stage ·
-    Mobility / Grid / Energy wind sub-cell. design.md D112 land
+    Mobility / Grid / Energy wind sub-cell. design.md D114 land
     예정. 0.3-0.5 session est. code 0.
   - **G33 [ ]** G32 cell 첫 `absorbed=true` legitimate flip
     (G29 mirror · κ-68 G29 와 다른 점: schema half 재사용 · 다른

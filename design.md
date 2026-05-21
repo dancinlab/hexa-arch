@@ -4719,3 +4719,80 @@ rule) · D83 (`.demi` format precedent) · D88 (`DEMIURGE_HEXA_LANG`
 deprecation) · D101 · ARCH §0 first principle · ARCH §4.5 (본
 결정으로 신설) · CLAUDE.md Principle 1+2+4+5 (ai-native ·
 hexa-first · domain-meta-domain · lattice-as-tool).
+
+
+### Decision 112 — Bug #2 closure · `Verb.canonical` Korean → English (wire-form rename · `koreanLabel` displays)
+
+**picked**: Swift `Verb.canonical` 의 의미를 **English wire form** 로 변경 (현재 Korean display label 반환을 → enum case name 반환). 13 display caller 가 `.koreanLabel` (신규 computed property) 로 redirect. 1 internal caller (Ingredient §6 string-match) 는 Korean version 직접 사용 (별 getter).
+
+**rationale**:
+
+- **`canonical = wire form` software idiom**: `.demi` manifests on disk (`[cell.analyze]`) + hexa-lang stdlib (`cellrun.hexa <verb>`) + Swift `Verb` enum case names (`String(describing: Verb.specify)` = `"specify"`) **모두 이미 English**. `Verb.canonical = "해석⟲"` 는 misnamed — Korean 은 진짜 display dialect 이지만 doc convention 이 가렸음. (`inbox/notes/2026-05-21-d111-phaseb-bug2-verb-naming-options.md` 의 surprise #3)
+
+- **Wilson ai-native 원칙 (Principle 1)**: "Structured / machine-readable over prose · deterministic dispatch over LLM guesswork". `canonical` 가 machine-readable wire 아닌 human display 를 가리키면 ai-native 원칙 위반.
+
+- **zero-implementation core**: Swift enum 의 `String(describing:)` 가 이미 영어 case name 반환 — English getter 의 **implementation cost = 0** (case 이름 그대로 사용 가능). Real work 는 13 display caller 의 `.canonical` → `.koreanLabel` redirect.
+
+- **Phase B `englishName(Verb)` helper 제거**: Phase B (`d111-phaseb-sscb-migration` branch `deffc92`) 의 `CellrunDispatch.swift::englishName()` 가 workaround 였음. D112 가 그 workaround 의 정직한 해체 — dispatch boundary translation 가 dispersed 보다 enum 자체가 canonical wire form 갖는 게 cleaner.
+
+- **rejected alternatives** (per `inbox/notes/2026-05-21-d111-phaseb-bug2-verb-naming-options.md` § 3-5):
+  - **Option β** (cellrun bilingual): cellrun.hexa 가 Korean ↔ English translation table carry · UTF-8 hardening 의존 · hexa stdlib ASCII identifier convention 위반.
+  - **Option γ** (keep helper): dispersed translation logic · 미래 Swift→hexa dispatcher 마다 helper 재작성 · foot-gun.
+
+- **naming convention picked = A** (canonical=English wire · koreanLabel=display):
+  - A: `canonical`(English wire) + `koreanLabel`(display) — chosen
+  - rejected B: `wireName`(English) + `canonical`(kept Korean) — preserves ARCH §3 narrative but `canonical` 의미 충돌 (canonical = wire 아니면 software idiom 위반)
+  - Wilson Principle 1 ai-native · Principle 2 hexa-first · canonical = machine wire 의 일관성 우선.
+
+**exit criterion**:
+
+- Phase A — `Verb.swift` 의 `canonical: String` impl 변경 (`String(describing:)` 또는 explicit switch · case 이름 그대로 영어 반환 · 7 verb 모두)
+- Phase B — 신규 computed `koreanLabel: String` getter 추가 (현 Korean labels 박제 · 명세/구조/설계/해석⟲/합성/검증/인계)
+- Phase C — 17 Swift caller audit + 13 display site `.canonical` → `.koreanLabel` redirect (CockpitApp ×9 · DemiurgeCLI ×4 · 1 non-display caller `Models/Ingredient.swift:50` 는 별 case · Korean string-match path)
+- Phase D — Phase B branch `d111-phaseb-sscb-migration` 의 `CellrunDispatch.swift::englishName()` helper 제거 (이제 `verb.canonical` 가 직접 English)
+- Phase E — swift build clean + swift test 65+/65+ PASS (regression 0)
+
+**est**: 1 session (40 LOC · 3 file · compiler-driven rename via Xcode/swift refactor)
+
+**axis distinction**:
+
+- D112 = naming/wire-axis · D111 dispatch-mechanism axis 와 분리 (D111 = cellrun.hexa 가 verb 받는 방법 · D112 = Swift 가 cellrun 에 보내는 verb 의 이름)
+- D103 dimension separation (absorbed vs hexa_native_parity) 와 무관 · measurement-axis 영향 없음
+
+**provenance**: Phase B (2026-05-21 cycle) 의 sscb migration 실행 중 `CellrunDispatch.swift` 가 `englishName(Verb)` workaround 작성 → bug #2 surfaced. design note `inbox/notes/2026-05-21-d111-phaseb-bug2-verb-naming-options.md` (353 line · α 추천) 가 motivation.
+
+**cross-link**: D111 (parent dispatcher decision) · D14 / D18 (hexa-lang substrate) · CLAUDE.md Principle 1 (ai-native) · ARCH §3 (7-verb spine narrative · Korean lead → narrative update Phase C 동안) · `inbox/notes/2026-05-21-d111-phaseb-bug2-verb-naming-options.md` (option audit + recommendation).
+
+### Decision 113 — Payload flattening · cellrun envelope rolls `<basename>.meta.json::measurements` into `payload.measurements`
+
+**picked**: cellrun.hexa 의 `emit_record` 가 substrate script 가 emit 한 sibling `<basename>.meta.json` 파일의 `measurements{}` block 을 envelope 의 `payload.measurements` top-level 로 **roll up**. Sibling `.meta.json` 파일은 **그대로 유지** (g3 honest disclosure · source-of-truth preserved). 동시에 envelope `payload.measurements_source` field 가 sibling file path 를 cite (provenance audit trail).
+
+**rationale**:
+
+- **downstream consumer compatibility** (Phase B observation): cockpit chat panel · RTSC view3D 등 record consumer 가 legacy producer 의 top-level `measurements{rise_time, interrupt_ratio}` 패턴 가정. Phase B 의 cellrun envelope 가 measurements 를 sibling `.meta.json` 에 묻어둠 → consumer 가 sibling file 별도 load 필요 (legacy producer 와 shape mismatch · 회귀).
+
+- **g3 honest disclosure 유지**: sibling `.meta.json` 그대로 keep · cellrun envelope 의 `payload.measurements` 가 **mirror** 일 뿐 source-of-truth 아님. `payload.measurements_source: "sscb_v1.meta.json"` field 가 provenance cite (어디서 왔는지 honest).
+
+- **legacy producer compatibility**: D111 의 transitional bridge 패턴 (46 *Producer.swift 가 점진 deprecation) 위해 record shape backwards-compat 가 reasonably required · 그래야 Phase C 의 46-cell migration 이 consumer code regression 없이 진행 가능.
+
+- **flattening scope = measurements only**: full meta.json copy 아님 · `measurements{}` block 만 roll up. 다른 meta fields (toolchain version · netlist sha · timing · etc.) 는 envelope 의 `payload.provenance` 또는 sibling cite 에 머무름.
+
+- **rejected alternatives**:
+  - **No flatten** (sibling .meta.json only): downstream consumer 가 별도 load 필요 · legacy shape mismatch · Phase C migration regression risk
+  - **Full meta copy** (entire meta.json into envelope): envelope 비대화 · sibling file 의 source-of-truth status 모호화 · Tier-2 fields 가 envelope 에 무의미 노출
+
+**exit criterion**:
+
+- Phase A — `cellrun.hexa::emit_record` 가 sibling `<basename>.meta.json` 존재 시 `measurements{}` block 만 parse · `payload.measurements` 로 mirror
+- Phase B — `payload.measurements_source` field 추가 (sibling file path · provenance)
+- Phase C — selftest extension: T10 (sibling meta.json with measurements → payload.measurements populated) · T11 (no sibling → payload.measurements absent + measurements_source absent · honest)
+- Phase D — Phase B `domains/sscb.demi` round-trip verify: cellrun → record envelope 의 `payload.measurements{rise_time, interrupt_ratio, …}` 가 legacy `SSCBProducer` 의 top-level `measurements{}` shape 와 동일
+
+**est**: 0.3-0.5 session (cellrun.hexa +30-50 line · selftest +20 line · sibling .meta.json parser 가 단순 JSON object extraction)
+
+**axis distinction**:
+
+- D113 = envelope-shape axis · D111 dispatch-mechanism + D112 naming 과 별
+- D9 / D12 / g3 record-honesty 와 align (mirror with source cite · NOT silent shadowing)
+
+**cross-link**: D111 (parent · cellrun envelope spec) · D9 (record format) · D12 (gate semantics) · `inbox/notes/2026-05-21-generic-cellrun-migration-design.md` § 7 (open question #2 · payload flattening · 본 D113 가 그 question 의 결정).
