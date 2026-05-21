@@ -239,6 +239,25 @@ python3 stdlib/nuclear/hfbtho_adapter.py <Z> <N> <out_dir>
 - **N6–N10 stabilization audit** — mirror RTSC §9.9.1 Phase 2 (4-baseline × 5-cohort sanity matrix). Baseline candidates: Z=118 Oganesson (known), Z=119 (predicted SHE), Z=120 (predicted SHE), drip-line ⁸B (proton), drip-line ²⁴O (neutron).
 - **N11 funnel cohort** — mirror RTSC §9.10 N5 compositional-explorer for nuclides: enumerate `(Z, N)` candidate space, rank by (a)(b)(c) composite score, emit top-K accelerator priority list.
 
+### §6.3 Phase progress (2026-05-22 update · mirror RTSC §9.9.1 Phase progress table · D116 demiurge=pointer)
+
+| Phase | 상태 | hexa-lang SSOT | demiurge pointer |
+|---|---|---|---|
+| Phase 1 (N6 + N7 wrap-as-is land) | ✅ **LANDED** | hexa-lang `nuclear-discovery-phase1` · `stdlib/nuclear/{hfbtho_adapter,wkb_alpha_decay}.py` | `inbox/notes/2026-05-22-nuclear-discovery-system-launch.md` |
+| Phase 2 (5-baseline × 2-cohort = 10-cell stabilization audit) | ✅ **LANDED** · 10/10 PASS · 0 absorbed=true · 8 install-gated + 2 simulation (²³⁸U + ²⁹⁴Og) · ²⁹⁴Og anchor reproduced (-2.93±0.22 dex vs obs -3.15) · ²³⁸U +0.30 dex deviation honest (low-Q_α calibration edge) | (audit only) | `inbox/notes/2026-05-22-nuclear-9-phase2-stabilization.md` |
+| Phase 3 (microkernel identification audit · N6+N7) | ⏳ **READY** · preliminary candidates identified: NC1 (`_viola_seaborg_log10_t`) · NC2 (`_royer_log10_t`) · NC3 (`_consensus`) — all in N7 · N6 = 0 candidates (HFB SCF anti-pattern carve-out) | — | (next session) |
+| Phase 4 (Path A microkernel port · NC1+NC2+NC3 bundle) | ⏳ **PENDING** · estimated ~50 LOC · target `stdlib/nuclear/sim.hexa` v0.1.0 (new module · mirror of `stdlib/material/sim.hexa` v0.2.0) · cross-stack reuse opportunity for NC3 ↔ RTSC C1 `inverse_variance_consensus` | — | (post Phase 3) |
+| Phase 5 (N8/N9/N10 wrap land) | ⏳ **DEFERRED** · per Phase 1 launch note §10 (separate sessions per external lib install audit) | — | — |
+| Phase 6 (N11 funnel cohort · mirror RTSC §9.10) | ⏳ **DEFERRED** · enumerate (Z, N) candidate space, rank by (a)(b)(c) composite, emit top-K accelerator priority list | — | — |
+
+#### Phase 2 honest blockers (resolved · documented · or carry-forward)
+
+- **HFBTHO binary not in env** (expected · honest-skip is PASS) — install path documented in adapter `_INSTALL_HINTS["hfbtho"]`.
+- **FRDM2012 `.dat` mass table not in env** (expected · honest-skip is PASS) — lightest install path; Phase 3 follow-on: `_fetch_frdm2012()` helper.
+- **BSk22/24/27 tables not in env** (expected · honest-skip is PASS) — same install class as FRDM.
+- **²⁹⁹Uue N6→N7 chain dependency** (informational) — N7 install-gates when N6 install-gates rather than fabricating Q_α from external mention; honest cascade per §3.3 "Don't invent" rule.
+- **Brown 1992 / SemFIS-2 third formula honest-skipped** — published coefficients don't reproduce SHE regime within honest spread; re-derivation would mis-cite. Phase 3+ follow-on: substitute Denisov-Khudenko 2009 with verbatim coefficients.
+
 ---
 
 ## §7. R4 invariant block — explicit wet-lab dependency (mirror RTSC §8.10 honest-correction pattern)
@@ -309,3 +328,4 @@ If any future record (NUCLEAR or hexa-lang stdlib/nuclear adapter) ever surfaces
 ## Log
 
 - **2026-05-22 KST** — **NUCLEAR.md neu**. 5-gate nuclear discovery sim stack — sibling of RTSC.md §9 (elemental discovery vs compositional discovery, same R4 invariant family). Sections: §1 goal · §2 5-gate taxonomy (a)(b)(c) sim · (d)(e) wet-lab · §3 honest invariants (R4 carry over · wet-lab dependency permanent · half-life cross-stack caveat · citation rigor) · §4 cohort spec N6-N10 · §5 external library survey (HFBTHO · UNEDF · BSk · FRDM · KSHELL / BIGSTICK / NuShellX · NCSM/CCSD/IM-SRG) · §6 Phase 1 land target (N6 HFBTHO wrap-as-is first) · §7 R4 invariant block (5-step promotion path · all five out-of-scope) · §8 citations + URLs (9 arxiv IDs + 11 library / data corpora). Honest: every record carries `gate_type=nuclear-novel-discovery-simulation` + `absorbed=false 영구`. Sim PASS = wet-lab accelerator priority hint, NEVER discovery claim.
+- **2026-05-22 KST** — **§6.3 Phase progress 신설** + **Phase 2 stabilization audit LANDED**. 5-baseline (²³⁸U · ²⁰⁸Pb · ²⁹⁴Og · ²⁹⁹Uue · ⁸B) × 2-cohort (N6 · N7) = 10-cell matrix. 10/10 PASS · 0 absorbed=true · 8 install-gated + 2 simulation (²³⁸U log T=17.45±0.21 dex vs obs 17.15 = +0.30 deviation honest at low-Q_α calibration edge · ²⁹⁴Og log T=-2.93±0.22 dex vs obs -3.15 = anchor reproduced from Phase 1). R4 invariant intact. Brown 1992 / SemFIS-2 third-formula re-derivation status: **honest-skipped** per §3.3 "Don't invent" rule — Phase 3+ may substitute Denisov-Khudenko 2009 with verbatim coefficients. Phase 3 microkernel candidates identified (preliminary): NC1 (`_viola_seaborg_log10_t`) · NC2 (`_royer_log10_t`) · NC3 (`_consensus`) all in N7; N6 = 0 candidates (HFB SCF anti-pattern carve-out per §3.3). Audit note: `inbox/notes/2026-05-22-nuclear-9-phase2-stabilization.md`.
