@@ -1895,28 +1895,52 @@ measurement round (scaffold · pre-code)**
 > 각 항목 진행되면 `[x]` 로 박고 PLAN κ-69 entry + design.md
 > D-block + 영향 파일 commit 으로 묶을 것.
 
-- [ ] **G31.** G29-β — Energy/solar cell `solar_position_kernel`
-    hexa-native runtime call site port (D80 ultimate-form parity)
+- [~] **G31.** G29-β — Energy/solar cell `solar_position_kernel`
+    hexa-native runtime call site port (D80 ultimate-form parity ·
+    *partial 2026-05-21*: wrapper half landed via hexa-lang PR #263 ·
+    producer integration follow-on pending)
   - **scope**: G29 (κ-68) 의 first legitimate flip 은 substrate
     bridge stack (pvlib clearsky/transposition trusted) 위에서
     `solar_position_kernel.hexa` 만 hexa-native scope 였음 — D80
     endpoint rule §0 의 "ultimate-form" 절대 endpoint 는 G29 시점
     에 미충족 (bridge-on-Python 잔재). G31 = solar_position_kernel
     runtime call site 자체를 hexa-native 화 · pvlib bridge 의존
-    제거 · 동일 NREL MIDC fixture 위 mean rel_err ≤ 5% 유지
+    제거 (sun-position axis 만 · Ineichen clearsky 는 G31β 별
+    scope) · 동일 NREL MIDC fixture 위 mean rel_err ≤ 5% 유지
+  - **partial-land status (2026-05-21)**:
+    - **G31a wrapper half** ✓ (hexa-lang PR #263 OPEN · branch
+      `g31-solar-position-hexa-native-port` · commit `740964a0`):
+      `stdlib/energy/_solar_position_cli.hexa` 64-line wrapper
+      exposing `solar_kernel::apparent_zenith` 를 per-timestamp
+      CLI 로. parity verified Δ≈0.002° vs pvlib 0.13.0 noon
+      Phoenix (solar_kernel_test.hexa <1e-9 claim 일치). avoids
+      `use "stdlib/sys"` due to upstream `read_line` symbol axis
+      (separate). isolated worktree `~/core/hexa-lang-g31` 에서
+      작업 (memory note: shared worktree with parallel agents
+      회피 · `git worktree add origin/main` 격리)
+    - **G31b producer integration** [ ]: `nrel_midc_pyranometer.py`
+      의 `_compute_modeled()` 에서 `loc.get_solarposition(times)`
+      → subprocess `hexa run _solar_position_cli.hexa` 로 swap +
+      `pvlib.clearsky.ineichen(apparent_zenith=hexa_native_z, ...)`
+      external apparent_zenith pass + NREL MIDC 480-sample mean
+      rel_err 유지 verify
   - **exit criterion**:
     - `solar_position_kernel.hexa` runtime call site 가 hexa-lang
-      sibling repo 의 hexa-native binary 위 동작
+      sibling repo 의 hexa-native binary 위 동작 [x] (PR #263
+      smoke verified 2026-05-21)
     - G29 fixture (480 clear-sky samples · 2024-06-15 SRRL BMS)
-      mean rel_err 유지 (drift ≤ ε · regression 0)
+      mean rel_err 유지 (drift ≤ ε · regression 0) [ ] G31b
     - `MeasuredOracleRef.bridgeStack` 표기 변화 audit (pvlib 의존
-      제거 시 `bridgeStack: "hexa_native_solar_position"` 등 갱신)
+      제거 시 `bridgeStack: "hexa_native_solar_position + pvlib
+      Ineichen"` 등 갱신) [ ] G31b
     - `EnergyVerifyRecord` `provisional=true` 강등 risk 제거
-      (D80 §0 endpoint compliance 충족)
+      (D80 §0 endpoint compliance — sun-position axis only)
+      [ ] G31b
   - **deps**: G29 (κ-68 first flip · D110) · D80 (endpoint rule)
-    · hexa-lang `stdlib/kernels/solar/` substrate
-  - **est**: 1-3 sessions (hexa-lang substrate · demiurge code
-    변경 mostly 0 · MeasuredOracleRef field doc update 정도)
+    · hexa-lang `stdlib/kernels/solar/` substrate · hexa-lang
+    PR #263 (G31a wrapper · merge gate for G31b)
+  - **est**: G31a ✓ (이 세션 land) · G31b 1-2 session (producer
+    swap + smoke test + bridgeStack update)
 
 - [ ] **G32.** 다음 cell pick + measured-oracle source 결정 (κ-69
     R8 pre-code decision gate · D106 illustrative gate 제외)
@@ -2112,6 +2136,52 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **G31a wrapper half landed · κ-69 first cross-repo
+  partial-land** (hexa-lang PR #263 OPEN). κ-69 opening 같은 cycle
+  안에 G31 의 wrapper 부분이 hexa-lang sibling repo 측 land — ARCH
+  §11.4 G31 `[ ]` → `[~]` (partial · G31a ✓ / G31b pending). work
+  요약:
+  - **isolation strategy**: hexa-lang main worktree 가 다른 agent
+    의 504-line WIP (정확히 §12.1 (e) fifo_mem 2-D LHS axis · 직접
+    충돌 위험) + 5 modified files 로 dirty 상태 였음. `git worktree
+    add /Users/ghost/core/hexa-lang-g31 origin/main` 로 clean
+    origin/main 위 격리 워크트리 생성 + branch `g31-solar-position-
+    hexa-native-port` checkout. memory note `feedback_hexa_lang_
+    concurrent_agents` 의 권고 (worktree 공유 회피 패턴) 따름.
+  - **artifact** (hexa-lang `740964a0`): `stdlib/energy/_solar_
+    position_cli.hexa` 64-line wrapper. argv-driven per-timestamp
+    interface (`<year> <doy> <utc_hour> <lat> <lon> [pressure_pa]
+    [temp_c]` → stdout `apparent_zenith_deg`). internal call site
+    = clean-room hexa-native `solar_kernel::apparent_zenith` (κ-65
+    D80 g_hexa_only pilot).
+  - **stdlib/sys avoidance**: 초기 build 가 `use "stdlib/sys"` 로
+    인해 `read_line` undeclared 컴파일 에러. stdlib/sys 의
+    `sys_stdin_read_line` 가 broken runtime symbol 참조 (별 axis ·
+    upstream). wrapper 는 stdin 미사용 → `use "stdlib/sys"` drop +
+    global builtins (`args()` · `exit()` · `println()` · `to_int()`
+    · `to_float()`) 직접 사용. workaround pattern 박제.
+  - **argv shape discovery**: `hexa run script.hexa user-args...`
+    모드의 `args()` = `[cached_binary_path, ...user_args]` (no
+    script_path slot in argv) — user args start at argv[1]. 초기
+    offset 2 가 틀려서 usage error 트리거, debug print 으로 확인
+    후 정정.
+  - **parity verification** (smoke · solar_kernel_test 의 <1e-9
+    claim 일치 확인):
+    - noon Phoenix MST 2024-06-15 (year=2024, doy=167, utc_h=19.5,
+      lat=33.4484, lon=-112.0740): hexa-native **10.0999°** vs
+      pvlib 0.13.0 **10.097987637367325°** → Δ ≈ 0.002°
+    - crepuscular 5:30am Phoenix MST 같은 day (utc_h=12.5): hexa-
+      native **88.3214°** (해 막 뜬 직후 · 합리적)
+  - **PR #263 OPEN**: `feat(stdlib/energy): G31 G29-β · hexa-native
+    sun-position CLI wrapper`. zero regression (leaf primitive, 호
+    출자 0 in-tree). merge gate for G31b producer integration.
+  - **G31b follow-on (1-2 session est)**: demiurge sibling repo 측
+    work — `nrel_midc_pyranometer.py::_compute_modeled()` 에서
+    `loc.get_solarposition()` → subprocess `hexa run wrapper` swap
+    + `pvlib.clearsky.ineichen(apparent_zenith=...)` external pass
+    + NREL MIDC 480-sample mean rel_err ≤ 5% 유지 verify +
+    `bridge_stack` field "hexa_native_solar_position + pvlib
+    Ineichen" 갱신. PR #263 merge 가 G31b 의 dependency.
 - 2026-05-21 — **§12.1 PR state drift 정정** (post-cross-repo-audit ·
   ARCH 사실 honesty). hexa-lang `gh pr view` 로 실제 PR state 점검
   결과 §12.1 + 이전 Log entry 의 PR# / merge state 에 3건 drift
