@@ -757,6 +757,100 @@ Honest 한계 — 본 LANDED 들 모두 *Tier 1 prediction · `gate_type=simulat
 
 → wrap 으로 *얻은* 외부 결과만 hexa-native closed-form 으로 후처리 — *hexa-first* (wilson principle 2) 의 honest 해석.
 
+### 9.11 BETE-NET 활성화 + empirical calibration milestone (2026-05-22)
+
+본 sub-section 은 §9.2 BETE-NET row 의 *empirical 증명 layer* — D1+D2+D6+D8 라운드 결과.
+
+#### A. BETE-NET activation (R5 venv + A1 weights)
+
+- `~/local/bete-net/BETE-NET/` clone 완료 (5.4 GB weights · 100 ensemble × 3 variant)
+- `~/local/bete-net/venv` Python 3.12 venv (torch 2.12 · torch_geometric 2.7 · torch_scatter 2.1.2 · torch_cluster 1.6.3 · e3nn 0.6 · ase · pymatgen)
+- `~/core/hexa-lang/stdlib/material/beenet_notebook_inference_producer.py` (proper typed producer, B-path wrap of notebook utilities)
+- 100-ensemble CSO inference 25-35s per candidate (macOS arm64 CPU)
+
+#### B. Empirical calibration — measured vs predicted Tc
+
+| material | n_atoms | family | **pred Tc (K)** | **measured (K)** | **rel_err** | σ/λ |
+|---|---:|---|---:|---:|---:|---:|
+| MgB₂ | 3 | two-gap | 32.5 | 39.0 | **16.6%** | 1.67 |
+| Nb₃Al | 8 | A15 | 14.1 | 18.0 | **21.7%** | 0.99 |
+| Nb₃Sn | 8 | A15 | 9.2 | 18.3 | 50% | 1.20 |
+| Nb₃Ge | 8 | A15 | 16.4 | 23.0 | 28.8% | 1.12 |
+| V₃Ga | 8 | A15 | 22.3 | 16.5 | 35.2% | 0.86 |
+| V₃Si | 8 | A15 | 29.3 | 17.1 | 71.3% | 0.97 |
+| Pb | 1 | LTS-strong | 15.2 | 7.2 | 111% | 0.80 |
+| Sn | 2 | LTS-weak | 1.8 | 3.7 | 51% | 1.41 |
+| Al | 1 | LTS-weak | 10.7 | 1.2 | 810% | 0.88 |
+| Nb | 1 | LTS-weak | 51.3 | 9.25 | 454% | 0.86 |
+| V | 1 | LTS-weak | 82.3 | 5.4 | 1424% | 0.71 |
+| YBa₂Cu₃O₇ | 13 | HTS cuprate | 8.0 | 92 | 91% | 0.95 |
+| La₂CuO₄ | 7 | HTS cuprate | 8.9 | 38 | 77% | 0.59 |
+| Bi₂Sr₂CaCu₂O₈ | 15 | HTS cuprate | 2.9 | 85 | 97% | 0.64 |
+| Nd₂CuO₄ | 7 | T'-cuprate | 1.0 | 25 | 96% | 0.61 |
+| FeSe | 4 | Fe-pnictide | 0.3 | 8 | 97% | 1.73 |
+| LiFeAs | 6 | Fe-pnictide | 3.4 | 18 | 81% | 1.07 |
+| NaFeAs | 6 | Fe-pnictide | 7.4 | 12 | **38%** | 1.05 |
+| BaFe₂As₂ | 10 | Fe-pnictide | 9.9 | 38 (doped) | 74% | 1.35 |
+| LaFeAsO | 8 | Fe-pnictide | 5.4 | 26 (doped) | 79% | 1.13 |
+| BaPbO₃ | 10 | bismuthate | 15.4 | 0.5 | **2978%** | 2.68 |
+| H₃S (Drozdov) | 4 | hydride | 15.9 | 203 | **92.3%** | 2.12 |
+| LaH₁₀ (Somayazulu) | 11 | hydride | 7.1 | 250 | **97.1%** | 1.92 |
+| CaH₆ (Ma) | 7 | hydride | 19.1 | 215 | 91% | 1.54 |
+| YH₆ (Troyan) | 7 | hydride | 14.4 | 224 | 93% | 1.62 |
+| MgH₆ | 7 | hydride | 51.5 | 260 (pred only) | 80% | — |
+
+#### C. Family-level finding
+
+| Family | best rel_err | best σ/λ | 해석 |
+|---|---|---|---|
+| **A15 (Nb₃Al · V₃Ga)** | **21.7-35.2%** | 0.86-0.99 | **BETE-NET 가장 신뢰권** — multi-atom strong-coupling phonon-mediated · 미탐색 A15 후보 sweep 가치 |
+| Two-gap MgB₂ | 16.6% | 1.67 | high σ/λ but accurate — single best-fit case |
+| LTS strong-coupling Pb | 111% | 0.80 | 한계 영역 — but phonon-mediated 라 모델 fit |
+| HTS cuprate | 77-97% off | 0.59-0.95 | d-wave unconventional · model architecture mismatch (BETE-NET 가 phonon-coupling only) |
+| Fe-pnictide | 38-97% off | 1.05-1.73 | s± unconventional · 같은 mismatch |
+| **Hydride high-P** | 91-97% off | 1.54-2.12 | **ambient-pressure training distribution limit** — *structure quality 무관 (D1 검증)* |
+| Bismuthate | 2978% off | 2.68 | 극단 OOD · σ/λ 강한 OOD 신호 |
+
+#### D. D1 결정적 finding (structure quality ≠ source of hydride error)
+
+publication-grade CIF (Drozdov 2015 · Somayazulu 2019 · Troyan 2021 · Ma 2022) 사용 시:
+- H₃S: 92.2 → 92.3% (Δ ~0%)
+- LaH₁₀: 97.2 → 97.1% (Δ ~0%)
+- CaH₆: 96.7 → 91.1% (Δ -5.6pp, modest)
+- YH₆: 94.3% (new)
+
+→ **fundamental ambient-training-distribution limit**. structure quality refinement 만으로는 hydride underprediction 해소 불가능. *pressure-aware* ML 또는 *direct EPW* 필요.
+
+#### E. 돌파 path (D2 survey + D6 literature)
+
+**D2 가 식별한 5/5 RTSC-relevance pressure-aware 모델**:
+- **ALIGNN-FF + JARVIS** (`arxiv:2312.12694`) — *900+ hydrides 0-500 GPa 직접 훈련* · NIST open · `pip alignn` · **DGL torch-2.12 compatibility block — pool host (ubu-1/2 Linux x86_64) 에서 해소 가능**
+- **MatterSim** (Microsoft, MIT) — *0-1000 GPa universal atomistic* · pip · 17.1MB weights · *force field only, NOT direct Tc* — 구조 relax 용
+- **OpenCSP** (`arxiv:2509.10293`, Sep 2025) — uncertainty-guided concurrent learning at high-P
+- **MatterGen** (Microsoft, MIT) — property-conditioned diffusion generator (target Tc 가능)
+- **InvDesFlow-AL** (`arxiv:2505.09203`) — active learning DFT loop · **LiAuH₆ 140K 발견**
+
+**D6 가 식별한 2024-2026 RTSC 후보 13건** (`inbox/notes/2026-05-22-d6-rtsc-literature-2025-2026-mining.md`):
+- **가장 RTSC-close**: Hg1223 pressure-quench (Houston 2026) — Tc 151 K **ambient** · (a)(c) PASS · (b) 151<270 · (d) 1 lab only → replication path
+- La₃Ni₂O₇ thin film · pressurized crystal (nickelate, 2024-2025)
+- PCPOSOS (LK-99 variant claim) · CSH (retracted) · N-doped LuH (retracted)
+- Grokene AI-designed 310 K · LaSc₂H₂₄ predicted · HTSC-2025 benchmark family
+- 모든 candidate 5-gate AND 통과 zero — gate OPEN 유지
+
+#### F. R4 invariant 영구 보호
+
+- 모든 D1/D2/D6/D8 record `absorbed=false` · `gate_type=simulation-only-prediction`
+- Pattern 1 회피: `domain="material"` (not "rtsc") · 어떤 candidate 도 "RTSC absorbed=true" 주장 안 됨
+- Pattern 2 회피: "0 candidate" 가 *next direction info* 로 frame — *불가능* 아닌 *현재 한계 + 돌파 path 식별*
+- candidate matrix append-only invariant 그대로
+
+#### G. 다음 직접 actionable breakthrough
+
+1. **pool 활용** (ubu-1/ubu-2 Linux x86_64) — ALIGNN-FF DGL 호환 가능 host 에서 hydride 재예측
+2. **MatterSim 구조 relax + BETE-NET 재예측** — structure quality 가 실제로 어디까지 영향 있는지 (D1 finding 외 추가 변수)
+3. **미탐색 A15 family sweep (E1, 진행 중)** — Nb₃Pd · Ta₃Sn · V₃Pt 등 · BETE-NET 신뢰권 안 novel ranking
+4. **direct EPW 후처리 loop** — pool QE+EPW build → top BETE-NET candidates 의 *direct first-principles* re-verification
+
 ### 9.10 N5 cohort 신설 — novel-discovery funnel (compositional space exploration)
 
 §9.7 의 N1-N4 는 *KNOWN candidate* (특정 화학식이 주어진 경우) 의 시뮬레이션. **N5 cohort 는 *unknown novel composition* 을 *compositional space 에서 탐색* 하여 RTSC 후보 funnel 을 emit** — Nature `s41524-026-01964-8` 의 1.3M cand → 741 stable funnel 패턴 + arxiv:2511.03865 의 Materials Genome HTS discovery 워크플로 본받음.
