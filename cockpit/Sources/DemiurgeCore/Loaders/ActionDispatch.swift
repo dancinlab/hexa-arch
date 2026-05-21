@@ -240,6 +240,14 @@ public enum ActionDispatch {
             return runMobilityVerify()
         case (.verify, "antimatter"):
             return runAntimatterVerify()
+        case (.verify, "brain"):
+            return runBrainVerify()
+        case (.verify, "bio"):
+            return runBioVerify()
+        case (.verify, "chem"):
+            return runChemVerify()
+        case (.verify, "grid"):
+            return runGridVerify()
         case (.specify, "firmware"):
             return runFirmwareSpecify()
         case (.structure, "firmware"):
@@ -454,9 +462,11 @@ public enum ActionDispatch {
     /// is permanently false (g3 — see scope_caveats).
     private static func runComponentVerify() -> ActionResult {
         let r = ComponentVerifyProducer.runVerify()
+        // scan-foreign: surface canonical + foreign bridge record IDs
+        // directly (B1+B2 cohort, 2026-05-21).
         return ActionResult(
             text: r.text,
-            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            newRecordIDs: r.newRecordIDs,
             usedEngineTool: true,
             engineToolSucceeded: r.ok)
     }
@@ -1279,8 +1289,10 @@ public enum ActionDispatch {
     /// the synthesize-cell firmware.bin (Cortex-M3 reference target).
     private static func runFirmwareVerify() -> ActionResult {
         let r = FirmwareVerifyProducer.runVerify()
+        // scan-foreign: surface canonical + foreign bridge record IDs
+        // directly (B1+B2 cohort, 2026-05-21).
         return ActionResult(text: r.text,
-            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            newRecordIDs: r.newRecordIDs,
             usedEngineTool: true, engineToolSucceeded: r.ok)
     }
 
@@ -1288,6 +1300,65 @@ public enum ActionDispatch {
     /// release.tar.gz bundle + MCUboot imgtool probe.
     private static func runFirmwareHandoff() -> ActionResult {
         let r = FirmwareHandoffProducer.runHandoff()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    // ── D74 cohort — anima-physics bridge scan-only verify producers ──
+    // Architectural distinction from prior verify-cells:
+    //   • {brain,bio,chem,grid} + verify SCAN exports/<domain>/verify/
+    //     <UTC>Z/anima_*.json — records the anima-physics bridge
+    //     (anima/anima-physics/{hw/kuramoto_neuromorphic/src,tool}/
+    //      demiurge_<domain>_bridge.py) has ALREADY dropped from
+    //     hexa-native substrate runs. Demiurge witnesses + aggregates;
+    //     never re-measures (g3 / D17 g_stdlib_ownership).
+    //   • This closes the brain/bio/chem/grid ❌ → ⏳ GATE_OPEN cells in
+    //     the cohort gap-table; the dropped records carry the honest
+    //     scope_caveats ("oracle parity TODO") from the bridge side.
+
+    /// `brain + verify` engine tool (D74) — scan anima-physics kuramoto
+    /// neuromorphic bridge records under exports/brain/verify/<UTC>Z/.
+    /// GATE_OPEN / absorbed=false ALWAYS (g3 — substrate is reference
+    /// numpy not silicon spike-event; demiurge witness only).
+    private static func runBrainVerify() -> ActionResult {
+        let r = BrainVerifyProducer.runVerify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `bio + verify` engine tool (D74) — scan anima-physics hippocampus
+    /// + memristor composite bridge records under exports/bio/verify/
+    /// <UTC>Z/. GATE_OPEN / absorbed=false ALWAYS (g3 — hexa-lang
+    /// reference sim, NOT wet-lab; demiurge witness only).
+    private static func runBioVerify() -> ActionResult {
+        let r = BioVerifyProducer.runVerify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `chem + verify` engine tool (D74) — scan anima-physics Langevin
+    /// double-well thermodynamic-consciousness bridge records under
+    /// exports/chem/verify/<UTC>Z/. GATE_OPEN / absorbed=false ALWAYS
+    /// (g3 — consciousness-analog NOT real chemistry, generic
+    /// U(x)=(x²-1)² potential; demiurge witness only).
+    private static func runChemVerify() -> ActionResult {
+        let r = ChemVerifyProducer.runVerify()
+        return ActionResult(text: r.text,
+            newRecordIDs: r.newRecordID.map { [$0] } ?? [],
+            usedEngineTool: true, engineToolSucceeded: r.ok)
+    }
+
+    /// `grid + verify` engine tool (D74) — scan anima-physics Kuramoto
+    /// power-grid analog bridge records under exports/grid/verify/
+    /// <UTC>Z/. Distinct from `grid + structure` (NetworkX IEEE 14-bus,
+    /// cohort D57). GATE_OPEN / absorbed=false ALWAYS (g3 — Kuramoto N=8
+    /// is intersubjective oscillator analog NOT real PMU/SCADA; Filatrella
+    /// 2008 mapping is qualitative; demiurge witness only).
+    private static func runGridVerify() -> ActionResult {
+        let r = GridVerifyProducer.runVerify()
         return ActionResult(text: r.text,
             newRecordIDs: r.newRecordID.map { [$0] } ?? [],
             usedEngineTool: true, engineToolSucceeded: r.ok)

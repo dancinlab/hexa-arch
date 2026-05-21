@@ -102,6 +102,52 @@ public enum ProducerRegistry {
         for (key, entry) in ProducerLoader.loadAll() {
             swiftClassEntries[key] = entry
         }
+
+        // Tier 3 — post-merge overrides that WRAP a Tier 2 sibling-repo
+        // variant with a Swift-side fallback. The wrapping preserves
+        // the sibling-repo dispatch as the primary path; only when the
+        // spawn returns exit != 0 does the fallback fire.
+        //
+        // aura+verify: the cycle-4 gap-bridges agent landed an
+        // anima-physics bridge record at
+        // `exports/aura/verify/<UTC>Z/anima_aura_*.json`, but the
+        // sibling-repo dispatch (`~/core/hexa-aura/verify/run_all.hexa`)
+        // never cited it — bypass reported in cycle-5 (2026-05-21).
+        // This override wraps the sibling spawn with
+        // `AuraVerifyProducer.verifyFromExports()` so that a sibling
+        // failure (or missing repo) falls back to citing the anima
+        // record. The sibling-repo dispatch pattern is preserved (G3 /
+        // ARCH.md §11.4) — fallback only on exit != 0.
+        let auraKey = ProducerCellKey(verb: .verify, domain: "aura")
+        if let auraEntry = swiftClassEntries[auraKey] {
+            let originalVariants = auraEntry.variants
+            var wrappedVariants: [String: ProducerVariant] = [:]
+            for (vid, variant) in originalVariants {
+                let innerRun = variant.run
+                wrappedVariants[vid] = ProducerVariant(
+                    id: variant.id,
+                    displayName: variant.displayName
+                ) {
+                    let primary = innerRun()
+                    if primary.engineToolSucceeded == true {
+                        return primary
+                    }
+                    // sibling-repo dispatch failed → anima record fallback.
+                    let fb = AuraVerifyProducer.verifyFromExports()
+                    let combined = primary.text + "\n---\n" + fb.text
+                    return ActionResult(
+                        text: combined,
+                        newRecordIDs: primary.newRecordIDs
+                            + fb.newRecordIDs,
+                        usedEngineTool: true,
+                        engineToolSucceeded: fb.engineToolSucceeded)
+                }
+            }
+            swiftClassEntries[auraKey] = ProducerEntry(
+                defaultID: auraEntry.defaultID,
+                variants: wrappedVariants)
+        }
+
         return swiftClassEntries
     }()
 

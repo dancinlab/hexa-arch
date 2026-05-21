@@ -49,14 +49,19 @@ public struct ComponentVerifyResult: Sendable {
     public let ok: Bool
     /// Newline-joined lines for stdout / chat panel.
     public let lines: [String]
-    /// The new record ID, if a record was written.
-    public let newRecordID: String?
+    /// All record IDs cited by this run: canonical first (if written),
+    /// then foreign bridge records (anima_*, upduino_*, …) found via
+    /// scan-foreign across `exports/component/verify/<stamp>/**`.
+    public let newRecordIDs: [String]
 
-    public init(ok: Bool, lines: [String], newRecordID: String?) {
+    public init(ok: Bool, lines: [String], newRecordIDs: [String]) {
         self.ok = ok
         self.lines = lines
-        self.newRecordID = newRecordID
+        self.newRecordIDs = newRecordIDs
     }
+
+    /// Backward-compat: first cited record (canonical when present).
+    public var newRecordID: String? { newRecordIDs.first }
 
     public var text: String { lines.joined(separator: "\n") }
 }
@@ -69,6 +74,44 @@ public enum ComponentVerifyProducer {
     public static let verifyRecordsRoot: URL =
         RecordLoader.exportsRoot
             .appendingPathComponent("component/verify", isDirectory: true)
+
+    /// scan-foreign: foreign record prefixes the consumer auto-cites
+    /// alongside canonical `component_verify_*` records. Add new bridge
+    /// substrates here — single point of extension. Mirrors the same
+    /// pattern in FirmwareVerifyProducer (B1+B2 cohort, 2026-05-21).
+    public static let foreignRecordPrefixes: [String] = [
+        "anima_",       // anima-side bridge records (HEXAD physics, etc.)
+        "upduino_",     // upduino_enclosure_thermal_* (real-PCB enclosure
+                        // STEP→FEM bridge from anima component STEP cycle)
+        // future: "hexa-aura_", "hexa-sense_", ...
+    ]
+
+    /// Foreign bridge records (any timestamp dir under `root`) — shallow
+    /// walk: `root/<stamp>/<prefix>*.json`. Deduped + sorted for
+    /// deterministic output (D26 g_swift_native).
+    private static func scanForeignRecords(under root: URL) -> [String] {
+        let fm = FileManager.default
+        guard let stampDirs = try? fm.contentsOfDirectory(
+                at: root, includingPropertiesForKeys: [.isDirectoryKey])
+        else { return [] }
+        var ids: [String] = []
+        for stampDir in stampDirs {
+            let isDir = (try? stampDir.resourceValues(forKeys: [.isDirectoryKey]))?
+                .isDirectory ?? false
+            guard isDir,
+                  let files = try? fm.contentsOfDirectory(
+                    at: stampDir, includingPropertiesForKeys: nil)
+            else { continue }
+            for url in files {
+                let name = url.lastPathComponent
+                guard url.pathExtension == "json" else { continue }
+                if foreignRecordPrefixes.contains(where: { name.hasPrefix($0) }) {
+                    ids.append(String(name.dropLast(".json".count)))
+                }
+            }
+        }
+        return Array(Set(ids)).sorted()
+    }
 
     /// Locate the producer script — SSOT in hexa-lang stdlib per
     /// D61 / g_demiurge_pointer_only. NO cockpit/scripts/ fallback
@@ -132,7 +175,7 @@ public enum ComponentVerifyProducer {
                 + "g_demiurge_pointer_only: producer script SSOT 는 "
                 + "hexa-lang 안에 살아야 합니다 (g3 — silent success 금지).")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         // Build per-run output dir under exports/component/verify/<stamp>/.
@@ -147,7 +190,7 @@ public enum ComponentVerifyProducer {
             lines.append("⏳ component verify dir mkdir 실패: "
                 + "\(error.localizedDescription)")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         guard let py = locatePython3() else {
@@ -156,7 +199,7 @@ public enum ComponentVerifyProducer {
                 + "meshio + numpy import 가 필요합니다 (g3 — silent "
                 + "success 금지).")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         let proc = Process()
@@ -179,7 +222,7 @@ public enum ComponentVerifyProducer {
             lines.append("⏳ engine tool gap — python3 gmsh_skfem.py 실행 "
                 + "실패: \(error.localizedDescription) (g3).")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         let summary = parseSummary(captured)
@@ -221,7 +264,7 @@ public enum ComponentVerifyProducer {
                 lines.append(tail)
             }
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         // Re-read the meta.json — the Python side is the SSOT for the
@@ -235,7 +278,7 @@ public enum ComponentVerifyProducer {
             lines.append("⏳ honest gap — meta.json 파싱 실패 "
                 + "(\(metaURL.path)) — record 미작성 (g3).")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         let recordId = "component_verify_"
@@ -364,7 +407,7 @@ public enum ComponentVerifyProducer {
             lines.append("⏳ component verify record JSON 쓰기 실패: "
                 + "\(error.localizedDescription)")
             return ComponentVerifyResult(
-                ok: false, lines: lines, newRecordID: nil)
+                ok: false, lines: lines, newRecordIDs: [])
         }
 
         // Headline output lines for the user.
@@ -384,8 +427,20 @@ public enum ComponentVerifyProducer {
             + "real STEP + 측정 datasheet + mesh convergence 필요 (g3, "
             + "scope_caveats 6종 참조).")
 
+        // scan-foreign: pick up sibling bridge records (anima_*,
+        // upduino_*, …) living under exports/component/verify/<other-stamp>/
+        // so the cockpit consumer auto-cites them alongside the canonical
+        // record (B1+B2 cohort, 2026-05-21).
+        let foreign = scanForeignRecords(under: verifyRecordsRoot)
+        if !foreign.isEmpty {
+            lines.append("[component+verify] scan-foreign cited \(foreign.count) "
+                + "bridge record(s): "
+                + foreign.joined(separator: ", "))
+        }
+        let cited = [recordId] + foreign
+
         return ComponentVerifyResult(
-            ok: true, lines: lines, newRecordID: recordId)
+            ok: true, lines: lines, newRecordIDs: cited)
     }
 
     // MARK: - Parsing helpers (private)
