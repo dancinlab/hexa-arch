@@ -400,7 +400,7 @@ ActionDispatch.dispatch(verb, domain)                                    [Swift 
 | record schema | 7 new Codable struct | 1 generic `CellRecord` OR 재사용 |
 | g3 honest-skip | ad-hoc text 응답 | **typed-by-config 자동** |
 
-**Migration path (Phase A..E · 10-17 session est)**:
+**Migration path (Phase A..E · 15-20 session est · honest correction 2026-05-21 저녁 per Phase B step 3 observed cost — was 10-17 session at D111 ratification morning)**:
 
 - **Phase A**: `stdlib/cockpit/cellrun.hexa` Phase A scaffold (hexa-
   lang isolated worktree `hexa-lang-cellrun` · concurrent agent
@@ -411,12 +411,25 @@ ActionDispatch.dispatch(verb, domain)                                    [Swift 
   verify. 1-2 session.
 - **Phase C**: 46 producer 점진 migration (1 도메인 / commit ·
   `.demi` add + Swift producer + switch case 제거 + regression
-  test PASS). 5-10 session.
+  test PASS). **8-13 session** (Phase B step 3 실측 20 min/cell ·
+  원본 12 min/cell 의 3× · 46 producer × 20 min ≈ 15-20 시간
+  total focused work · 도메인 별 1 session ≈ 3-6 cell).
 - **Phase D**: `ActionDispatch.swift` 가 switch 0 case · 5-line
   thin spawner 로 축소. 1 session.
 - **Phase E** (optional): Swift-side record schema 도 manifest-
   declared fields 로 generalize (per-domain CodingKey 폐기 검토).
   2-3 session.
+
+> **Phase B observed cost (2026-05-21 저녁 · honest correction
+> source)**: 3 sscb cells (6.5% of 46) ≈ 1 hour focused work →
+> 20 min/cell observed (3× original 12 min/cell estimate). Overhead
+> sources: format-mismatch fixup · Verb Korean→English mapping ·
+> Python version debug · payload-flattening decisions. Phase A bug
+> fixes in flight (cellrun.hexa `_split_csv` quoted-comma · Verb.
+> canonical Korean drift · python candidate list · concurrent
+> agent · PR update on `d111-phaseb-sscb-migration`) will reduce
+> future per-cell cost — but 20 min figure already absorbs some
+> recovery overhead, so envelope stays honest at 15-20 session.
 
 **Axis distinction**:
 
@@ -2341,6 +2354,53 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **D111 estimate honest correction · 10-17 → 15-20
+  session per Phase B step 3 observed cost** (3-SSOT synchronized
+  update · 본 entry = ARCH side anchor). D111 ratification 같은
+  날 morning (commit `24e5179` design.md + ARCH §4.5 · `29227c3`
+  constitution R2 1.2.0) 에서 10-17 session desk estimate 으로
+  ratify 했으나, 같은 날 저녁 Phase B agent 의 실측 데이터로
+  envelope 보정:
+  - **observed cost (Phase B step 3 · branch `d111-phaseb-sscb-
+    migration` · PR #267 OPEN · 직전 commit `deffc92`)**: 3 sscb
+    cells (6.5% of 46 producer · sscb wired 3/7) ≈ 1시간 focused
+    work · 환산 = **20 min/cell** (원본 12 min/cell estimate
+    의 3×). 46-producer 풀 migration 외삽 = **15-20 시간 focused
+    work**.
+  - **overhead source**: format-mismatch fixup · Verb Korean→
+    English mapping · Python version debug · payload-flattening
+    결정 — manifest-driven dispatch invariant 들이 실측 시
+    surface (desk estimate 가 missed).
+  - **Phase A bug fixes in flight** (concurrent agent · hexa-
+    lang 측): cellrun.hexa `_split_csv` quoted-comma · Verb.
+    canonical Korean drift · python candidate list · PR #267
+    update 진행 중. 이 fix 후 future per-cell cost 감소 예상
+    이지만 **20 min figure 자체가 이미 일부 recovery overhead
+    흡수** → 큰 추가 감소 기대 안 함 (정직한 envelope 유지).
+  - **3-SSOT synchronized**:
+    - design.md D111 `**est total**:` block — 10-17 session
+      narrative 유지 + 직후 "honest correction" sub-block 추가
+      (15-20 session 정직 envelope · observed cost provenance ·
+      Phase A bug-fix 기대 효과 명시).
+    - ARCH §4.5 Migration path block — `10-17 session est` →
+      `15-20 session est` (Phase C `5-10` → `8-13` per 실측 외삽)
+      · Phase B observed cost callout 추가.
+    - `.specify/memory/constitution.md` R2 Migration cost row —
+      `6-8 focused sessions` → `15-20 focused sessions` · semver
+      **1.2.0 → 1.2.1** (PATCH · wording-only correction · no new
+      principle/section) · Last Amended 2026-05-21 유지 (same-day
+      correction).
+    - 본 Log entry (ARCH side anchor) — 3-SSOT synchronization
+      narrative + Log line 2026-05-21 D111 ratification entry
+      안 `[superseded ...]` inline pointer.
+  - **g3 honest disclosure 적용**: morning estimate 가 wrong 이었
+    음을 동일 day 안에 정직히 record · NO retro-edit of original
+    narrative (D111 ratification entry 본문 보존 · superseded
+    pointer 만 inline 추가). principle V (no over-claim · measured
+    before claimed) 의 cost-estimate axis 적용 first instance.
+  - **provenance chain**: Phase B agent observed (deffc92) →
+    user invoked 3-SSOT correction task → 본 commit (design.md
+    + ARCH.md + constitution.md 3 file · explicit `git add`).
 - 2026-05-21 — **`f4defee` surprise-rider audit · material-falsifier
   axis narrative bracket** (retrospective · 15-file rider on a
   2-file-intended commit · 1852 line ride-along · ARCH/§2 DAG &
@@ -2776,7 +2836,9 @@ landing 시각만 ARCH `## Log` 에 박제.
     C = 46 producer 점진 migration (5-10 session) · D =
     ActionDispatch 5-line thin spawner 축소 (1 session) · E =
     record schema generalization optional (2-3 session). 누적
-    10-17 session · multi-cycle work.
+    10-17 session · multi-cycle work. [**superseded same-day 저녁
+    → 15-20 session per Phase B step 3 observed cost · see top-of-
+    Log entry 2026-05-21 honest correction**]
   - **axis distinction**: D111 = dispatch-mechanism axis ·
     cell `absorbed` 와 무관 (D103 dimension separation 보존) ·
     D74 ProducerRegistry alternatives 패턴 자연 흡수 (`[cell.

@@ -4668,6 +4668,31 @@ D18 / ARCH §0 hexa-only ultimate form 의 후속 적용 axis).
 session · Phase E 2-3 session (optional). **누적 10-17 session ·
 multi-cycle work**.
 
+**honest correction (2026-05-21 저녁 · Phase B step 3 실측 후)**:
+원본 10-17 session 추정은 D111 ratification (2026-05-21 morning ·
+commit `24e5179`) 시점의 desk estimate. Phase B 진입 후 실측
+데이터로 invalidate. 정직한 보정 → **15-20 session**.
+
+- **observed cost** (branch `d111-phaseb-sscb-migration` ·
+  PR #267 OPEN · 직전 deffc92): Phase B step 3 = 3 sscb cells
+  (6.5% of 46 producer · sscb 의 wired 3/7) 가 ~1시간 focused
+  work 소비. 환산 = **20 min/cell** (원본 12 min/cell estimate
+  의 3×). 46-producer 풀 migration 외삽 = **15-20 시간 focused
+  work**.
+- **overhead source**: format-mismatch fixup · Verb Korean→English
+  mapping · Python version debug · payload-flattening 결정 ·
+  manifest-driven dispatch 의 invariant 들이 실측 시 surface.
+- **Phase A bug fixes** (concurrent agent 작업 중 · 본 estimate
+  보정 시점에 hexa-lang 측 land 진행): cellrun.hexa `_split_csv`
+  quoted-comma · Verb.canonical Korean drift · python candidate
+  list. 이 3 bug fix 후 future per-cell cost 는 감소 예상이지만
+  **20 min figure 자체가 이미 일부 recovery overhead 흡수**
+  → 추가 큰 감소는 기대 안 함 · 정직한 envelope 유지.
+- **3-layer SSOT synchronized**: design.md D111 (본 entry) · ARCH
+  §4.5 (Migration path est) · `.specify/memory/constitution.md`
+  R2 Migration cost 모두 **15-20 session** 으로 정직 일치
+  (2026-05-21 저녁 cycle).
+
 **rejected**:
 
 - **Status quo** (Swift producer 추가 유지): 새 도메인 추가 cost
