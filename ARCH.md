@@ -1874,8 +1874,141 @@ in-progress)**
 
 ---
 
+## 12. Open axes (substrate-side · post-cell-flip)
+
+This section tracks open work on **substrate-side parity axes**,
+running parallel to the per-cell measured-oracle round structure of
+§11.4. Each axis owns its own gate (g3 substrate · `measurement_gate`
+flip) and lands independently of the §11.4 G-rounds. ARCH §12 carries
+the narrative anchor + Tier-1/2/3 shape; detail SSOTs live in
+`inbox/notes/`.
+
+> **landing-axis distinction** — D80 endpoint rule (§0): per-cell
+> `absorbed=true` (e.g. chip §B+§D κ-43 dynamic flip) is a separate
+> axis from the **hexa-native parity port** axis tracked here. A cell
+> can be `absorbed=true` while its substrate-axis `measurement_gate`
+> is still OPEN; the §12 axes close the latter without changing the
+> former. Closure of a §12 axis removes the `provisional=true`
+> demotion risk implied by §0, but is NOT itself a cell flip.
+
+### 12.1 chip §B — rfc_006 §5 area-oracle parity (yosys absorption)
+
+> **inherited 2026-05-21**: 구 root `YOSYS.md` (rm'd at `06a8428`) 의
+> 잔여 Tier-1/2/3 로드맵을 본 절로 이관. Detail SSOT (entry-by-entry
+> 측정-fact + 사이클별 변동 log · 1754 line · entries (o)..(bb)+ 누적)
+> 는 `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md`.
+
+**goal** — hexa-native synth chain 이 substrate yosys+SKY130 의 oracle
+area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
+1.5156× bit-exact) 를 ±5 % 안에서 재현 → rfc_006 §5
+`measurement_gate = CLOSED_MEASURED` flip.
+
+**current gate state** (2026-05-21 KST · post hexa-lang PR #260):
+- `measurement_gate = OPEN` · substrate-axis `absorbed = false`
+  (cell-side κ-43 flip 별 axis · unchanged `absorbed=true`)
+- 첫 **area > 0** measured (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
+  stdlib/yosys/gate_record.hexa`, cleared `/tmp/_hexa_yosys_gate_*
+  _out.blif`):
+  - router_d4 = **559.286 µm²** (Δ=99.09% vs oracle 61,763) ·
+    `abc_map: ok exit=0`
+  - router_d6 = **771.99 µm²** (Δ=99.18% vs oracle 93,608.5) ·
+    `abc_map: ok exit=0`
+  - PR #260 이전의 stale-BLIF false positive 였던 chain 이 honest
+    measurement 로 전환됨
+- gate target window: area ∈ [58,675, 64,851] µm² (d4 ±5 %) +
+  [88,928, 98,289] µm² (d6 ±5 %)
+
+**Tier-1 — closure path (immediate, multi-session)**
+
+- [x] (0) **exec runtime restore** — upstream PR #251 (hexa-lang
+  cycle 66 `8ea4b75e`) MERGED; popen/spawn stubs 복구 → `hexa exec`
+  chain testable
+- [x] (a) **PR #247 SSA fix** (`8dd1e677` + `f4c3c493`) MERGED — `_rv_
+  parse_always` for-handler 의 intra-iteration blocking-LHS chain
+  per-iter SSA renaming (3 helper + read-then-write filter · T73
+  selftest)
+- [x] (b) **PR #255 abc_map honesty** MERGED — `abc_map.hexa` truncate-
+  before-exec + `combinational loop` stdout pattern + T8 selftest;
+  stale `_out.blif` false-positive 차단
+- [x] (c) **abc_map script reorder** (`read_lib` → `read_blif`) —
+  already in PR #247 `logic_synth/abc_map.hexa` L478-486
+- [x] (d) **`rr_ptr__d` cross-iter comb-loop** — hexa-lang PR #260
+  (`c10699c2`) MERGED; `_rv_parse_always` for-handler 의 SSA chain
+  pre-loop alias (`connect(s__ssa0, s)`) + post-loop publish
+  (`connect(s, s__ssaP)`) 결합으로 발생한 `s__ssa0 = s = s__ssaP`
+  comb cycle 을 `connect_lhs[]` 역방향 scan + pre-loop driver rhs
+  직접 seed 로 해체. cycle 해체 + 외부 readers 는 post-loop publish
+  통해 정확한 값 read. T74c rewrite + T74d regression guard 추가.
+  read_verilog selftest 77/77 · round_trip 12/12 · abc_map 7/7
+  (zero regression)
+- [ ] (e) **`fifo_mem[*]` 2-D LHS RTLIL Memory emit** — 40 d4 / 52 d6
+  const-tied nets · ~60k µm² oracle gap · ABC 가 `Constant-0 drivers`
+  recovery hack 으로 tie. 2-D packed-array `fifo_mem[pp][...] <=
+  in_data[pp]` writes 가 frontend 에서 drop. **shortest path** = PR
+  #256 inbox patch Option A (per-element flat `$dff`)
+- [ ] (f) **end-to-end router_d4 area > 0 → ±5 % gate** measurement
+  — area ∈ [58,675, 64,851] µm² · g3-conditional flip
+- [ ] (g) **router_d6 parity** measurement — area ∈ [88,928, 98,289]
+  µm² · same pipeline as (f)
+- [ ] (h) **ratio 1.5156× verification** — d6/d4 from hexa-native
+  chain ∈ [1.4399, 1.5914] (±5 %)
+- [ ] (i) **`measurement_gate = CLOSED_MEASURED`** flip — g3
+  conditional · d4 + d6 + ratio 三項 all PASS 이후만
+
+**Tier-2 — post-closure expansion (week+ scope)**
+
+- [ ] **`$adff` / `$sdff` / `$dffe` write_verilog behavioural emit**
+  — reset / enable variants. `always @(posedge clk, posedge rst) if
+  (rst) q <= 0; else q <= d;` round-trip · T14/T15/T16 selftest 가
+  signal. router-class designs 가 사용
+- [ ] **share / freduce parity** — comb-side oracle gap closure
+  (handoff (s) finding: `synth` macro 의 logic-sharing optimizations
+  ~12,806 µm² 차). 옵션 A = `stdlib/kernels/logic_synth/passes.hexa`
+  의 share + freduce impl · 옵션 B = substrate-yosys-as-tail-pass
+  (hexa-native frontend → substrate `synth` tail · D80 endpoint 의
+  hexa-native ultimate-form 와 trade)
+- [ ] **formal equivalence check** — substrate `yosys -p "...
+  equiv_make oracle hexa_native eq; equiv_simple; equiv_status"`
+  reports `0 unproven` · hexa-native ↔ substrate's oracle RTLIL
+  semantic equivalence (§5 cross-verification)
+
+**Tier-3 — announcement + governance close**
+
+- [ ] **`ABSORPTION.md` §178 yosys row** flip → `absorbed=true ·
+  measured area passes ±5 %` · Tier-1 all `[x]` dependency
+- [ ] **rfc_006 §5 closure announcement** — `measurement_gate =
+  CLOSED_MEASURED · absorbed=true · 2026-MM-DD measured` ROADMAP +
+  commit message adoption · ABSORPTION.md updated dependency
+
+**estimate** (post-2026-05-21 audit): **8–16 sessions** until gate
+close. Tier-1 (e) + (f) + (g) + (h) + (i) cluster 가 dominant cost;
+Tier-2 + Tier-3 는 gate flip 이후 unlock.
+
+**shape note** — 이 axis 의 work 는 sibling repo `~/core/hexa-lang`
+에서 일어남 (demiurge 측은 narrative emit + ABSORPTION.md row flip
+정도). demiurge 측 commit 0 에 가까운 axis — sibling-repo PR 의
+landing 시각만 ARCH `## Log` 에 박제.
+
+---
+
 ## Log
 
+- 2026-05-21 — **ARCH §12 신설 · chip §B substrate-axis 잔여 로드맵
+  YOSYS.md → ARCH.md 이관**. 06a8428 (κ-68 closure cycle) 에서 git
+  rm 된 구 root `YOSYS.md` 의 Tier-1/2/3 잔여 로드맵을 본 파일 §12.1
+  로 흡수. 이관 동기: per-cell measured-oracle axis (κ-43 cell flip
+  · κ-68 measurement-parity flip) 와 substrate-axis (hexa-native
+  parity port · rfc_006 §5 `measurement_gate`) 는 D80 endpoint
+  rule §0 의 두 개 별 axis 인데, 후자의 narrative SSOT 가 git rm
+  이후 ARCH `## Log` 안에만 흩어져 있었음 — 구조적 anchor 부재.
+  §12 가 새 anchor 가 되어 (a) §11.4 G-round 와 분리된 substrate-
+  side 트랙 임을 명시 (b) Tier-1 (e..i) / Tier-2 (3 item) / Tier-3
+  (2 item) 잔여 work 구조적 박음 (c) 8-16 session estimate 박음
+  (d) cell-flip vs gate-flip dimension 박음. detail SSOT 는 여전히
+  `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md` (entries
+  (o)..(bb)+ · 1754 line). 다음 substrate-axis work commit 부터는
+  ARCH §12.1 의 해당 `[ ]` 항목을 `[x]` 로 flip + `## Log` 에 narrative
+  bracket 박는 패턴 (§11.4 G-item 과 동형) 채택.
 - 2026-05-20 — ARCH.md created. Consolidates D72 (kernel layer),
   D73 (firmware domain), D74 (ProducerRegistry), D76
   (SceneDescriptor), D77 (chem + bio domains), D78 (domain graph
