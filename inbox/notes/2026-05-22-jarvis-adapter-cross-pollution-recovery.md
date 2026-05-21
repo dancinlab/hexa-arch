@@ -68,3 +68,20 @@ Per memory rule: combine `git add && git commit` to avoid wrong-branch landings.
 - hexa-lang commit `a68d3ac1` (orphan on dfflibmap branch · JARVIS adapter content)
 - `~/.claude/projects/-Users-ghost-core-demiurge/memory/feedback_hexa_lang_concurrent_agents.md` (memory rule)
 - `/tmp/phase2-jarvis-rerun/` (20-cell empirical records)
+
+## Closure (2026-05-22)
+
+RESOLVED — hexa-lang main now has JARVIS adapter at `513bed75` (merged into `main` via PR #287, merge commit `c6c6e9a3` on `origin/main`). Cross-pollution gap closed. **Plan B used** (fresh worktree `~/core/hexa-lang-jarvis-rescue` from `main@0a5a5e7f` + `git cherry-pick a68d3ac1` → `513bed75` · clean, no conflicts).
+
+Why Plan B over Plan A: shared `~/core/hexa-lang` main worktree was STILL on `dfflibmap-sky130-reset-flop-variants-2026-05-22` (not released) and `main` is checked out across many locked agent worktrees, so direct `git checkout main` in the shared worktree was blocked. Fresh dedicated worktree isolated the operation.
+
+Why PR (not local FF): local `git push . HEAD:main` rejected (`receive.denyCurrentBranch` — main is checked out in locked agent worktrees). Per safety protocol cannot modify git config. Routed the FF via `origin/main` instead — `gh pr merge --merge` produced merge commit `c6c6e9a3` on remote main. Local `refs/heads/main` (currently `0a5a5e7f` in the shared repo) will FF on next `git fetch && git merge --ff-only origin/main` when the locked worktrees release.
+
+Equivalence verification: `git diff a68d3ac1 513bed75 -- stdlib/material/cross_code_dft.py` showed only two pre-existing main-side docstring example-formula differences (`Pb10Cu(PO4)6O` → `Ca10(PO4)6F2`); the JARVIS adapter code itself is byte-identical to the orphan.
+
+Smoke (rescue worktree):
+- `YBa2Cu3O7` → `gate_type=simulation-only-prediction`, n=3 (mp_cache, oqmd, **jarvis**), consensus = -2.0849 ± 0.0289 eV/at
+- `H3S` → `gate_type=simulation-only-prediction`, n=3 (mp_cache, oqmd, **jarvis**), consensus = 0.0221 ± 0.1775 eV/at
+- `absorbed=false` on both (R4 invariant intact)
+
+Honest audit trail preserved. The `dfflibmap-sky130-reset-flop-variants-2026-05-22` branch (original orphan location) was not touched — per owner-of-branch rule.
