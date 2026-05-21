@@ -2079,18 +2079,19 @@ area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
 1.5156× bit-exact) 를 ±5 % 안에서 재현 → rfc_006 §5
 `measurement_gate = CLOSED_MEASURED` flip.
 
-**current gate state** (2026-05-21 KST · post hexa-lang PR #261):
+**current gate state** (2026-05-21 KST · post hexa-lang `c4b35b13`
+Tier-1 (e) Option A LANDED):
 - `measurement_gate = OPEN` · substrate-axis `absorbed = false`
   (cell-side κ-43 flip 별 axis · unchanged `absorbed=true`)
-- 첫 **area > 0** measured (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
-  stdlib/yosys/gate_record.hexa`, cleared `/tmp/_hexa_yosys_gate_*
-  _out.blif`):
-  - router_d4 = **559.286 µm²** (Δ=99.09% vs oracle 61,763) ·
+- area measurement (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
+  stdlib/yosys/gate_record.hexa`):
+  - router_d4 = **1207.41 µm²** (Δ=98.05% vs oracle 61,763 · was
+    559.286 pre-(e) · +2.16× via 2-D LHS flat $dff demux) ·
     `abc_map: ok exit=0`
-  - router_d6 = **771.99 µm²** (Δ=99.18% vs oracle 93,608.5) ·
-    `abc_map: ok exit=0`
+  - router_d6 = **1677.86 µm²** (Δ=98.21% vs oracle 93,608.5 · was
+    771.99 · +2.17×) · `abc_map: ok exit=0`
   - PR #261 이전의 stale-BLIF false positive 였던 chain 이 honest
-    measurement 로 전환됨
+    measurement 로 전환됨 · (e) 의 honest-skip 제거 추가
 - gate target window: area ∈ [58,675, 64,851] µm² (d4 ±5 %) +
   [88,928, 98,289] µm² (d6 ±5 %)
 
@@ -2121,11 +2122,25 @@ area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
   (zero regression). **note**: PR #260 (`rfc006-yosys-ssa-seed-fix`
   branch) 는 같은 (d) target 의 parallel attempt — superseded by
   PR #261 · still OPEN
-- [ ] (e) **`fifo_mem[*]` 2-D LHS RTLIL Memory emit** — 40 d4 / 52 d6
-  const-tied nets · ~60k µm² oracle gap · ABC 가 `Constant-0 drivers`
-  recovery hack 으로 tie. 2-D packed-array `fifo_mem[pp][...] <=
-  in_data[pp]` writes 가 frontend 에서 drop. **shortest path** = PR
-  #256 inbox patch Option A (per-element flat `$dff`)
+- [x] (e) **`fifo_mem[*]` 2-D LHS flat `$dff` demux** — hexa-lang
+  `c4b35b13` LANDED 2026-05-21 (Option A · 2-D unpacked array LHS
+  → per-slot `$eq + $and + $mux + $dff` demux · 4 sub-cases:
+  const/dyn × const/dyn). Selftest 78/78 → **79/79 PASS** (+T76).
+  ABC accepts cleanly · `_rv_emit_body_v2` honest-skip 제거.
+  Measured (sky130_fd_sc_hd · 2026-05-21):
+  - router_d4 = **1207.41 µm²** (was 559.286 · +2.16×) · oracle
+    61,762.99 · still ~98% under
+  - router_d6 = **1677.86 µm²** (was 771.99 · +2.17×) · oracle
+    93,608.53 · still ~98% under
+  Follow-up width-aware fix `a4a032af` (D-wire mirror packed
+  width via `_rv_v2_wire_width`) · 79/79 PASS preserved (no area
+  delta — BLIF emitter still collapses multi-bit to single
+  `.latch`). **scope note**: (e) 의 own-scope (area > 0 + ABC
+  accepts + no honest-skip) CLOSED. §5 absolute area gap ~98%
+  잔존 — Option B (RTLIL `$memrd`/`$memwr`) 또는 (f) crossbar
+  output array writes 가 cluster cost 의 dominant 잔여. NO
+  `Yosys absorbed` claim. PR #256 inbox patch status → "Option
+  A landed".
 - [ ] (f) **end-to-end router_d4 area > 0 → ±5 % gate** measurement
   — area ∈ [58,675, 64,851] µm² · g3-conditional flip
 - [ ] (g) **router_d6 parity** measurement — area ∈ [88,928, 98,289]
@@ -2160,9 +2175,13 @@ area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
   CLOSED_MEASURED · absorbed=true · 2026-MM-DD measured` ROADMAP +
   commit message adoption · ABSORPTION.md updated dependency
 
-**estimate** (post-2026-05-21 audit): **8–16 sessions** until gate
-close. Tier-1 (e) + (f) + (g) + (h) + (i) cluster 가 dominant cost;
-Tier-2 + Tier-3 는 gate flip 이후 unlock.
+**estimate** (post-2026-05-21 (e) Option A LANDED audit): **8–16
+sessions** until gate close. Tier-1 (f) + (g) + (h) + (i) cluster
+가 dominant 잔여 cost (§5 absolute area gap ~98% 잔존 — Option A
+flat $dff 는 substrate `synth_memory_dff` consolidated count 보다
+~10× 비싸므로 ±5 % closure 는 Option B `$memrd`/`$memwr` cells 또는
+crossbar output array writes (Tier-1 (f) territory) 필요); Tier-2 +
+Tier-3 는 gate flip 이후 unlock.
 
 **shape note** — 이 axis 의 work 는 sibling repo `~/core/hexa-lang`
 에서 일어남 (demiurge 측은 narrative emit + ABSORPTION.md row flip
@@ -2172,6 +2191,57 @@ landing 시각만 ARCH `## Log` 에 박제.
 ---
 
 ## Log
+
+- 2026-05-21 — **§12.1 (e) `fifo_mem` 2-D LHS Option A LANDED ·
+  Tier-1 (e) own-scope CLOSED · ARCH §12.1 (e) `[ ]` → `[x]` flip**
+  (hexa-lang direct commit `c4b35b13` `feat(read_verilog): RFC 006
+  §5 Tier-1 (e) Option A — 2-D LHS flat $dff demux (T76 PASS ·
+  router_d{4,6} area > 0 unblocked)` · 2026-05-21T14:32 KST · NOT
+  via PR · direct push to hexa-lang origin/main). post-G31-merge
+  consolidation audit 에서 hexa-lang sibling-repo log scan 으로
+  발견된 cross-repo land — ARCH §12.1 의 (e) `[ ]` 표시 stale.
+  Honest update + (b)..(i) cluster framing 갱신.
+  - **landing detail**: 2-D unpacked array `fifo_mem[pp][...] <= ...`
+    writes 가 frontend 에서 더이상 drop 되지 않음. `_rv_emit_body_v2`
+    의 `if has_idx2 == 1 { continue }` honest-skip 제거 + 4 sub-case
+    demux emit (const/dyn outer × const/dyn inner). per-slot `$eq +
+    $and + $mux + $dff` cell sequence. `_rv_parse_port_decl` 의
+    second unpacked range parse + `_rv_array_bound2` 신규 helper.
+  - **measurement delta** (sky130_fd_sc_hd · ABC 2026-05-21):
+    - router_d4 = 559.286 → **1207.41 µm²** (+2.16× · oracle gap
+      99.09% → 98.05%)
+    - router_d6 = 771.99 → **1677.86 µm²** (+2.17× · oracle gap
+      99.18% → 98.21%)
+    - both `abc_map: ok` · no NetworkCheck failure · no honest-skip
+  - **selftest delta**: read_verilog 78/78 → **79/79 PASS** (+T76
+    minimum-shape 2-D `m[i][j] <= d` N=M=2 falsifier). passes 35/35
+    · abc_map 7/7 · rtlil 11/11 · liberty 8/8 — zero regression.
+  - **follow-up** (same-cycle): hexa-lang `a4a032af`
+    `fix(read_verilog): 2-D LHS D-wire width-aware — match slot
+    width via _rv_v2_wire_width` (15:27 KST · post-G34 land time).
+    D-wire packed-width mirror via new `_rv_v2_wire_width(m, name)`
+    helper. 79/79 PASS preserved · area delta NONE (BLIF emitter
+    still collapses multi-bit cells to single `.latch` lines · 별
+    inbox note filed `2026-05-21-rfc006-§5-multibit-width-
+    truncation.md`).
+  - **scope honesty (g3)**: (e) 의 own-scope 만 CLOSED — area > 0
+    + ABC accepts + no honest-skip + 측정 가능. §5 absolute area
+    gap ~98% 잔존 (Option A flat $dff 는 substrate `synth_memory_
+    dff` consolidated count 보다 ~10× 비쌈 · 알려진 cost model).
+    ±5 % closure 필요 시 Option B (RTLIL `$memrd` / `$memwr` cells
+    + module-level `$mem`) 또는 (f) crossbar output array writes
+    territory. NO `Yosys absorbed` claim. ABSORPTION.md §178 yosys
+    row 변경 0 · `measurement_gate = OPEN` 유지.
+  - **§12.1 in-place 갱신**: (e) bullet `[ ]` → `[x]` · "shortest
+    path = PR #256 inbox patch Option A" line 제거 (Option A 가
+    실제 land 된 form · PR #256 inbox 는 이제 historical note) ·
+    "current gate state" 의 area 수치 갱신 + PR #261 → `c4b35b13`
+    anchor 추가 · "estimate" 의 Tier-1 cluster (e)+(f)+(g)+(h)+(i)
+    → (f)+(g)+(h)+(i) 로 정정 + Option A 한계 narrative 명시.
+  - **cross-repo discipline**: 본 commit 은 demiurge-side narrative
+    update only (sibling repo 측 work 미접촉 · §12.1 shape-note
+    "demiurge 측 commit 0 에 가까운 axis" 유지). hexa-lang `c4b35b13`
+    + `a4a032af` 의 land 시각만 박제.
 
 - 2026-05-21 — **G34 governance row LANDED · κ-68 R7 DEFERRED Stage 2
   closure · ARCH §11.4 G34 `[ ]` → `[x]` flip** (constitution.md v1.0.0
