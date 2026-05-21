@@ -2387,6 +2387,66 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-22 — **SSCB 7-verb walkthrough Step 3 LANDED · `(.design,
+  "sscb")` cell wired · 6 wired / 1 unwired** (design 마감 · 다음
+  Step 4 = handoff verb · LAST). 같은 cycle 안 2번째 inadvertent
+  deletion 발견 + closure:
+  - **hexa-lang PR #274** `1030bcaa` MERGED — `stdlib/sscb/design.
+    py` (**592 LOC** · Python 3.10+ stdlib-only) · 5 artifacts
+    emit:
+    - `sscb_design_v1.cir` (ngspice transient netlist · `.title` +
+      `.MODEL VDMOS_SIC` + `.TRAN 1n 5u` + `.END` · well-formed)
+    - `sscb_design_v1.netlist.kicad_pcb_stub` (textual KiCad-like
+      sketch · NOT loadable .kicad_pcb · Tier-2 future)
+    - `sscb_design_v1.dossier.md` (10-section human narrative)
+    - `sscb_v1.meta.json` (D113 sibling · `measurements{}` +
+      `datasheet_bindings[]`)
+    - `sscb_design_<stamp>.json` (top-level record · Codable mirror)
+    Netlist metrics: **node_count=15** · **element_count=14** · 6
+    datasheet placeholder bindings (Wolfspeed C3M0021120K · IXYS
+    IXDD609SI · rule-of-thumb RC snubber + TVS · FEMMT 1.118µH
+    coupled inductor · 0.05°C/W cold plate · 3mΩ/segment busbars).
+    `simulation_ready=true`.
+  - **demiurge PR #7** `3ae9b30` MERGED — `ActionDispatch.swift`
+    `(.design, "sscb")` cellrun route 1 case (+9 line incl. comment)
+    + `Models/SscbDesignRecord.swift` **118 LOC** (Codable +
+    Equatable + Sendable · snake_case CodingKeys · 10 scalar +
+    artifacts list fields).
+  - **end-to-end CLI dispatch verified**: `swift run DemiurgeCLI
+    action design sscb` → `[cellrun] record → exports/sscb/design/
+    <TS>/sscb_design_record_<TS>.json · gate=OPEN absorbed=false ·
+    caveats=2 · payload.measurements` 4 D113 keys 모두 (node_count
+    =15 · element_count=14 · datasheet_bound_count=6 · placeholder_
+    remaining_count=6).
+  - **regression**: swift test **74/74 PASS** · 0 회귀.
+  - **R3 compliance**: substrate = hexa-lang (`stdlib/sscb/design.
+    py` 592 LOC algorithm + netlist templates + datasheet binding
+    table) · cockpit = typed record (118 LOC) + thin dispatch
+    (1 case) only. D114/D116 invariant 유지.
+  - **⚠️ 2nd inadvertent wipe discovered + restored** (cellrun.hexa
+    wipe via RFC067 N74 commit · 그 다음 structure.py wipe via
+    runtime restore commit · 패턴 동일): hexa-lang commit
+    `3a4282ec restore(stdlib/runtime): re-land cycles 93-96 wiped
+    by c39afbbe deploy-regen` 이 `stdlib/sscb/structure.py` 도
+    silent mass-delete. Step 2 LANDED 상태 였지만 hexa-lang main
+    에서 사라짐. **PR #275** `034ec625` MERGED — `864a6aa3^..
+    864a6aa3` 에서 verbatim restore (516 LOC · 단일 squash
+    commit). 동일 wipe-and-restore pattern (PR #272 cellrun
+    restore 와 같은 시그니처) · 별 audit 사이클에 repo-wide audit
+    필요 (사이드 agent 의 runtime restore 가 unrelated files
+    mass-delete · 의도 vs accidental).
+  - **doctrinal 영향 없음**: design.md D-blocks · ARCH §0/§4.4/
+    §4.5 · R3 narrative 모두 유지. cockpit + hexa-lang Step 2/3
+    artifacts 모두 main 에 정착 (PR #271 specify · PR #273+#275
+    structure · PR #274 design · PR #5/#6/#7 cockpit). 6 wired /
+    1 unwired (handoff 만 남음).
+  - **Step 4 readiness (handoff verb · LAST)**: 동일 pattern ·
+    `stdlib/sscb/handoff.py` (cert-dossier bundle producer · UL
+    489I lab-booking artefacts · IEC 60947-2 type-test checklist
+    · IEEE C37.x cross-reference · Tier-2 fan-out list collected
+    from Steps 1-3 record JSONs) + `SscbHandoffRecord.swift` +
+    ActionDispatch `(.handoff, "sscb")` case. 7-verb 100% closure
+    예상.
 - 2026-05-22 — **SSCB 7-verb walkthrough Step 2 LANDED · `(.structure,
   "sscb")` cell wired · 5 wired / 2 unwired** (structure 마감 · 다음
   Step 3 = design verb). 2-PR pattern · cellrun route (PR #272 restore
