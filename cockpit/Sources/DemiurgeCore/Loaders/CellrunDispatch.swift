@@ -147,23 +147,6 @@ public enum CellrunDispatch {
         return cwd.appendingPathComponent("../domains").standardizedFileURL
     }
 
-    /// Map a Swift `Verb` to the english identifier expected in the
-    /// `[cell.<verb>]` manifest section header. The Project.swift Verb
-    /// enum's `canonical` property returns the Korean engineering term
-    /// (해석⟲ / 합성 / 검증) — the manifest dialect uses the english
-    /// enum-case name, so we surface that here instead.
-    public static func englishName(_ verb: Verb) -> String {
-        switch verb {
-        case .specify:    return "specify"
-        case .structure:  return "structure"
-        case .design:     return "design"
-        case .analyze:    return "analyze"
-        case .synthesize: return "synthesize"
-        case .verify:     return "verify"
-        case .handoff:    return "handoff"
-        }
-    }
-
     /// Drive cellrun.hexa for (verb, domain). Returns an
     /// ActionResult-shaped outcome via CellrunDispatchResult.
     public static func runRaw(verb: Verb, domain: String)
@@ -200,7 +183,7 @@ public enum CellrunDispatch {
 
         let proc = Process()
         proc.executableURL = URL(fileURLWithPath: hexa)
-        proc.arguments = ["run", cellrun, domain, englishName(verb)]
+        proc.arguments = ["run", cellrun, domain, verb.canonical]
         var env = ProcessInfo.processInfo.environment
         env["HEXA_CELLRUN_DEMI_ROOT"] = demiRoot
         env["HEXA_CELLRUN_EXPORTS_ROOT"] = exportsRoot
