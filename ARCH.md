@@ -1952,3 +1952,95 @@ in-progress)**
   round 의 frame 을 박은 것. illustrative-physics gate (D106) 적용
   cell 은 본 round 의 flip 대상에서 제외 (RFC 013 §6.12 anti-
   conflation 유지).
+- 2026-05-21 — **Round 7 close · κ-68 closure narrative bracket**
+  (RFC 013 §6.11 `queued` → `LANDED` · §11.4 G27..G30 4 G-item 모두
+  `[x]` 한 사이클 마감). 2026-05-20 scaffold 직후 사이클에서 4-fold
+  full land 가 박혔으며 G-item 자체 `[x]` flip 은 §11.4 본문에 이미
+  반영. 본 Log entry 는 그 narrative bracket close 만 박제:
+  - **G27 [x]** (D109 · `5392213`) — cell pick = Energy/solar +
+    external oracle = NREL MIDC SRRL Golden CO pyranometer GHI
+    (single clear-sky day · 1-min cadence) + bridge = pvlib clearsky
+    /transposition trusted + hexa-native scope = `solar_position_
+    kernel` + PASS criterion = mean rel_err ≤ 5%. 5 sub-decision
+    default lock-in · code 0 (decision-only).
+  - **G28 [x]** (G28a `4a1a087` demiurge Swift + G28b PR #248 STUB
+    MERGED hexa-lang) — schema-half: `MeasuredOracleRef` 8-field
+    Codable Sendable Equatable + `EnergyVerifyRecord.measuredOracle`
+    optional field + `isMeasuredOraclePASS` computed predicate + 7
+    XCTest method (Codable round-trip · snake_case JSON wire ·
+    D103 invariant). hexa-lang STUB producer (60-sample synthetic
+    clear-sky) 가 schema half end-to-end emit→decode 입증.
+  - **G29 [x]** (D110 · `80a1664` demiurge + hexa-lang `b8d35920`
+    PR #259 REAL MERGED) — first cell `absorbed=true` **legitimate
+    flip** (mean_rel_err **0.0499 vs threshold 0.05** marginal PASS ·
+    480 clear-sky samples · 2024-06-15 SRRL BMS · NOT D95 computed
+    projection · NOT D106 illustrative). stored `absorbed: Bool` 의
+    첫 legitimate flip — κ-43 dynamic flip 의 measured-oracle axis
+    mirror.
+  - **G30 Stage 1 [x]** (`fee34cc`) — XCTest invariant load-bearing
+    land (3 test method · `absorbed=true` ⇔ `measuredOracle.isMeasured
+    OraclePASS=true` typed enforcement · D95 computed projection
+    부산물 차단 · D106 illustrative exempt). G30 Stage 2 (`.specify/
+    memory/constitution.md` governance row) 는 constitution.md
+    populate 후로 deferred — Stage 1 만으로 load-bearing.
+  - **RFC 013** `MOSTLY-LANDED` → `LANDED` (§6.11 entry refresh ·
+    §9 Log new entry). κ-67 의 substrate-parity axis (§6.1..6.10 +
+    6.12) 와 κ-68 의 measurement-parity axis (§6.11) 가 D103
+    dimension-separation 으로 typed-enforce — 두 axis 가 별 round
+    로 land.
+  - **κ-69 reserved scope** (다음 phase boundary): G29-β (hexa-native
+    sun-position runtime call site port — solar_position_kernel.hexa
+    의 D80 ultimate-form parity) + 다른 cell measured-oracle round
+    (Aura / Ufo 등 · D106 illustrative 제외) + G30 Stage 2
+    (constitution.md populate 후 governance row). §11.4 Round 8
+    scaffold 는 κ-69 opening 시점에 박음.
+- 2026-05-21 — **chip §B substrate-axis · yosys measurement chain
+  첫 area > 0 측정 (별 axis — κ-43 dynamic flip 의 substrate-side
+  확장 work)**. hexa-lang PR #260 (`c10699c2`) MERGED — `read_verilog.
+  hexa::_rv_parse_always` for-handler 의 SSA chain pre-loop alias
+  (`connect(s__ssa0, s)`) 와 post-loop publish (`connect(s, s__ssaP)`)
+  결합으로 발생한 `s__ssa0 = s = s__ssaP` comb cycle (`rr_ptr__d`
+  종단 ~13-hop) 을 `connect_lhs[]` 역방향 scan 으로 pre-loop driver
+  rhs 직접 seed 하여 해체. cycle 해체 + 외부 readers 는 여전히
+  post-loop publish 통해 정확한 값 read. T74c 재작성 + T74d
+  regression guard 추가. read_verilog selftest 77/77 PASS · round_
+  trip 12/12 · abc_map 7/7 (zero regression).
+  - **첫 area > 0 측정** (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
+    stdlib/yosys/gate_record.hexa`, cleared `/tmp/_hexa_yosys_gate_
+    *_out.blif`): router_d4 = **559.286 µm²** (oracle 61,763 ·
+    Δ=99.09%) · router_d6 = **771.99 µm²** (oracle 93,608.5 ·
+    Δ=99.18%) · 둘 다 `abc_map: ok exit=0`. 어제 23:48 까지 stale
+    BLIF false-positive 였던 chain 이 honest measurement 로 전환.
+  - **Tier-1 closure 진행** (post-(d)-close 2026-05-21): (0) exec
+    runtime · (a) PR #247 SSA · (b) PR #255 abc_map honesty · (c)
+    script reorder · (d) **rr_ptr__d cross-iter comb-loop** 모두
+    closed. (e) `fifo_mem[*]` 2-D LHS RTLIL Memory emit (40 d4 /
+    52 d6 const-tied nets · ~60k µm² oracle gap) + (f) re-measure
+    ±5% gate (area ∈ [58,675, 64,851] d4 + [88,928, 98,289] d6) 만
+    남음. PR #256 inbox patch 의 Option A (per-element flat `$dff`)
+    가 shortest path.
+  - **κ-43 axis 와의 관계**: chip §B+§D 는 κ-43 (D70 dynamic flip
+    2026-05-?) 시점에 이미 `absorbed=true` — substrate yosys + booksim
+    측정 fact 위에서 박힌 첫 dynamic flip. 본 PR #260 work 는 그
+    cell 의 **hexa-native parity port** axis 진척 (D80 endpoint
+    rule · §0 first principle) — substrate yosys 가 측정한 oracle
+    area 를 hexa-native synth chain 이 ±5% 안에서 재현하는 것이
+    목표. κ-43 cell 상태 자체는 unchanged (이미 `absorbed=true`),
+    rfc_006 §5 `measurement_gate = OPEN` (g3 — `CLOSED_MEASURED`
+    flip 은 area > 0 → ±5% 측정 후 g3-conditional) 도 OPEN 유지.
+  - **SSOT 분리**: 측정-fact + Tier-1/2/3 roadmap + landing timeline
+    의 detail SSOT 는 `inbox/notes/rfc006-s5-area-oracle-parity-
+    handoff.md` (entries (o)-(u)+ 누적). 본 axis 의 narrative SSOT
+    는 ARCH `## Log` (κ-68 closure 와 동일 cycle 2026-05-21 KST 에서
+    chip §B substrate-axis 도 measurement breakthrough 가 있었다는
+    사실 박제). 별 도메인 SSOT 파일 (구 `YOSYS.md`) 은 본 entry
+    박제 시점에 git rm — narrative 는 ARCH 가 carry, detail handoff
+    는 inbox/notes 가 carry, 측정 fact (oracle d4=61,762.99 µm² /
+    d6=93,608.53 µm² / ratio 1.5156× bit-exact · Tier-1/2/3 89%
+    prune · 8-16 session estimate) 는 git history (last commit `338837f`
+    + 본 closure cycle) 에서 retrievable.
+  - **demiurge 측 code commit 0**: 본 PR #260 land 는 hexa-lang 측
+    work (sibling repo `~/core/hexa-lang`), demiurge 는 narrative
+    emit (본 entry) + 구 `YOSYS.md` git rm 만. cell schema / record
+    변경 없음 — chip §B+§D 의 κ-43 ProducerRegistry 와 동일 structure,
+    measured area 가 진척한 것뿐.
