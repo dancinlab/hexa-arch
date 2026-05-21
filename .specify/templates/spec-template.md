@@ -123,9 +123,22 @@
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right assumptions based on reasonable defaults
   chosen when the feature description did not specify certain details.
+
+  D111 IMPLICATIONS (see `.specify/README.md` + `.specify/memory/constitution.md` R2):
+  - If feature adds/modifies a verb-cell (domain × verb), assume dispatch
+    flows through `cellrun.hexa` + `domains/<id>.demi` manifest — NOT new
+    `*Producer.swift` Swift code. Cite the D111 commitment if scope touches
+    cell dispatch.
+  - If feature is a new domain, ship `domains/<id>.demi` manifest (not a
+    new Producer Swift class hierarchy).
+  - If feature touches existing `*Producer.swift` classes, declare whether
+    it's transitional-bridge maintenance (allowed for now) OR migration to
+    cellrun (preferred per D111).
 -->
 
 - [Assumption about target users, e.g., "Users have stable internet connectivity"]
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+- **Cell dispatch (D111)**: [If verb-cell related — "Feature ships `.demi` manifest entry; no new `*Producer.swift`" OR "Out of scope (e.g. pure UI/cockpit feature)"]
+- **Governance gates**: [Cite applicable R-row from `memory/constitution.md` (R1 measured-oracle · R2 cellrun dispatch · etc.) and applicable D-block from `../design.md`]
