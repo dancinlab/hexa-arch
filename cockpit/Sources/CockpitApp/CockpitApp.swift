@@ -266,7 +266,7 @@ struct WorkbenchView: View {
         chatMessages.append(ChatMessage(
             role: .assistant,
             text: "🍳 이제 \(verb.rawValue + 1)단계 — "
-                + "\(verb.plain)(\(verb.canonical)) 입니다. \(verb.hint)"))
+                + "\(verb.plain)(\(verb.koreanLabel)) 입니다. \(verb.hint)"))
     }
 
     // MARK: — θ-2 action dispatch (rfc_011 §6 / D48 / D49)
@@ -284,7 +284,7 @@ struct WorkbenchView: View {
         let domain = project.domain
         chatMessages.append(ChatMessage(
             role: .user,
-            text: "▶ \(verb.plain)(\(verb.canonical)) 단계 실제로 돌리기"))
+            text: "▶ \(verb.plain)(\(verb.koreanLabel)) 단계 실제로 돌리기"))
         let thinkingIndex = chatMessages.count
         chatMessages.append(ChatMessage(role: .assistant, text: "🍳 … 실행 경로 확인 중 …"))
         let context = chatContext()
@@ -430,7 +430,7 @@ struct WorkbenchView: View {
         let verb = project.currentVerb
         return "Project \"\(project.name)\" — 목표: \(project.target), "
              + "분야: \(project.domain). Current 7-verb stage: "
-             + "\(verb.rawValue + 1)/7 \(verb.canonical)(\(verb.plain))."
+             + "\(verb.rawValue + 1)/7 \(verb.koreanLabel)(\(verb.plain))."
     }
 
     /// Write a mutated project back to the in-memory list + manifest,
@@ -467,7 +467,7 @@ struct WorkbenchView: View {
         HStack(spacing: 4) {
             ForEach(Verb.allCases) { verb in
                 let state = activeProject?.state(of: verb) ?? .upcoming
-                Text(expertMode ? verb.canonical : verb.plain)
+                Text(expertMode ? verb.koreanLabel : verb.plain)
                     .font(.caption2)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
@@ -531,7 +531,7 @@ struct WorkbenchView: View {
             .disabled(!project.canRetreat)
             .help("이전 단계 — ⌘←")
             Spacer()
-            Text(expertMode ? project.currentVerb.canonical : project.currentVerb.plain)
+            Text(expertMode ? project.currentVerb.koreanLabel : project.currentVerb.plain)
                 .font(.caption.weight(.medium))
             Spacer()
             Button { advanceVerb() } label: {
@@ -555,11 +555,11 @@ struct WorkbenchView: View {
                 .imageScale(.medium)
                 .frame(width: 18)
             VStack(alignment: .leading, spacing: 1) {
-                Text(expertMode ? verb.canonical : verb.plain)
+                Text(expertMode ? verb.koreanLabel : verb.plain)
                     .font(.callout)
                     .foregroundStyle(state == .upcoming ? .secondary : .primary)
                 if !expertMode {
-                    Text(verb.canonical)
+                    Text(verb.koreanLabel)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
@@ -615,7 +615,7 @@ struct WorkbenchView: View {
                 Button { runAction() } label: {
                     Label(isRunningAction
                           ? "실행 경로 확인 중…"
-                          : "\(project.currentVerb.plain)(\(project.currentVerb.canonical)) 단계 실제로 돌리기",
+                          : "\(project.currentVerb.plain)(\(project.currentVerb.koreanLabel)) 단계 실제로 돌리기",
                           systemImage: "play.fill")
                         .frame(maxWidth: .infinity)
                 }
@@ -693,7 +693,7 @@ struct WorkbenchView: View {
                 role: .assistant,
                 text: "🍳 \"\(project.name)\" 프로젝트를 시작했어요. "
                     + "'\(project.target)' — \(project.domain) 분야로 잡았습니다. "
-                    + "1단계 \(Verb.specify.plain)(\(Verb.specify.canonical))부터 "
+                    + "1단계 \(Verb.specify.plain)(\(Verb.specify.koreanLabel))부터 "
                     + "같이 정리해 볼까요?")
         ]
     }
