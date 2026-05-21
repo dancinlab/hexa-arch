@@ -2125,7 +2125,7 @@ measurement round (scaffold · pre-code)**
       에는 적용 불가)
     - D95 computed-projection 만으로 만족하는 cell (substrate-
       parity 가 아닌 measurement-parity 가 본 round 의 점)
-  - **exit criterion**: design.md D114 (κ-69 G32 land) record ·
+  - **exit criterion**: design.md D115 (κ-69 G32 land) record ·
     5-fold sub-decision 명시 (cell · external oracle · bridge
     stack · hexa-native scope · PASS criterion) · code 변경 0
   - **deps**: G31 (G29-β 가 우선 land 되어 endpoint pattern 정착)
@@ -2356,6 +2356,47 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **D114 stdlib SSOT enforcement ratified · constitution
+  R3 (1.2.2 → 1.3.0 MINOR) 신설 · §11.4 G32 D-number shift D114 →
+  D115**. 사용자 직접 지시 "모두 hexa-lang 보관 / SSOT 말이야 /
+  stdlib 말이야" (post-D113 land) — Phase B PR #3 OPEN 후 발견된
+  `MaterialFalsifierDispatch.swift` 438 line in cockpit/Sources/ 가
+  trigger artifact. Constitution Principle I + D14/D18/D111/D80
+  의 specific enforcement axis 명문화.
+  - **D114 picked**: 모든 stdlib code (substrate algorithms · 커널
+    · 수학 · validation logic · physics) SSOT = hexa-lang (또는
+    sibling `hexa-matter`/`hexa-bio`/`hexa-chem`). demiurge
+    `cockpit/Sources/` 에 typed records · UI · thin dispatch
+    wrappers · CLI presentation 만 허용 · algorithm-shaped code =
+    anti-pattern · hexa-lang 이전 의무.
+  - **R3 governance row** (constitution 1.3.0 MINOR): code-shape
+    boundary table (typed records OK · UI OK · thin dispatch OK
+    transitional · CLI OK · domain manifests OK · algorithm NO ·
+    Python scripts under cockpit/scripts/ NO). transitional bridge
+    carve-out (`*Producer.swift` 46 잔존 · D111 Phase C 15-20
+    session migration) · UI carve-out (macOS-native UI Tier-2
+    별 axis · wilson harness 가 future).
+  - **enforcement boundary** explicit (R3 + D114 §):
+    - ✅ typed Codable records · SwiftUI views · thin dispatch
+      wrappers · DemiurgeCLI · `.demi` manifests
+    - 🔴 algorithm code in cockpit/Sources/ · Python scripts in
+      cockpit/scripts/ (`bipv_freecad.py` D61 violator 1개 잔존)
+  - **D115 stub (G32 reservation)**: D-numbering sequence shift
+    (D111 morning → D112+D113 afternoon → D114 R3 → G32 = D115).
+    G32 user decision territory · `inbox/notes/k69-g32-candidate-
+    research-2026-05-21.md` (Aura/EEG #1) ready.
+  - **Phase A 완료 (본 commit)**: D114 ratification + R3 row + ARCH
+    update · doctrinal land 즉시.
+  - **Phase B/C next-cycle**:
+    - B: MaterialFalsifierDispatch.swift 438-line audit (algorithm
+      vs orchestration ratio · 알고리즘 portion hexa-lang 이전
+      D-block 으로 ratify · 다음 cycle audit inbox note)
+    - C: `cockpit/scripts/bipv_freecad.py` migration
+      (`~/core/hexa-lang/stdlib/component/` 으로 이전 · D61
+      violator 1개 잔존 closure · 1-2 session est)
+    - D (Tier-2 deferred): static-analysis hook 가 cockpit/Sources/
+      에 algorithm-shaped code 진입 시 swift build 실패 트리거 ·
+      typed-enforce 자동화 · 별 cycle
 - 2026-05-21 — **D112 + D113 ratified · Phase B bug #2 (Verb canonical
   Korean → English wire) + payload flattening 결정 박제 · §11.4 G32
   D-number reference shift (D112 → D114)**. Phase B agent 의 design
@@ -3022,7 +3063,7 @@ landing 시각만 ARCH `## Log` 에 박제.
     decision (G27 mirror · D106 illustrative gate 제외 · D95
     computed-projection 만족 cell 제외). 후보 cluster = Aura
     soft-biology (PhysioNet) · Ufo non-illustrative stage ·
-    Mobility / Grid / Energy wind sub-cell. design.md D114 land
+    Mobility / Grid / Energy wind sub-cell. design.md D115 land
     예정. 0.3-0.5 session est. code 0.
   - **G33 [ ]** G32 cell 첫 `absorbed=true` legitimate flip
     (G29 mirror · κ-68 G29 와 다른 점: schema half 재사용 · 다른

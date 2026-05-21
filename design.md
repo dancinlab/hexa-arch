@@ -4796,3 +4796,75 @@ hexa-first · domain-meta-domain · lattice-as-tool).
 - D9 / D12 / g3 record-honesty 와 align (mirror with source cite · NOT silent shadowing)
 
 **cross-link**: D111 (parent · cellrun envelope spec) · D9 (record format) · D12 (gate semantics) · `inbox/notes/2026-05-21-generic-cellrun-migration-design.md` § 7 (open question #2 · payload flattening · 본 D113 가 그 question 의 결정).
+
+
+### Decision 114 — stdlib SSOT = hexa-lang only · demiurge cockpit/ algorithm-shaped code 금지 (typed records · UI · dispatch wrapper 만)
+
+**picked**: 모든 **stdlib code (substrate algorithms · 커널 · 수학 · validation logic · physics models)** 의 SSOT 는 **hexa-lang (또는 sibling repo `hexa-matter` · `hexa-bio` · `hexa-chem`)** 임을 명문화. demiurge `cockpit/Sources/` 에는 (a) **typed record schemas** (Codable wire models) · (b) **UI/cockpit chrome** · (c) **thin dispatch wrappers** (cellrun spawn glue) · (d) **CLI presentation** 만 허용. **algorithm-shaped code** (math · physics · domain-specific logic) 가 cockpit/ 에 들어가면 anti-pattern · hexa-lang 으로 이전 필요.
+
+**rationale**:
+
+- **Constitution Principle I (NON-NEGOTIABLE) 강화**: "demiurge is a typed-interface CONSUMER of hexa-lang stdlib... It does NOT fork, vendor, or absorb these". 본 D114 는 그 Principle 의 enforcement axis 명시화 — *what kind of code* 가 cockpit 에 살 수 있는지 explicit boundary.
+
+- **D14 / D18 / ARCH §0 hexa-only ultimate form 의 specific enforcement**: §0 가 "every producer, kernel, record schema, and verify oracle's ultimate destination is hexa-native". D114 = 그 ultimate form 의 *현 시점 enforcement rule* (algorithm code = hexa-lang 즉시 · transitional bridge 만 cockpit/ 에 imm 허용).
+
+- **D111 generic dispatch (`cellrun.hexa` + `.demi` manifest) 자연 귀결**: D111 이 dispatch-layer mechanism 을 hexa-lang 으로 이전. D114 는 **algorithm-layer** 도 같은 이전 axis 적용 — Swift `*Producer.swift` 가 spawn 만 하지 algorithm 자체를 implement 하면 안 됨.
+
+- **Wilson Principles 부합**:
+  - **Principle 1 (ai-native)**: structured · machine-readable substrate. Swift code 안에 algorithm = prose-shaped · 부적격.
+  - **Principle 2 (hexa-first)**: "absorbed intrinsics over forking a shell · absorbed stdlib / atlas over hand-rolling".
+  - **Principle 4 (domain-meta-domain)**: one-domain-one-place — algorithm SSOT 가 hexa-lang stdlib 안에 모이면 자연 enforce.
+
+**enforcement boundary** (cockpit/ 에 OK vs NO):
+
+| code shape | demiurge cockpit/ 위치? | rationale |
+|---|---|---|
+| typed record models (`*Record.swift` Codable structs) | ✅ OK | typed-interface consumer · wire format SSOT 일부 (record schema 는 cockpit 측 compile-time safety 필요) |
+| UI views (SwiftUI · cockpit chrome) | ✅ OK | macOS-native presentation · hexa-lang 가 macOS UI 미지원 (Tier-2 가능성 별 axis) |
+| thin dispatch wrappers (`CellrunDispatch.swift` · `*Producer.swift` transitional) | ✅ OK (transitional) | hexa-lang spawn glue · D111 Phase A..E migration 안 사이 transitional 만 허용 |
+| CLI presentation (DemiurgeCLI args parse · output formatting) | ✅ OK | Swift binary entrypoint · hexa-lang 측 substitute 가 D14 ultimate form |
+| domain manifests (`.demi`) | ✅ OK | pointers · D111 § rationale "co-located 2 file" |
+| **algorithm code** (math · physics · validation rules · domain-specific logic · large `*Dispatch.swift` 가 algorithm carry) | 🔴 **NO** — anti-pattern | hexa-lang stdlib 으로 이전 필수 |
+| Python scripts under `cockpit/scripts/` (예: `bipv_freecad.py`) | 🔴 **NO** — D61 violator | hexa-lang `stdlib/<domain>/` 으로 이전 |
+
+**axis distinction**:
+
+- D114 = **code-shape-level enforcement axis** (어떤 종류의 code 가 어디 살 수 있는지)
+- D111 = **dispatch-mechanism-level migration** (cockpit 의 dispatch layer 가 cellrun + manifest 로 이전)
+- D74 = **producer alternatives** (cells with multiple substrates · 자연 흡수)
+- D80 = **endpoint rule** (ultimate-form parity proof boundary)
+
+D111 + D114 = 같은 hexa-only ultimate-form 의 두 facets · D111 = dispatch · D114 = algorithm.
+
+**exit criterion** (typed enforcement · constitution R3):
+
+- Phase A — **R3 governance row 신설** (constitution.md · MINOR 1.2.2 → 1.3.0)
+- Phase B — **MaterialFalsifierDispatch.swift audit** (438 line · `cockpit/Sources/DemiurgeCore/Loaders/`). Algorithm vs orchestration 비율 확인 · algorithm portion 이전 D-block (D116? · 다음 audit cycle).
+- Phase C — **`cockpit/scripts/bipv_freecad.py` migration** (`~/core/hexa-lang/stdlib/component/` 으로 이전). D61 violator 1개 잔존 closure.
+- Phase D — **automated check**: cockpit/Sources/ 정적 분석 hook (Tier-2) — 새 `*Dispatch.swift` · `*Producer.swift` 가 algorithm carry 하는지 LOC threshold + AST 분석. 위반 시 swift build 실패. (별 axis · 추가 D-block 으로 deferred)
+
+**est**: Phase A 1 commit (지금 · 본 D114 + R3 + ARCH update) · Phase B 0.3 session (audit inbox note) · Phase C 1-2 session (script port + dispatch update + selftest) · Phase D Tier-2 (정적 분석 hook · 별 cycle).
+
+**rejected alternatives**:
+
+- **Status quo** (cockpit/ 에 algorithm code 허용): Principle I 정면 위반 · D111 의 Swift-side proliferation 막을 길 없음. 새 도메인 등장 시 Producer 신설이 default path 가 되는 anti-pattern 부활.
+- **Strict ban** (모든 cockpit/ Swift code 금지): UI · CLI · typed records 까지 hexa-lang 으로 이전 unrealistic 단기. Tier-2 일 수는 있음 (Q3 option 의 wilson harness 전환과 함께).
+- **Soft guideline** (PR review 만 의존): typed-enforcement 부재 · drift 누적 가능.
+
+**provenance**: 사용자 직접 지시 "모두 hexa-lang 보관하여야해 / SSOT 말이야 / stdlib 말이야" (2026-05-21 evening · D113 land 직후). Phase B PR #3 land 후 발견된 `MaterialFalsifierDispatch.swift` 438-line 가 trigger artifact — 그 code 의 algorithm portion 이 만약 substrate-shaped 라면 정확히 본 D114 의 anti-pattern.
+
+**cross-link**: Principle I (constitution NON-NEGOTIABLE) · D14 / D18 / D111 / D74 / D80 · ARCH §0 · §4.5 · CLAUDE.md Principles 1+2+4+5 · 본 D114 enforces R3.
+
+### Decision 115 — G32 D-number reserved (κ-69 R8 user-decision territory · D114 cellrun-side land 후 shift)
+
+**picked**: G32 (κ-69 R8 R8 두번째 cell pick + measured-oracle source 결정) 의 design.md ratification D-number 를 **D115** 로 명시. 본 D-block 은 G32 land 시점에 본 stub 을 replace 하는 anchor reservation.
+
+**rationale**:
+
+- D-numbering shift cleanup: D111 cellrun decision 이 D111 차지 → G32 가 D112 로 shift (2026-05-21 morning) · 그 후 D112+D113 (bug #2 closure + payload flattening) land → G32 가 D114 로 shift (afternoon) · 그 후 D114 (stdlib SSOT R3) land → G32 가 **D115** 로 최종 shift.
+- ARCH §11.4 G32 references 갱신: 2 sites (1 in §11.4 G32 block · 1 in §11.4 Round 8 narrative) D114 → D115.
+- 본 stub 은 G32 land 시점에 정식 5-fold lock-in decision (cell pick · external oracle · bridge stack · hexa-native scope · PASS criterion) 으로 replace.
+
+**status**: **RESERVED · NOT YET LANDED** · G32 user decision territory · `inbox/notes/k69-g32-candidate-research-2026-05-21.md` (144 line · Aura/EEG #1 recommended) 가 candidate analysis.
+
+**cross-link**: ARCH §11.4 G32 block · `inbox/notes/k69-g32-candidate-research-2026-05-21.md` · D111 (parent) · D112 (sibling — bug #2 closure · D-number sequence) · D113 (sibling — payload flattening · D-number sequence) · D114 (本 cycle landing 직전).

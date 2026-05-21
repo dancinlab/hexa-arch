@@ -85,9 +85,34 @@ Verb-cell dispatch (the 18-domain × 7-verb = 126-cell grid) flows through a **h
 - **Axis distinction**: R2 is dispatch-mechanism axis (plumbing) · cell `absorbed` 자체 무관 (R1 measurement axis · D103 dimension separation 보존). D74 ProducerRegistry alternatives 패턴 자연 흡수 (`[cell.<verb>.<variant>]` 섹션 multiple).
 - **Cross-links**: ARCH §4.5 (target shape diagram + cost reduction table + migration path) · design.md D111 (parent decision · full rationale + rejected alternatives + Phase A..E exit criterion + axis distinction) · **D112** (Verb canonical Korean → English wire-form rename · bug #2 fix · naming convention A picked) · **D113** (payload flattening · sibling `.meta.json::measurements` roll-up into `payload.measurements` · downstream consumer compat) · D14 / D18 / D74 / D80 / D83 (`.demi` precedent) · Principles I (hexa-lang pointer) · II (7-verb spine) · ARCH §0 first principle.
 
-**Version**: 1.2.2 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
+### R3. stdlib SSOT = hexa-lang only — demiurge `cockpit/Sources/` algorithm-shaped code 금지
+
+All **stdlib code** (substrate algorithms · physics · math · validation logic · domain-specific kernels) lives in **`~/core/hexa-lang/stdlib/`** (or sibling repos `~/core/hexa-matter/` · `~/core/hexa-bio/` · `~/core/hexa-chem/` per D17/D77 precedent). demiurge `cockpit/Sources/` carries **only**: (a) typed record schemas (Codable wire models · compile-time safety for consumer) · (b) UI views (SwiftUI · cockpit chrome) · (c) thin dispatch wrappers (`CellrunDispatch.swift` · `*Producer.swift` transitional bridges per D111 Phase C deprecation track) · (d) CLI presentation (DemiurgeCLI args parse + output formatting). **Algorithm-shaped code in `cockpit/Sources/` is an anti-pattern requiring migration to hexa-lang stdlib.**
+
+- **Boundary table** (cockpit/Sources/ 에 OK vs NO · per D114 § enforcement boundary):
+  | code shape | demiurge cockpit/ 위치? | reason |
+  |---|---|---|
+  | typed record models (`*Record.swift` Codable) | ✅ OK | consumer-side wire-format compile-time safety |
+  | UI views (SwiftUI · cockpit chrome) | ✅ OK | macOS-native presentation · Tier-2 hexa-lang UI is separate axis |
+  | thin dispatch wrappers | ✅ OK (transitional · D111 Phase C track) | spawn glue |
+  | CLI presentation (DemiurgeCLI) | ✅ OK | Swift binary entrypoint |
+  | domain manifests (`.demi`) | ✅ OK | pointers (D111 § rationale "co-located 2 file") |
+  | **algorithm code** (math · physics · validation rules · domain logic) | 🔴 **NO** | migrate to hexa-lang stdlib |
+  | Python scripts under `cockpit/scripts/` | 🔴 **NO** (D61 violator) | migrate to `hexa-lang/stdlib/<domain>/` |
+- **Carve-outs**:
+  - **Transitional bridges** (`*Producer.swift` 46 잔존 · `*Dispatch.swift` spawn glue): allowed UNTIL D111 Phase C migration retires them (estimated 15-20 session). Each transitional bridge must cite the cellrun.hexa target script path in a header docstring + the Phase C migration ETA in commit body when modified.
+  - **macOS-native UI** (SwiftUI · RealityKit · etc.): allowed since hexa-lang lacks macOS UI substrate. Tier-2 future axis (wilson harness with native UI) may shift this; until then, cockpit Swift UI is canonical.
+- **Anti-pattern enforcement**:
+  - New `*Dispatch.swift` · `*Producer.swift` containing >100 LOC of non-dispatch logic = R3 violation · refactor to hexa-lang stdlib (D111 cellrun route) or split into thin dispatch + hexa-lang substrate.
+  - Python scripts under `cockpit/scripts/` (currently 1 D61 violator `bipv_freecad.py`) = R3 violation · migrate to `~/core/hexa-lang/stdlib/<domain>/`.
+- **First land (2026-05-21 · D114 ratification)**: doctrine ratified before any migration · Phase A = R3 governance row (this row) · Phase B = `MaterialFalsifierDispatch.swift` 438-line audit · Phase C = `bipv_freecad.py` migration · Phase D = automated static-analysis hook (Tier-2 deferred).
+- **Load-bearing enforcement** — *Phase D (planned · Tier-2)*: automated static-analysis hook on `cockpit/Sources/` that fails `swift build` when new files exceed dispatch-wrapper LOC threshold OR contain algorithm-shaped patterns (AST analysis). Until Phase D lands, **PR review** is the enforcement vehicle; new PRs touching `cockpit/Sources/Loaders/` must cite R3 + verify the dispatch-wrapper shape.
+- **Cross-links**: design.md **D114** (full rationale + boundary table + Phase A..D exit + axis distinction) · D111 (dispatch-mechanism sibling axis · `cellrun.hexa` + `.demi` manifest) · D14 / D18 (hexa-lang substrate doctrine) · D17 / D77 (sibling repos precedent) · D61 (D61 violator pattern · `bipv_freecad.py` is the 1 remaining) · D80 (endpoint rule · ultimate-form proof) · ARCH §0 (first principle) · §4.5 (cellrun architecture) · Principle I (NON-NEGOTIABLE · this row enforces) · Wilson Principles 1+2+4+5.
+
+**Version**: 1.3.0 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
 
 **Amendment history**:
+- 1.3.0 (2026-05-21 저녁 후반 · MINOR) — R3 stdlib SSOT row added (D114 ratification). cockpit/Sources/ 의 code-shape enforcement boundary 명문화 (typed records · UI · thin dispatch · CLI = OK · algorithm-shaped code = NO). 사용자 직접 지시 "모두 hexa-lang 보관 / SSOT 말이야 / stdlib 말이야" 가 본 row 의 doctrinal motivation. MINOR (new R-row + R3 enforcement boundary table · no principle change).
 - 1.2.2 (2026-05-21 저녁 후반 · PATCH) — R2 Cross-links 확장: D112 (Verb canonical Korean → English wire-form rename · bug #2 closure · naming convention A picked) + D113 (payload flattening · sibling `.meta.json::measurements` roll-up · downstream consumer compat) cross-link 추가. Phase A bug triage 완료 narrative anchor — bug #1 `_split_csv` quoted-comma fix · #2 design ratified D112 · #3 `python_candidates` manifest key fix 모두 PR #267 또는 D-block 으로 closure 경로 확보. PATCH (no new principle/section · cross-link expansion only).
 - 1.2.1 (2026-05-21 저녁 · PATCH) — R2 Migration cost wording correction: **6-8 → 15-20 focused sessions** per Phase B step 3 observed cost (20 min/cell · 3× original 12 min/cell desk estimate · 3 sscb cells consumed ~1 hour focused work on branch `d111-phaseb-sscb-migration` · PR #267 OPEN). 3-SSOT synchronized correction (design.md D111 · ARCH §4.5 + Log entry · this row). PATCH (no new principle/section · wording-only).
 - 1.2.0 (2026-05-21 morning) — R2 Generic Verb-Cell Dispatch row added (D111 ratification · `cellrun.hexa` + `.demi` manifest target shape · Phase A scaffold landed).
