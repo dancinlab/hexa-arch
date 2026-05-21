@@ -2387,6 +2387,59 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-22 — **SSCB 7-verb walkthrough Step 2 LANDED · `(.structure,
+  "sscb")` cell wired · 5 wired / 2 unwired** (structure 마감 · 다음
+  Step 3 = design verb). 2-PR pattern · cellrun route (PR #272 restore
+  덕분에 main cellrun.hexa 정착 후 첫 clean step):
+  - **hexa-lang PR #273** `864a6aa3` MERGED — `stdlib/sscb/structure.
+    py` (**516 LOC** · networkx 3.2.1 DiGraph + dict-of-lists
+    graceful fallback) · sscb.md §1+§2 ARCHITECT 의 BOM topology
+    structural inventory · **9 nodes / 17 edges / 5 categories**
+    (enclosure root → SiC switch stack + 3 busbars (power_path) +
+    gate driver + snubber (control) + magnetic limiter (commutation)
+    + cold plate (thermal)) · edge types (signal/power/thermal/
+    mechanical) · 4 artifacts emit (`sscb_v1.meta.json` D113 roll-up
+    호환 + `bom_graph.json` 전체 graph + `bom_dossier.md` human-
+    readable + record JSON).
+  - **demiurge PR #6** `d96f3e28` MERGED — `ActionDispatch.swift`
+    `(.structure, "sscb")` cellrun route 1 case (CellrunDispatch
+    호출) + `Models/SscbStructureRecord.swift` **91 LOC** (Codable
+    + Equatable + Sendable · snake_case CodingKeys · 5 fields
+    `bomNodeCount`/`bomEdgeCount`/`categories`/`placeholders`/`notes`
+    + sibling pointer `bomGraphFile`).
+  - **end-to-end CLI dispatch verified** (post-merge clean ·
+    HEXA_CELLRUN_CELLRUN_PATH 환경변수 override 불필요 since
+    cellrun.hexa back on hexa-lang main `56cd5c41`):
+    `swift run DemiurgeCLI action structure sscb` → `[cellrun]
+    record → exports/sscb/structure/<TS>/sscb_structure_record_
+    <TS>.json · gate=OPEN absorbed=false · payload.measurements`
+    roll-up correct (`bom_node_count=9` · `bom_edge_count=17` ·
+    `categories_count=5` · `placeholders_count=9`).
+  - **regression**: swift test **74/74 PASS** (Step 1 SscbSpecify
+    Record + Step 2 SscbStructureRecord 추가 후 · 69 → 74 · +5
+    test) · 0 회귀.
+  - **R3 compliance**: substrate = hexa-lang only (`stdlib/sscb/
+    structure.py` 516 LOC algorithm + BOM data) · cockpit = typed
+    record (91 LOC Codable) + thin dispatch (1 line ActionDispatch
+    case) only · algorithm-shaped code 0 in cockpit/. D114/D116
+    invariant 유지.
+  - **D113 payload flattening verify**: producer's sibling `sscb_
+    v1.meta.json::measurements{}` block 이 cellrun envelope `payload.
+    measurements` top-level 로 roll-up · downstream consumer
+    (cockpit chat panel · RTSC view3D 등) 자동 read 가능 ·
+    sibling .meta.json source-of-truth 보존 (g3 honest).
+  - **Step 1 (specify) main merge 도 같은 cycle 안 paired** —
+    PR #5 (cockpit ActionDispatch specify + SscbSpecifyRecord)
+    `15f24d63` MERGED (Step 2 merge 와 같은 순간에 admin-squash).
+    Step 1 narrative 의 "PR #5 already MERGED" claim 가 사실은
+    Step 2 직전 시점까지 OPEN 이었음 — agent 가 정직 catch.
+  - **Step 3 readiness (design verb)**: 동일 pattern · KiCad 정도
+    PCB netlist + ngspice .net (sscb.md §2 DESIGN row 의 open-
+    source col) · structure 의 `bom_graph.json` 이 input feed
+    candidate (BOM placeholders 가 datasheet binding 으로 resolve
+    되어 ngspice .net 으로) · est 1 session · ~200-350 LOC ·
+    절제된 template netlist (absorbed=false g3 · 실 transient 은
+    analyze/verify cell).
 - 2026-05-22 — **SSCB 7-verb walkthrough Step 1 LANDED · `(.specify,
   "sscb")` cell wired via cellrun · 3 wired → 4 wired · 4 unwired
   → 3 unwired** (specify 마감 · structure/design/handoff 다음 Step
