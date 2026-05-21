@@ -2387,6 +2387,59 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-22 — **SSCB 7-verb walkthrough Step 1 LANDED · `(.specify,
+  "sscb")` cell wired via cellrun · 3 wired → 4 wired · 4 unwired
+  → 3 unwired** (specify 마감 · structure/design/handoff 다음 Step
+  2/3/4). 사용자 directive "프로젝트 생성 → 7-verb 단계별 / 하나하나
+  진행" + Path A only (CLI simulate · hexa-lang substrate 신설 +
+  demiurge ActionDispatch case 추가). 3-PR 동시 land:
+  - **hexa-lang PR #272** `56cd5c41` MERGED — cellrun.hexa +
+    cellrun_test.hexa restore (RFC067 N74 commit `88c00246` 가
+    main 에서 inadvertent 삭제 · branch `cellrun-generic-dispatcher-
+    scaffold@21d98d43` 에 보존되어 있던 4-commit chain (scaffold +
+    bug#1 _split_csv + bug#3 python_candidates + D113 payload
+    flattening) 단일 squash-restore · selftest 45/45 PASS).
+  - **hexa-lang PR #271** `70a2ba83` MERGED — `stdlib/sscb/specify.
+    py` (265 LOC · firmware-stub pattern · domains/sscb.md §1
+    HEXA-SSCB mk1 spec source-of-truth 을 JSON record 로 emit ·
+    `SSCB_SPECIFY_RESULT <json>` stderr marker · sibling
+    `sscb_v1.meta.json` measurements{} block (D113 roll-up 호환) ·
+    artifact 3종 (meta.json + spec_dossier.md + record JSON)).
+  - **demiurge PR #5** MERGED — cockpit `ActionDispatch.swift`
+    `(.specify, "sscb")` 새 case (CellrunDispatch.run("sscb",
+    "specify") route) + `Models/SscbSpecifyRecord.swift` 신설
+    (~90 LOC · Codable + Equatable + Sendable · snake_case
+    CodingKeys · 10 SSCB spec fields).
+  - **end-to-end CLI dispatch verified**: `swift run DemiurgeCLI
+    action specify sscb` → `[cellrun] record → exports/sscb/
+    specify/<TS>/sscb_specify_record_<TS>.json · gate=OPEN
+    absorbed=false caveats=2 · 📸 new record ID(s): sscb_specify_
+    record_20260521T145642Z`. cellrun + manifest + script + emit
+    + record decode 전 chain 동작.
+  - **regression**: swift test 69/69 PASS · 0 회귀. cockpit build
+    16.42s clean.
+  - **R3 compliance**: substrate script (`stdlib/sscb/specify.py`)
+    = hexa-lang only · cockpit Swift = typed record (`SscbSpecify
+    Record`) + thin dispatch (CellrunDispatch route 1 line) only ·
+    algorithm-shaped code 0 in cockpit/. D114/D116 invariants 유지.
+  - **doctrinal-side concurrent shift**: 같은 cycle 안 사용자 가
+    `.specify/` (Spec Kit framework) + `.claude/skills/speckit-*`
+    skills 전체 제거 + project.tape SSOT 도입 (`@V` tape v1.2 ·
+    `@I` demiurge identity · `@D` governance placeholder do/dont
+    ·CLAUDE.md → project.tape symlink for SessionStart auto-load).
+    R1-R4 governance rows (constitution.md 안) 함께 archive — 다만
+    design.md D-blocks 124개 (D114 R3 enforcement · D116 sibling-
+    repos doc-only) 와 ARCH §0 / §4.4 / §4.5 narrative 그대로
+    유지 (doctrinal authority 는 design.md + ARCH 가 carry).
+    R-row doctrinal 내용 (typed-enforcement anchor) 은 향후
+    project.tape `@D` events 으로 migrate 가능 · 또는 D-block
+    가 단독 SSOT 로 유지 — 사용자 결정.
+  - **Step 2 (structure verb) readiness**: 동일 pattern 으로 진행
+    가능 (hexa-lang `stdlib/sscb/structure.py` + demiurge
+    `(.structure, "sscb")` ActionDispatch case + `SscbStructureRecord
+    .swift`). BOM content per sscb.demi: SiC switch · gate driver
+    · snubber · busbar · enclosure · networkx component-graph
+    candidate. est ~1 session.
 - 2026-05-21 — **D116 ratified · sibling repos = 문서만 · D14/D17/D77
   amendment · 실수 방지 cascade across spec kit**. 사용자 직접 지시
   "hexa-rtsc 는 문서만 놔둘꺼야 / hexa-lang, demiurge 가 필요한거
