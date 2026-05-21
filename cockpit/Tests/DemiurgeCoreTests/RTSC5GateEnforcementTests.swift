@@ -2,32 +2,47 @@
 //
 // Validates the MaterialAttestationRecord Codable decoder's R4
 // (RTSC absorbed=true twin-error invariant) Stage 1 enforcement:
-//   (1) existing Nb attestation record (`nb_bcs_v1`) is now INVALID
-//       per the new invariant — by design (migration trigger);
-//   (2) any future RTSC record with `aggregate != ALL_PASS` is
+//   (1) HISTORICAL Nb attestation record (`rtsc_attestation_...json`)
+//       is INVALID per the new invariant — by design (Pattern 1
+//       audit evidence, preserved for the historical record);
+//   (2) CURRENT Nb attestation record (`lts_attestation_...json`,
+//       Path B migration 2026-05-22 · `domain: "lts"`) decodes cleanly
+//       — R4 only constrains `domain == "rtsc"`, so the LTS record
+//       is structurally legitimate (no over-reach);
+//   (3) any future RTSC record with `aggregate != ALL_PASS` is
 //       rejected at decode time;
-//   (3) non-rtsc domain records (energy / solar pyranometer pattern)
+//   (4) non-rtsc domain records (energy / solar pyranometer pattern)
 //       remain unconstrained — invariant does not over-reach.
 //
 // Cross-refs:
 //   - constitution.md R4
-//   - RTSC.md §8.9 (5-criteria gate) · §8.10 (Nb correction)
-//   - inbox/notes/2026-05-21-r4-stage1-enforcement.md (migration plan)
+//   - RTSC.md §8.9 (5-criteria gate) · §8.10 (Nb correction + Path B
+//     migration completed 2026-05-22)
+//   - inbox/notes/2026-05-21-r4-stage1-enforcement.md (migration plan,
+//     Path B recommended + implemented)
 
 import XCTest
 @testable import DemiurgeCore
 
 final class RTSC5GateEnforcementTests: XCTestCase {
 
-    // MARK: Test 1 — existing Nb attestation is now INVALID (expected fail)
+    // MARK: Test 1a — HISTORICAL Nb attestation is INVALID (Pattern 1 audit)
 
-    /// HONEST-FAIL by design — validates the *current state* of the
-    /// landed Nb attestation record (`exports/material_attestation/
-    /// nb_bcs_v1/...json`). Record has `domain: "rtsc"` + `absorbed:
-    /// true` but NO `rtsc_5_gate_evaluation` field → MUST throw under
-    /// the R4 Stage 1 invariant. This test asserts the throw — passing
-    /// means the invariant *catches* the migration target.
-    func testNbAttestationDomainRTSCRequires5GateField() throws {
+    /// HONEST-FAIL by design — validates that the *historical* Nb
+    /// attestation record (`exports/material_attestation/nb_bcs_v1/
+    /// rtsc_attestation_nb_bcs_20260521T111656Z.json`, preserved as
+    /// Pattern 1 audit evidence per RTSC.md §8.10 / inbox migration
+    /// notes) has `domain: "rtsc"` + `absorbed: true` but NO
+    /// `rtsc_5_gate_evaluation` field → MUST throw under the R4 Stage
+    /// 1 invariant. This test asserts the throw — passing means the
+    /// invariant *catches* the historical namespace exploit.
+    ///
+    /// Renamed from `testNbAttestationDomainRTSCRequires5GateField`
+    /// after Path B migration (2026-05-22): the *current* Nb record
+    /// now lives under `lts_attestation_*.json` with `domain: "lts"`
+    /// (see Test 1b). The historical file is intentionally preserved
+    /// so this invariant-catches-Pattern-1 assertion remains live.
+    func testHistoricalNbAttestationRequires5GateField() throws {
         // #filePath = .../demiurge/cockpit/Tests/DemiurgeCoreTests/<this>.swift
         // exports root lives at .../demiurge/exports/ (sibling of cockpit/).
         let path = URL(fileURLWithPath: #filePath)
@@ -52,16 +67,18 @@ final class RTSC5GateEnforcementTests: XCTestCase {
         }
         let peek = try JSONDecoder().decode(Peek.self, from: data)
         XCTAssertEqual(peek.domain, "rtsc",
-            "Nb attestation record IS in the rtsc namespace (Pattern 1 root)")
+            "Historical Nb attestation record IS in the rtsc namespace (Pattern 1 root, preserved as audit evidence)")
         XCTAssertTrue(peek.absorbed,
-            "Nb attestation record IS absorbed=true (current state)")
+            "Historical Nb attestation record IS absorbed=true (pre-Path-B state)")
         XCTAssertNil(peek.rtsc_5_gate_evaluation,
-            "Nb attestation record does NOT yet carry rtsc_5_gate_evaluation (migration target)")
+            "Historical Nb attestation record does NOT carry rtsc_5_gate_evaluation (migration trigger)")
 
-        // R4 Stage 1 invariant MUST reject the decode.
+        // R4 Stage 1 invariant MUST reject the decode of the historical
+        // record — Pattern 1 namespace exploit caught at the Codable
+        // layer.
         XCTAssertThrowsError(
             try JSONDecoder().decode(MaterialAttestationRecord.self, from: data),
-            "R4 invariant MUST reject Nb attestation: domain=rtsc + absorbed=true + no 5-gate field"
+            "R4 invariant MUST reject historical Nb attestation: domain=rtsc + absorbed=true + no 5-gate field"
         ) { err in
             guard case DecodingError.dataCorrupted(let ctx) = err else {
                 XCTFail("Expected DecodingError.dataCorrupted, got \(err)")
@@ -70,6 +87,61 @@ final class RTSC5GateEnforcementTests: XCTestCase {
             XCTAssertTrue(ctx.debugDescription.contains("R4 invariant"),
                 "Error message must cite R4 invariant; got: \(ctx.debugDescription)")
         }
+    }
+
+    // MARK: Test 1b — CURRENT Nb attestation (Path B, domain=lts) decodes cleanly
+
+    /// HAPPY-PATH after Path B migration (2026-05-22) — the current
+    /// Nb attestation record (`exports/material_attestation/nb_bcs_v1/
+    /// lts_attestation_nb_bcs_*.json`, emitted by
+    /// `nb_bcs_absorbed_attestation_producer.py@v2`) has
+    /// `domain: "lts"` + `absorbed: true`. R4 only constrains
+    /// `domain == "rtsc"`, so this record decodes CLEANLY without
+    /// requiring a `rtsc_5_gate_evaluation` field.
+    ///
+    /// Together with `testHistoricalNbAttestationRequires5GateField`
+    /// (Test 1a) this pair documents the migration: the same physical
+    /// claim (BCS universal ratio parity for Nb at <5%) is REJECTED
+    /// when carried under `domain: "rtsc"` (Pattern 1) and ACCEPTED
+    /// when carried under `domain: "lts"` (honest material classification).
+    func testCurrentNbAttestationIsLtsDomainNoConstraint() throws {
+        // Locate the most recent `lts_attestation_nb_bcs_*.json`
+        // (producer emits a timestamped file each run; pick the latest
+        // by lexical sort since timestamps are ISO-style sortable).
+        let dir = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent() // DemiurgeCoreTests
+            .deletingLastPathComponent() // Tests
+            .deletingLastPathComponent() // cockpit
+            .deletingLastPathComponent() // demiurge
+            .appendingPathComponent("exports")
+            .appendingPathComponent("material_attestation")
+            .appendingPathComponent("nb_bcs_v1")
+
+        let fileManager = FileManager.default
+        let entries = try fileManager.contentsOfDirectory(atPath: dir.path)
+        let ltsRecords = entries
+            .filter { $0.hasPrefix("lts_attestation_nb_bcs_") && $0.hasSuffix(".json") }
+            .sorted()
+        guard let latestName = ltsRecords.last else {
+            XCTFail("No lts_attestation_nb_bcs_*.json found in \(dir.path) — Path B producer not run?")
+            return
+        }
+        let path = dir.appendingPathComponent(latestName)
+
+        let data = try Data(contentsOf: path)
+
+        // Decode through the R4-enforcing MaterialAttestationRecord — must succeed.
+        let rec = try JSONDecoder().decode(MaterialAttestationRecord.self, from: data)
+        XCTAssertEqual(rec.domain, "lts",
+            "Path B migration: current Nb record carries domain=lts (not rtsc)")
+        XCTAssertTrue(rec.absorbed,
+            "Current Nb record preserves absorbed=true (legitimate BCS universal ratio parity)")
+        XCTAssertNil(rec.rtsc_5_gate_evaluation,
+            "R4 only constrains domain=rtsc — domain=lts MUST decode without a 5-gate field")
+        XCTAssertEqual(rec.kind, "nb_bcs_universal_gap_ratio_attestation",
+            "Path B migration: lts_ prefix dropped from kind (domain field carries the material class)")
+        XCTAssertEqual(rec.gateType, "bcs-universal-ratio-attestation",
+            "BCS-universal-ratio gate is preserved across migration")
     }
 
     // MARK: Test 2 — future RTSC attestation w/ ANY_FAIL is rejected
