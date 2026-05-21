@@ -12,7 +12,7 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (36 entries)
+## Index (37 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
@@ -39,6 +39,7 @@
 | `k69-g32-candidate-research-2026-05-21.md` | pickup-open | κ-69 / G32 / ARCH §11.4 Round 8 | κ-69 G32 next-cell candidate digest — 3 finalist (Aura/EEG · Energy/wind · Ufo/plasma) 의 5-fold lock-in (cell · external oracle · bridge stack · hexa-native scope · PASS criterion) articulated. RANK #1 = Aura/EEG (PhysioNet Sleep-EDF · `aura_mne.py` bridge ✓ · `pilot-dft_naive` 17/17 PASS ✓ · `AuraVerifyRecord` 1-줄 schema 확장 · G33 different-record-type generalization payoff). #2 = Ufo/plasma (substrate 41/41 PASS · prediction-shape 약함 · Stage-4..7 carve-out 필요). #3 = Energy/wind (kernel 신설 필요 · same-record reuse 시 G33 payoff 약함). User pick → D111 박제 → G33 first-flip. |
 | `k69-g33-schema-prep-2026-05-21.md` | pickup-open | κ-69 / G33 / ARCH §11.4 Round 8 (POST-G32) | κ-69 G33 schema-prep digest — `MeasuredOracleRef` 재사용성 audit (`EnergyVerifyRecord` G28a 패턴을 `AuraVerifyRecord` 로 generalization). G32 = Aura/EEG 가정. §1 / §3 schema-generalization audit 는 G32 후보 무관 holds; §2 / §4 / §5 estimates 는 후보별 shift. NO code changed · digest only · G33 work-plan skeleton. |
 | `k69-substrate-axis-closure-path-2026-05-21.md` | pickup-open | κ-69 / chip §B / §12.1 (f..i) | post-(e) LANDED audit — chip §B substrate-axis (f..i) closure path 평가. (e) `fifo_mem` 2-D LHS Option A 가 hexa-lang `c4b35b13` + `a4a032af` (2026-05-21) 직접 push 로 LANDED 후 잔여 Tier-1 (f..i) `measurement_gate = CLOSED_MEASURED` 까지 가는 최단 honest path + 측정해야 할 unknowns surface. NO ARCH/PLAN/HANDOFF mutation — 조사 결과 직접 inbox 박제. |
+| `k69-substrate-axis-yosys-stat-measurement-2026-05-21.md` | archive | κ-69 / chip §B / SSOT (kk)/(ll) | historical · measurement caveat in (ll) — `yosys -p stat` cell-type breakdown (hexa-native vs substrate) for post-(e) 98% area gap disambiguation. dff_ratio 40× · comb_ratio 7.7-12.1× · Option F algebra. **Cell-type breakdown remains authoritative**, but the area numbers (1207/1677 µm²) were based on stale `/tmp/*_out.blif` files; reconciled in SSOT (kk)/(ll) at commit `1b63afa` (truncate-before-exec fix). Read for breakdown structure, not absolute area. |
 | `openmc-install-blocker-2026-05-20.md` | pickup-blocked | (Track D / H-3) | OpenMC + ENDF/B-VIII.0 install fails on osx-arm64 + Linux pool unreachable — k-eff measurement deferred |
 | `openmdao-kernel-promotion-pickup.md` | pickup-open | (2nd consumer) | OpenMDAO 2 consumers (scope+space) — promote to kernels/mdo/ |
 | `parity_attempt_bot_synth_2026-05-20.md` | resolved | κ-50 | Pinocchio rel err 0.04% / 0.0003% vs Spong; flip NO (URDF hermetic) |

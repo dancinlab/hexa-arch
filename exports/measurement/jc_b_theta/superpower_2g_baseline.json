@@ -1,0 +1,89 @@
+{
+  "domain": "measurement",
+  "verb": "ingest",
+  "kind": "jc_b_theta",
+  "stamp": "20260521T000000Z",
+  "sample_id": "superpower_2g_scs_baseline",
+  "test_family": "hts_cuprate",
+  "test_compound": "(Y,Gd)Ba2Cu3O7-delta",
+  "instrument": {
+    "model": "literature extraction",
+    "vendor": "SuperPower",
+    "calibration_date": null
+  },
+  "operator": null,
+  "sample_provenance": {
+    "synthesis_recipe_record_id": null,
+    "vendor": "SuperPower",
+    "batch_lot": "literature/datasheet baseline"
+  },
+  "raw_data_hash": null,
+  "data_points": [
+    {
+      "independent_var_name": "B",
+      "independent_var_value": 0.0,
+      "independent_var_unit": "T",
+      "dependent_var_name": "Jc",
+      "dependent_var_value": 3.0e10,
+      "dependent_var_unit": "A/m^2"
+    },
+    {
+      "independent_var_name": "B",
+      "independent_var_value": 1.0,
+      "independent_var_unit": "T",
+      "dependent_var_name": "Jc",
+      "dependent_var_value": 2.0e10,
+      "dependent_var_unit": "A/m^2"
+    },
+    {
+      "independent_var_name": "B",
+      "independent_var_value": 3.0,
+      "independent_var_unit": "T",
+      "dependent_var_name": "Jc",
+      "dependent_var_value": 1.0e10,
+      "dependent_var_unit": "A/m^2"
+    },
+    {
+      "independent_var_name": "B",
+      "independent_var_value": 5.0,
+      "independent_var_unit": "T",
+      "dependent_var_name": "Jc",
+      "dependent_var_value": 6.0e9,
+      "dependent_var_unit": "A/m^2"
+    },
+    {
+      "independent_var_name": "B",
+      "independent_var_value": 10.0,
+      "independent_var_unit": "T",
+      "dependent_var_name": "Jc",
+      "dependent_var_value": 3.0e9,
+      "dependent_var_unit": "A/m^2"
+    }
+  ],
+  "headline": {
+    "peak_jc_a_per_m2": 3.0e10,
+    "field_t": 0.0,
+    "temp_k": 77.0
+  },
+  "measurement_gate": "GATE_OPEN",
+  "replication_count": 1,
+  "absorbed": false,
+  "gate_type": "vendor-datasheet",
+  "provisional": true,
+  "provenance": {
+    "source_url": "https://www.superpower-inc.com/specification.aspx",
+    "source_citation": "SuperPower 2G HTS tape datasheet (publicly available); cross-reference HTS Modelling Workgroup shared model files (htsmodelling.com).",
+    "vendor_datasheet_url": "https://www.superpower-inc.com/specification.aspx"
+  },
+  "scope_caveats": [
+    "Vendor datasheet values are typical, NOT per-batch lot-tested. Real engineering use requires per-lot Jc measurement.",
+    "Anisotropy Jc(B,theta) not captured here — single-axis baseline only (B perpendicular to tape face implied at 77 K self-field).",
+    "Order-of-magnitude estimates derived from publicly cited SuperPower SCS 2G product family (300 A/cm-width over ~1 μm superconducting layer ≈ 3e10 A/m^2); not lot-specific.",
+    "Replication count = 1 (datasheet only); absorbed=false per RTSC.md §8.7 g3 — vendor datasheets never auto-promote to absorbed=true without independent cross-validation."
+  ],
+  "citations": [
+    "SuperPower Inc., 2G HTS Wire Specification, https://www.superpower-inc.com/specification.aspx",
+    "HTS Modelling Workgroup, shared model REBCO Jc(B,T,theta) datasets, https://htsmodelling.com",
+    "RTSC.md §8.4 (9-test characterization) + §8.7 Tier 3 (measurement ingest)"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "domain": "conductor",
+  "verb": "ingest",
+  "kind": "rebco_2g_hts_tape",
+  "stamp": "2026-05-21T00:00:00Z",
+  "family": "hts_rebco",
+  "compound": "(Y,Gd)Ba2Cu3O7-δ",
+  "spec": {
+    "tc_k": 92.5,
+    "hc2_t_at_4k": 150.0,
+    "hc2_t_at_77k": 7.0,
+    "peak_jc_a_per_m2_at_4k": null,
+    "peak_jc_a_per_m2_at_77k": 3.0e10,
+    "anisotropy_gamma": 5.0,
+    "jc_data_table_ref_record_id": null
+  },
+  "vendor": "SuperPower (canonical industry reference; not lot-specific)",
+  "source_provenance": {
+    "source_substrate": "vendor-datasheet",
+    "source_record_url": null,
+    "source_citation": "SuperPower 2G HTS tape publicly documented specs + HTS Modelling Workgroup baseline (htsmodelling.com)"
+  },
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "vendor-datasheet",
+  "provisional": true,
+  "scope_caveats": [
+    "Industry-typical values, NOT lot-specific. Real-device design requires per-batch Jc(B,T,θ) data table.",
+    "Anisotropy γ ≈ 5 is a rough average; actual REBCO γ varies 5-7 with field orientation and temperature.",
+    "jc_data_table_ref_record_id is null on first ingest — Tier 3 Jc(B,T,θ) measurement record lands separately (RTSC.md §8.7).",
+    "Hc2 at 77 K (~7 T) is a rough orientation-averaged figure; field-parallel vs field-perpendicular differ by γ.",
+    "absorbed=false until vendor datasheet is cross-validated by an independent lab measurement (g3 RTSC.md §8.7)."
+  ],
+  "citations": [
+    "HTS Modelling Workgroup — htsmodelling.com",
+    "SuperPower SCS series datasheet (vendor public)",
+    "Iwasa, Y., 'Case Studies in Superconducting Magnets' 2nd ed."
+  ]
+}
