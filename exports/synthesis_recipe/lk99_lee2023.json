@@ -44,11 +44,14 @@
     "Original arXiv preprint (2307.12008, Lee/Kim 2023). Multiple independent attempts (Nature Sept 2023 synthesis efforts: Beijing, USTC, Princeton, Berkeley, IISc Bangalore, Max Planck) failed to reproduce Tc>300K. The synthesized material may be reproducible as a material (apatite-structure Pb10-xCux(PO4)6O can be made), but its claimed room-temperature superconductivity property is NOT replicated.",
     "Solid-state reaction parameters (925 C, 5 h, vacuum sealed quartz tube) follow Lee/Kim 2023 §2.3 verbatim. Reported duration varies in companion paper (5-20 h); the canonical figure here is 5 h.",
     "Stoichiometry (1:1 molar lanarkite : Cu3P) targets x≈1 substitution per the paper's mechanism claim. The Cu site occupancy is itself contested in follow-up DFT work.",
-    "RTSC.md §8.8: LK-99 family never reaches absorbed=true. Tier 2 ingest is recipe + citation only; Tier 3 measurement and Tier 4 falsifier remain ✗ for this family."
+    "RTSC.md §8.8: LK-99 family never reaches absorbed=true. Tier 2 ingest is recipe + citation only; Tier 3 measurement and Tier 4 falsifier remain ✗ for this family.",
+    "(annotation added 2026-05-22 — honest-scrub pass) Empirical resolution of the original signal: independent analyses (Jain arxiv:2308.05222 · Zhu et al arxiv:2308.07999) attribute the sharp resistivity drop near 385 K and the ferromagnetic levitation to a Cu2S impurity β→α first-order phase transition (~385 K), NOT bulk superconductivity. This recipe is preserved as the canonical honest-negative anchor for F-RTSC-3 (replicated_by_independent_labs=0); the substrate behaviour and R4 invariant are unchanged."
   ],
   "citations": [
     "arxiv:2307.12008",
     "arxiv:2307.12037",
+    "arxiv:2308.05222 (Jain 2023 — Cu2S phase transition explanation)",
+    "arxiv:2308.07999 (Zhu et al 2023 — independent Cu2S impurity confirmation)",
     "RTSC.md §8.2 (LK-99 family row)",
     "RTSC.md §8.7 Tier 2 (recipe-as-record)",
     "RTSC.md §8.8 (g3 honest stance — RTSC class never absorbed)"
