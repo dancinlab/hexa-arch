@@ -4810,3 +4810,91 @@
   Hann/Welch hexa-native port 후 본 record 의 caveat shape 이 강화
   (현재 scope_caveats 3 lines 가 더 narrow disclosure 로 진화). κ-69
   R8 의 자연 끝 — 다음 round (κ-70) 은 별 cycle 의 별 decision.
+
+- 2026-05-22 — **phase κ-70 OPENING · ARCH §11.5 Round 9 scaffold
+  (G35..G38 pre-code 박힘) + G35 candidate-research note 동시 land —
+  사용자 게이트 "κ-70 horizon design (code 0)"**. κ-69 R8 4/4 CLOSURE
+  직후 같은 cycle 안에 κ-70 의 horizon scaffold 가 entry point 를
+  박았다. κ-68 G27..G30 → κ-69 G31..G34 → κ-70 G35..G38 의 third-cell
+  measurement-parity round progression. 한 commit 묶음으로 land:
+  - **§11.5 신설** — `### 11.5 G35–G38 implementation checklist (κ-70
+    R9 · 3rd cell measurement round)` head + 4 placeholder G-item
+    (G35 candidate-research [x] · G36 cell pick [ ] · G37 first-flip
+    [ ] · G38 closure [ ]). κ-68 G27..G30 / κ-69 G31..G34 의 동형
+    structure mirror. ARCH §11.3 head note refresh: G1-G34 → G1-G38
+    Round 1-9 carry. §11.4 R8 intro 'scaffold pre-code' → 'LANDED
+    2026-05-22 4/4 CLOSURE' 갱신.
+  - **G35 candidate-research note (`inbox/notes/2026-05-22-k70-horizon-
+    candidate-research.md`)** — 3 finalist 의 5-fold lock-in (cell ·
+    external oracle · bridge stack · hexa-native scope · PASS
+    criterion) 비교표 + ranking advisory:
+    - **#1 Ufo/plasma Stage-2** — `UfoVerifyRecord` 1-field 확장
+      (κ-69 G33 AuraVerifyRecord mirror 최저 friction) · `pilot-
+      plasma_metrics` 41/41 bit-exact substrate-parity floor · JET
+      pulse archive (default) / IMAS 2025 / NSTX-U dataset. Stage-4..7
+      (warp/wormhole/dim) D106 illustrative carve-out 명시 필요 ·
+      prediction-shape 약함 (formula evaluation · D117 numeric-
+      equivalence mirror shape · D110 prediction shape 아님).
+    - **#2 Energy/wind** — NREL Wind Toolkit (HSDS REST · token 필요) ·
+      IEC 61400-12 power curve · 새 `stdlib/kernels/wind/power_curve_
+      kernel.hexa` 신설 1-3 session (G31 mirror) · `EnergyWindVerifyRecord`
+      신설 (sub-cell separation) 또는 `EnergyVerifyRecord` 재사용 ·
+      prediction-shape 강함 (G29 mirror · honesty floor elevate).
+    - **#3 Bio/ECG** — 새 `BioVerifyRecord.swift` 신설 (~40 line ·
+      NEW DOMAIN signal · 3-domain progression Energy/Aura/Bio) ·
+      PhysioNet MIT-BIH Arrhythmia (anonymous wget · solar MIDC 와
+      동형 floor) · QRS R-peak interval (Pan-Tompkins · 새 `stdlib/
+      kernels/signal_proc/qrs_detector.hexa` 신설) 또는 Durbin §2.3
+      sequence alignment (`pilot-bio_align_nw` reuse · 7 textbook
+      pair PASS discrete-exact).
+  - **candidate-research note 의 trade-off (4 dimension)**:
+    schema 재사용 friction · prediction-axis honesty · critical-path
+    length (κ-70 R9 close time) · dataset access overhead · invariant-
+    helper audit signal (1st→2nd→3rd carrier record-type-agnostic
+    audit). default ranking = Ufo (#1 lowest-friction · κ-69 G33
+    mirror) · Energy/wind (#2 prediction-shape strong · longer path) ·
+    Bio (#3 NEW DOMAIN signal · new-record cost).
+  - **D-block 미land** (κ-68 / κ-69 scaffold opening pattern 동형) —
+    horizon-scaffold 자체는 design.md D-block 없이 land. D118 = G36
+    decision 시점 land (κ-69 G32 D115 land cycle 동형). D119 = G37
+    first-flip 시점 land (κ-69 G33 D117 mirror). D-block sequence
+    audit trail = D117 (κ-69 G33) → D118 (κ-70 G36 decision · 다음
+    cycle) → D119 (κ-70 G37 first-flip · 다다음 cycle).
+  - **NEXT_SESSIONS.md P-⑭ 신설** — κ-70 R9 cold-pickup brief (G36
+    cell pick · G37 first-flip · G38 closure · NOT/avoid invariants ·
+    exit criterion α/β/γ/δ). P-⑬ closure marker 추가 (κ-69 R8 4/4
+    CLOSURE 박제). head refresh: κ-69 closure + κ-70 opening 표면.
+  - **누적 commits** (κ-70 opening 묶음 · demiurge 측 · 본 cycle): 
+    단일 commit `design(κ-70): Round 9 horizon opened — G35-G38 scaffold
+    + 3-candidate research note (code 0)` 안에 `ARCH.md` §11.5 신설 +
+    §11.3 head refresh + §11.4 R8 intro 갱신 + `inbox/notes/2026-05-22-
+    k70-horizon-candidate-research.md` 신설 + `NEXT_SESSIONS.md` P-⑭
+    신설 + P-⑬ closure marker + head refresh + 본 PLAN entry. hexa-lang
+    측 변경 0 (decision 미수행 · substrate kernel 추가 0).
+  - **사이클 결과**: 새 cell flip = 0 · 새 측정 = 0 · 새 stored field =
+    0 · 새 `.demi` row = 0 · 새 D-block = 0 · 새 substrate kernel =
+    0. ARCH narrative + research note + session-pickup brief 만.
+  g3 — κ-70 opening 묶음은 **scaffold + 1-axis research-note land**
+  (G35 only). ARCH §11.5 Round 9 의 4 G-item 중 G35 만 `[x]` · G36..G38
+  은 `[ ]` placeholder (κ-68 G27..G30 가 G27 decision-only opening 으로
+  시작했던 패턴 / κ-69 G31..G34 가 G31 partial-land opening 으로 시작
+  했던 패턴의 자연 evolution — κ-70 는 G35 research-note opening 으로
+  시작). RFC 013 §6.11 status 는 여전히 `LANDED` (κ-69 closure 의 상태 ·
+  κ-70 R9 는 same-invariant 의 third-instance generalization audit
+  axis 라 RFC status 자체는 미flip). κ-68 ↔ κ-69 ↔ κ-70 boundary:
+  - κ-68 = per-cell measured-oracle parity 의 *1st cell first-flip
+    land* (Energy/solar · D110 · marginal prediction-shape PASS)
+  - κ-69 = (a) 1st cell ultimate-form parity 완성 (G31 G29-β · bridge
+    dependency 제거) + (b) 2nd cell mirror land (G32/G33 Aura/EEG ·
+    D117 · comfortable numeric-equivalence-shape PASS · honest
+    disclosure 박제) + (c) governance Stage 2 land (G34)
+  - κ-70 = 3rd cell measurement-parity land (G36 picked cell · G37
+    first-flip · PASS shape 는 picked cell + oracle 선택에 의존 ·
+    `invariantHolds` record-type-agnostic 설계의 3rd instance audit ·
+    `testXxxVerifyRecordCoveredByInvariantNoCodeChange` 의 3rd record-
+    type 위 확장이 invariant-helper code 변경 0 으로 land 되면 record-
+    type-agnostic 설계의 strongest evidence cycle).
+  본 κ-70 opening 의 *G35 research-note 동시 land* 패턴은 κ-68 G27
+  decision-only opening / κ-69 G31 partial-land opening 의 자연
+  evolution — research-note 박제가 G36 decision 의 가장 lowest-friction
+  entry point.

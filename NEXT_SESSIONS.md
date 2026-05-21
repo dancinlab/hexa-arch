@@ -1,10 +1,13 @@
 # NEXT_SESSIONS — copy-paste session-pickup prompts
 
-> 2026-05-21 · demiurge origin/main `3338e2c` (κ-68 closure +
-> κ-69 opening + ARCH §12 신설 + R8 2/4 LANDED: G31 full + G34
-> governance row) · hexa-lang PR #263 MERGED `8eec8e7` (G31a
-> wrapper + G31b producer integration same-cycle). 4-Phase
-> design-complete,
+> 2026-05-22 · demiurge origin/main (κ-69 R8 4/4 CLOSURE +
+> κ-70 R9 opening · ARCH §11.5 신설 · G35 candidate-research
+> LANDED) · 직전 cycle: κ-68 closure + κ-69 opening + ARCH §12
+> 신설 + R8 2/4 LANDED (G31 full + G34 governance row) +
+> hexa-lang PR #263 MERGED `8eec8e7` (G31a wrapper + G31b producer
+> integration same-cycle) + R8 4/4 CLOSURE (D115 G32 cell pick + D117
+> G33 2nd cell first-flip Aura/EEG · `mean_rel_err 8.4e-07` PASS).
+> 4-Phase design-complete,
 > macOS cockpit workbench built (rfc_012 IMPLEMENTED), κ-47..κ-49
 > swept ROI 1→18 (17 cell dispatch · 잔여=0 substrate side), κ-51
 > cern+synth absorbed=true, **κ-66 D80 sweep closed at 13 hexa-native
@@ -23,10 +26,15 @@
 > historical reference); **P-⑪ (bio D80 pilot full sweep · T3
 > in-progress)**, **P-⑫ (Q3 advisory cross-cohort follow-up +
 > chem substrate seed watch)**; **P-⑬ (κ-69 hexa-native ultimate-
-> form parity + next-cell round, ARCH §11.4 Round 8 G31..G34)** ←
-> κ-69 opening 2026-05-21 · **R8 2/4 LANDED** (G31 full via
-> hexa-lang PR #263 MERGED `8eec8e7` · G34 governance row
-> `3338e2c`) · **G32 / G33 still open**.
+> form parity + next-cell round, ARCH §11.4 Round 8 G31..G34) —
+> CLOSED 2026-05-22** (G31..G34 4/4 full land · D115 G32 cell pick +
+> D117 G33 second cell `absorbed=true` legitimate flip · Aura/EEG ·
+> historical reference); **P-⑭ (κ-70 third-cell measured-oracle
+> round, ARCH §11.5 Round 9 G35..G38)** ← κ-70 opening 2026-05-22 ·
+> **R9 1/4 LANDED** (G35 candidate-research note `inbox/notes/
+> 2026-05-22-k70-horizon-candidate-research.md` · 3 finalist: Ufo/
+> plasma Stage-2 · Energy/wind · Bio/ECG) · **G36 / G37 / G38 still
+> open**.
 >
 > **H-* (heavy-substrate measurement sessions, new 2026-05-20)** —
 > H-1 unblocks all (hexa-lang live-tree re-align); H-2..H-7 each
@@ -739,6 +747,148 @@ Exit criterion (any one ends honestly):
 > memory pattern). G31b 후속은 같은 worktree 유지 가능 (PR #263
 > branch 그대로) — `~/core/hexa-lang` main worktree 와 commit
 > 충돌 회피.
+
+> **κ-69 R8 closure (2026-05-22)**: G31..G34 4/4 full land — G31
+> (`84d4f66` G31a ultimate-form parity + hexa-lang PR #263 `8eec8e7` ·
+> Energy/solar `solar_position_kernel` runtime port · G31β PR #265
+> Ineichen clearsky port follow-on) + G32 (`234fb80` D115 · Aura/EEG
+> cell pick) + G33 (D117 · 두번째 cell `absorbed=true` legitimate
+> flip · PhysioNet Sleep-EDF SC4001E0 · mean_rel_err 8.40e-07 PASS ·
+> ~5 orders below 0.05 threshold · MNE Welch boxcar single-segment
+> numeric-equivalence shape · D110 의 prediction-shape PASS 와 다른
+> honest shape disclosure) + G34 (`3338e2c` governance row · constitution.md
+> v1.0.0 → v1.1.0 MINOR bump · measured-oracle invariant narrative
+> + 2 carve-out + first-land cite). RFC 013 §6.11 `LANDED` 유지
+> (κ-69 R8 = same-invariant 의 second-instance generalization audit ·
+> RFC status 자체 미flip · narrative cross-link만 add via D117).
+> P-⑬ 본문은 historical reference 로 박제 — κ-70 horizon (G35..G38 ·
+> 3rd cell measurement round) 는 **P-⑭** 참조.
+
+---
+
+## P-⑭ — κ-70 third-cell measured-oracle round (ARCH §11.5 Round 9 · post-κ-69)
+
+**κ-70 opening (2026-05-22 · 같은 cycle as κ-69 R8 4/4 CLOSURE)**: ARCH
+§11.5 Round 9 (G35..G38) 박힘 + 3-candidate research note 동시 land
+(`inbox/notes/2026-05-22-k70-horizon-candidate-research.md`). **R9 1/4
+LANDED same-cycle**: G35 candidate-research 박제 (Ufo/plasma Stage-2 ·
+Energy/wind · Bio/ECG 3 finalist · ranking advisory · code 0). Remaining
+open: **G36 cell pick** (D118 decision · code 0 · research note 3 finalist
+중 1 pick) · **G37 first-flip** (G36 cell measured-oracle PASS · κ-68 G29
+/ κ-69 G33 mirror · 3rd record-type invariant audit) · **G38 closure**
+(R9 4/4 박제 · κ-69 R8 closure entry mirror).
+
+**Use this when:** you continue κ-70 R9 work. ARCH.md §11.5 Round 9 는
+G35..G38 의 full scope (scope · deps · est · exit criterion · avoid) 를
+가지고 있다 — 본 prompt 는 그 narrative 를 *next-session pickup* 형태로
+framing 만; **detail 은 ARCH §11.5 G35..G38 + research note 참조**,
+본문 중복 금지.
+
+```
+demiurge κ-70 Round 9 session pickup.
+Repo: ~/core/demiurge · branch from origin/main. Read first:
+  - ARCH.md §11.5 Round 9 (G35..G38 full scope · est · exit
+    criterion) — 본 prompt 의 detail SSOT
+  - inbox/notes/2026-05-22-k70-horizon-candidate-research.md (3
+    finalist 5-fold lock-in · ranking advisory: #1 Ufo/plasma
+    Stage-2 · #2 Energy/wind · #3 Bio/ECG)
+  - PLAN.md κ-70 opening entry (2026-05-22 · §11.5 scaffold + G35
+    research note · 1/4 LANDED)
+  - ARCH.md §11.4 Round 8 (G31..G34 LANDED · κ-69 R8 closure
+    template · κ-70 R9 의 직접 mirror)
+  - design.md D109/D110 (κ-68 G27/G29) + D115/D117 (κ-69 G32/G33) —
+    G36/G37 D-block 의 grandparent + parent templates
+  - inbox/notes/k69-g32-candidate-research-2026-05-21.md (κ-69
+    G32 의 candidate-digest · 본 round 의 template)
+  - proposals/rfc_013_hexa_native_parity_connection.md §6.11 (LANDED
+    · κ-70 R9 는 same-invariant 의 third-instance generalization audit)
+
+Open axes (pick whichever is honest for this session — they are
+independent gates, except G37 depends on G36):
+
+(a) G35 — **LANDED 2026-05-22** (candidate-research note 박제 ·
+    `inbox/notes/2026-05-22-k70-horizon-candidate-research.md`).
+    Historical reference for G36 pickup — superseded by (b) for
+    next pickup.
+
+(b) G36 — 3rd cell pick + measured-oracle source decision (κ-70 R9
+    pre-code decision gate). G27 (κ-68 D109) / G32 (κ-69 D115) 와
+    동형 — 5-fold lock-in (cell · external oracle · bridge stack ·
+    hexa-native scope · PASS criterion) decision-only · code 0.
+    후보 cluster (G35 research note 의 3 finalist · ranking
+    advisory):
+    - #1 Ufo/plasma Stage-2 (UfoVerifyRecord · pilot-plasma_metrics
+      41/41 bit-exact · Stage-4..7 D106 carve-out 명시 필요)
+    - #2 Energy/wind (EnergyVerifyRecord or 새 EnergyWindVerifyRecord ·
+      substrate kernel 신설 1-3 session · HSDS token)
+    - #3 Bio/ECG (새 BioVerifyRecord ~40 line · PhysioNet MIT-BIH
+      anonymous wget · NEW DOMAIN signal)
+    avoid: D106 illustrative-physics gate cell · D95 computed-projection
+    only cell · ChipAnalyze (chip §B substrate-axis 별 axis 활성). 
+    design.md D118 record + exit criterion 박제.
+    est: 0.3-0.5 session. code 0.
+
+(c) G37 — G36 cell 의 첫 `absorbed=true` legitimate flip (κ-68 G29
+    / κ-69 G33 mirror · 세번째 cell measurement-parity land).
+    `MeasuredOracleRef` schema 재사용 + picked record type 에 field
+    instantiate (1-field 확장 if Ufo · 새 record if Energy/wind 또는
+    Bio) + 외부 dataset fetch + PASS criterion 측정 + g3-honest flip.
+    G30 Stage 1 XCTest invariant 가 새 cell 에도 auto-extend 적용
+    audit (3rd record-type · invariant helper code 변경 0 의
+    record-type-agnostic 설계의 strongest evidence).
+    deps: G36 (decision · D118) · G28 (schema 재사용) · G30 Stage 1
+    (invariant pattern · 2nd carrier 까지 audited).
+    est: 1-3 session (G36 picked cell candidate 에 의존).
+
+(d) G38 — κ-70 R9 closure 박제 (4/4 LANDED · κ-69 R8 closure entry
+    mirror). G35 + G36 + G37 누적 LANDED 시 land · partial-land
+    cycle boundary 도 가능.
+    est: 0.3-0.5 session.
+
+Gate (g3 — REQUIRED for remaining open axes):
+  - G36 land = design.md D118 박제 (5-fold sub-decision · code 0 ·
+    회피 후보 reject rationale 명시).
+  - G37 land = stored `absorbed: Bool` true · measured oracle PASS
+    근거 record cite · 다른 cell (Energy/solar Aura/EEG) 회귀 0 ·
+    XCTest 3rd carrier auto-extension audit confirmed.
+  - G38 land = R9 4/4 박제 + `next horizon (κ-71+)` placeholder.
+
+NOT (g3 — non-negotiable):
+  - Do NOT touch hexa-lang sibling repo 의 chip §B substrate-axis
+    work — 별 agent 가 active 작업 중 (§12.1). 본 세션은 chip §B
+    substrate-axis 미접촉.
+  - Do NOT trigger `absorbed=true` from D95 computed projection —
+    κ-68 D103 separation 유지.
+  - Do NOT include illustrative-physics cells in G36/G37 — D106.
+    Ufo Stage-2 채택 시 Stage-4..7 carve-out 명시 박제 필요
+    (scopeCaveats array + D118 body cite).
+  - Do NOT hardcode oracle dataset path — D86 floor.
+  - Do NOT bundle G36 decision + G37 first-flip in one session if
+    both require cross-repo merge — multi-repo discipline (κ-68 G28
+    / κ-69 G33 pattern).
+  - Do NOT skip G35 research note cite in D118 body — decision
+    rationale 가 G35 ranking 위 build.
+
+Exit criterion (any one ends honestly):
+  (α) G36 LANDED (D118 박제 · code 0) + scope-bounded next-pickup
+      note + ARCH §11.5 G36 `[x]` flip, OR
+  (β) G37 LANDED (세번째 cell first-flip · measured-oracle PASS) +
+      ARCH §11.5 G37 `[x]` flip + invariant 3rd-carrier audit, OR
+  (γ) G36 + G37 묶음 land + κ-70 closure (R9 4/4 LANDED via G38), OR
+  (δ) Scope-bounded sub-progress + honest next-pickup note in this
+      P-⑭ section + ARCH §11.5 partial flag (`[~]`) update.
+```
+
+> **Pattern note (κ-68 → κ-69 → κ-70 progression)**: κ-68 = 1st cell
+> measurement-parity land (Energy/solar D110 · marginal PASS prediction-
+> shape) · κ-69 = 2nd cell + ultimate-form parity (Aura/EEG D117 ·
+> comfortable PASS numeric-equivalence shape · honest disclosure 박제) ·
+> κ-70 = 3rd cell measurement-parity (G36 picked cell · PASS shape 는
+> picked cell + oracle 선택에 의존 · `invariantHolds` record-type-agnostic
+> 설계의 3rd instance audit). κ-69 G33 의 XCTest auto-extension test
+> (testAuraVerifyRecordCoveredByInvariantNoCodeChange) 가 κ-70 G37 에서
+> 3rd record-type 위 확장 — record-type-agnostic 설계의 strongest
+> evidence cycle.
 
 ---
 
