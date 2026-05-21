@@ -4627,3 +4627,17 @@
   row 는 narrative anchor 만 박힘. κ-68 R7 DEFERRED 의 honest closure —
   constitution.md populate (`99ccbc1`) 가 pre-condition 이었고 그 위
   같은 session 안에 closure 완료.
+  - **G31β LANDED same-cycle ✓** (hexa-lang PR #265 admin-squash ·
+    merge commit `326fdecfdc39d1b9185da5a8e022e46702f0ab09` ·
+    2026-05-21). G31 의 ultimate-form parity 의 Ineichen clearsky
+    leaf 도 hexa-native 화 — 5 new kernel pub fn + 7 new test case
+    (34/34 PASS @ <1e-10 vs pvlib 0.13.0) · producer 4 pvlib call
+    → 1 hexa subprocess collapse · smoke mean_rel_err 0.049674869
+    (G31b baseline 위 drift 5e-6 · 1/200 of 1e-3 transcription
+    threshold · `absorbed=true` 유지). Linke turbidity climatology
+    lookup 만 pvlib 잔여 — Energy/solar D80 endpoint NEAR-FULL
+    closure. G31β = G31 의 exit criterion 3 bridge_stack audit
+    확대 closure (별 G-item 아님) · R8 ledger 변동 없음 (G31 +
+    G34 `[x]` 유지 · G32 + G33 still `[ ]`). ARCH §11.4 G31
+    block 의 G31β sub-bullet append + bridge_stack 표기 갱신 +
+    ARCH `## Log` 새 entry 박힘 (본 entry 와 cross-consistent).

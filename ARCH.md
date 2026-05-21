@@ -1941,11 +1941,16 @@ measurement round (scaffold · pre-code)**
       (0.04988 → 0.04967 · improved 21bp · 추가 33bp threshold
       margin · regression 0)
     - `MeasuredOracleRef.bridgeStack` 표기 변화 audit — pvlib
-      의존 제거 표기 (`bridge_stack: "hexa_native_solar_position
-      + pvlib Ineichen clearsky"`) [x] G31b
+      의존 제거 표기 (post-G31β: `bridge_stack: "hexa_native_
+      solar_position + hexa_native_ineichen_clearsky (Linke from
+      pvlib turbidity climatology)"` — Linke turbidity climatology
+      lookup 만 pvlib 잔여 leaf · 4 pvlib call swap → 1 subprocess
+      via PR #265 `326fdecfdc39d1b9185da5a8e022e46702f0ab09`) [x]
+      G31b 후 G31β
     - `EnergyVerifyRecord` `provisional=true` 강등 risk 제거
-      (D80 §0 endpoint compliance — sun-position axis only ·
-      Ineichen clearsky 는 G31β 별 scope) [x] G31b
+      (D80 §0 endpoint compliance — sun-position axis only post-
+      G31b · Ineichen clearsky 도 hexa-native 화 post-G31β · D80
+      endpoint NEAR-FULL closure) [x] G31b · 확대 G31β
   - **deps**: G29 (κ-68 first flip · D110) · D80 (endpoint rule)
     · hexa-lang `stdlib/kernels/solar/` substrate · hexa-lang
     PR #263 MERGED 2026-05-21 (`8eec8e734f6db6a9275218dc4e2ebb5a9cf41f15`
@@ -1966,8 +1971,27 @@ measurement round (scaffold · pre-code)**
   - **est**: G31 fully landed same-cycle · est_actual = 1 session
     (well under 1-3 session estimate) · PR #263 merged 2026-05-21
     `8eec8e734f6db6a9275218dc4e2ebb5a9cf41f15`
-
-- [ ] **G32.** 다음 cell pick + measured-oracle source 결정 (κ-69
+  - **G31β follow-on LANDED same-cycle ✓** (hexa-lang PR #265
+    `326fdecfdc39d1b9185da5a8e022e46702f0ab09` · 2026-05-21 admin-
+    squash · bootstrap-CI infra-fail documented pattern):
+    Ineichen clearsky port hexa-native. 5 new pub fn in
+    `stdlib/kernels/solar/clearsky_kernel.hexa`
+    (`relative_airmass_kasten` · `alt2pres_barometric` ·
+    `absolute_airmass` · `ineichen_clearsky` · `ineichen_clearsky_
+    batch`) · 7 new test cases in `clearsky_kernel_test.hexa`
+    (34/34 PASS @ <1e-10 relative tolerance vs pvlib 0.13.0).
+    Producer `_compute_modeled()` 의 4 pvlib call (`clearsky.
+    ineichen` · `get_relative_airmass` · `alt2pres` · `get_
+    absolute_airmass`) → 1 hexa subprocess (`_ineichen_clearsky_
+    batch.hexa`). **smoke verified**: mean_rel_err =
+    **0.049674869** (drift 5e-6 from G31b baseline 0.04967492 ·
+    1/200 of 1e-3 transcription threshold · `pass=true` ·
+    `absorbed=true` 유지). Linke turbidity climatology lookup
+    만 pvlib 잔여 leaf — Energy/solar D80 endpoint NEAR-FULL
+    closure. transcription notes: (i) `perez_enhancement`
+    default kept · (ii) Kasten airmass form equivalence vs
+    `1/(cos(z)+0.50572*(96.07995-z)^-1.6364)` verified · (iii)
+    `HEXA_LANG` env var workaround for worktree-local imports.
     R8 pre-code decision gate · D106 illustrative gate 제외)
   - **scope**: G27 (κ-68) 와 동형 — cell 선정 + 외부 measured
     oracle + bridge stack + hexa-native scope + PASS criterion 의
@@ -2192,6 +2216,84 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **G31β Ineichen clearsky hexa-native port LANDED ·
+  Energy/solar D80 endpoint NEAR-FULL closure · §11.4 G31 block
+  G31β sub-bullet append + `bridge_stack` 표기 갱신** (hexa-lang
+  PR #265 squash-merged to origin/main · merge commit
+  `326fdecfdc39d1b9185da5a8e022e46702f0ab09` · admin-merge per
+  documented bootstrap-CI infra-fail pattern · 같은 PR #196/#208/
+  #247/#263 의 fail mode). G31 branch-complete (G31a + G31b) 위
+  ultimate-form parity 의 Ineichen clearsky leaf 도 hexa-native
+  화 — Linke turbidity climatology lookup 만 pvlib 잔여 (D80
+  endpoint compliance 의 NEAR-FULL closure · "FULL" 은 turbidity
+  lookup 도 hexa-native 화 시점).
+  - **hexa-lang side artifact** (PR #265 · 2 commit ·
+    `a6567c5a` kernel+test · `62a562db` producer+batch):
+    - `stdlib/kernels/solar/clearsky_kernel.hexa` 에 5 new pub
+      fn (`relative_airmass_kasten` · `alt2pres_barometric` ·
+      `absolute_airmass` · `ineichen_clearsky` · `ineichen_
+      clearsky_batch`). Kasten 1989 + Perez clear-sky model
+      (DNI / GHI / DHI 3-output) · perez_enhancement default
+      preserved
+    - `stdlib/kernels/solar/clearsky_kernel_test.hexa` 에 7 new
+      test case (Phoenix noon · 다양한 zenith · altitude
+      sensitivity · airmass forms · batch consistency 등) →
+      34/34 PASS @ <1e-10 relative tolerance vs pvlib 0.13.0
+    - producer-side batch wrapper `_ineichen_clearsky_batch.
+      hexa` (G31b 의 `_solar_position_batch.hexa` mirror
+      pattern · per-timestamp `hexa run` cold cost 회피)
+  - **demiurge side smoke verification** (producer
+    `nrel_midc_pyranometer.py` `_compute_modeled()` 의 4 pvlib
+    call → 1 hexa subprocess swap):
+    - mean_rel_err = **0.049674869** (G31b baseline 0.04967492
+      위 drift **5e-6** · 1e-3 transcription threshold 의 1/200
+      · 0.05 absolute threshold 기준 PASS margin 0.000325 →
+      0.000325 거의 무변화)
+    - `pass=true` · `absorbed=true` 유지 · `bridge_stack` 표기
+      `"hexa_native_solar_position + hexa_native_ineichen_
+      clearsky (Linke from pvlib turbidity climatology)"` 로
+      갱신
+    - 4 → 1 subprocess collapse: `pvlib.clearsky.ineichen(...)`
+      + `pvlib.atmosphere.get_relative_airmass(z)` + `pvlib.
+      atmosphere.alt2pres(altitude)` + `pvlib.atmosphere.get_
+      absolute_airmass(rel_am, p)` 한 batch CLI 호출 안에
+      흡수됨
+  - **3 algorithm transcription notes** (Linke turbidity 외
+    discoveries):
+    - **perez_enhancement default 유지**: pvlib default
+      (perez_enhancement = False) 를 그대로 transcribe — 변경
+      시 mean_rel_err drift ≥ 1e-4 expected · scope 외
+    - **Kasten airmass form equivalence**: hexa-native form
+      `relative_airmass_kasten(z) = 1 / (cos(z) + 0.50572 *
+      (96.07995 - degrees(z))^-1.6364)` ≡ pvlib `get_relative_
+      airmass(z, model='kastenyoung1989')` (test fixture <1e-10
+      relative drift)
+    - **`HEXA_LANG` env var workaround**: producer subprocess
+      에서 worktree-local stdlib import 를 `HEXA_LANG=<repo
+      root>` 로 override (system-installed hexa-lang 대신
+      sibling repo 의 in-flight stdlib 가 load 되도록 ·
+      별도 axis 로 `hexa run --stdlib` flag 검토 가능)
+  - **κ-69 R8 진척**: G31β = G31 의 follow-on (별 G-item 아님 ·
+    G31 exit criterion 3 의 bridge_stack audit 의 확대 closure).
+    R8 4 G-item 의 ledger 변동 없음 (G31 + G34 `[x]` · G32 + G33
+    still `[ ]`) — G31β 는 G31 의 ultimate-form parity 완성도
+    심화 (sun-position axis only → sun-position + clearsky axis).
+    다음 lowest-friction = G32 decision gate (5-fold lock-in cell
+    pick · code 0).
+  - **cross-repo discipline**: 본 commit 은 demiurge-side
+    narrative update only. hexa-lang PR #265 merge 시각만 박제
+    (sibling repo 측 work 미접촉 · 본 cycle 의 sibling work 는
+    이미 PR #265 안에 absorbed). post-merge worktree cleanup
+    (`~/core/hexa-lang-g31`) 은 별도 step 으로 user 가 inspect
+    후 결정.
+  - **inbox-file ref fix (side-fix · 본 cycle audit)**: 본 Log
+    entry 의 2026-05-21 `## Log` 헤드 직전 entry (§12.1 (e)
+    LANDED) 의 "inbox note filed `2026-05-21-rfc006-§5-multibit-
+    width-truncation.md`" reference 가 phantom (해당 inbox file
+    부재 · 가장 가까운 name `rfc006-s5-area-oracle-parity-
+    handoff.md` 는 concurrent agent domain 으로 off-limits).
+    Reference 를 narrative-carried 표기로 fix (별 file 신설 0).
+
 - 2026-05-21 — **§12.1 (e) `fifo_mem` 2-D LHS Option A LANDED ·
   Tier-1 (e) own-scope CLOSED · ARCH §12.1 (e) `[ ]` → `[x]` flip**
   (hexa-lang direct commit `c4b35b13` `feat(read_verilog): RFC 006
@@ -2221,9 +2323,9 @@ landing 시각만 ARCH `## Log` 에 박제.
     width via _rv_v2_wire_width` (15:27 KST · post-G34 land time).
     D-wire packed-width mirror via new `_rv_v2_wire_width(m, name)`
     helper. 79/79 PASS preserved · area delta NONE (BLIF emitter
-    still collapses multi-bit cells to single `.latch` lines · 별
-    inbox note filed `2026-05-21-rfc006-§5-multibit-width-
-    truncation.md`).
+    still collapses multi-bit cells to single `.latch` lines ·
+    filing deferred · narrative carried by this Log entry — 별
+    inbox note 신설 0).
   - **scope honesty (g3)**: (e) 의 own-scope 만 CLOSED — area > 0
     + ABC accepts + no honest-skip + 측정 가능. §5 absolute area
     gap ~98% 잔존 (Option A flat $dff 는 substrate `synth_memory_
