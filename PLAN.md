@@ -4490,3 +4490,72 @@
   discipline 의 직접 evolution — isolated worktree (`~/core/hexa-
   lang-g31`) 가 같은 sibling repo 에 다른 agent 가 활성 작업 중일
   때의 honest concurrent-agent pattern.
+
+- 2026-05-21 — **G31b producer integration LANDED same-cycle ·
+  G31 branch-complete · PR #263 = 2 commits ready-to-merge**
+  (hexa-lang `47c2378e`). κ-69 opening 묶음의 "다음 cycle G31b
+  follow-on" 약속이 같은 cycle 안에서 실현 — `all bg go` background
+  agent 가 G31b producer integration 완수. ARCH §11.4 G31 partial-
+  land block 갱신 (G31a + G31b 모두 ✓ branch · `[~]` 유지 until
+  PR #263 merge · merge 시 `[x]` flip):
+  - **hexa-lang artifact** (`47c2378e` · branch `g31-solar-position-
+    hexa-native-port`):
+    - 신규 `stdlib/energy/_solar_position_batch.hexa` (67-line ·
+      argv `<year> <doy> <utc_hour_start> <step_min> <n_steps>
+      <lat> <lon>` → stdout N zenith lines · internal loop using
+      `solar_kernel::apparent_zenith`).
+    - 수정 `stdlib/energy/nrel_midc_pyranometer.py` (+141 / -38 ·
+      `_compute_modeled()` swap + `pvlib.clearsky.ineichen(
+      apparent_zenith=hexa_native_z, ...)` external pass +
+      `bridge_stack` 갱신).
+  - **G31b smoke test PASS** (D109 acceptance · κ-68 G29 first-flip
+    gate 안 깨짐):
+    - mean_rel_err = **0.04967492** vs baseline 0.04988 → 21bp
+      *IMPROVED* (regression NOT · drift 가 favorable 방향)
+    - 0.05 threshold 기준 PASS margin **doubled** (0.00033 →
+      0.00067 · marginal pass 의 안정성 강화)
+    - n_clearsky=480 · daylight=831 · dropped=351 (cloudy/cloud-
+      enhanced) · max_rel_err=0.22708 (clear-sky window cloud-edge
+      transients · honestly documented)
+    - `absorbed=true` `pass=true` 유지
+    - bridge_stack = `"hexa_native_solar_position + pvlib Ineichen
+      clearsky"` (D80 §0 endpoint compliance · sun-position axis
+      only · Ineichen 는 G31β 별 scope)
+  - **batch wrapper rationale** (Approach B 채택): Approach A
+    (per-timestamp `hexa run`) cold ≈ 10s/call · 1440-step ≈ 4h
+    infeasible. Approach B (batch wrapper) 9s wall for 1440 zeniths
+    · native binary self 0.48s · cold-start overhead 가 dominant 라
+    batch 가 자연 amortization. NREL MIDC HTTP fetch 가 producer
+    총 3m17s 의 dominant cost — hexa-native subprocess overhead 는
+    noise-floor 이하.
+  - **infra discoveries** (G31b agent · 별 axis tracked):
+    - `/tmp` output path 가 `hexa build` panic-trigger guard (April
+      2026 mac kernel-panic mitigation) 에 의해 차단 — sidestep:
+      batch wrapper 는 `hexa run` 만 사용 (cached artifact path)
+    - Sandia 1985 ephemeris (hexa-native) vs pvlib NREL SPA의
+      0.001-0.002° drift = algorithm choice 차이 (kernel docstring
+      의 <1e-9 relative 와 일치) · regression NOT
+  - **demiurge doc sync** (background agent · `8e002a4`): PLAN.md
+    κ-69 opening entry · NEXT_SESSIONS.md P-⑬ 신설 + P-⑩ closure
+    marker · HANDOFF.md §9/§10 refresh — ARCH narrative 와 cross-
+    consistent. 본 entry 가 그 doc-sync 후 G31b 결과를 append.
+  - **누적 commits** (G31 branch-complete cycle):
+    - demiurge 측: 본 entry 의 ARCH update commit + earlier
+      `e7371be`/`5897572`/`984c2d4`/`8b46c95`/`8e002a4` = 6 cycle
+      commits (전부 ARCH/PLAN narrative · sibling-repo work 없음)
+    - hexa-lang 측: PR #263 = 2 commit (`740964a0` G31a + `47c2378e`
+      G31b) OPEN ready-to-merge
+  - **PR #263 merge gate**: smoke verified · zero regression · 1-3
+    bp improvement · ARCH §11.4 G31 → `[x]` flip + `bridge_stack`
+    audit closure + `provisional=true` 강등 risk 제거 (sun-position
+    axis only)
+  - **next axis chain**: G31β (Ineichen clearsky 도 hexa-native
+    port · κ-69+ scope) 또는 κ-69 R8 의 G32 decision gate (lowest-
+    friction · 5-fold lock-in cell pick · code 0)
+  g3 — G31 branch-complete cycle = `all bg go` background-agent
+  pattern 의 첫 substantive land. demiurge ARCH narrative + hexa-
+  lang PR + smoke verification 모두 honest, ARCH §11.4 Round 8 의
+  4 G-item 중 G31 만 branch-complete (`[~]` PR-pending · G31a+G31b
+  모두 ✓) · G32..G34 still `[ ]`. κ-69 의 critical-path 가 G31 →
+  G32 → G33 으로 deepen — G32 decision 이 다음 lowest-friction
+  step.

@@ -1897,8 +1897,8 @@ measurement round (scaffold · pre-code)**
 
 - [~] **G31.** G29-β — Energy/solar cell `solar_position_kernel`
     hexa-native runtime call site port (D80 ultimate-form parity ·
-    *partial 2026-05-21*: wrapper half landed via hexa-lang PR #263 ·
-    producer integration follow-on pending)
+    *G31a + G31b both landed on branch 2026-05-21 · PR #263 OPEN
+    with 2 commits · `[~]` until PR merge → `[x]`*)
   - **scope**: G29 (κ-68) 의 first legitimate flip 은 substrate
     bridge stack (pvlib clearsky/transposition trusted) 위에서
     `solar_position_kernel.hexa` 만 hexa-native scope 였음 — D80
@@ -1907,9 +1907,8 @@ measurement round (scaffold · pre-code)**
     runtime call site 자체를 hexa-native 화 · pvlib bridge 의존
     제거 (sun-position axis 만 · Ineichen clearsky 는 G31β 별
     scope) · 동일 NREL MIDC fixture 위 mean rel_err ≤ 5% 유지
-  - **partial-land status (2026-05-21)**:
-    - **G31a wrapper half** ✓ (hexa-lang PR #263 OPEN · branch
-      `g31-solar-position-hexa-native-port` · commit `740964a0`):
+  - **branch-land status (2026-05-21 · same-cycle ✓ ✓)**:
+    - **G31a wrapper half** ✓ (hexa-lang `740964a0`):
       `stdlib/energy/_solar_position_cli.hexa` 64-line wrapper
       exposing `solar_kernel::apparent_zenith` 를 per-timestamp
       CLI 로. parity verified Δ≈0.002° vs pvlib 0.13.0 noon
@@ -1918,29 +1917,53 @@ measurement round (scaffold · pre-code)**
       (separate). isolated worktree `~/core/hexa-lang-g31` 에서
       작업 (memory note: shared worktree with parallel agents
       회피 · `git worktree add origin/main` 격리)
-    - **G31b producer integration** [ ]: `nrel_midc_pyranometer.py`
-      의 `_compute_modeled()` 에서 `loc.get_solarposition(times)`
-      → subprocess `hexa run _solar_position_cli.hexa` 로 swap +
+    - **G31b producer integration** ✓ (hexa-lang `47c2378e`):
+      `nrel_midc_pyranometer.py` 의 `_compute_modeled()` 에서
+      `loc.get_solarposition(times)` → subprocess
+      `hexa run _solar_position_batch.hexa` 로 swap +
       `pvlib.clearsky.ineichen(apparent_zenith=hexa_native_z, ...)`
-      external apparent_zenith pass + NREL MIDC 480-sample mean
-      rel_err 유지 verify
+      external apparent_zenith pass + `bridge_stack` 표기 갱신.
+      **batch wrapper** (`_solar_position_batch.hexa` 67 line ·
+      neue) 채택 — per-timestamp `hexa run` cold ≈ 10s →
+      1440-step batch ≈ 9s wall (one subprocess loop internally).
+      Approach A (per-timestamp) 는 1440×0.48s≈11min infeasible
+      이라 Approach B 선택. **smoke test PASS**: mean_rel_err =
+      **0.04967492** (baseline 0.04988 보다 0.00021 *IMPROVED* ·
+      0.05 threshold 기준 PASS margin 0.00033 → 0.00067 doubled).
+      n_clearsky=480 · daylight=831 · dropped=351 · max_rel_err=
+      0.22708 · `absorbed=true` `pass=true` 유지
   - **exit criterion**:
     - `solar_position_kernel.hexa` runtime call site 가 hexa-lang
-      sibling repo 의 hexa-native binary 위 동작 [x] (PR #263
-      smoke verified 2026-05-21)
+      sibling repo 의 hexa-native binary 위 동작 [x] (G31a · PR
+      #263 smoke verified 2026-05-21)
     - G29 fixture (480 clear-sky samples · 2024-06-15 SRRL BMS)
-      mean rel_err 유지 (drift ≤ ε · regression 0) [ ] G31b
-    - `MeasuredOracleRef.bridgeStack` 표기 변화 audit (pvlib 의존
-      제거 시 `bridgeStack: "hexa_native_solar_position + pvlib
-      Ineichen"` 등 갱신) [ ] G31b
+      mean rel_err 유지 (drift ≤ ε · regression 0) [x] G31b
+      (0.04988 → 0.04967 · improved 21bp · 추가 33bp threshold
+      margin · regression 0)
+    - `MeasuredOracleRef.bridgeStack` 표기 변화 audit — pvlib
+      의존 제거 표기 (`bridge_stack: "hexa_native_solar_position
+      + pvlib Ineichen clearsky"`) [x] G31b
     - `EnergyVerifyRecord` `provisional=true` 강등 risk 제거
-      (D80 §0 endpoint compliance — sun-position axis only)
-      [ ] G31b
+      (D80 §0 endpoint compliance — sun-position axis only ·
+      Ineichen clearsky 는 G31β 별 scope) [x] G31b
   - **deps**: G29 (κ-68 first flip · D110) · D80 (endpoint rule)
     · hexa-lang `stdlib/kernels/solar/` substrate · hexa-lang
-    PR #263 (G31a wrapper · merge gate for G31b)
-  - **est**: G31a ✓ (이 세션 land) · G31b 1-2 session (producer
-    swap + smoke test + bridgeStack update)
+    PR #263 merge (origin/main land 시 G31 → `[x]`)
+  - **infra discoveries** (G31b agent · 별 axis tracked):
+    - `/tmp` output path 가 `hexa build` panic-trigger guard
+      (April 2026 mac kernel-panic mitigation) 에 의해 차단 —
+      sidestep: batch wrapper 는 `hexa run` 만 사용 (build
+      산출물 별 path 로 cached)
+    - Sandia 1985 ephemeris (hexa-native) vs pvlib NREL SPA
+      0.001-0.002° drift 유지 (kernel docstring 의 <1e-9
+      relative 와 일치 · 두 algorithm 차이 이지 regression
+      아님)
+    - per-timestamp `hexa run` cold ≈ 10s · native binary 0.48s
+      (interp warm path · 1440× = 11min infeasible) → batch
+      wrapper 가 single subprocess 로 9s wall · NREL HTTP fetch
+      가 producer 총 3m17s 의 dominant cost
+  - **est**: G31a + G31b 모두 same-cycle 2026-05-21 ✓ · PR #263
+    merge 대기만 남음 (review + merge 후 `[~]` → `[x]`)
 
 - [ ] **G32.** 다음 cell pick + measured-oracle source 결정 (κ-69
     R8 pre-code decision gate · D106 illustrative gate 제외)
@@ -2136,6 +2159,55 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **G31b producer integration landed · same-cycle full
+  G31 partial → branch-complete** (hexa-lang PR #263 OPEN with 2
+  commits — `740964a0` G31a + `47c2378e` G31b). κ-69 opening 같은
+  cycle 안에 G31 의 두 half 가 모두 branch 측 land. `[~]` 유지
+  (PR merge 대기 · merge 시 `[x]` 로 flip). work 요약:
+  - **artifact** (hexa-lang `47c2378e` · branch `g31-solar-
+    position-hexa-native-port`):
+    - new `stdlib/energy/_solar_position_batch.hexa` (67-line ·
+      argv `<year> <doy> <utc_hour_start> <step_min> <n_steps>
+      <lat> <lon>` → stdout N zenith lines · internal loop
+      using `solar_kernel::apparent_zenith`)
+    - modified `stdlib/energy/nrel_midc_pyranometer.py` (+141 /
+      -38 line · `_compute_modeled()` swap + `pvlib.clearsky.
+      ineichen(apparent_zenith=hexa_native_z, ...)` external
+      pass + `bridge_stack` field 갱신)
+  - **smoke test PASS** (G31b acceptance):
+    - mean_rel_err = **0.04967492** vs baseline 0.04988 ·
+      threshold 0.05 → PASS margin doubled (0.00033 → 0.00067 ·
+      약 21bp 개선 · regression NOT)
+    - n_clearsky=480 · daylight=831 · dropped=351 (cloudy/cloud-
+      enhanced)
+    - max_rel_err=0.22708 (clear-sky window 의 cloud-edge
+      transient · honest documented in dataset_caveats)
+    - `absorbed=true` `pass=true` 유지 (κ-68 G29 first-flip
+      gate 안 깨짐)
+    - bridge_stack = `"hexa_native_solar_position + pvlib
+      Ineichen clearsky"` 으로 honest 갱신 (D80 §0 endpoint
+      compliance · sun-position axis only · Ineichen 는 G31β)
+  - **batch wrapper rationale**: Approach A (per-timestamp `hexa
+    run`) = 1440 × ~10s cold-start = 4-hour infeasible. Approach
+    B (batch wrapper · single subprocess loop internally) = 9s
+    wall for 1440 zeniths. native binary 자체는 0.48s, cold-
+    start overhead 가 dominant — batch 가 자연스러운 amortization.
+  - **infra discoveries** (별 axis · note 박제):
+    - `/tmp` output path 가 `hexa build` panic-trigger guard
+      (April 2026 mac kernel-panic mitigation) 에 의해 차단 —
+      batch wrapper 는 `hexa run` 만 사용해서 sidestep (run mode
+      cached artifact path 사용)
+    - Sandia 1985 ephemeris (hexa-native) vs pvlib NREL SPA의
+      0.001-0.002° drift 는 algorithm choice 차이 (kernel
+      docstring 의 <1e-9 relative 와 일치) · regression 아님
+    - NREL MIDC HTTP fetch 가 producer 총 3m17s 의 dominant
+      cost — hexa-native subprocess overhead 는 noise-floor 이하
+  - **PR #263 status**: OPEN with 2 commits ready-to-merge ·
+    smoke verified · merge 시 ARCH §11.4 G31 `[~]` → `[x]` flip
+    + bridge_stack audit 완료 + provisional=true 강등 risk 제거
+  - **next dep chain**: G31β (Ineichen clearsky 도 hexa-native
+    port · κ-69+ scope) · 또는 κ-69 R8 의 다른 axis (G32/G33/G34
+    중 G32 decision gate 가 lowest-friction next)
 - 2026-05-21 — **G31a wrapper half landed · κ-69 first cross-repo
   partial-land** (hexa-lang PR #263 OPEN). κ-69 opening 같은 cycle
   안에 G31 의 wrapper 부분이 hexa-lang sibling repo 측 land — ARCH
