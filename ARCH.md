@@ -23,9 +23,12 @@
 ## 0. First principle — hexa-only (ultimate form)
 
 > Every producer, kernel, record schema, and verify oracle's
-> **ultimate destination** is **hexa-native** (hexa-lang). Python
-> adapters, Swift cockpit, external CLI, and sibling-repo binaries
-> are **transitional pointers (bridges)** — not endpoints. A cell
+> **ultimate destination** is **hexa-native** (`~/core/hexa-lang/`).
+> Python adapters, Swift cockpit, external CLI are **transitional
+> pointers (bridges)** — not endpoints. **Sibling repos** (`hexa-
+> rtsc/` · `hexa-matter/` · `hexa-bio/` · `hexa-chem/`) carry
+> **domain narrative only** (markdown · physics derivation · spec
+> · citation index) — **no code** per D116 amendment of D14/D17/D77. A cell
 > can only be flipped to `absorbed=true` non-provisionally when
 > its hexa-native parity port exists AND matches the transitional
 > implementation to a cited tolerance. Otherwise: GATE_OPEN /
@@ -315,23 +318,48 @@ ActionDispatch.runEngineTool(verb, domain, producer:)
 
 CLI: `action analyze cern --producer pylhe`.
 
-### 4.4 Sibling repos (D17 / D77)
+### 4.4 Sibling repos (D17 / D77 / **D116 amendment 2026-05-21**)
 
-`hexa-lang` is the single SSOT for stdlib code. A handful of
-substrate domains live in *sibling repos* because their full
-substrate tree is much larger than what fits as one stdlib subtree:
+> **D116** amendment: sibling repos = **문서만 (docs only)** · **모든
+> substrate code = `~/core/hexa-lang/stdlib/<domain>/` ONLY**. D14/
+> D17/D77 의 "sibling repo for large substrate sub-trees" precedent
+> 는 본 D116 으로 **role-only-narrative** 로 amendment.
+
+`hexa-lang` is the **single SSOT for ALL stdlib code** (substrate
+algorithms · kernels · math · physics models · validation logic).
+Sibling repos serve as **doc-only domain SSOTs** — domain narrative
+(`*.md`) · physics derivation notes · citation indexes · spec ·
+clean-room provenance. **No code** (no `.hexa` · no `.py` · no
+`.swift` in sibling repos):
 
 ```
-~/core/hexa-matter/   — material synthesis substrate (D17 precedent)
-~/core/hexa-bio/      — molecular biology substrate (D77, planned)
-~/core/hexa-chem/     — chemistry substrate (D77, planned)
+~/core/hexa-rtsc/     — RTSC.md 도메인 narrative · 5-gate definition
+                        · candidate matrix · physics derivation
+                        notes (R4 cross-link 의 doctrinal source).
+                        **docs only · NO code (D116)**.
+~/core/hexa-matter/   — material domain narrative + taxonomy +
+                        citation index (D17 precedent · D116 으로
+                        code allowance 제거). **docs only**.
+~/core/hexa-bio/      — molecular biology domain narrative + spec
+                        (D77 planned · D116 으로 docs-only 정착).
+~/core/hexa-chem/     — chemistry domain narrative + citation index
+                        (D77 planned · D116 으로 docs-only 정착).
 ```
 
-The demiurge-side domain (`domains/matter.md`, `domains/bio.md`,
-`domains/chem.md`) is a **pointer** — it carries the deliverable
-spec + cited sources, and its substrate scripts spawn into the
-sibling repo. `hexa-lang/stdlib/<domain>/` for these three points
-to the sibling repo's entry script rather than holding the math.
+The demiurge-side `domains/<id>.md` is the **active engineering
+pointer** (carries deliverable spec + 7-verb cell wiring + cited
+sources); sibling repos carry the **expanded narrative** (physics
+derivation · longer-form spec · multi-paper citation cluster) when
+the spec exceeds what a single `domains/<id>.md` page can hold.
+Cellrun.hexa (D111 + ARCH §4.5) reads `.demi` manifest from
+demiurge `domains/` · resolves substrate `script` path under
+**`~/core/hexa-lang/stdlib/<domain>/`** (NEVER a sibling repo).
+
+**Migration scope** (Phase B/C of D116 · multi-cycle): sibling
+repos that currently hold algorithm code (`hexa-rtsc/verify/calc_
+bcs.hexa` · `calc_mcmillan.hexa` · `calc_hc2_48t.hexa` · `falsifier_
+check.hexa` · 등 추정 4개) 점진 `~/core/hexa-lang/stdlib/<domain>/`
+이전. Sibling repo 의 narrative-only role 정착까지 multi-session.
 
 ### 4.5 D111 — Generic verb-cell dispatch (`cellrun.hexa` + `.demi` manifest)
 
@@ -444,9 +472,12 @@ ActionDispatch.dispatch(verb, domain)                                    [Swift 
 **Cross-link**: design.md D111 (full rationale + rejected
 alternatives + Phase A..E) · D112 (Verb canonical → English wire
 form · bug #2 fix) · D113 (payload flattening · sibling .meta.json
-roll-up) · D14 / D18 / D74 / D80 / D83 (.demi precedent) ·
+roll-up) · **D114** (stdlib SSOT enforcement · code-shape × repo
+boundary) · **D116** (sibling repos = docs only · amendment of
+D14/D17/D77) · D14 / D18 / D74 / D80 / D83 (.demi precedent) ·
 CLAUDE.md Principles 1 + 2 + 4 + 5 (ai-native · hexa-first ·
-domain-meta-domain · lattice-as-tool) · ARCH §0 first principle.
+domain-meta-domain · lattice-as-tool) · ARCH §0 first principle ·
+§4.4 (sibling repos docs-only role per D116).
 
 ---
 
@@ -2356,6 +2387,49 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **D116 ratified · sibling repos = 문서만 · D14/D17/D77
+  amendment · 실수 방지 cascade across spec kit**. 사용자 직접 지시
+  "hexa-rtsc 는 문서만 놔둘꺼야 / hexa-lang, demiurge 가 필요한거
+  각각 나눠서 보관하면 되 코드 / spec kit 에도 반드시 기록 / 실수
+  방지" + AskUser 해석 A (모든 sibling repos 문서만) — D116 ratify.
+  6-file cascade 단일 commit:
+  - **design.md D116** (80 line · sibling repos doc-only · D14/D17/
+    D77 amendment · 4-repo enforcement boundary table · Phase A/B/C/D
+    exit · rejected alternatives 명시)
+  - **constitution R3** boundary table 3-column 확장 (`cockpit/Sources/`
+    × `hexa-lang/stdlib/` × sibling repos) · sibling repos 컬럼 추가
+    with NO/NO/OK domain narrative · semver **1.4.0 → 1.4.1 PATCH**
+    (Amendment history block entry)
+  - **`.specify/README.md`** D114/D116 section (3-column boundary
+    table 도식 · 4 anti-pattern catalog "🛑 실수 방지" 명시 — hexa-
+    rtsc/verify/ 추천 #1 · Producer.swift 신설 #2 · cockpit/scripts/
+    Python #3 · Dispatch class 안 algorithm #4)
+  - **`.specify/templates/spec-template.md`** Assumptions section
+    D114/D116 prompt 추가 (per-spec auto-prompt · 신규 feature spec
+    이 sibling repo 에 코드 추천하는 실수 방지)
+  - **ARCH §0** first principle narrative refresh (sibling repos
+    부분 "transitional pointers (bridges)" → "domain narrative only
+    (markdown · physics derivation · spec · citation index) — no
+    code per D116 amendment")
+  - **ARCH §4.4** sibling repos section full refresh (D116 정착 ·
+    `hexa-rtsc` 추가 · 4-repo doc-only role · Phase B/C migration
+    scope · current 4 algorithm files in hexa-rtsc/verify/ → hexa-
+    lang/stdlib/<domain>/ 이전 대상 명시)
+  - **ARCH §4.5** cross-link D114 + D116 추가
+  - **audit note correction** (inbox/notes/2026-05-21-d114-phaseb-
+    material-falsifier-audit.md): MaterialFalsifier 273-LOC algorithm
+    destination `~/core/hexa-rtsc/verify/falsifier_dispatch.hexa`
+    → `~/core/hexa-lang/stdlib/rtsc/falsifier_dispatch.hexa` 정정
+  - **trigger artifact**: Phase B MaterialFalsifier audit agent 가
+    `~/core/hexa-rtsc/verify/` 를 destination 으로 추천 — D116
+    명문화 이전이라 가능했던 실수. 본 cycle 의 doctrinal lock 이
+    미래 동일 패턴 영구 방지.
+  - **D-numbering 정리**: G32 = D115 (reserved stub 유지) · D116 =
+    sibling repos amendment (이 cycle) · 향후 G32 land 시 D115 replace
+    → G33 등은 D117 onwards.
+  - **next cycle (Phase B/C)**: sibling repo 4-repo 의 현 substrate
+    code inventory + hexa-lang stdlib/<domain>/ 이전 plan (multi-
+    cycle · 6-12 session est).
 - 2026-05-21 — **D114 stdlib SSOT enforcement ratified · constitution
   R3 (1.2.2 → 1.3.0 MINOR) 신설 · §11.4 G32 D-number shift D114 →
   D115**. 사용자 직접 지시 "모두 hexa-lang 보관 / SSOT 말이야 /

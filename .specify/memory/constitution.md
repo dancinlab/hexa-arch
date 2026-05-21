@@ -107,16 +107,17 @@ Verb-cell dispatch (the 18-domain × 7-verb = 126-cell grid) flows through a **h
 
 All **stdlib code** (substrate algorithms · physics · math · validation logic · domain-specific kernels) lives in **`~/core/hexa-lang/stdlib/<domain>/` ONLY**. Sibling repos (`~/core/hexa-rtsc/` · `~/core/hexa-matter/` · `~/core/hexa-bio/` · `~/core/hexa-chem/`) are **docs only** — markdown narrative · domain spec · physics derivation notes · citation indexes · NO code (per D116 amendment of D14/D17/D77 precedent). demiurge `cockpit/Sources/` carries **only**: (a) typed record schemas (Codable wire models · compile-time safety for consumer) · (b) UI views (SwiftUI · cockpit chrome) · (c) thin dispatch wrappers (`CellrunDispatch.swift` · `*Producer.swift` transitional bridges per D111 Phase C deprecation track) · (d) CLI presentation (DemiurgeCLI args parse + output formatting). **Algorithm-shaped code in `cockpit/Sources/` is an anti-pattern requiring migration to hexa-lang stdlib.**
 
-- **Boundary table** (cockpit/Sources/ 에 OK vs NO · per D114 § enforcement boundary):
-  | code shape | demiurge cockpit/ 위치? | reason |
-  |---|---|---|
-  | typed record models (`*Record.swift` Codable) | ✅ OK | consumer-side wire-format compile-time safety |
-  | UI views (SwiftUI · cockpit chrome) | ✅ OK | macOS-native presentation · Tier-2 hexa-lang UI is separate axis |
-  | thin dispatch wrappers | ✅ OK (transitional · D111 Phase C track) | spawn glue |
-  | CLI presentation (DemiurgeCLI) | ✅ OK | Swift binary entrypoint |
-  | domain manifests (`.demi`) | ✅ OK | pointers (D111 § rationale "co-located 2 file") |
-  | **algorithm code** (math · physics · validation rules · domain logic) | 🔴 **NO** | migrate to hexa-lang stdlib |
-  | Python scripts under `cockpit/scripts/` | 🔴 **NO** (D61 violator) | migrate to `hexa-lang/stdlib/<domain>/` |
+- **Boundary table** (3-column · code-shape × repo · per D114 + D116 enforcement boundary):
+  | code shape | demiurge `cockpit/Sources/` | `hexa-lang/stdlib/<domain>/` | sibling repos (`hexa-rtsc/` · `hexa-matter/` · `hexa-bio/` · `hexa-chem/`) |
+  |---|---|---|---|
+  | typed record models (`*Record.swift` Codable) | ✅ OK | ✅ OK (hexa-native typed records mirror) | 🔴 NO (D116) |
+  | UI views (SwiftUI · macOS-native) | ✅ OK | — | 🔴 NO (D116) |
+  | thin dispatch wrappers | ✅ OK (transitional · D111 Phase C) | ✅ OK (`cellrun.hexa`) | 🔴 NO (D116) |
+  | CLI presentation (DemiurgeCLI) | ✅ OK | — | 🔴 NO (D116) |
+  | domain manifests (`.demi`) | ✅ OK (D111 § rationale co-located 2-file) | ✅ OK (alternative · TBD) | 🔴 NO (D116) |
+  | **algorithm code** (math · physics · validation · domain logic · kernels) | 🔴 **NO** (R3 violation) | ✅ OK | 🔴 **NO (D116)** |
+  | Python scripts under `cockpit/scripts/` | 🔴 **NO** (D61 violator) | ✅ OK (`stdlib/<domain>/`) | 🔴 NO (D116) |
+  | domain narrative (`.md` · physics derivation · citation index · spec) | ✅ OK (`domains/<id>.md`) | — | ✅ **OK · sibling repos' SOLE purpose (D116)** |
 - **Carve-outs**:
   - **Transitional bridges** (`*Producer.swift` 46 잔존 · `*Dispatch.swift` spawn glue): allowed UNTIL D111 Phase C migration retires them (estimated 15-20 session). Each transitional bridge must cite the cellrun.hexa target script path in a header docstring + the Phase C migration ETA in commit body when modified.
   - **macOS-native UI** (SwiftUI · RealityKit · etc.): allowed since hexa-lang lacks macOS UI substrate. Tier-2 future axis (wilson harness with native UI) may shift this; until then, cockpit Swift UI is canonical.
@@ -125,7 +126,7 @@ All **stdlib code** (substrate algorithms · physics · math · validation logic
   - Python scripts under `cockpit/scripts/` (currently 1 D61 violator `bipv_freecad.py`) = R3 violation · migrate to `~/core/hexa-lang/stdlib/<domain>/`.
 - **First land (2026-05-21 · D114 ratification)**: doctrine ratified before any migration · Phase A = R3 governance row (this row) · Phase B = `MaterialFalsifierDispatch.swift` 438-line audit · Phase C = `bipv_freecad.py` migration · Phase D = automated static-analysis hook (Tier-2 deferred).
 - **Load-bearing enforcement** — *Phase D (planned · Tier-2)*: automated static-analysis hook on `cockpit/Sources/` that fails `swift build` when new files exceed dispatch-wrapper LOC threshold OR contain algorithm-shaped patterns (AST analysis). Until Phase D lands, **PR review** is the enforcement vehicle; new PRs touching `cockpit/Sources/Loaders/` must cite R3 + verify the dispatch-wrapper shape.
-- **Cross-links**: design.md **D114** (full rationale + boundary table + Phase A..D exit + axis distinction) · D111 (dispatch-mechanism sibling axis · `cellrun.hexa` + `.demi` manifest) · D14 / D18 (hexa-lang substrate doctrine) · D17 / D77 (sibling repos precedent) · D61 (D61 violator pattern · `bipv_freecad.py` is the 1 remaining) · D80 (endpoint rule · ultimate-form proof) · ARCH §0 (first principle) · §4.5 (cellrun architecture) · Principle I (NON-NEGOTIABLE · this row enforces) · Wilson Principles 1+2+4+5.
+- **Cross-links**: design.md **D114** (full rationale + boundary table + Phase A..D exit + axis distinction) · **D116** (sibling repos = docs only · `hexa-rtsc/`/`hexa-matter/`/`hexa-bio/`/`hexa-chem/` 코드 amendment) · D111 (dispatch-mechanism sibling axis · `cellrun.hexa` + `.demi` manifest) · D14 / D18 (hexa-lang substrate doctrine) · D17 / D77 (sibling repos precedent · D116 으로 docs-only 로 amendment) · D61 (D61 violator pattern · `bipv_freecad.py` 1 closed PR #268+#4) · D80 (endpoint rule · ultimate-form proof) · ARCH §0 (first principle) · §4.4 (sibling repos role · D116 으로 refresh) · §4.5 (cellrun architecture) · Principle I (NON-NEGOTIABLE · this row enforces) · Wilson Principles 1+2+4+5.
 
 ### R4. RTSC absorbed=true twin-error invariant — namespace exploit + goal abandonment 모두 금지
 
@@ -144,9 +145,10 @@ User-level goal "RTSC 물질 absorbed=true" (room-temperature SuperConductor 의
 - **First triggered (κ-?? · 2026-05-21)**: Pattern 1 발생 — `lts_nb_bcs_universal_gap_ratio_attestation` record (`exports/material_attestation/nb_bcs_v1/`) 가 `domain: "rtsc"` 로 박힘 + `PAPERS/sample-nb-bcs-absorbed/main.tex` abstract 가 "first RTSC-domain absorbed=true" 표현 사용. 사용자 catch: "Nb 는 LTS 잖아 · 상온 초전도체 아니잖아". 정정 행위: RTSC.md §8.9 신설 (5-gate 형식 정의) + §8.10 신설 (Nb attestation honest 정정 narrative). 본 R4 ratification 은 두 anti-pattern 동시 재발 영구 방지 doctrinal lock.
 - **Cross-links**: RTSC.md **§8.9** (5-criteria gate · SOLE 정의 · candidate matrix · 7 유의사항) · **§8.10** (Nb attestation honest 정정 · *RTSC 가 아닌* LTS validation 으로 재포지셔닝) · **§8.8** (g3 honest stance 의 invariant 강화) · **§1** (domain naming-collision 진단 — Pattern 1 의 historical root) · **R1** (Measured-Oracle Invariant · `absorbed=true ⇔ measuredOracle.isMeasuredOraclePASS=true` · R4 는 R1 의 RTSC-specific 강화) · `design.md` D110 (첫 absorbed=true · solar pyranometer precedent · 5-gate 의 (e) parity 원형) · **Principle V** (No Over-Claim g3 · R4 는 그 RTSC-specific 가드).
 
-**Version**: 1.4.0 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
+**Version**: 1.4.1 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
 
 **Amendment history**:
+- 1.4.1 (2026-05-21 저녁 후반 · PATCH) — R3 amendment: 사용자 directive "hexa-rtsc 는 문서만 / hexa-lang, demiurge 가 필요한거 각각 나눠서 보관하면 되 코드 / spec kit 에도 반드시 기록 / 실수 방지" + AskUser 해석 A (모든 sibling repos 문서만) 따라 R3 boundary table 3-column 확장 (code shape × repo · 사이드 repos 컬럼 추가 with NO/NO/OK domain narrative only) + D116 ratification cross-link + carve-out narrative 정정 ("hexa-lang OR sibling repos" → "hexa-lang ONLY"). 직전 D114 Phase B audit agent 가 추천한 `~/core/hexa-rtsc/verify/falsifier_dispatch.hexa` destination 이 D116 위반 — audit note inline correction (별 파일). 본 PATCH 가 미래 agent / contributor 가 sibling repo 에 코드 추천하는 실수 방지 typed-anchor. design.md D116 + ARCH §0/§4.4/§4.5 + `.specify/README.md` D116 section + spec-template.md Assumptions 동시 cascade.
 - 1.4.0 (2026-05-21 후반 · MINOR) — R4 RTSC absorbed=true twin-error invariant 추가. user-level goal "RTSC 물질 absorbed=true" 의 만족 여부는 RTSC.md §8.9 5-criteria gate 가 SOLE 정의 — Pattern 1 (namespace exploit · LTS Nb 에 `domain: "rtsc"` 박고 RTSC 검증으로 주장) 과 Pattern 2 (goal abandonment · "현재 물리학으로 불가능" 이유로 영구 폐기) 모두 금지. 본 세션의 Nb attestation Pattern 1 발생 + 사용자 catch 가 ratification 의 직접 동기. RTSC.md §8.9 5-gate 형식 정의 + §8.10 Nb honest 정정 narrative 도 같은 세션 신설. MINOR (new R-row + 5-gate formal 정의 + candidate matrix append-only invariant · no Core Principle 변경).
 - 1.3.0 (2026-05-21 저녁 후반 · MINOR) — R3 stdlib SSOT row added (D114 ratification). cockpit/Sources/ 의 code-shape enforcement boundary 명문화 (typed records · UI · thin dispatch · CLI = OK · algorithm-shaped code = NO). 사용자 직접 지시 "모두 hexa-lang 보관 / SSOT 말이야 / stdlib 말이야" 가 본 row 의 doctrinal motivation. MINOR (new R-row + R3 enforcement boundary table · no principle change).
 - 1.2.2 (2026-05-21 저녁 후반 · PATCH) — R2 Cross-links 확장: D112 (Verb canonical Korean → English wire-form rename · bug #2 closure · naming convention A picked) + D113 (payload flattening · sibling `.meta.json::measurements` roll-up · downstream consumer compat) cross-link 추가. Phase A bug triage 완료 narrative anchor — bug #1 `_split_csv` quoted-comma fix · #2 design ratified D112 · #3 `python_candidates` manifest key fix 모두 PR #267 또는 D-block 으로 closure 경로 확보. PATCH (no new principle/section · cross-link expansion only).

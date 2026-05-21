@@ -134,6 +134,22 @@
   - If feature touches existing `*Producer.swift` classes, declare whether
     it's transitional-bridge maintenance (allowed for now) OR migration to
     cellrun (preferred per D111).
+
+  D114 / D116 / R3 CODE-LOCATION IMPLICATIONS (see `.specify/README.md` 의
+  "D114 / D116" + "🛑 실수 방지" sections + constitution R3 boundary table):
+  - **algorithm code** (math · physics · validation · domain logic · kernels)
+    MUST live in `~/core/hexa-lang/stdlib/<domain>/` ONLY. NEVER in
+    sibling repos (`hexa-rtsc/` · `hexa-matter/` · `hexa-bio/` · `hexa-chem/`)
+    — those are **docs only** per D116.
+  - **sibling repos** carry domain narrative (`.md` · physics derivation ·
+    citation index · spec) ONLY. NO code (`.hexa` · `.py` · `.swift`).
+  - **cockpit/Sources/** allowed: typed Codable records · SwiftUI views ·
+    thin dispatch wrappers · CLI presentation · `.demi` manifests. NOT
+    allowed: algorithm code (>100 LOC non-dispatch logic) · `cockpit/scripts/`
+    Python (D61 violator).
+  - If the spec proposes placing code in `hexa-rtsc/<...>` · `hexa-matter/<...>`
+    · `hexa-bio/<...>` · `hexa-chem/<...>` → STOP · redirect to `hexa-lang/
+    stdlib/<domain>/`. (Past mistake pattern · see README "🛑 실수 방지" #1.)
 -->
 
 - [Assumption about target users, e.g., "Users have stable internet connectivity"]
@@ -141,4 +157,5 @@
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
 - **Cell dispatch (D111)**: [If verb-cell related — "Feature ships `.demi` manifest entry; no new `*Producer.swift`" OR "Out of scope (e.g. pure UI/cockpit feature)"]
-- **Governance gates**: [Cite applicable R-row from `memory/constitution.md` (R1 measured-oracle · R2 cellrun dispatch · etc.) and applicable D-block from `../design.md`]
+- **Code location (D114/D116)**: [If feature adds code — explicitly cite which repo: `hexa-lang/stdlib/<domain>/` for algorithms · `demiurge/cockpit/Sources/` for typed records/UI/thin dispatch/CLI · NEVER sibling repos (hexa-rtsc/hexa-matter/hexa-bio/hexa-chem · docs only per D116). If feature touches `cockpit/Sources/` Swift, declare whether it's typed-record/UI/thin-dispatch (allowed) or algorithm-shaped (R3 violation · refactor).]
+- **Governance gates**: [Cite applicable R-row from `memory/constitution.md` (R1 measured-oracle · R2 cellrun dispatch · R3 stdlib SSOT · R4 RTSC twin-error · etc.) and applicable D-block from `../design.md`]

@@ -66,6 +66,54 @@ Cells gated by `GateType.illustrativePhysics` (RFC 013 §6.12) are exempt from R
 
 **Anti-pattern (forbidden by R2)**: any spec proposing "add a new `*Producer.swift` class for cell X" without first checking whether the manifest path covers it. If the manifest doesn't yet cover the substrate, **extend `cellrun.hexa` + `.demi` schema · NOT cockpit Swift**.
 
+### D114 / D116 — Code-location boundary (3-repo · sibling repos = docs only) *2026-05-21*
+
+> *Critical: applies to EVERY spec touching code. R3 governance row (constitution.md 1.4.1) is the typed-enforcement anchor.*
+
+**Picked**: code-location is a 3-repo decision · enforced by R3 boundary table.
+
+| code shape | demiurge `cockpit/Sources/` | `hexa-lang/stdlib/<domain>/` | sibling repos (`hexa-rtsc/` · `hexa-matter/` · `hexa-bio/` · `hexa-chem/`) |
+|---|---|---|---|
+| typed records (Codable) | ✅ | ✅ (hexa-native mirror) | 🔴 |
+| UI views (SwiftUI · macOS-native) | ✅ | — | 🔴 |
+| thin dispatch wrappers | ✅ (transitional · D111 Phase C) | ✅ (`cellrun.hexa`) | 🔴 |
+| CLI presentation | ✅ | — | 🔴 |
+| domain manifests (`.demi`) | ✅ (co-located w/ `.md`) | ✅ (alternative) | 🔴 |
+| **algorithm code** | 🔴 (R3 violation) | ✅ | 🔴 (D116) |
+| Python scripts (under `cockpit/scripts/`) | 🔴 (D61 violator) | ✅ (`stdlib/<domain>/`) | 🔴 |
+| domain narrative (`.md`) | ✅ (`domains/<id>.md`) | — | ✅ **sibling repos' SOLE purpose** |
+
+**Implication for new feature specs**:
+
+- A spec adding **algorithm code** (math · physics · validation · kernels) → ship to **`~/core/hexa-lang/stdlib/<domain>/`** (NEVER to a sibling repo)
+- A spec touching **`~/core/hexa-rtsc/`** · **`~/core/hexa-matter/`** · **`~/core/hexa-bio/`** · **`~/core/hexa-chem/`** → **docs only** (markdown narrative · physics derivation · citation index · spec) · **NO code**
+- A spec adding `*Producer.swift` >100 LOC of non-dispatch logic → **R3 violation** · refactor to hexa-lang stdlib OR split into thin dispatch + hexa-native substrate
+- A spec adding Python under `cockpit/scripts/` → **D61 violator** · move to `~/core/hexa-lang/stdlib/<domain>/`
+
+**Authority**: `memory/constitution.md` **R3** (governance row · 1.4.1 PATCH · boundary table) · `../design.md` **D114** (stdlib SSOT enforcement · code-shape × repo) · **D116** (sibling repos = docs only · amendment of D14/D17/D77) · `../ARCH.md` §0 + §4.4 + §4.5.
+
+### 🛑 실수 방지 (Anti-mistake catalog — REMEMBER THESE)
+
+The following recommendations have actually been made by past agents/contributors and would have **violated** D114/D116 if executed. Future specs MUST NOT repeat these:
+
+1. **❌ "Place new algorithm in `~/core/hexa-rtsc/verify/<file>.hexa`"** (NOT this repo · sibling repos = docs only per D116)
+   - ✅ **Correct destination**: `~/core/hexa-lang/stdlib/rtsc/<file>.hexa`
+   - Trigger: Phase B `MaterialFalsifierDispatch.swift` audit agent (2026-05-21) recommended this · corrected by D116
+
+2. **❌ "Add new `*Producer.swift` class for domain X verb Y"** (proliferation anti-pattern per D111)
+   - ✅ **Correct path**: add `[cell.<verb>]` section to `domains/<id>.demi` manifest
+   - Trigger: pre-D111 default pattern · 46 such classes currently in cockpit awaiting Phase C migration
+
+3. **❌ "Place Python script in `cockpit/scripts/`"** (D61 violator)
+   - ✅ **Correct destination**: `~/core/hexa-lang/stdlib/<domain>/<file>.py`
+   - Trigger: 4 historical D61 violators · 1 was open as of 2026-05-21 morning (`bipv_freecad.py`) · closed via PR #268 + #4 same day
+
+4. **❌ "Algorithm Swift code OK in `cockpit/Sources/DemiurgeCore/Loaders/<file>.swift` if it's a Dispatch class"** (R3 violation · MaterialFalsifierDispatch.swift trigger)
+   - ✅ **Correct path**: algorithm portion → hexa-lang stdlib · Swift class becomes thin dispatch wrapper (<100 LOC non-dispatch)
+   - Trigger: MaterialFalsifierDispatch.swift 438-line (62% algorithm) found in audit `inbox/notes/2026-05-21-d114-phaseb-material-falsifier-audit.md` · D116 amendment
+
+**WHEN in doubt**: write the destination check INTO the spec's `Assumptions` section so reviewer + AI agents catch it before implementation. (`spec-template.md` Assumptions section now prompts this.)
+
 ## Workflow integration
 
 `/speckit-specify` and `/speckit-plan` MUST cross-reference:
