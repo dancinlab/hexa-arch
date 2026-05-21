@@ -30,7 +30,7 @@ Phase 2 ext (20-cell matrix, 4 producers × 5 baselines, LANDED `b12bd05`-class 
 | License                                         | Public domain (US government work; NIST)                             | CC-BY 4.0 (per NOMAD T&C)                                            |
 | Last update / stability signal (probed live)    | Entries timestamped `last_modified: 2024-12-08` (recent)             | Active 2026 (probed live this session)                               |
 | Implementation cost vs existing `_poll_*` peers | **~50 LOC** drop-in mirror of `_poll_aflow` (single GET, parse `data[].attributes._jarvis_formation_energy_peratom`) | **~150-200 LOC**: POST `/entries/query` to enumerate, then POST `/entries/archive/query` per entry to fetch total energies, then compute formation energy from elemental references (requires bookkeeping) |
-| Risk: 1-corpus dropout on uncommon comps        | LOW for H₃S/YBCO (both probed positive); MEDIUM for LK-99 (probed 0) | HIGH for formation_energy (NOT indexed) regardless of composition    |
+| Risk: 1-corpus dropout on uncommon comps        | LOW for H₃S/YBCO (both probed positive); MEDIUM for the claim-only RT-SC slot (probed 0; anonymized 2026-05-22) | HIGH for formation_energy (NOT indexed) regardless of composition    |
 
 ### Coverage probe — 5 compositions × 2 corpora (live, this session)
 
@@ -42,7 +42,7 @@ Probed 2026-05-22 from this sandbox. Cell value = `formation_energy_per_atom (eV
 | MgB₂                 | **−0.194** eV/at · 5 rows (7 entries)                | n=0 under `MgB2`; n=34 under `BMg2` (Hill-canonical) · F NOT indexed |
 | YBa₂Cu₃O₇            | **−2.040** eV/at · 1 row (1 entry)                   | n=15 entries (under hill `Ba2Cu3O7Y`) · F NOT indexed           |
 | H₃S                  | **+0.108** eV/at · 5 rows (5 entries)                | n=571 entries · F NOT indexed                                   |
-| LK-99 (Pb₁₀Cu(PO₄)₆O) | **0 entries** (expected — hypothetical apatite)      | n=56 entries for elements{Pb,Cu,P,O} n=4 (none = LK stoichiometry) · F NOT indexed |
+| Claim-only RT-SC (5th cell, anonymized 2026-05-22) | **0 entries** (expected — hypothetical composition; honestly absent from JARVIS — empirical n=0 signal preserved) | n=N entries / F NOT indexed |
 
 **Verdict**: JARVIS-OPTIMADE returns **a usable formation-energy number in a single anonymous GET for 4/5 baseline compositions**, including both YBCO and H₃S — the exact cells that drop to `insufficient-sources` under the current 3-source (mp_cache+AFLOW+OQMD) poll. NOMAD has wider entry counts but does **not** index `formation_energy_per_atom` as a queryable doc-quantity for these compositions; pulling per-atom formation energies from NOMAD requires fetching total energies via the archive endpoint and computing formation energy with per-functional elemental-reference bookkeeping — that is **not a B-path wrap, it is a small new microkernel** (anti-pattern for Phase 2 follow-on).
 
@@ -58,7 +58,7 @@ Nb: {'name': 'jarvis', 'value': 0.0, 'n_rows': 4, …}
 MgB2: {'name': 'jarvis', 'value': -0.19412, 'n_rows': 5, …}
 Ba2Cu3O7Y: {'name': 'jarvis', 'value': -2.03974, 'n_rows': 1, …}
 H3S: {'name': 'jarvis', 'value': 0.10797, 'n_rows': 5, …}
-Pb10Cu_PO4_6O: None
+ClaimOnly_5th_cell: None  (anonymized 2026-05-22 aggressive scrub)
 ```
 
 All 5 probes executed in < 5 s total. No API key, no auth header, no rate-limit hit observed. **The endpoint is alive and the formation-energy field is honest-extractable.**
@@ -83,12 +83,12 @@ No probe failed; no probe returned a value outside the published reference band.
 2. **Implementation cost ~3-4× lower** (~50 LOC vs ~150-200 LOC). The new `_poll_jarvis` mirrors `_poll_aflow` almost line-for-line (GET URL build → JSON parse → filter `-99999` sentinel → min for formation_energy, mean for band_gap → return dict with same keys). Stays unambiguously in B-path wrap-as-is territory.
 3. **Anonymous-read** (per RTSC honest invariant: prefer no-auth). No `JARVIS_API_KEY` env var needed.
 4. **OPTIMADE protocol federation** — adopting an OPTIMADE-conformant endpoint also opens future low-cost expansion to other OPTIMADE providers (Materials Cloud, AFLOW-OPTIMADE itself if that ever becomes more complete than AFLUX, OQMD-OPTIMADE) by reusing the same poll shape with a different base URL. Defer this expansion to a future session; flagged in §6.
-5. **Coverage uplift quantified** — probed YBCO + H₃S both return usable formation_energy_peratom. Adding JARVIS to the poll chain converts these 2 cells from `n=1 → insufficient-sources` to `n=2 → simulation-only-prediction` (mp_cache + JARVIS), unblocking 2/5 = 40% of the canonical baseline matrix. LK-99 stays `n=0` (honest — it's hypothetical), and the Phase 2 ext DEVIATION count drops from 2 to **0** (YBCO 0-row LK-99 1-row → both honest, but LK-99 already classified honest).
+5. **Coverage uplift quantified** — probed YBCO + H₃S both return usable formation_energy_peratom. Adding JARVIS to the poll chain converts these 2 cells from `n=1 → insufficient-sources` to `n=2 → simulation-only-prediction` (mp_cache + JARVIS), unblocking 2/5 = 40% of the canonical baseline matrix. The 5th hypothetical (anonymized 2026-05-22): 0 entries (honestly absent from JARVIS — empirical n=0 signal preserved), and the Phase 2 ext DEVIATION count drops from 2 to **0** (YBCO 0-row plus 5th cell 1-row → both honest, but the 5th cell was already classified honest).
 
 ### Honest caveats
 
 - **(c1) Single-functional bias.** JARVIS-DFT primarily uses OptB88vdW. mp_cache uses PBE (mostly). OQMD uses PBE. The 2-of-3 PBE / 1-of-3 OptB88vdW mix is *not* truly independent functionals — same s2 scope_caveat ("inverse-variance consensus assumes per-source σᵢ independent — they are NOT, common training data + common functional families PBE-dominated") still applies. JARVIS-OptB88vdW is closer to PBE than to HSE; the consensus σ will narrow but the systematic-error correlation across sources stays.
-- **(c2) LK-99 still drops.** JARVIS has zero entries for the Pb₁₀Cu(PO₄)₆O stoichiometry, as expected for a hypothetical apatite. This is *honest* (the producer should refuse consensus on a composition no public DFT corpus has ever computed) — and matches the Phase 2 audit verdict for LK-99 ("hypothetical apatite — no DFT corpus entry, R4 invariant holds"). Adding JARVIS does not falsely manufacture a value.
+- **(c2) The 5th hypothetical (anonymized 2026-05-22) still drops.** JARVIS has zero entries for the 5th cell's claim-only stoichiometry, as expected for a hypothetical composition. This is *honest* (the producer should refuse consensus on a composition no public DFT corpus has ever computed) — and matches the Phase 2 audit verdict for the 5th cell ("claim-only hypothetical — no DFT corpus entry, R4 invariant holds"). Adding JARVIS does not falsely manufacture a value.
 - **(c3) NOMAD revisit deferred.** If a future need for per-functional formation-energy disaggregation, or for non-formation-energy properties (e.g. phonon band structure for Allen-Dynes consensus), then NOMAD's archive-level access becomes worth the extra LOC. Not in scope for Phase 2 ext follow-on.
 
 ### Decision flavor
@@ -119,10 +119,10 @@ This is a **routine B-path 3rd-corpus wrap** in the spirit of RTSC.md §9.9.1 Ph
 | Nb           | simulation-only-prediction (mp_cache+OQMD, n=2) | simulation-only-prediction (n=3) — tighter σ |
 | MgB₂         | simulation-only-prediction (mp_cache+OQMD, n=2) | simulation-only-prediction (n=3) — tighter σ |
 | YBa₂Cu₃O₇    | **insufficient-sources** (mp_cache only, n=1)   | **simulation-only-prediction** (mp_cache + JARVIS, n=2) — DEVIATION resolved |
-| LK-99        | insufficient-sources (n=0) — honest             | insufficient-sources (n=0) — honest (unchanged) |
+| Claim-only RT-SC (5th) | insufficient-sources (n=0) — honest    | insufficient-sources (n=0) — honest (unchanged; anonymized 2026-05-22) |
 | H₃S          | **insufficient-sources** (mp_cache only, n=1)   | **simulation-only-prediction** (mp_cache + JARVIS, n=2) — DEVIATION resolved |
 
-Phase 2 ext 5-cell `cross_code_dft` row: 2 PASS · 2 DEVIATION · 1 honest-skip → 4 PASS · 0 DEVIATION · 1 honest-skip. 20-cell total: 18/20 PASS → 20/20 PASS (with LK-99 still gating honestly at `n=0`).
+Phase 2 ext 5-cell `cross_code_dft` row: 2 PASS · 2 DEVIATION · 1 honest-skip → 4 PASS · 0 DEVIATION · 1 honest-skip. 20-cell total: 18/20 PASS → 20/20 PASS (with the 5th claim-only RT-SC slot still gating honestly at `n=0`).
 
 **Estimated session count**: 1 session for the wrap land + 1 session for the 20-cell rerun audit = 2 sessions. The wrap land is single-file, low-risk, and the probe code is already de-risked.
 

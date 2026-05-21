@@ -52,7 +52,7 @@ PAPERS/
   URL/DOI 까지 추적 가능. 추적 불가능한 claim 은 paper 에 안 들어감.
 - **absorbed=true 주장 paper** 는 동반 record 의 `measurement_gate =
   GATE_CLOSED_MEASURED` 필수.
-- **claim-only 영역** (LK-99 / hexa-rtsc n=6 등 미재현 RTSC) 의 paper 는
+- **claim-only 영역** (any unreplicated RTSC 가설 · hexa-rtsc n=6 등 미재현 RTSC) 의 paper 는
   `absorbed=false · gate_type=empirically-unproven` 명시 + 'claim 자체'
   논의로 명확히 제한.
 

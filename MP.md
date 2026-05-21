@@ -29,7 +29,7 @@ API key 가 필요한 건 *실시간 REST 쿼리* 만; **bulk dump (S3 mirror / 
 - [x] `mp_query.py` thin REST adapter (`~/core/hexa-lang/stdlib/material/mp_query.py`) — key-dependent path
 - [x] Honest skip path (no key → `gate_type=api-key-missing`) — K cohort verified
 - [x] Setup guide 노트 (`inbox/notes/2026-05-21-mp-api-setup-needed.md`)
-- [x] `sim_adapter.py` / `sim.hexa` 가 Nb + LK-99 가설 입력 받아 4-formula (BCS · McMillan · Allen-Dynes · WHH) Tc 예측 — params 는 현재 **hard-code**
+- [x] `sim_adapter.py` / `sim.hexa` 가 Nb 입력 받아 4-formula (BCS · McMillan · Allen-Dynes · WHH) Tc 예측 — params 는 현재 **hard-code**
 
 → 현재 상태의 한계: sim_adapter 의 입력 params (Θ_D · λ · μ* · ω_log · slope) 가 hard-code. MP 가 있어야 실제 candidate 의 params 를 가져옴. **MP 가 없으면 candidate 추가 불가** — 이걸 풀려는 게 본 로드맵.
 

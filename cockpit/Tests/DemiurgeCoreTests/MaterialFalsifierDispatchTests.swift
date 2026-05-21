@@ -1,23 +1,22 @@
 // MaterialFalsifierDispatchTests — RTSC.md §8.7 Tier 4 dispatch smoke.
 //
 // Jobs:
-//   (1) Honest demo — dispatch the existing LK-99 Tier 2 recipe
+//   (1) Honest demo — dispatch a synthetic claim-only Tier 2 recipe
 //       (replicated_by_independent_labs=0) with tier1=nil and
 //       tier3Measurements=[]. Assert aggregate = FAILS-AT-LEAST-ONE
 //       (because F-RTSC-3 FAILs on replicated=0) AND assert the
-//       verdict JSON lands under exports/material_verdict/.
+//       verdict JSON lands under exports/material_verdict/. Claim-
+//       agnostic: no specific historical RTSC claim payload is
+//       carried — the test exercises the generic R4 negative path.
 //   (2) absorbed=false invariant — even a hypothetical PASSES-ALL
 //       triple still produces absorbed=false (g3 honest限界 from
 //       RTSC.md §8.7 → §8.8).
-//   (3) Four non-LK-99 dispatches (Nb · MgB2 · YBCO · Nb3Sn) — the
-//       first multi-material Tier 4 batch. Tier 3 measurement records
-//       just landed (RTSC.md §8.4 R(T) · Meissner · Cp · Hc2 rows),
-//       so falsifiers actually evaluate rather than uniformly SKIP.
-//       The YBCO row is the FIRST F-RTSC-3 replication=PASS in the
-//       project (REBCO MOCVD recipe replicated_by_independent_labs=5).
-//
-// The first test is also what generates the canonical LK-99 verdict
-// stub the task requires under exports/material_verdict/lk99_lee2023_v1/.
+//   (3) Four multi-material dispatches (Nb · MgB2 · YBCO · Nb3Sn) —
+//       the first multi-material Tier 4 batch. Tier 3 measurement
+//       records just landed (RTSC.md §8.4 R(T) · Meissner · Cp · Hc2
+//       rows), so falsifiers actually evaluate rather than uniformly
+//       SKIP. The YBCO row is the FIRST F-RTSC-3 replication=PASS in
+//       the project (REBCO MOCVD recipe replicated_by_independent_labs=5).
 
 import XCTest
 @testable import DemiurgeCore
@@ -26,12 +25,39 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
 
     // MARK: helpers
 
-    /// Decode the LK-99 Tier 2 recipe stub from exports/.
-    private func loadLk99Recipe() throws -> SynthesisRecipeRecord {
-        let path = RecordLoader.exportsRoot
-            .appendingPathComponent("synthesis_recipe", isDirectory: true)
-            .appendingPathComponent("lk99_lee2023.json")
-        let data = try Data(contentsOf: path)
+    /// Build a synthetic claim-only Tier 2 recipe (replicated=0) via JSON
+    /// round-trip — the test exercises the generic R4 negative path
+    /// without carrying any specific historical RTSC claim payload.
+    private func makeClaimOnlyRecipe() throws -> SynthesisRecipeRecord {
+        let dict: [String: Any] = [
+            "domain": "synthesis_recipe",
+            "verb": "ingest",
+            "kind": "solid_state_reaction",
+            "stamp": "20260522T000000Z",
+            "family": "claim_only_hypothetical",
+            "target_compound": "Hypothetical-RTSC-A",
+            "reagents": [],
+            "conditions": [
+                "temperature_profile_c": [],
+                "atmosphere_gas": "vacuum_sealed_quartz_tube",
+                "atmosphere_pressure_bar": 0.0,
+                "duration_hours": 0.0
+            ],
+            "replicated_by_independent_labs": 0,
+            "measurement_gate": "GATE_OPEN",
+            "absorbed": false,
+            "gate_type": "claim-only",
+            "provisional": true,
+            "provenance": [
+                "source_url": "test://synthetic-claim-only",
+                "source_citation": "synthetic test fixture — claim-agnostic RTSC negative anchor"
+            ],
+            "scope_caveats": [
+                "Synthetic fixture. No specific historical RTSC claim payload. F-RTSC-3 FAIL on replicated=0 by construction."
+            ],
+            "citations": []
+        ]
+        let data = try JSONSerialization.data(withJSONObject: dict)
         return try JSONDecoder().decode(SynthesisRecipeRecord.self, from: data)
     }
 
@@ -150,13 +176,13 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
 
     // MARK: tests
 
-    func testLk99DispatchFailsAtLeastOne() throws {
-        let recipe = try loadLk99Recipe()
+    func testClaimOnlyDispatchFailsAtLeastOne() throws {
+        let recipe = try makeClaimOnlyRecipe()
         XCTAssertEqual(recipe.replicatedByIndependentLabs, 0,
-                       "LK-99 stub must keep replicated_by_independent_labs=0 (RTSC.md §8.8).")
+                       "Claim-only stub must keep replicated_by_independent_labs=0 (RTSC.md §8.8).")
 
         let result = MaterialFalsifierDispatch.dispatch(
-            sampleId: "lk99_lee2023_v1",
+            sampleId: "synthetic_claimonly_v1",
             tier1: nil,
             tier2: recipe,
             tier3Measurements: []
@@ -170,7 +196,7 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
 
         // Verify the JSON landed on disk and parses back round-trip.
         let outDir = MaterialFalsifierDispatch.verdictRecordsRoot
-            .appendingPathComponent("lk99_lee2023_v1", isDirectory: true)
+            .appendingPathComponent("synthetic_claimonly_v1", isDirectory: true)
         let contents = try FileManager.default.contentsOfDirectory(at: outDir,
             includingPropertiesForKeys: nil)
         let jsons = contents.filter { $0.pathExtension == "json" }
@@ -213,7 +239,7 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
         XCTAssertEqual(result.aggregateVerdict, "INCONCLUSIVE-MULTIPLE-MISSING")
     }
 
-    // MARK: 4-material batch — first non-LK-99 Tier 4 dispatches.
+    // MARK: 4-material batch — multi-material Tier 4 dispatches.
     //
     // Each test: load real Tier 1 / 2 / 3 inputs from exports/, dispatch,
     // assert the verdict JSON lands and at least one falsifier evaluated
@@ -314,7 +340,7 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
     }
 
     /// YBCO — F-RTSC-3 replication=PASS (replicated_by_independent_labs=5).
-    /// First non-LK-99, first replication-PASS in the project.
+    /// First replication-PASS in the project.
     /// tier1 = on-disk rebco_hts_baseline.json (REBCO, predicted Tc=92.5 K).
     /// tier2 = on-disk rebco_mocvd_2g_hts_tape.json (replicated=5).
     /// tier3 = ybco_wu1987.json (R(T), measured Tc=92 K).
@@ -342,7 +368,7 @@ final class MaterialFalsifierDispatchTests: XCTestCase {
         // The headline assertion of this whole batch — first replication-PASS.
         let f3 = decoded.falsifierResults.first(where: { $0.id == "F-RTSC-3-replication" })
         XCTAssertEqual(f3?.status, "PASS",
-            "F-RTSC-3 replication=PASS — REBCO replicated_by_independent_labs=5 ≥ 2 (first non-LK-99 replication-PASS).")
+            "F-RTSC-3 replication=PASS — REBCO replicated_by_independent_labs=5 ≥ 2 (first replication-PASS in project).")
         XCTAssertEqual(decoded.replicatedByIndependentLabs, 5,
             "Carry-forward from tier2; never auto-incremented.")
         // F-RTSC-2: measured Tc=92 K within [0.5·92.5, 2.0·92.5] = [46.25, 185.0]

@@ -3,16 +3,17 @@
 // execute synthesis — the SSOT here is the recipe + citation only.
 //
 // Family axis mirrors RTSC.md §8.2 (LTS · MgB₂ · FeSC · HTS Cuprate · Heavy
-// hydride · TBG · LK-99 · hexa-rtsc n=6). Kind axis mirrors §8.3 synthesis
-// routes (solid_state_reaction · diamond_anvil_cell · mocvd ·
+// hydride · TBG · claim-only hypothetical · hexa-rtsc n=6). Kind axis mirrors
+// §8.3 synthesis routes (solid_state_reaction · diamond_anvil_cell · mocvd ·
 // single_crystal_growth · twisted_exfoliation · sol_gel_sinter · pit_wire).
 //
 // g3 (RTSC.md §8.8) — honest stance:
 //   • A recipe without provenance is rejected — `provenance` is non-optional.
 //   • `replicatedByIndependentLabs == 0` ⇒ claim-only territory; absorbed=false
 //     永遠. The schema does not gate this — the producer / loader must.
-//   • RTSC-class claims (LK-99, hexa-rtsc n=6) never reach absorbed=true even
-//     if the recipe ingests cleanly. Tier 4 falsifier dispatch decides that.
+//   • RTSC-class claims (hexa-rtsc n=6 closed-form, any claim-only family)
+//     never reach absorbed=true even if the recipe ingests cleanly.
+//     Tier 4 falsifier dispatch decides that.
 //
 // Style: mirrors RtscVerifyRecord.swift — camelCase properties + explicit
 // CodingKeys mapping to snake_case JSON. Sub-structs are nested for tight

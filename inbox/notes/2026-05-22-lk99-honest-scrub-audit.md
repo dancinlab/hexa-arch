@@ -1,5 +1,13 @@
 # LK-99 honest-scrub audit — demiurge + hexa-rtsc sibling repos (2026-05-22)
 
+> **[2026-05-22 SUPERSEDED · aggressive-scrub agent — see `2026-05-22-lk99-final-scrub.md`]**
+> The user's intent was decisively "aggressive scrub" (not honest reframe).
+> This note's "honest reframe + Cu₂S annotation" approach is superseded by
+> the final-scrub note's CSH substitution / claim-agnostic refactor. The
+> Cu₂S citations added by this session are obsoleted by the final-scrub
+> bib swap to `snider2020csh + snider2022retraction + hirsch2022csh`.
+> Kept on disk as audit trail for the superseded intermediate state.
+
 **Stamp** 2026-05-22
 **Scope** Audit all LK-99 / LK99 / Pb₁₀Cu(PO₄)₆O / arxiv:2307.12008 references across `~/core/demiurge` and `~/core/hexa-rtsc`, decide per the briefing's decision tree (reframe / remove / annotate / preserve), and add 2026-Q4 replication-failure mechanism citations (Cu₂S impurity).
 **Out of scope** `~/core/hexa-lang` — explicitly excluded by the briefing.

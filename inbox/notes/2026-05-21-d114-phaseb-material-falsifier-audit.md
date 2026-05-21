@@ -123,10 +123,10 @@ Note: `displayName` switch in `ConductorMaterial.swift` is mostly static label t
 1. **`MaterialFalsifierDispatch.dispatch(...)`** signature stays identical · same 4-param Swift surface · same `MaterialVerdictResult` return type · same on-disk JSON layout under `exports/material_verdict/<sample_id>/<stamp>.json`.
 
 2. **Per-falsifier verdict shape**:
-   - LK-99 (tier1=nil · tier2 with replicated=0 · tier3=[]) → `aggregateVerdict = "FAILS-AT-LEAST-ONE"` · F-RTSC-3 status = "FAIL"
+   - Claim-only synthetic (tier1=nil · tier2 with replicated=0 · tier3=[]) → `aggregateVerdict = "FAILS-AT-LEAST-ONE"` · F-RTSC-3 status = "FAIL" (anonymized 2026-05-22 aggressive scrub — was named after a specific historical RT-SC claim)
    - Nb (tier1=nil · tier2=nil · tier3=[meissner χ=-1.0]) → F-RTSC-1 status = "PASS" · aggregate = "INCONCLUSIVE-MULTIPLE-MISSING"
    - MgB2 (tier1.tc_k=39 · tier3=[r_t, cp]) → F-SC-2 = "PASS" · F-RTSC-2 = "PASS"
-   - YBCO (REBCO conductor + REBCO recipe replicated=5 + ybco r_t Tc=92 K) → F-RTSC-3 = "PASS" (first non-LK-99 replication=PASS) · F-RTSC-2 = "PASS" · `replicatedByIndependentLabs = 5` carry-forward
+   - YBCO (REBCO conductor + REBCO recipe replicated=5 + ybco r_t Tc=92 K) → F-RTSC-3 = "PASS" (first replication=PASS in project) · F-RTSC-2 = "PASS" · `replicatedByIndependentLabs = 5` carry-forward
    - Nb3Sn (tier1.tc_k=18 · hc2_at_4k=30 · tier2=NbTi replicated=8 · tier3=[hc2 measured=27]) → F-SC-3 = "PASS" · F-RTSC-3 = "PASS"
 
 3. **g3 invariants** (NON-NEGOTIABLE):
@@ -213,7 +213,7 @@ Justification:
 
 ### 4.5 Regression test approach (smoke comparison)
 
-1. Pre-migration: run all 5 XCTest cases · capture emitted `MaterialVerdictRecord` JSONs as golden fixtures under `Fixtures/material_verdict_golden/{lk99,nb,mgb2,ybco,nb3sn}.json`.
+1. Pre-migration: run all 5 XCTest cases · capture emitted `MaterialVerdictRecord` JSONs as golden fixtures under `Fixtures/material_verdict_golden/{claimonly,nb,mgb2,ybco,nb3sn}.json` (claim-only fixture name anonymized 2026-05-22 aggressive scrub).
 2. Stamp-normalize (replace `stamp` field with `"<NORMALIZED>"` for comparison).
 3. Post-migration: re-run same 5 XCTest cases · normalize stamps · `diff` against golden — byte-identical required.
 4. Additional invariants reasserted: 6 falsifier results · evidence non-empty · absorbed=false · measurementGate=GATE_OPEN · replicatedByIndependentLabs carry-forward.

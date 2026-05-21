@@ -49,8 +49,13 @@
 
 % =========================================================================
 \begin{abstract}
-We establish the first \absorbedtrue\ attestation for a superconducting
-material in the \texttt{demiurge/RTSC.md} 4-tier expansion framework.
+We establish the first \emph{LTS-domain} \absorbedtrue\ attestation
+for a superconducting material in the \texttt{demiurge/RTSC.md}
+4-tier expansion framework --- equivalently, the first
+\absorbedtrue\ SC-material record within the \texttt{rtsc/} namespace,
+\emph{correctly classified as LTS} (low-temperature superconductor)
+under the constitution v1.4.0 \S R4 Stage 1 Path B migration
+(2026-05-22).
 The attestation rests on the BCS \emph{universal gap-to-temperature ratio}
 \(2\Delta(0)/(k_{B} T_{c}) = 2\pi e^{-\gamma_{E}} \approx 3.5276\),
 a parameter-free first-principles prediction of weak-coupling Bardeen-Cooper-Schrieffer
@@ -58,13 +63,14 @@ theory. Comparing this prediction against an inverse-variance-weighted consensus
 of five independent tunneling-spectroscopy measurements of pure niobium
 yields a relative error of \(0.309\%\), well below a pre-registered
 \(5\%\) threshold. The resulting record passes \gateclosedmeas\ and
-emits \absorbedtrue.  The same model-vs-measured-oracle pattern that
-yielded the project's first \absorbedtrue\ (a solar-pyranometer
-\(\text{GHI}\) parity) thus generalises across domains. We argue that
-the \texttt{RTSC.md \S 8.8} invariant which forbids \absorbedtrue\ for
-room-temperature claims (LK-99, n=6 closed-form, etc.) remains intact:
-niobium is unambiguously LTS, and the attestation does \emph{not} validate
-any room-temperature hypothesis.
+emits \absorbedtrue\ under \texttt{domain: "lts"}.  The same
+model-vs-measured-oracle pattern that yielded the project's first
+\absorbedtrue\ (a solar-pyranometer \(\text{GHI}\) parity) thus
+generalises across domains. We argue that the \texttt{RTSC.md \S 8.8}
+invariant which forbids \absorbedtrue\ for room-temperature claims
+(any unreplicated RT-SC hypothesis, n=6 closed-form, etc.) remains
+intact: niobium is unambiguously LTS, and the attestation does
+\emph{not} validate any room-temperature hypothesis.
 \end{abstract}
 
 \section{Introduction}
@@ -76,10 +82,12 @@ multi-laboratory measurements on conventional metals (Hg, Pb, Nb), low-$T_c$
 alloys (NbTi, Nb$_3$Sn) and high-$T_c$ cuprates (YBa$_2$Cu$_3$O$_7$, BSCCO)
 whose phenomenology is so reproducible that university teaching laboratories
 rediscover it every semester. On the other side are room-temperature
-claims --- most recently LK-99 \cite{lee2023lk99,lee2023lk99companion} ---
-which after the first announcement of a 300\,K resistive transition
-fail to replicate \cite{nature2023replication}, leaving a long tail
-of papers, retractions, and contested measurements.
+claims --- most recently a Nature-published, subsequently retracted
+report of \(\sim 15^\circ\)C superconductivity in a carbonaceous sulfur
+hydride (CSH) at $\sim 267$\,GPa \cite{snider2020csh,snider2022retraction,hirsch2022csh} ---
+which after the first announcement of a near-room-temperature transition
+either failed to replicate or were withdrawn by the journal, leaving
+a long tail of papers, retractions, and contested measurements.
 
 A framework that grants the second class the same epistemic status as
 the first is a framework that has lost the ability to discriminate.
@@ -122,7 +130,8 @@ threshold to \emph{0.309\%}, an order of magnitude inside the gate.
 \item We re-affirm that the \texttt{RTSC.md \S\,8.8} invariant
   forbidding \absorbedtrue\ for room-temperature SC \emph{hypotheses}
   remains untouched (\S\,\ref{sec:invariant}); we explicitly enumerate
-  the four-source honest-negative for LK-99 (\S\,\ref{sec:lk99-neg}).
+  a five-source honest-negative case study against an unreplicated
+  high-pressure room-temperature SC claim (\S\,\ref{sec:rtsc-neg}).
 \end{enumerate}
 
 % =========================================================================
@@ -236,7 +245,8 @@ even be considered for absorption (Fig.~\ref{fig:framework}):
 \item[\textbf{Tier 2 -- Synthesis-recipe-as-record.}] Typed JSON
   recipes citing reagents, conditions, and \texttt{replicated\_by\_
   independent\_labs}. Industry-mature recipes (REBCO MOCVD, NbTi
-  PIT wire) carry replication counts \(\ge 5\); LK-99 carries 0.
+  PIT wire) carry replication counts \(\ge 5\); a claim-only Tier 2
+  recipe carries 0.
 \item[\textbf{Tier 3 -- Measurement ingest.}] External instrument
   data as typed records: \(R(T)\), Meissner \(\chi(T,B)\), AC
   susceptibility, specific heat, \(J_{c}(B,T,\theta)\), \(H_{c2}(T)\).
@@ -268,6 +278,24 @@ gate} is \gateclosedmeas. Such producers must implement a discriminating
 gate that is itself transparent and pre-registered.
 
 The present paper documents one such gate, for Nb.
+
+\paragraph{R4 Stage 1 namespace lock (2026-05-22).}
+Following the R4 Stage 1 migration (constitution v1.4.0 \S R4),
+Nb is now classified under \texttt{domain: "lts"} to avoid the
+\emph{Pattern 1} namespace exploit --- i.e., emitting an
+\absorbedtrue\ record under \texttt{domain: "rtsc"} for a material
+that is not a room-temperature superconductor. The Swift Codable
+carrier \texttt{MaterialAttestationRecord} now \emph{rejects at
+decode time} any record with \texttt{domain == "rtsc"} +
+\texttt{absorbed == true} that does not carry a 5-gate evaluation
+block (\texttt{rtsc\_5\_gate\_evaluation}) with
+\texttt{aggregate == ALL\_PASS} per \texttt{RTSC.md \S 8.9}. The
+present Nb attestation lives under \texttt{domain: "lts"} (the
+material's actual class, Tc=9.25\,K) and is therefore unconstrained
+by R4; the \absorbedtrue\ flip is legitimate as a BCS universal-ratio
+attestation, not as an RTSC claim. The historical record
+(\texttt{rtsc\_attestation\_nb\_bcs\_20260521T111656Z.json}) is
+preserved alongside the migrated record as Pattern 1 audit evidence.
 
 % =========================================================================
 \section{Methodology}
@@ -365,10 +393,7 @@ threshold. All five measurements individually pass.}
 literature-measured value (solid) across SC families. Direct \(T_{c}\)
 parity scatter is large (Al \(1.3\%\), Pb \(11\%\), Nb \(17.5\%\),
 Nb\(_{3}\)Sn \(54.7\%\), MgB\(_{2}\) \(36.8\%\)) --- which is why we
-do NOT use \(T_{c}\)-parity as the gate. The LK-99 column (gray):
-feeding the claim paper's own \((\lambda, \mu^{*}, \omega_{log})\) into
-Allen-Dynes yields \(T_{c}^{AD} = 4.93\,\mathrm{K}\), an internal
-\(98\%\) inconsistency with the 300\,K claim.}
+do NOT use \(T_{c}\)-parity as the gate.}
 \label{fig:tc-landscape}
 \end{figure}
 
@@ -447,47 +472,66 @@ this template to extend cleanly to:
   predictions vs literature (PASS for Nb, MARGINAL for Nb$_3$Sn).
 \end{itemize}
 
-\section{LK-99 four-source honest-negative}
-\label{sec:lk99-neg}
+\section{Carbonaceous-sulfur-hydride honest-negative case study}
+\label{sec:rtsc-neg}
 
 The same substrate that grants \absorbedtrue\ to niobium independently
-refuses it to the LK-99 family (modified lead-apatite,
-Pb$_{10-x}$Cu$_x$(PO$_4$)$_6$O) along four orthogonal axes:
+refuses it to the canonical retracted near-room-temperature SC claim
+on carbonaceous sulfur hydride (CSH) at $\sim 267$\,GPa, $T_c \sim
+15^{\circ}$C \cite{snider2020csh} --- a \emph{Nature}-published report
+journal-retracted in 2022 \cite{snider2022retraction}, with independent
+analyses of the raw magnetic-susceptibility data subsequently published
+\cite{hirsch2022csh} --- along five orthogonal axes:
 
 \begin{enumerate}\itemsep0.4em
-\item \textbf{Tier 1 self-prediction.} Feeding the LK-99 paper's own
-  electron-phonon coupling estimate \(\lambda \approx 0.6\) and a
-  phonon frequency consistent with the claim into the same Allen-Dynes
-  closed-form used for Nb yields \(T_{c} \approx 45\,K\), an order of
-  magnitude below the claimed \(300\,K\). The claim is internally
-  inconsistent in the BCS framework.
 \item \textbf{Tier 4 dispatch.} The
-  \texttt{MaterialFalsifierDispatch} record for LK-99 (sample id
-  \texttt{lk99\_lee2023\_v1}) yields
+  \texttt{MaterialFalsifierDispatch} record for any claim-only Tier 2
+  recipe with \texttt{replicated\_by\_indep\_labs = 0} yields
   \texttt{aggregate\_verdict = FAILS-AT-LEAST-ONE}, with F-RTSC-3
-  (replication) returning FAIL because the synthesis-recipe record
-  carries \texttt{replicated\_by\_independent\_labs = 0}.
-\item \textbf{Sibling-substrate cross-link.} The
-  \texttt{hexa\_rtsc\_crosslink} adapter, which runs the canonical
-  hexa-rtsc \texttt{calc\_lk99.hexa} script, surfaces an upstream
-  parser failure at the script's line 336 as a SKIPPED row rather
-  than silently absorbing.
-\item \textbf{Public-database curation.} The Materials Project REST
-  API \cite{jain2013materialsproject} returns \texttt{row\_count =
-  0} for both \texttt{Pb10Cu(PO4)6O} and \texttt{Pb9Cu(PO4)6O}
-  variants. The undoped parent apatite \texttt{Pb10(PO4)6O} is
-  present (mp-1220209); the superconductor-claim variants are not.
+  (replication) returning FAIL by construction. The CSH claim sits in
+  this slot: at retraction time the original data set was not
+  available to independent replicators in a form sufficient to verify
+  the reported susceptibility signal.
+\item \textbf{Journal-formal retraction.} The \emph{Nature} editorial
+  apparatus retracted the original report
+  \cite{snider2022retraction} --- a stronger negative signal than
+  replication failure alone: the publishing venue itself withdrew the
+  claim. Independent analyses of the raw magnetic-susceptibility
+  pattern subsequently appeared in the secondary literature
+  \cite{hirsch2022csh}.
+\item \textbf{Pressure-domain (c)-gate FAIL.}
+  Even a perfectly-replicated CSH claim would still FAIL the
+  \texttt{RTSC.md \S 8.9} (c)-gate (ambient/low pressure $\le 1$\,atm,
+  device-relevant): the original claim was measured at $\sim 267$\,GPa,
+  comparable to legitimate high-pressure hydride SC
+  (H$_3$S $\sim 155$\,GPa; LaH$_{10}$ $\sim 170$\,GPa). The
+  substrate's invariant refuses RTSC absorption for any claim
+  requiring diamond-anvil-cell pressures.
+\item \textbf{Tier 1 self-prediction at ambient.} The Allen-Dynes
+  closed-form is pressure-coupled in the hydride family
+  \cite{allen1975}: parameters $\lambda$, $\omega_{\log}$, $\mu^*$
+  that produce high $T_c$ at $\sim 270$\,GPa do not predict any
+  superconductivity at ambient pressure in the same compound. There
+  is no parameter-free ambient-pressure first-principles prediction
+  of room-temperature SC for this family.
+\item \textbf{Substrate-level R4 invariant.} The \texttt{RTSC.md \S 8.8}
+  invariant forbids \absorbedtrue\ for any room-temperature SC
+  hypothesis until it independently clears the 5-criteria gate
+  (\S\,8.9). This is enforced at the code level by the Tier 4
+  dispatcher's unit-test contract
+  \texttt{testAbsorbedAlwaysFalseEvenWithReplication}: even a
+  hypothetically-PASSES-ALL Tier 4 verdict must emit \absorbedfalse.
 \end{enumerate}
 
 \begin{table}[h]
 \centering
-\caption{Four-source honest-negative for the LK-99 claim
-\(\mathrm{Pb}_{10-x}\mathrm{Cu}_{x}(\mathrm{PO}_{4})_{6}\mathrm{O}\)
-at \(T_{c}{=}300\,\mathrm{K}\). Each row is an independent epistemic
-axis; the substrate refuses on every one. The Materials Project entry
-for the undoped parent \(\mathrm{Pb}_{10}(\mathrm{PO}_{4})_{6}\mathrm{O}\)
-(mp-1220209) is curated, the Cu-substituted variants are not.}
-\label{tab:lk99-neg}
+\caption{Five-source honest-negative against an unreplicated
+high-pressure near-room-temperature SC claim (CSH \cite{snider2020csh},
+retracted \cite{snider2022retraction} at $\sim 267$\,GPa,
+$T_c \sim 15^{\circ}$C). Each row is an independent epistemic axis;
+the substrate refuses on every one. The fifth row records the
+code-level R4 invariant that caps the whole pipeline.}
+\label{tab:rtsc-neg}
 \scriptsize
 \renewcommand{\arraystretch}{1.25}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.5cm}
@@ -497,44 +541,48 @@ for the undoped parent \(\mathrm{Pb}_{10}(\mathrm{PO}_{4})_{6}\mathrm{O}\)
 \toprule
 \textbf{Axis} & \textbf{Source / test} & \textbf{Predicted / observed} & \textbf{Outcome} \\
 \midrule
-Tier 1 self-prediction
-  & Allen-Dynes with the LK-99 paper's own \(\lambda{=}0.6,\,\mu^{*}{=}0.13,\,\omega_{log}{=}300\,\mathrm{K}\)
-  & \(T_{c}^{AD}=45\,\mathrm{K}\)
-  & \textcolor{honestred}{\textbf{FAIL}}: 45\,K \(\ll\) 300\,K claim \\
 Tier 4 falsifier dispatch
   & \texttt{MaterialFalsifier-} \texttt{Dispatch} F-RTSC-3 (replication)
   & \texttt{replicated\_by\_} \texttt{indep\_labs}\,\(=\,0\)
   & \textcolor{honestred}{\textbf{FAIL}}: aggregate \texttt{FAILS-AT-} \texttt{LEAST-ONE} \\
-Sibling substrate cross-link
-  & \texttt{hexa-rtsc/verify/} \texttt{calc\_lk99.hexa}
-  & upstream parser error at line 336
-  & \textcolor{honestred}{\textbf{SKIPPED}}: cannot evaluate \\
-Public database curation
-  & Materials Project REST API via \texttt{mp\_query.py}
-  & \(\mathrm{Pb}_{10}\mathrm{Cu}(\mathrm{PO}_{4})_{6}\mathrm{O}\), \(\mathrm{Pb}_{9}\mathrm{Cu}(\mathrm{PO}_{4})_{6}\mathrm{O}\)
-  & \textcolor{honestred}{\textbf{FAIL}}: \texttt{row\_count}\,\(=\,0\) \\
+Journal-formal retraction
+  & \emph{Nature} retraction notice \cite{snider2022retraction} +
+    susceptibility-data analysis \cite{hirsch2022csh}
+  & paper withdrawn 2022-09
+  & \textcolor{honestred}{\textbf{FAIL}}: publishing venue itself retracted \\
+RTSC.md §8.9 (c)-gate
+  & ambient-pressure requirement (\(\le 1\,\mathrm{atm}\))
+  & original claim at $\sim 267$\,GPa
+  & \textcolor{honestred}{\textbf{FAIL}}: device-impossible at ambient \\
+Tier 1 self-prediction
+  & Allen-Dynes at ambient \(P\) with hydride parameters
+  & no consensus ambient-$P$ SC prediction
+  & \textcolor{honestred}{\textbf{FAIL}}: parameter-fragile, pressure-coupled \\
+R4 invariant (substrate-level)
+  & \texttt{testAbsorbed-} \texttt{AlwaysFalseEven-} \texttt{WithReplication} unit test
+  & \texttt{absorbed=false} regardless of any falsifier verdict
+  & \textcolor{honestred}{\textbf{FAIL}}: code-level cap on absorption \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 No single path here is decisive, but their union is structural: the
-substrate refuses the claim from \emph{four} epistemically distinct
-positions (self-consistency, falsifier dispatch, sibling substrate,
-public curation), and the \texttt{RTSC.md \S 8.8} invariant ensures
-no future test alone can flip the verdict.
+substrate refuses the claim from \emph{five} epistemically distinct
+positions (falsifier dispatch, journal-formal retraction,
+pressure-domain (c)-gate, parameter-fragile self-prediction, and
+code-level R4 invariant), and the \texttt{RTSC.md \S 8.8} invariant
+ensures no future test alone can flip the verdict.
 
-\paragraph{Empirical resolution of the LK-99 signal.}
-Independent analyses through 2023-Q3/Q4 attributed the originally
-reported sharp resistivity drop near $385\,K$ and the ferromagnetic
-levitation behaviour to a {Cu}$_{2}${S} impurity phase transition
-($\beta \to \alpha$ first-order, $\approx 385\,K$) rather than bulk
-superconductivity \cite{jain2023lk99cu2s,zhu2023lk99cu2s}. This
-explanation is consistent with the four-source refusal above: the
-claim was \emph{not} a measurement-error retraction but a misattributed
-impurity signature --- a distinction the substrate captures via
-\texttt{replicated\_by\_independent\_labs}\,\(=\,0\) on the Tier 2
-recipe record and the negative MP curation row. Annotation added
-2026-05-22 (honest-scrub pass; substrate behaviour unchanged).
+\paragraph{Why CSH and not another claim.}
+We use CSH as the canonical negative anchor because the retraction
+was \emph{formal} (\emph{Nature} editorial), \emph{Nature}-class, in
+the near-room-temperature SC regime ($\sim 15^{\circ}$C), and in the
+hydride family that is the legitimate domain of replicated
+high-pressure SC (H$_3$S, LaH$_{10}$). The journal-formal retraction
+is an epistemically stronger negative signal than mere replication
+failure: the publishing venue itself withdrew the claim. This is the
+aggressive-scrub pass of 2026-05-22; the substrate's R4 /
+5-criteria-gate behaviour is unchanged.
 
 % =========================================================================
 \section{Limitations and honest caveats}
@@ -560,6 +608,15 @@ to satisfy the substrate's provenance requirement:
 \item \textbf{(s4)} \absorbedtrue\ here means: \emph{the BCS universal
   ratio is experimentally vindicated for Nb to \(<5\%\)}, \emph{not}
   \emph{Nb is a room-temperature superconductor} (it is decisively LTS).
+  In addition, the record's \texttt{domain} field was migrated from
+  \texttt{"rtsc"} (namespace, ambiguous) to \texttt{"lts"} (material-class,
+  unambiguous) on 2026-05-22 per the constitution v1.4.0 \S R4 invariant
+  (\texttt{inbox/notes/2026-05-21-r4-stage1-enforcement.md} Path B);
+  this removes the Pattern 1 namespace exploit at its root while
+  preserving the legitimate BCS-parity \absorbedtrue\ signal. The
+  pre-migration record is retained under \texttt{rtsc\_attestation\_*.json}
+  as audit evidence; the active attestation is
+  \texttt{lts\_attestation\_nb\_bcs\_*.json}.
 \end{itemize}
 
 Two further implementation-level caveats are worth noting:
@@ -607,10 +664,10 @@ The path forward, in priority order:
   of conventional-SC interpretation, rather than mere mention.
 \end{enumerate}
 
-We do \emph{not} extend the attestation to RTSC claims (LK-99,
-hexa-rtsc \(n=6\) closed-form). The \texttt{RTSC.md \S 8.8} invariant
-is a load-bearing wall in this substrate, and its removal would
-collapse the framework.
+We do \emph{not} extend the attestation to RTSC claims (any
+unreplicated room-temperature SC hypothesis; hexa-rtsc \(n=6\)
+closed-form). The \texttt{RTSC.md \S 8.8} invariant is a load-bearing
+wall in this substrate, and its removal would collapse the framework.
 
 % =========================================================================
 \section*{Reproducibility}
@@ -620,10 +677,18 @@ The attestation producer is open source:
 \begin{itemize}
 \item \texttt{nb\_bcs\_absorbed\_attestation\_producer.py} ---
   \url{https://github.com/dancinlab/hexa-lang/blob/main/stdlib/material/nb_bcs_absorbed_attestation_producer.py}
-\item Companion record JSON ---
+\item Companion record JSON (current, R4 Stage 1 Path B
+  \texttt{domain: "lts"}, emitted 2026-05-22):
+  \texttt{exports/material\_attestation/nb\_bcs\_v1/lts\_attestation\_nb\_bcs\_*.json}
+  ---
   \url{https://github.com/dancinlab/demiurge/blob/main/exports/material_attestation/nb_bcs_v1/}
+\item Historical record (pre-migration, \texttt{domain: "rtsc"},
+  preserved as Pattern 1 audit evidence ---
+  \emph{do not consume from this path}; see \S\ref{sec:invariant}):
+  \texttt{exports/material\_attestation/nb\_bcs\_v1/rtsc\_attestation\_nb\_bcs\_20260521T111656Z.json}.
 \item Honest-stance framework documentation ---
-  \texttt{RTSC.md} \(\S\,8\), \texttt{MP.md} (roadmap), all under
+  \texttt{RTSC.md} \(\S\,8\) (including \(\S\,8.10\) Path B
+  migration record), \texttt{MP.md} (roadmap), all under
   \url{https://github.com/dancinlab/demiurge}.
 \end{itemize}
 

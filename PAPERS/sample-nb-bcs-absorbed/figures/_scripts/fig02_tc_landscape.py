@@ -25,7 +25,6 @@ CANDIDATES = [
     ("Nb$_3$Sn", 220, 1.70, 0.13, 18.30, "lts-sc"),
     ("MgB$_2$",   520, 0.87, 0.13, 39.00, "mgb2"),
     ("YBCO",     0,  0,    0,    92.00, "cuprate"),  # BCS N/A
-    ("LK-99",    300, 0.60, 0.13, 300.00, "claim"),  # paper's own claim params
 ]
 
 plt.rcParams.update({
@@ -42,7 +41,7 @@ ad = []
 labels = []
 colors = []
 COLORS = {"lts": "#1565c0", "lts-sc": "#6a1b9a", "mgb2": "#ef6c00",
-          "cuprate": "#c62828", "claim": "#37474f"}
+          "cuprate": "#c62828"}
 for i, (name, w, lam, mu, tm, fam) in enumerate(CANDIDATES):
     if fam == "cuprate":
         ad.append(np.nan)
@@ -70,14 +69,6 @@ ax.set_title("BCS-class $T_c$ prediction vs measurement across SC families",
              fontsize=10)
 ax.legend(loc="upper left", fontsize=8, frameon=False)
 ax.grid(axis="y", which="both", linestyle=":", linewidth=0.5, alpha=0.5)
-
-# Annotate LK-99 self-inconsistency
-i_lk = len(CANDIDATES) - 1
-ax.annotate(f"$T_c^{{AD}}={ad[i_lk]:.0f}$\\,K\n(claim's own $\\lambda,\\mu^*$;\nclaim is 300\\,K)",
-            xy=(i_lk + width/2, ad[i_lk]),
-            xytext=(i_lk - 1.5, 200),
-            fontsize=7.5, color="#37474f",
-            arrowprops=dict(arrowstyle="->", color="#37474f", lw=0.6))
 
 # Annotate YBCO (BCS N/A)
 i_y = labels.index("YBCO")

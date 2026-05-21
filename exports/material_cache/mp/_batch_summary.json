@@ -1,10 +1,11 @@
 {
   "batch_stamp": "20260521T110703Z",
-  "total_queried": 31,
-  "total_hit": 25,
-  "total_miss": 6,
+  "total_queried": 28,
+  "total_hit": 24,
+  "total_miss": 4,
   "api_calls_made": 0,
-  "cached_skips": 31,
+  "cached_skips": 28,
+  "scrub_note": "2026-05-22 aggressive scrub — claim-only family removed (3 entries, see inbox/notes/2026-05-22-lk99-final-scrub.md).",
   "per_family_stats": {
     "lts": {
       "queried": 7,
@@ -41,12 +42,6 @@
       "hit": 1,
       "miss": 0,
       "cached_skip": 1
-    },
-    "lk99_family": {
-      "queried": 3,
-      "hit": 1,
-      "miss": 2,
-      "cached_skip": 3
     }
   },
   "duration_s": 0.0,
@@ -102,11 +97,6 @@
     {
       "formula": "YH6",
       "family": "heavy_hydride",
-      "reason": "row_count=0"
-    },
-    {
-      "formula": "Pb10Cu(PO4)6O",
-      "family": "lk99_family",
       "reason": "row_count=0"
     }
   ]

@@ -58,7 +58,7 @@ Plus modified `ActionDispatch.swift` + `ProducerRegistry.swift`. This **directly
 
 - No `exports/rtsc/verify/` in this untracked set (RTSC working tree is per "unstaged RTSC working tree" caveat).
 - No `exports/energy/verify/2026-05-21T03-07-39Z/energy_verify_20260520T190739Z_nrel_midc_pyranometer.json` … wait, there IS one (G29-MIDC ride-along · landed in `80a1664` but a stray re-run timestamp survives untracked). Worth a closer look in commit cycle.
-- No `material_falsifier` / `lk99` paths — that family landed clean in `f4defee` (`exports/falsifier/lk99_lee2023_v1/`).
+- No `material_falsifier` / claim-only RT-SC paths — that family landed clean in `f4defee` (the original `exports/falsifier/<historic-claim>_v1/` directory was deleted 2026-05-22 in the aggressive scrub pass — see `inbox/notes/2026-05-22-lk99-final-scrub.md`).
 
 ### 2.4 Naming convention drift
 

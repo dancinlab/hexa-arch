@@ -29,15 +29,15 @@
   "provenance": {
     "source_url": "https://github.com/dancinlab/hexa-rtsc",
     "source_paper_arxiv_id": null,
-    "source_citation": "hexa-rtsc — Room-temperature superconductor substrate-of-substrates · n=6 invariant lattice · 48T SC coil · v1.1.0 (canon sha c0f1f570, 2026-05-06). The repo ships closed-form spec + falsifier preregister + 43/43 verifier closure, but explicitly: 'v1.0.0 ships spec + falsifier preregister only — no working empirical sandbox. RT-SC is academically unproven (LK-99 et al. unsettled).' DOI: 10.5281/zenodo.20102616."
+    "source_citation": "hexa-rtsc — Room-temperature superconductor substrate-of-substrates · n=6 invariant lattice · 48T SC coil · v1.1.0 (canon sha c0f1f570, 2026-05-06). The repo ships closed-form spec + falsifier preregister + 43/43 verifier closure, but explicitly: 'v1.0.0 ships spec + falsifier preregister only — no working empirical sandbox. RT-SC is academically unproven.' DOI: 10.5281/zenodo.20102616."
   },
   "scope_caveats": [
     "No experimental synthesis route has been demonstrated; this record exists ONLY to register the candidate spec for §8.7 Tier 2-4 future ingestion.",
     "The hexa-rtsc substrate is algebraic-closed-form: it specifies what an n=6 RTSC would have to satisfy (Tc=300K · Hc2=σ·τ=48T · Cooper φ=2 · CN=6 Abrikosov lattice · 43/43 verifier closure between numerics and BCS/Abrikosov/WHH/McMillan/Allen-Dynes algebra). It does NOT specify which compound, which stoichiometry, or which fabrication route realises that closed form.",
     "target_compound is intentionally 'unspecified' — assigning a compound here would be a fabrication (in both senses). The candidate is a spec-without-material.",
     "replicated_by_independent_labs=0 is permanent until an empirical sandbox lands. Per RTSC.md §8.8 (g3 honest stance): RTSC-class claims never reach absorbed=true through Tier 4 falsifier dispatch alone. Tier 4 verdict can only ever say 'closed-form consistent' — never 'empirically realised'.",
-    "gate_type=empirically-unproven is the canonical label for this category (RTSC.md §8.6 deferred item: 'LK-99 / hexa-rtsc n=6 후보를 absorbed=false · provisional=true · gate_type=empirically-unproven 로 import'). This record fulfils that deferred line item for the hexa-rtsc n=6 side.",
-    "Sibling LK-99 record (lk99_lee2023.json) uses gate_type=claim-only because Lee/Kim 2023 made an empirical claim that was attempted-and-failed-to-replicate. hexa-rtsc n=6 uses gate_type=empirically-unproven because no empirical claim has been made — only a closed-form spec exists.",
+    "gate_type=empirically-unproven is the canonical label for this category (RTSC.md §8.6 deferred item: 'hexa-rtsc n=6 후보를 absorbed=false · provisional=true · gate_type=empirically-unproven 로 import'). This record fulfils that deferred line item for the hexa-rtsc n=6 side.",
+    "gate_type=empirically-unproven is used because no empirical claim has been made — only a closed-form spec exists. Sibling claim-only records (in the RTSC.md §8.9 5-criteria gate matrix) carry gate_type=claim-only.",
     "duration_hours=0.0 and a degenerate single-point temperature_profile_c are schema-required placeholders. The schema's Conditions struct has no nullable variant; these zeros encode 'not applicable' and must not be interpreted as a 25°C ambient-pressure room-temperature reaction."
   ],
   "citations": [

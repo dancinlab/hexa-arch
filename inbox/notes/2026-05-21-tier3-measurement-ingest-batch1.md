@@ -5,12 +5,13 @@
 RTSC.md §8.7 Tier 3 (measurement ingest) had **1** record (the SuperPower 2G HTS
 tape Jc(B,θ) baseline) — vendor-datasheet origin, `replication_count: 1`,
 `absorbed: false`. The downstream `MaterialFalsifierDispatch` (Tier 4) had
-nothing to bucket beyond `jc_b_theta` for non-LK-99 materials, so most of its
+nothing to bucket beyond `jc_b_theta` for replicated SC families, so most of its
 6-falsifier verdict reduced to `SKIPPED-MISSING-INPUT` for canonical compounds.
 
 This batch expands Tier 3 from 1 → **6 records** (1 existing + 5 new) drawn from
 public superconductivity literature, sized to exercise 4 of the 6 falsifiers
-(F-RTSC-1, F-RTSC-2, F-SC-2, F-SC-3) on non-LK-99 compounds.
+(F-RTSC-1, F-RTSC-2, F-SC-2, F-SC-3) on replicated SC compounds (Nb, MgB2,
+YBCO, Nb3Sn).
 
 ## Files added
 

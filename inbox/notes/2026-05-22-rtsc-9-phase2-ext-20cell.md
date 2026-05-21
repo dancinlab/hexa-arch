@@ -9,7 +9,7 @@
 
 ## 1. 5×4 matrix update — H₃S row appended
 
-| producer            | Nb                                | MgB₂                              | YBa₂Cu₃O₇                              | Pb₁₀Cu(PO₄)₆O (LK-99)             | **H₃S (NEW)**                          |
+| producer            | Nb                                | MgB₂                              | YBa₂Cu₃O₇                              | Claim-only RT-SC (anonymized 2026-05-22)             | **H₃S (NEW)**                          |
 |---------------------|-----------------------------------|-----------------------------------|----------------------------------------|------------------------------------|----------------------------------------|
 | csp_adapter.py      | PASS · install-gated              | PASS · install-gated              | PASS · install-gated                   | PASS · install-gated               | **PASS · install-gated**               |
 | beenet_adapter.py   | PASS · install-gated              | PASS · install-gated              | PASS · install-gated                   | PASS · install-gated               | **PASS · install-gated**               |
@@ -20,7 +20,7 @@ Phase 2 ext totals (H₃S column only, 4 new cells): **3 PASS / 1 DEVIATION / 0 
 Cumulative 20-cell totals: **18/20 PASS · 2 DEVIATION · 0 FAIL · 0 crash.**
 
 Footnotes:
-1. **H₃S on askcos**: H₃S is in the explicit `_INORGANIC_SC_HINTS` allow-list in `askcos_adapter.py` ("H3S" is one of the family literals), so the domain-mismatch routes via explicit-hit (rationale: "explicit hit on RTSC §8.2 SC family (H3S)"). Honest skip — same shape as Nb/MgB₂/YBCO/LK-99. No surprise.
+1. **H₃S on askcos**: H₃S is in the explicit `_INORGANIC_SC_HINTS` allow-list in `askcos_adapter.py` ("H3S" is one of the family literals), so the domain-mismatch routes via explicit-hit (rationale: "explicit hit on RTSC §8.2 SC family (H3S)"). Honest skip — same shape as Nb/MgB₂/YBCO/claim-only RT-SC slot. No surprise.
 2. **H₃S on cross_code_dft**: only **`mp_cache` returned a value** (5 polymorph rows, mean = −0.1178 eV/atom, σ = 0.3395). **AFLOW returned empty data list, OQMD returned empty data list.** `poll_errors=[]` — both upstreams were reachable; they simply have no H₃S entry. Net gate: `insufficient-sources` (n=1, requires ≥ 2). This is the **second** DEVIATION in the 20-cell matrix from a *single-source DFT corpus*, with YBCO being the first.
 
 ---

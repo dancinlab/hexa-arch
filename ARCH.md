@@ -2898,8 +2898,9 @@ landing 시각만 ARCH `## Log` 에 박제.
   - **Models (5 · 4-tier record schemas)**:
     `ConductorMaterial.swift` (77) ·
     `ConductorRecord.swift` (110 · Tier 1 material→device handoff
-    · `lk99Hypothetical` family forced `absorbed=false` forever +
-    `gate_type="empirically-unproven"`) ·
+    · `claimOnlyHypothetical` family forced `absorbed=false` forever +
+    `gate_type="empirically-unproven"`; renamed 2026-05-22 aggressive
+    LK-99 scrub from `lk99Hypothetical`) ·
     `SynthesisRecipeRecord.swift` (104 · Tier 2 recipe) ·
     `MeasurementRecord.swift` (159 · Tier 3 measurement) ·
     `MaterialVerdictRecord.swift` (154 · Tier 4 verdict).
@@ -2909,14 +2910,15 @@ landing 시각만 ARCH `## Log` 에 박제.
     `exports/conductor/rebco_hts_baseline.json` (REBCO 2G HTS
     baseline · SuperPower-class Tc=92K · `absorbed=false` first
     ingest per §8.5) ·
-    `exports/synthesis_recipe/lk99_lee2023.json` (LK99 Lee 2023
-    recipe seed) ·
+    [historic seed recipe — deleted 2026-05-22 in aggressive scrub
+    pass; see `inbox/notes/2026-05-22-lk99-final-scrub.md`] ·
     `exports/measurement/jc_b_theta/superpower_2g_baseline.json`
     (Jc(B,θ) baseline) ·
     `exports/measurement/2026-05-21T08-58-24Z.json` (stamped
     measurement instance) ·
-    `exports/falsifier/lk99_lee2023_v1/2026-05-21T08-58-24Z.json`
-    (Tier 4 dispatch verdict instance).
+    [historic Tier 4 dispatch verdict — deleted 2026-05-22 with the
+    seed recipe above; XCTest now uses a synthetic claim-only fixture
+    via `makeClaimOnlyRecipe()`].
   - **Inbox note (1 · detail SSOT)**:
     `inbox/notes/2026-05-21-pool-gate_v3-abc-diagnosis.md` (59
     line) — orthogonal `chip` axis · pool cross-platform
@@ -2935,7 +2937,8 @@ landing 시각만 ARCH `## Log` 에 박제.
   `hexa-rtsc` is the producer per the file's own header
   comments) with cross-edges to **matter** (conductor compound
   · `rebco_hts_baseline`) and **chem** (synthesis recipe ·
-  `lk99_lee2023`). The §2 DAG is **unchanged** — these are
+  historical claim-only seed recipe, deleted 2026-05-22). The §2 DAG
+  is **unchanged** — these are
   verb-cell implementations, not new domain nodes/edges. The
   §7 records-gates-honesty contract is the load-bearing axis
   here: every new record obeys `absorbed=false` until

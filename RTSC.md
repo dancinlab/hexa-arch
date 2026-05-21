@@ -18,7 +18,7 @@
 현재 코드 (`RtscGeometry.swift::htsSolenoidProxy`, `pyfemm_magnetics.py`,
 `getdp_hts.py`) 는 전부 **HTS 솔레노이드** — 즉 "device=솔레노이드 · conductor=HTS(REBCO 77 K)"
 하나의 cell. 그런데 domain id 는 RTSC(Room-Temp, 300 K) 라서 **이름과 내용물의
-온도 영역이 정반대**다. RTSC 는 conductor material 축의 한 값(LK-99 류 가설)에
+온도 영역이 정반대**다. RTSC 는 conductor material 축의 한 값(미재현 RT-SC 가설)에
 불과한데 도메인 전체 이름이 돼버렸다.
 
 이 파일에서 두 축을 명시적으로 분리하고, 다른 3개 축(solver / verb / formulation)
@@ -63,7 +63,7 @@ characterization · demiurge↔hexa-rtsc handoff schema · g3 honest stance — 
 | LTS Nb₃Sn | 18 | scaling law (Summers/Bordini) | linear 근사 | ITER / 8 T 급 |
 | **HTS REBCO** | ~93 | E-J power law (n=20-30), J_c(B,T,θ) anisotropy | **본 세션 cell** — linear μ_r=1 근사 (저전류 한정) | 본 producer 의 default. HONEST: 임계상태/quench 미적용 |
 | HTS Bi-2212 | ~85 | E-J power law (n=10-15) | linear 근사 | round-wire 가능 → 등방 |
-| RTSC (가설) | ~300 (LK-99 등) | **empirically unproven** | μ_r=1 가정 (재현 미확정) | hexa-rtsc 의 falsifier preregister 영역 (43/43 closure 별개) |
+| RTSC (가설) | ~300 (미재현) | **empirically unproven** | μ_r=1 가정 (재현 미확정) | hexa-rtsc 의 falsifier preregister 영역 (43/43 closure 별개) |
 
 → producer 입장에서 B 축은 **(a) μ_r 값 결정 (b) source J_phi = N·I / A_coil (c) saturation guard** 3가지로 환원. 본 세션은 (a)=1, (b)=parametric, (c)=경고만.
 
@@ -121,7 +121,7 @@ characterization · demiurge↔hexa-rtsc handoff schema · g3 honest stance — 
 
 ### 3.2 material-side (§8 — 합성/특성평가 트랙)
 
-|              | LTS | MgB₂ | FeSC | HTS Cuprate | Hydride | TBG | LK-99 | hexa-rtsc n=6 |
+|              | LTS | MgB₂ | FeSC | HTS Cuprate | Hydride | TBG | Claim-only RT-SC | hexa-rtsc n=6 |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | 합성 (synthesis) | ✓ industry | ✓ industry | ✓ lab | ✓ industry | △ DAC only | △ lab | ✗ claim only | — closed-form only |
 | Meissner 검증 | ✓ | ✓ | ✓ | ✓ | ✓ (under GPa) | ✓ | ✗ | — |
@@ -178,7 +178,7 @@ provisional      = true
 | 1 | D1 (HTS Workgroup) | `stdlib/rtsc/templates/hts_workgroup/{benchmark1_tape,life_hts_pancakes_ref}/` | 외부 reference benchmark provenance manifests. **license-unclear → 콘텐츠 vendor 거부**, fetch.sh + gitignored `_external/` 캐시. |
 | 1 | M4 (MPRester) | `stdlib/material/mp_query.py` | Materials Project REST API thin adapter. 3-gate path (install · api-key · external-api) 전부 honest skip 검증. |
 | 2 | GetDP 4.0.0 ARM | `~/local/getdp/getdp-4.0.0-MacOSARM/bin/getdp` | Apple Silicon native (Rosetta 불필요). `RhoPowerLaw` 내장 → HTS Workgroup .pro 즉시 실행 가능. |
-| 2 | F (Tier 4 dispatch) | `MaterialVerdictRecord.swift` + `MaterialFalsifierDispatch.swift` + XCTest 2건 | **LK-99 first verdict (HONEST DEMO)** — `exports/material_verdict/lk99_lee2023_v1/2026-05-21T08-58-24Z.json` — aggregate_verdict=FAILS-AT-LEAST-ONE, F-RTSC-3 replication FAIL (Tier 2 replicated=0), 나머지 SKIPPED-MISSING-INPUT. **absorbed=false 불변** (testAbsorbedAlwaysFalseEvenWithReplication 보호). |
+| 2 | F (Tier 4 dispatch) | `MaterialVerdictRecord.swift` + `MaterialFalsifierDispatch.swift` + XCTest 2건 | **Claim-only first verdict (HONEST DEMO · anonymized 2026-05-22 aggressive scrub · historic seed deleted from exports/)** — synthetic claim-only Tier 2 recipe with replicated=0 yields aggregate_verdict=FAILS-AT-LEAST-ONE, F-RTSC-3 replication FAIL, 나머지 SKIPPED-MISSING-INPUT. **absorbed=false 불변** (testAbsorbedAlwaysFalseEvenWithReplication 보호). |
 | 2 | G (H-formulation adapter) | `stdlib/rtsc/h_formulation_adapter.py` | 3 skip mode (license-unclear · install-gated · getdp_solve_timeout) — getdp_hts.py 의 gate-landing 상태 유지하면서 별 파일로 H-formulation 진입 경로 확보. |
 
 ### 4.2.1.c HTS Workgroup H-formulation 본해 실증 (cube benchmark)
@@ -333,16 +333,16 @@ last postop  = res/dummy.txt — t=0.025s · 6-PostOp 값 (energy / current / et
 | **HTS Cuprates** | 77–135 K | YBCO (REBCO) · BSCCO · Hg-1223 | mid–high (텍스처 제어) | ✓ replicated 1986~, 본 데모 producer 의 default |
 | **Heavy hydrides** (≥GPa 압력) | 200–260 K | H₃S · LaH₁₀ · CaH₆ · ScH₉ · YH₆ | very high (DAC + 150 GPa) | ✓ replicated 2015~ (Eremets 등), **GPa 압력 풀면 unstable** — device 불가 |
 | **Twisted bilayer graphene** | ~1.7 K (UTBG) | TBG @ 1.1° magic angle | high (exfoliation + alignment) | ✓ replicated 2018~ (Cao/Jarillo-Herrero) |
-| **LK-99 family** | 가설 300 K | Pb₁₀₋ₓCuₓ(PO₄)₆O (가설) | low (claimed) | **✗ NOT replicated** — Lee et al 2023, 후속 다수 실패 |
+| **Claim-only RT-SC** | 가설 300 K | (anonymized — see RTSC.md §8.9 5-criteria gate) | low (claimed) | **✗ NOT replicated** — any unreplicated RT-SC claim sits in this slot; aggressive-scrubbed 2026-05-22 |
 | **hexa-rtsc n=6 candidate** | 가설 300 K | n=6 σ·τ=48 closed-form spec | ? | **closed-form only** — `~/core/hexa-rtsc` falsifier preregister, 합성 sandbox 부재 |
 
-→ 본 producer의 `conductor=rebco_hts_linear_mu1` default 는 위 표의 **HTS Cuprates** 행. RTSC 가설(LK-99 / hexa-rtsc n=6)은 *실제 device 권선의 입력으로 사용 금지* — empirical proof 가 없음. demiurge 가 가설 물질을 "absorbed=true" 로 기록하면 그 자체가 g3 위반.
+→ 본 producer의 `conductor=rebco_hts_linear_mu1` default 는 위 표의 **HTS Cuprates** 행. RTSC 가설 (claim-only RT-SC · hexa-rtsc n=6) 은 *실제 device 권선의 입력으로 사용 금지* — empirical proof 가 없음. demiurge 가 가설 물질을 "absorbed=true" 로 기록하면 그 자체가 g3 위반.
 
 ### 8.3 합성 루트 (synthesis routes)
 
 | 루트 | 적용 family | 대표 장비 | 본 세션 demiurge 영역? |
 |---|---|---|---|
-| **Solid-state reaction** | LK-99 · Cuprates · MgB₂ · FeSC | 박스 furnace · 진공 ampoule | ✗ — material-side만 |
+| **Solid-state reaction** | Cuprates · MgB₂ · FeSC · claim-only RT-SC families | 박스 furnace · 진공 ampoule | ✗ — material-side만 |
 | **Diamond Anvil Cell (DAC)** | Heavy hydrides | DAC + Raman + 라이저 | ✗ — material-side, 압력 풀면 무너짐 |
 | **Single-crystal growth** | Cuprates · FeSC · TBG | melt-textured / floating-zone / CVT | ✗ |
 | **MOCVD · sputtering · PLD** | REBCO tape · 박막 | reactor · target · 기판 | ✗ (외주 / 상용 tape 매입) |
@@ -358,7 +358,7 @@ material-side 의 verify verb. hexa-rtsc 의 35 verify 스크립트 + 6 falsifie
 
 | 테스트 | 측정량 | 통과 조건 (RTSC claim) | hexa-rtsc verifier |
 |---|---|---|---|
-| **R(T) drop** | 4-probe 저항 vs T | T<Tc 에서 R → 0 (실험 noise 한도) | `empirical_lk99_arxiv.hexa` 등 |
+| **R(T) drop** | 4-probe 저항 vs T | T<Tc 에서 R → 0 (실험 noise 한도) | `verify/empirical_*_arxiv.hexa` (hexa-rtsc archival proxies) |
 | **Meissner 효과** | 외부 B-field 차폐 (zero-field-cooled / field-cooled) | χ < 0 (반자성) · 자기 levitation | `empirical_abrikosov_sans_arxiv.hexa` |
 | **AC susceptibility** | χ'(T,ω) · χ''(T,ω) | dissipation peak @ Tc | (hexa-rtsc verify pool 포함) |
 | **Specific heat 도약** | Cp(T) at Tc | BCS 도약 ΔCp/γT_c ≈ 1.43 | `empirical_specific_heat_arxiv.hexa` · `calc_bcs.hexa` |
@@ -366,9 +366,9 @@ material-side 의 verify verb. hexa-rtsc 의 35 verify 스크립트 + 6 falsifie
 | **Hc2 측정** | resistive transition vs B | WHH 외삽으로 Hc2(0) | `calc_hc2_48t.hexa` · `numerics_whh_full.hexa` · `numerics_hc2_48t*.hexa` |
 | **McMillan/Allen-Dynes** | λ · ω_log · μ* 로 Tc 예측 | predicted Tc 일관성 | `calc_mcmillan.hexa` · `numerics_mcmillan*.hexa` |
 | **Vortex lattice (Abrikosov)** | STM/SANS 로 vortex 격자 관측 | type-II SC 확인 | `empirical_abrikosov_sans_arxiv.hexa` · `numerics_tdgl_vortex.hexa` |
-| **DFT band structure** | first-principles N(E_F) · λ | EM coupling 추정 | `numerics_lk99_dft.hexa` |
+| **DFT band structure** | first-principles N(E_F) · λ | EM coupling 추정 | hexa-rtsc `verify/numerics_*_dft.hexa` (claim-class numerics) |
 
-→ "RTSC 라고 주장한다" → 위 9개 테스트 중 최소 **R(T)=0 + Meissner + 재현성** 3 개를 동시에 통과해야 함. LK-99 류는 R(T) 단독 (재현 실패) 까지만 통과 → "claim only" 영역. hexa-rtsc 는 본 9-test 매트릭스의 closed-form 일관성을 43/43 닫았지만 **empirical sandbox 없음** (= 진짜 합성+측정이 없음).
+→ "RTSC 라고 주장한다" → 위 9개 테스트 중 최소 **R(T)=0 + Meissner + 재현성** 3 개를 동시에 통과해야 함. 미재현 RT-SC 가설은 일반적으로 R(T) 단독 (재현 실패) 까지만 통과 → "claim only" 영역. hexa-rtsc 는 본 9-test 매트릭스의 closed-form 일관성을 43/43 닫았지만 **empirical sandbox 없음** (= 진짜 합성+측정이 없음).
 
 ### 8.5 demiurge ↔ material-side handoff schema (planned)
 
@@ -411,7 +411,7 @@ scope_caveats:
 - [ ] `ConductorRecord` Swift 모델 + `ConductorLoader` (DemiurgeCore) — `RtscAnalyzeProducer` / `RtscVerifyProducer` 가 시작 시 conductor record 1건을 인자로 받는 형태로 리팩
 - [ ] `ConductorMaterial` enum (§5 Axis B 의 ledger 와 동일) — record 의 `spec.family` 와 1:1
 - [ ] vendor datasheet ingest (예: SuperPower 2G HTS tape Jc(B,T,θ) CSV)
-- [ ] LK-99 / hexa-rtsc n=6 후보를 `absorbed=false · provisional=true · gate_type=empirically-unproven` 로 import (claim-only 영역 명시)
+- [ ] hexa-rtsc n=6 후보를 `absorbed=false · provisional=true · gate_type=empirically-unproven` 로 import (claim-only 영역 명시 · claim-only RT-SC family slot 동일 contract)
 
 ### 8.7 demiurge 영역으로 들이려면 — 4-tier expansion path
 
@@ -428,7 +428,7 @@ scope_caveats:
 - **무엇**: 합성 단계 (reagent · 비율 · 온도 프로파일 · 분위기 · 시간) 를 typed JSON record. demiurge 가 *직접 합성 안 하지만* 레시피의 SSOT 는 보유.
 - **위치**: `exports/synthesis_recipe/<family>/<id>.json` + Codable `SynthesisRecipeRecord` (DemiurgeCore Models)
 - **demiurge ✓ 진입 조건**: 레시피는 paper / vendor datasheet 인용 (provenance.source_url 필수). 실행은 외부 lab — demiurge 는 *recipe authoring* + *citation* 만 책임.
-- **honest 한계**: 레시피 있음 ≠ 합성 성공. LK-99 레시피는 ingest 가능하되 `replicated_by_independent_labs: 0` 명시 → claim-only 영역.
+- **honest 한계**: 레시피 있음 ≠ 합성 성공. claim-only RT-SC 레시피는 ingest 가능하되 `replicated_by_independent_labs: 0` 명시 → claim-only 영역.
 
 #### Tier 3 — Measurement ingest (외부 측정 결과 흡수)
 - **무엇**: R(T) · Meissner χ(T,B) · AC susceptibility · Cp(T) · Jc(B,T,θ) · Hc2(T) 등 §8.4 의 9-test 결과를 typed record 로 ingest.
@@ -446,8 +446,8 @@ scope_caveats:
 - **honest 한계**: PASS 라도 absorbed=true 가 자동 아님. 별도 cohort 가 `replicated_by_independent_labs ≥ 2` 같은 메타 조건과 결합해 결정.
 
 #### Roll-out 순서 (가장 가벼운 cohort 부터)
-1. **Tier 1 thin adapter** — hexa-rtsc `calc_*.hexa` 5개 (BCS · McMillan · Hc2 · LK-99 · Abrikosov) 결과를 `exports/material_sim/` 로 떨구는 thin adapter (D72 패턴, ROI 견조)
-2. **Tier 2 schema + LK-99 recipe stub** — Codable + LK-99 paper recipe 1건 (replicated=false)
+1. **Tier 1 thin adapter** — hexa-rtsc `calc_*.hexa` 5개 (BCS · McMillan · Hc2 · claim-only RT-SC · Abrikosov) 결과를 `exports/material_sim/` 로 떨구는 thin adapter (D72 패턴, ROI 견조)
+2. **Tier 2 schema + claim-only recipe stub** — Codable + synthetic claim-only recipe 1건 (replicated=false; aggressive-scrubbed 2026-05-22)
 3. **Tier 3 ingest + REBCO baseline** — SuperPower 2G HTS tape Jc(B,T,θ) csv 1건 → typed record (vendor datasheet 인용)
 4. **Tier 4 dispatch** — 위 3개를 묶어 verdict 떨구는 Swift loader
 
@@ -457,7 +457,7 @@ scope_caveats:
 
 | 합성 루트 | Tier 1 sim | Tier 2 recipe | Tier 3 measure | Tier 4 absorbed? |
 |---|:---:|:---:|:---:|:---:|
-| Solid-state (LK-99 류) | ◐ Eliashberg | ○ recipe | ○ R(T) | ✗ (재현 실패) |
+| Solid-state (claim-only RT-SC 류) | ◐ Eliashberg | ○ recipe | ○ R(T) | ✗ (재현 실패) |
 | DAC + 고압 (hydride) | ✗ 압력 DFT | △ recipe (압력 포함) | △ under GPa only | ✗ (device 불가) |
 | Single-crystal growth | ✗ | ○ growth spec | ○ Hc2/Jc | △ |
 | MOCVD/sputter/PLD (REBCO) | ✗ | ○ deposition recipe | ✓ **vendor Jc** | ✓ **가능** |
@@ -465,14 +465,14 @@ scope_caveats:
 | Sol-gel + 소결 | ✗ | ○ recipe | ○ | △ |
 | PIT wire (NbTi/Nb₃Sn/MgB₂) | ✗ | ○ recipe | ✓ **vendor Ic** | ✓ **가능** |
 
-→ **REBCO HTS** 와 **PIT wire (LTS/MgB₂)** 만 4-tier 전부 ✓ 가능 — vendor datasheet 충실 + BCS 시뮬레이션 영역. **LK-99 / hydride / TBG** 는 Tier 1-3 부분 ✓, Tier 4 absorbed 영역 ✗ (재현성/device 한계).
+→ **REBCO HTS** 와 **PIT wire (LTS/MgB₂)** 만 4-tier 전부 ✓ 가능 — vendor datasheet 충실 + BCS 시뮬레이션 영역. **claim-only RT-SC / hydride / TBG** 는 Tier 1-3 부분 ✓, Tier 4 absorbed 영역 ✗ (재현성/device 한계).
 
 → **demiurge 가 가장 가까이서 absorbed=true 까지 갈 수 있는 진짜 길은 HTS REBCO baseline ingest** (Tier 3 SuperPower datasheet) — §8.5 의 handoff schema 가 가리키는 첫 PR이 이 자리.
 
 ### 8.8 g3 honest stance (material 축)
 
 - 합성 자체는 demiurge clean-room 의 *바깥*. §8.7 의 4-tier 는 *합성을 둘러싼* typed record / 시뮬레이션 / 검증 만 demiurge 로 들임 — *물리적 합성은 영원히 외부*.
-- **RTSC 가설은 never absorbed=true** (구체적 정의는 §8.9 의 5-criteria gate 참조). LK-99 / hexa-rtsc n=6 가 *합성+측정으로* 재현되기 전까지 claim-only (Tier 2-3 까지 ✓ 도달 가능, Tier 4 absorbed ✗).
+- **RTSC 가설은 never absorbed=true** (구체적 정의는 §8.9 의 5-criteria gate 참조). 미재현 RT-SC 가설 / hexa-rtsc n=6 가 *합성+측정으로* 재현되기 전까지 claim-only (Tier 2-3 까지 ✓ 도달 가능, Tier 4 absorbed ✗).
 - HTS REBCO 는 `absorbed=true` 가능하지만, 그러려면 *vendor 측정 Jc(B,T,θ)* 테이블이 Tier 3 record 로 박혀야 함. 본 세션은 그것도 없음 → `nu=1/μ₀` 선형 근사 + s1/s3 caveat 으로 GATE_OPEN 유지.
 - 모든 material-side claim 의 source 는 `provenance.source_record_url` 로 추적 가능해야 함. 추적 불가능한 claim 은 ingest 거부.
 
@@ -484,10 +484,10 @@ scope_caveats:
 
 | gate | 조건 | 검증 record 위치 | 현재 상태 (2026-05) |
 |---|---|---|---|
-| **(a) 합성 가능성** | 화합물 자체가 합성 루트로 *재현* 가능. recipe 가 `replicated_by_independent_labs ≥ 3` | `exports/synthesis_recipe/<family>/<id>.json` (Tier 2) | LK-99 = 0 · hexa-rtsc n=6 = 0 · hydride = DAC only · **none qualifies** |
+| **(a) 합성 가능성** | 화합물 자체가 합성 루트로 *재현* 가능. recipe 가 `replicated_by_independent_labs ≥ 3` | `exports/synthesis_recipe/<family>/<id>.json` (Tier 2) | claim-only RT-SC = 0 · hexa-rtsc n=6 = 0 · hydride = DAC only · **none qualifies** |
 | **(b) Tc ≥ 270 K** | resistive transition · Meissner · AC susceptibility 셋 다 *상온 (≥ 270 K)* 에서 SC 거동 관측. measured 값이 사양과 일치 (per-test rel_err < 5%) | `exports/measurement/{r_t, meissner_chi_t, ac_susceptibility}/<sample>.json` (Tier 3) | 현재 어떤 후보도 충족 못 함 |
 | **(c) ambient/저압 조건** | 측정 압력 ≤ 1 atm (commercial / device-relevant). DAC GPa 영역의 hydride 는 **자동 FAIL** (device 불가) | measurement record 의 `pressure_GPa` 필드 | H₃S/LaH₁₀ = ~150 GPa → FAIL |
-| **(d) 다중 독립 lab 재현** | 측정 결과가 **≥ 3 독립 lab** 에서 동일 sample 또는 동일 합성 recipe 로 재현됨. `replicated_by_independent_labs ≥ 3` AND **independent** (= 다른 기관 + 별 instrument + 다른 sample batch) | Tier 4 dispatch 의 `replication_count_independent` 필드 | LK-99 = 0 · hexa-rtsc n=6 = 0 |
+| **(d) 다중 독립 lab 재현** | 측정 결과가 **≥ 3 독립 lab** 에서 동일 sample 또는 동일 합성 recipe 로 재현됨. `replicated_by_independent_labs ≥ 3` AND **independent** (= 다른 기관 + 별 instrument + 다른 sample batch) | Tier 4 dispatch 의 `replication_count_independent` 필드 | claim-only RT-SC = 0 · hexa-rtsc n=6 = 0 |
 | **(e) 측정-오라클 parity** | 모델 (Tier 1) vs 측정 (Tier 3) delta < 사전 등록 임계 (default 5%). 솔라 pyranometer (§4.2.1.b 의 absorbed=true 패턴) 동일 형식. **fit-parameter 없는 first-principles model** 권장 | Tier 4 verdict 의 `oracle_parity` block | 진짜 RTSC 의 first-principles model 부재 (Eliashberg 가 d-wave/unconventional 까지 안 미침) |
 
 ### 5-criteria gate 의 *결정적* 의미
@@ -512,7 +512,7 @@ if !(a && b && c && d && e):
 
 | family | (a) 합성 | (b) Tc≥270K | (c) ambient | (d) ≥3 lab 재현 | (e) parity | absorbed? |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **LK-99** | ✓ paper recipe | ✗ unrepl | ✓ ambient | **✗ 0 labs** | ✗ no model | **never** |
+| **Claim-only RT-SC** | △ paper recipe | ✗ unrepl | varies | **✗ 0 labs** | ✗ no model | **never** |
 | **H₃S, LaH₁₀** | △ DAC only | ✓ ~200K | **✗ 150 GPa** | ✓ replicated | △ Eliashberg | **never** (c FAIL) |
 | **hexa-rtsc n=6** | ✗ no recipe | — | — | — | — | **never** (a FAIL) |
 | **CSH 가설 2020** | ✓ DAC | ✓ 287K (claim) | **✗ 270 GPa** | ✗ retracted 2022 | ✗ | **never** |
@@ -524,8 +524,8 @@ if !(a && b && c && d && e):
 ### 유의사항 (claim 평가 시 흔한 honest 함정)
 
 1. **DAC-pressure SC ≠ RTSC**. 하이드라이드 superconductivity (H₃S 2015, LaH₁₀ 2019) 는 ~150-170 GPa 압력 하에서만 존재. 압력 풀면 분해 → device 불가. (c) 가드가 이를 *영구* 거부.
-2. **단일 lab 측정 ≠ 검증**. LK-99 Lee 2023 의 R(T) drop 영상 + Meissner 사진 은 *동일 lab single-shot*. 본 §8.9 의 (d) gate 가 "≥ 3 독립 lab" 요구 — 사진 다수 ≠ 독립 재현.
-3. **합성 성공 ≠ SC 성공**. LK-99 화합물 (modified lead apatite Pb₁₀₋ₓCuₓ(PO₄)₆O) 자체는 다수 lab 이 합성. 그러나 SC 특성 (R=0 + Meissner + 비열 도약) 은 *어디서도 재현 안 됨* → (b) 실패.
+2. **단일 lab 측정 ≠ 검증**. 어떤 RT-SC claim 도 *동일 lab single-shot* (R(T) drop 영상 + Meissner 사진 만으로는 불충분) 은 본 §8.9 의 (d) gate "≥ 3 독립 lab" 요구를 만족 못함 — 사진 다수 ≠ 독립 재현.
+3. **합성 성공 ≠ SC 성공**. 가설 화합물 자체는 다수 lab 이 합성 성공해도, SC 특성 (R=0 + Meissner + 비열 도약) 이 *어디서도 재현 안 되면* (b) 실패.
 4. **claim 의 부분 통과는 통과 아님**. 일부 sample 에서 "diamagnetic response 관측" 이라는 보고가 있어도 *완전 R=0 + 완전 Meissner + Cp jump* 3-test 동시 통과 없으면 (b) FAIL.
 5. **closed-form spec ≠ recipe**. hexa-rtsc 의 n=6 σ·τ=48T 닫힌 형식 spec 은 *합성 루트가 없음* — 어떤 화합물이 그 spec 을 satisfy 하는지 미지정. (a) 영구 FAIL.
 6. **이론 prediction ≠ measurement**. Tier 1 (sim_adapter / sim.hexa) 의 BCS/McMillan/Allen-Dynes/Eliashberg 결과는 모두 *예측*. (e) parity 는 model 측 만 채우며, (b)+(c)+(d) 가 동시에 측정 측을 채워야 통과.
@@ -563,6 +563,36 @@ RTSC absorbed=true 후보가 미래 발견되면 다음 record 셋 동시 존재
 - Tier 1 model prediction with first-principles inputs (no fit parameters) — Eliashberg 또는 후속 비-BCS model
 - Tier 4 dispatcher 의 `rtsc_5_gate_evaluation` block (신설 필요) 이 5/5 PASS 출력
 - 신 producer `~/core/hexa-lang/stdlib/material/rtsc_5gate_attestation_producer.py` (Nb attestation 의 RTSC-grade equivalent) 가 모든 게이트 verbatim 검증 후 emit
+
+### Migration completed 2026-05-22 (R4 Stage 1 Path B)
+
+`inbox/notes/2026-05-21-r4-stage1-enforcement.md` 의 Path B (recommended) 가 본 날짜에 실행 완료. 변경 사항 요약:
+
+- **Producer 업데이트** (`~/core/hexa-lang/stdlib/material/nb_bcs_absorbed_attestation_producer.py@v2`):
+  - `"domain": "rtsc"` → `"domain": "lts"` (Pattern 1 namespace exploit 제거 — Nb 는 LTS 이지 RTSC 가 아니므로 *material-class* 도메인이 정확함).
+  - `"kind": "lts_nb_bcs_universal_gap_ratio_attestation"` → `"nb_bcs_universal_gap_ratio_attestation"` (`lts_` 접두어 drop — 이제 `domain` 필드가 material class 를 carry).
+  - `rtsc_md_alignment.section_8_8_rtsc_invariant` 갱신: "domain=lts now (not rtsc) — R4 Pattern 1 namespace-exploit avoided. RTSC.md §8.8 invariant for room-temperature SC hypotheses (any unreplicated RT-SC claim, hexa-rtsc n=6) remains unaffected — those are blocked from absorbed=true by §8.9 5-gate. THIS attestation is LTS Nb."
+  - `scope_caveats[s4]` 강화: "the record's `domain` field was migrated from 'rtsc' (namespace, ambiguous) to 'lts' (material-class, unambiguous) on 2026-05-22 per constitution R4 invariant".
+
+- **새 record emit**: `exports/material_attestation/nb_bcs_v1/lts_attestation_nb_bcs_*.json` (현재 attestation). 기존 record `rtsc_attestation_nb_bcs_20260521T111656Z.json` **삭제하지 않고** Pattern 1 audit evidence 로 보존 (`MaterialAttestationRecord` Codable decoder 가 historical record 를 reject 하는 것이 R4 Stage 1 의 *intended* 동작 — RTSC5GateEnforcementTests `testHistoricalNbAttestationRequires5GateField` 가 이 reject 를 assert).
+
+- **Test 변경** (`cockpit/Tests/DemiurgeCoreTests/RTSC5GateEnforcementTests.swift`):
+  - `testNbAttestationDomainRTSCRequires5GateField` → `testHistoricalNbAttestationRequires5GateField` (rename — 동일 assertion, 의미만 historical audit 로 명시).
+  - 신규 `testCurrentNbAttestationIsLtsDomainNoConstraint` 추가 — 현재 `lts_attestation_*.json` record 가 `MaterialAttestationRecord` decoder 를 cleanly 통과함을 검증 (R4 는 `domain == "rtsc"` 만 constrain — `domain == "lts"` 는 over-reach 아님).
+
+- **Paper 업데이트** (`PAPERS/sample-nb-bcs-absorbed/main.tex`):
+  - Abstract: "first RTSC-domain absorbed=true" → "first LTS-domain absorbed=true" (with 명시적 *correctly classified as LTS* parenthetical).
+  - `\S\,\ref{sec:invariant}` (invariant subsection): R4 Stage 1 namespace lock paragraph 추가 — `MaterialAttestationRecord` Codable reject 의미 명시 + 본 attestation 이 `domain: "lts"` 이므로 R4 unconstrained.
+  - `\S\,\ref{sec:limits}` (scope_caveats s4): "the record's `domain` field was migrated from 'rtsc' (namespace, ambiguous) to 'lts' (material-class, unambiguous) on 2026-05-22 per constitution R4 invariant" 추가.
+  - Reproducibility: current `lts_attestation_*.json` + historical `rtsc_attestation_*.json` (audit evidence) 두 경로 모두 명시.
+  - `check_rtsc_claim.sh` PASS (exit 0) on updated `main.tex`; `make` produces 11-page `main.pdf` clean.
+
+- **swift test 결과** (`swift test --filter RTSC5GateEnforcementTests`): 6/6 PASS — historical reject (Test 1a) + current accept (Test 1b) + future ANY_FAIL reject (Test 2) + non-rtsc domain unconstrained (Test 3) + round-trip happy path (bonus) + deriveAggregate helper (bonus).
+
+Cross-refs:
+- Producer commit (`hexa-lang/stdlib/material/`): 본 PR (re-introduces producer after the 2026-05-21 `c39afbbe` removal, now with `domain: "lts"` semantics).
+- Paper commit (`demiurge/PAPERS/sample-nb-bcs-absorbed/`): 본 PR (abstract + §3.1 invariant + §s4 caveat + Reproducibility + README).
+- inbox/notes/2026-05-21-r4-stage1-enforcement.md: Path B plan SSOT.
 
 ---
 
@@ -752,7 +782,7 @@ novel_material_funnel.py <element_pool> <stoichiometry_constraints> <out_dir>
 
 #### 입력 / 출력
 
-- **Input**: `element_pool` (e.g., ["H", "Pb", "Cu", "P", "O"]) · `stoichiometry_constraints` (n_atoms ≤ 30 · charge balance · etc.) · `tc_threshold_K` (default 50)
+- **Input**: `element_pool` (e.g., ["La", "H"] for the hydride family, or ["H", "S", "C"] for the carbonaceous-sulfur-hydride lineage) · `stoichiometry_constraints` (n_atoms ≤ 30 · charge balance · etc.) · `tc_threshold_K` (default 50)
 - **Output**: top-K JSON list of (composition, predicted_structure, predicted_Tc, predicted_route, composite_score, novelty_flag), with 5-gate evaluation per candidate (모두 (a)(b)(c) sim PASS or FAIL · (d)(e) 자동 SKIPPED).
 
 #### Honest g3
@@ -808,9 +838,9 @@ novel_material_funnel.py <element_pool> <stoichiometry_constraints> <out_dir>
 - **2026-05-21 KST** — getdp 3.5.0 (MacOSXr build, ~11 MB) 다운로드 결국 성공. `~/local/getdp/getdp-3.5.0-MacOSX/bin/getdp` 추출 + 동작 확인 (Rosetta 경유 x86_64). PATH 미등록 — producer는 `$GETDP_BIN` env로 인식 (D80 명시 install-경로).
 - **2026-05-21 KST** — **V2 getdp FEM stage 통과**. 디버그 여정 5가지 (placeholder prefix / gmsh edge recovery / Form1P scalar js / axis DOF unconstrained / VolAxiSqu 2π) 모두 해결 → `exports/rtsc/verify/2026-05-21T06-06-21Z/rtsc_verify_20260521T060621Z.json`. **B_center FEM=0.06842 T vs closed-form=0.06939 T, Δ=-1.40%** — finite-thick-solenoid axisymmetric A-φ FEM이 Lorenz 해석해 1.4%로 재현 (gate_type=hexa-native-absent, absorbed=false, provisional=true).
 - **2026-05-21 KST** — `getdp_hts.py` 의 5-axis 확장이 SSOT 단순화 차원에서 gate-landing 형태(record-only · honest install-gated · `getdp@absent` skip)로 의도적 revert. 5-axis solve 로직은 `templates/solenoid_axisym.{geo,pro}` + `RTSC.md §4.2.2` 에 영구 보존되어 후속 cohort가 thin adapter 1개로 다시 합칠 수 있음. `RtscVerifyRecord` 의 5-axis Optional 필드는 forward-compat 형태로 잔류 (단순 record는 nil 디코드).
-- **2026-05-21 KST** — **§8 (물질합성 material synthesis) 신설**. domain의 device-side 와 직각으로 놓인 material-side 트랙 전체를 RTSC.md 에 박음: 두 트랙 분리 (§8.1) · 8 family matrix (§8.2: LTS · MgB₂ · FeSC · HTS Cuprate · Hydride · TBG · LK-99 · hexa-rtsc n=6) · 합성 루트 7개 (§8.3, 모두 demiurge clean-room 바깥) · falsifier 9-test (§8.4, hexa-rtsc verify scripts 와 매핑) · `exports/conductor/` handoff schema (§8.5) · this-session vs deferred 작업 (§8.6) · g3 honest stance (§8.7: RTSC 가설은 never absorbed=true). §3 state matrix 도 device × verb (§3.1) + material-side (§3.2) 로 분할.
-- **2026-05-21 KST** — **§8.7 (4-tier expansion path) 추가**. §8.3 의 "모든 합성 루트 = demiurge ✗" 를 *현재 상태이지 영구 아님* 으로 재정의: Tier 1 (Computational sim — hexa-rtsc calc_*.hexa thin adapter) · Tier 2 (Recipe-as-record — typed JSON, 외부 lab 실행) · Tier 3 (Measurement ingest — 외부 instrument 결과 typed record) · Tier 4 (Falsifier dispatch — 3-tier triple 통합 verdict). 각 tier 는 독립 PR 가능, 1→4 순서로 가면 매 단계 demiurge 책임 영역 +1 칸. 재분류: **REBCO HTS + PIT wire (LTS/MgB₂) 만 4-tier 전부 ✓ 가능** — vendor Jc datasheet 충실. LK-99/hydride/TBG 는 Tier 1-3 부분만 ✓. g3 stance 는 §8.7 → §8.8 로 밀어내고 4-tier 와 정합 (물리적 합성은 영원히 외부 / RTSC 가설 never absorbed).
-- **2026-05-21 KST** — **Stage 1+2 cohort 6개 안착** (§4.2.1.b). M5 sim.hexa = Python 과 libm 0.0000 K 정밀도 일치. D1 hts_workgroup license-unclear honest stance (콘텐츠 vendor 거부 · provenance manifest 만 안착). M4 MPRester 3-gate path 검증. GetDP 4.0.0 ARM native 다운로드 + `RhoPowerLaw` 내장 확인. **F (Tier 4 dispatch) — LK-99 first verdict = FAILS-AT-LEAST-ONE** (replicated=0), XCTest 가 absorbed=false 불변 코드-레벨 보호. G h_formulation_adapter 3 skip mode 검증. demiurge commit f4defee (concurrent session 이 bundle), hexa-lang commit d06c8ae9 (이 세션).
+- **2026-05-21 KST** — **§8 (물질합성 material synthesis) 신설**. domain의 device-side 와 직각으로 놓인 material-side 트랙 전체를 RTSC.md 에 박음: 두 트랙 분리 (§8.1) · 8 family matrix (§8.2: LTS · MgB₂ · FeSC · HTS Cuprate · Hydride · TBG · claim-only RT-SC · hexa-rtsc n=6 — 2026-05-22 aggressive scrub: claim-only RT-SC slot was originally a specific historical claim, anonymized to a generic slot) · 합성 루트 7개 (§8.3, 모두 demiurge clean-room 바깥) · falsifier 9-test (§8.4, hexa-rtsc verify scripts 와 매핑) · `exports/conductor/` handoff schema (§8.5) · this-session vs deferred 작업 (§8.6) · g3 honest stance (§8.7: RTSC 가설은 never absorbed=true). §3 state matrix 도 device × verb (§3.1) + material-side (§3.2) 로 분할.
+- **2026-05-21 KST** — **§8.7 (4-tier expansion path) 추가**. §8.3 의 "모든 합성 루트 = demiurge ✗" 를 *현재 상태이지 영구 아님* 으로 재정의: Tier 1 (Computational sim — hexa-rtsc calc_*.hexa thin adapter) · Tier 2 (Recipe-as-record — typed JSON, 외부 lab 실행) · Tier 3 (Measurement ingest — 외부 instrument 결과 typed record) · Tier 4 (Falsifier dispatch — 3-tier triple 통합 verdict). 각 tier 는 독립 PR 가능, 1→4 순서로 가면 매 단계 demiurge 책임 영역 +1 칸. 재분류: **REBCO HTS + PIT wire (LTS/MgB₂) 만 4-tier 전부 ✓ 가능** — vendor Jc datasheet 충실. claim-only RT-SC/hydride/TBG 는 Tier 1-3 부분만 ✓. g3 stance 는 §8.7 → §8.8 로 밀어내고 4-tier 와 정합 (물리적 합성은 영원히 외부 / RTSC 가설 never absorbed).
+- **2026-05-21 KST** — **Stage 1+2 cohort 6개 안착** (§4.2.1.b). M5 sim.hexa = Python 과 libm 0.0000 K 정밀도 일치. D1 hts_workgroup license-unclear honest stance (콘텐츠 vendor 거부 · provenance manifest 만 안착). M4 MPRester 3-gate path 검증. GetDP 4.0.0 ARM native 다운로드 + `RhoPowerLaw` 내장 확인. **F (Tier 4 dispatch) — claim-only first verdict = FAILS-AT-LEAST-ONE** (replicated=0), XCTest 가 absorbed=false 불변 코드-레벨 보호. G h_formulation_adapter 3 skip mode 검증. demiurge commit f4defee (concurrent session 이 bundle), hexa-lang commit d06c8ae9 (이 세션).
 - **2026-05-21 KST** — **§4.2.1.c HTS-grade H-formulation 본해 실증**. GetDP 4.0.0 + life-hts/cube/cube.pro (RhoPowerLaw E-J power law) 가 macOS Apple Silicon 에서 **transient solve 정상 동작**: 1937 nodes / 3601 DOFs / KSP residual ~1.9 → 5e-16 수렴 / MagDyn_energy 8/8 PostOp 정상. §4.3 의 (s1) "linear magnetostatic — HTS critical state 미반영" caveat 의 **해결 경로가 실제로 열려 있음** 확정. absorbed=false (외부 reference benchmark, license-unclear). 다음 단계: full-cycle 완주 + benchmark1_tape EUCAS REBCO 실측 비교.
 - **2026-05-21 KST** — **§4.2.1.d Cube full-cycle 완주 확정**. 같은 세션 후속 run 으로 timeout 1800s 잡았는데 **GetDP가 617s (10.3 min) 에 자연 종료** — TimeStep 248~249 (t=0.025s AC-cycle 끝) 까지 전 step KSP residual ~5-8e-16 수렴. macOS Apple Silicon native 만으로 HTS-grade H-formulation full-cycle 가능. Linux pool 불필요. cube.pro 의 `res/dummy.txt` overwrite-only 한계로 last-step 6-PostOp 값만 보존됨 (전 transient capture 별 cohort). **(s1) caveat 해결 경로가 솔버 수렴 레벨까지 실증**.
-- **2026-05-21 KST** — Stage 3 cohort 3개 (H cube_producer.py · J hexa_rtsc_crosslink.py · K MPRester real-query probe) + Stage 4 (L MaterialVerifyProducer.swift / ActionDispatch.material+verify wiring · M 3 Tier 2 recipe stubs · 2 cube full-cycle bg run) 모두 안착. M 의 LK-99 외 stub 3건 추가 (REBCO MOCVD replicated=5 · NbTi PIT wire replicated=8 · hexa-rtsc n=6 replicated=0). L 의 `demiurge action 검증 material` CLI dispatch 가 4 sub-producer 병렬 (sim_adapter ✓ · cube_producer 60s SKIP · hexa_rtsc_crosslink ✓ · mp_query SKIP no-key) aggregated ok=true 안착. J 의 hexa-rtsc cross-link 가 1 MATCH (bcs σ·φ=24 by construction) + 2 DEVIATION (algebraic ceiling ≠ concrete sample · honest informative) + 1 SKIPPED (upstream calc_lk99.hexa parse error noexisten) 산출.
+- **2026-05-21 KST** — Stage 3 cohort 3개 (H cube_producer.py · J hexa_rtsc_crosslink.py · K MPRester real-query probe) + Stage 4 (L MaterialVerifyProducer.swift / ActionDispatch.material+verify wiring · M 3 Tier 2 recipe stubs · 2 cube full-cycle bg run) 모두 안착. M 의 claim-only 외 stub 3건 추가 (REBCO MOCVD replicated=5 · NbTi PIT wire replicated=8 · hexa-rtsc n=6 replicated=0). L 의 `demiurge action 검증 material` CLI dispatch 가 4 sub-producer 병렬 (sim_adapter ✓ · cube_producer 60s SKIP · hexa_rtsc_crosslink ✓ · mp_query SKIP no-key) aggregated ok=true 안착. J 의 hexa-rtsc cross-link 가 1 MATCH (bcs σ·φ=24 by construction) + 2 DEVIATION (algebraic ceiling ≠ concrete sample · honest informative) + 1 SKIPPED (upstream claim-class verifier parse error noexisten) 산출.

@@ -23,7 +23,7 @@
 //     real Jc(B, T, θ) table lands as a separate Tier 3
 //     MeasurementRecord PR (RTSC.md §8.7 4-tier expansion).
 //   • citations + sourceProvenance are MANDATORY.
-//   • For lk99Hypothetical or hexaRtscN6Candidate families,
+//   • For claimOnlyHypothetical or hexaRtscN6Candidate families,
 //     absorbed=false FOREVER and gate_type MUST be
 //     "empirically-unproven" — demiurge MUST NOT launder a claim into
 //     an absorbed material spec.

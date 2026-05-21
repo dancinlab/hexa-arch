@@ -13,12 +13,15 @@
 //     at ambient pressure (RTSC.md §8.2 "GPa 압력 풀면 unstable").
 //   • twisted_bilayer_graphene — replicated 2018~ but ~1.7 K device
 //     niche, not a power conductor.
-//   • lk99_hypothetical — NOT replicated; claim-only.
+//   • claim_only_hypothetical — claim-only RTSC class (RTSC.md §8.9
+//     5-criteria gate; never absorbed=true). Generic anonymized slot for
+//     any historical or future room-temperature SC claim that has not
+//     cleared the 5-gate matrix.
 //   • hexa_rtsc_n6_candidate — closed-form-only; empirical sandbox absent.
 //   • cu_normal — non-SC baseline (resistive Cu, the device-side null
 //     hypothesis comparator).
 //
-// g3 honest stance (RTSC.md §8.7): lk99Hypothetical and
+// g3 honest stance (RTSC.md §8.7): claimOnlyHypothetical and
 // hexaRtscN6Candidate ingest records MUST stay `absorbed=false` and
 // gate_type="empirically-unproven" forever — demiurge MUST NOT promote
 // a hypothetical material to absorbed=true.
@@ -39,7 +42,7 @@ public enum ConductorMaterial: String, Codable, CaseIterable, Sendable {
     case htsBi2212 = "hts_bi2212"
     case heavyHydride = "heavy_hydride"
     case twistedBilayerGraphene = "twisted_bilayer_graphene"
-    case lk99Hypothetical = "lk99_hypothetical"
+    case claimOnlyHypothetical = "claim_only_hypothetical"
     case hexaRtscN6Candidate = "hexa_rtsc_n6_candidate"
 }
 
@@ -68,8 +71,8 @@ extension ConductorMaterial {
             return "Heavy hydride (H3S/LaH10/CaH6, 200-260 K at >150 GPa — device-impossible at ambient)"
         case .twistedBilayerGraphene:
             return "Twisted bilayer graphene (TBG @ 1.1 deg magic angle, ~1.7 K, lab-only)"
-        case .lk99Hypothetical:
-            return "LK-99 (hypothetical, NOT replicated)"
+        case .claimOnlyHypothetical:
+            return "Claim-only RTSC hypothetical (room-temperature SC, NOT replicated)"
         case .hexaRtscN6Candidate:
             return "hexa-rtsc n=6 candidate (closed-form only, empirically unproven)"
         }

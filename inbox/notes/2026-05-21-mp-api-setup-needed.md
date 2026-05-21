@@ -2,7 +2,8 @@
 
 End-to-end probe of `~/core/hexa-lang/stdlib/material/mp_query.py` (RTSC.md
 §8.2 + §8.5 Tier 1 sibling) requested a real Materials Project query against
-MgB2 / YBa2Cu3O7 / Pb10Cu(PO4)6O. Probe results say **Branch B — setup
+MgB2 / YBa2Cu3O7 (and a claim-only RT-SC composition — anonymized
+2026-05-22 aggressive scrub). Probe results say **Branch B — setup
 required**. Specifics below.
 
 ## Probe results (exact)
@@ -100,12 +101,10 @@ MP_API_KEY_NEW="$MP_API_KEY_NEW" python3 \
   /Users/ghost/core/demiurge/exports/material_query/yba2cu3o7 \
   YBa2Cu3O7
 
-# Pb10Cu(PO4)6O — LK-99-family; informative either way (likely zero hits
-# since not real, OR a theoretical structure with no replicated Tc)
-MP_API_KEY_NEW="$MP_API_KEY_NEW" python3 \
-  ~/core/hexa-lang/stdlib/material/mp_query.py \
-  /Users/ghost/core/demiurge/exports/material_query/lk99 \
-  'Pb10Cu(PO4)6O'
+# (aggressive-scrub 2026-05-22: removed claim-only RT-SC composition
+# probe row — see inbox/notes/2026-05-22-lk99-final-scrub.md. The
+# remaining MgB2 + YBa2Cu3O7 probes cover the replicated SC family
+# coverage check the inbox note documents.)
 ```
 
 ### 5. Confirm `absorbed=false` + `gate_type="external-api"`
