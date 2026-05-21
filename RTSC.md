@@ -709,6 +709,50 @@ deep-research session 에서 surfaced 된 모든 arxiv ID — 각각 §9.x sub-s
 
 → wrap 으로 *얻은* 외부 결과만 hexa-native closed-form 으로 후처리 — *hexa-first* (wilson principle 2) 의 honest 해석.
 
+### 9.10 N5 cohort 신설 — novel-discovery funnel (compositional space exploration)
+
+§9.7 의 N1-N4 는 *KNOWN candidate* (특정 화학식이 주어진 경우) 의 시뮬레이션. **N5 cohort 는 *unknown novel composition* 을 *compositional space 에서 탐색* 하여 RTSC 후보 funnel 을 emit** — Nature `s41524-026-01964-8` 의 1.3M cand → 741 stable funnel 패턴 + arxiv:2511.03865 의 Materials Genome HTS discovery 워크플로 본받음.
+
+#### N5 의 위치
+
+- **(a)(b)(c) gate 의 *시뮬 영역* 만 채움** — (d) 다중 lab 재현 + (e) measurement-oracle 은 영원히 wet-lab 의존 (§8.9 honest限界)
+- gate_type 신규 값: **`novel-discovery-simulation`**
+- `absorbed=false 영구` (R4 invariant 하드코드)
+- 산출의 의미 = *wet-lab 우선순위 candidate list (top-K)*, NOT actual SC discovery
+
+#### N5 pipeline
+
+```
+novel_material_funnel.py <element_pool> <stoichiometry_constraints> <out_dir>
+  → enumerate candidate compositions (combinatorial)
+    for each candidate:
+      1. MP cache check (이미 알려진 물질 → skip · novelty filter)
+      2. N4 cross_code_dft → formation_energy + stability (convex hull)
+      3. (if stable AND novel) N1 csp_adapter → predicted structure
+      4. (if structure usable) N2 beenet_adapter → predicted Tc
+      5. (if Tc > threshold) N3 askcos_adapter → synthesis route 제안
+    rank by composite score (stability × Tc × synth-feasibility)
+    emit `exports/material_discovery/<run_stamp>/top_k.json`
+```
+
+#### 입력 / 출력
+
+- **Input**: `element_pool` (e.g., ["H", "Pb", "Cu", "P", "O"]) · `stoichiometry_constraints` (n_atoms ≤ 30 · charge balance · etc.) · `tc_threshold_K` (default 50)
+- **Output**: top-K JSON list of (composition, predicted_structure, predicted_Tc, predicted_route, composite_score, novelty_flag), with 5-gate evaluation per candidate (모두 (a)(b)(c) sim PASS or FAIL · (d)(e) 자동 SKIPPED).
+
+#### Honest g3
+
+- N5 도 wrap pattern (Path B) — N1-N4 를 *orchestrate* 만 함, 본문 logic 은 그대로 delegate
+- 단일 wet-lab 시간으로는 1.3M candidate 일일이 합성 불가능 — N5 의 funnel 은 **상위 K 후보 (e.g., K=10) 우선순위 list** 까지만 honest
+- "이 후보가 RTSC 일 가능성 있음" ≠ "이 후보가 RTSC 임" — R4 Pattern 1 회피 영구
+- arxiv:2511.03865 의 Material Genome Initiative pattern: 후보 → DFT screen → ML predict → synthesis-feasibility score → wet-lab 우선순위
+
+#### 발사 일정
+
+- **이 세션 (Phase 4 microkernel #1 와 평행)**: N5 cohort agent (B path · wrap-as-is) 발사
+- Phase 2 stabilization (16-cell sanity 그대로) 의 5번째 row 로 N5 추가 (다음 세션 audit)
+- Phase 3 audit 재실행 (N1-N5 5 cohort 통합) — N5 microkernel 후보 식별 (compositional enumerator? scoring formula?)
+
 ### 9.9 Web non-arxiv 참고 URL
 
 - Nature `s41524-026-01964-8` — Complete AI-accelerated SC discovery workflow (2026 best SOTA)
