@@ -12,5 +12,5 @@
   dont = "leave non-wet-lab verification in `partial` / `in-progress` / `pending` / `tbd` when the path to completion is clear — only the physical wet-lab experiment itself is the legitimate `not yet` boundary"
 
 @D d2 := "wall encountered: surface breakthrough paths, never concede" :: governance [required active]
-  do   = "when current methods + current understanding hit an empirically-demonstrated wall (any domain — materials · biology · chip · component), propose 2-3 concrete breakthrough hypotheses to test (new lens · new dataset · new method · feedback loop · domain extension · re-framing) — use `/gap full` for systematic 40-lens axis sweep + `hexa kick` for engine-driven gap traversal"
+  do   = "when current methods + current understanding hit an empirically-demonstrated wall (any domain — materials · biology · chemical), propose 2-3 concrete breakthrough hypotheses to test (new lens · new dataset · new method · feedback loop · domain extension · re-framing) — use `/gap full` for systematic 40-lens axis sweep + `hexa kick` for engine-driven gap traversal"
   dont = "concede `impossible with current methods` as terminal without naming concrete breakthrough paths to try"
