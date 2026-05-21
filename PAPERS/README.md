@@ -201,13 +201,71 @@ curl -sS "$URL" -o figures/cover.png
 
 ```bash
 cd PAPERS/<slug>/
-make            # pdflatex + bibtex + pdflatex × 2
+make            # check_rtsc_claim → pdflatex + bibtex + pdflatex × 2
+make check      # run RTSC-claim attestation hook only (no compile)
 # 또는 수동:
-pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+bash ../_tools/check_rtsc_claim.sh . \
+  && pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
 ```
 
 결과: `main.pdf` 같은 디렉터리 안. arxiv 제출 시 `main.tex` + `references.bib`
 + `figures/*` tarball 로 묶음.
+
+---
+
+## `_tools/check_rtsc_claim.sh` (Stage 2 enforcement hook)
+
+> constitution.md v1.4.0 R4 Stage 2 · RTSC.md §8.9 5-gate · §8.10 Nb correction
+
+paper 가 `RTSC absorbed=true` 주장을 본문에 *literal* 로 포함하면, 동반 attestation record 의 `rtsc_5_gate_evaluation.aggregate == ALL_PASS` 검증 필요. 그렇지 않으면 build 단계에서 fail — bold claim 의 R4 Pattern 1 (gate-bypass) 방지.
+
+### Logic (optimistic-default)
+
+1. `grep -i -E "RTSC[[:space:]]+absorbed[[:space:]]*=[[:space:]]*true"` on `main.tex`
+   - 매칭 없음 → exit 0 silent (paper makes no RTSC claim)
+2. 매칭 있음 → sentence-window 에 disclaimer (`is LTS` · `is HTS` · `NOT RTSC` · `NOT a room-temperature`) 가 같이 있는지 검사
+   - 모든 매치가 guarded → exit 0 (honest disclaimer 인정)
+3. unguarded match 있음 → paper 의 `README.md` 에서 `exports/material_attestation/<slug>/*.json` 참조 추출 → JSON 로드
+   - field `rtsc_5_gate_evaluation` 없거나 `null` → exit 2 ("likely R4 Pattern 1 violation")
+   - `aggregate != "ALL_PASS"` → exit 3 (현재 state 가 5/5 PASS 아님)
+   - `aggregate == "ALL_PASS"` → exit 0 (legitimate claim)
+   - companion record 못 찾음 → exit 1
+
+### API
+
+```bash
+bash PAPERS/_tools/check_rtsc_claim.sh <paper_dir>
+# 예:
+bash PAPERS/_tools/check_rtsc_claim.sh PAPERS/sample-nb-bcs-absorbed/
+```
+
+각 paper 의 `Makefile` 에서 `check` target 으로 노출 + `all:` prerequisite 로 자동 실행. 새 paper 추가 시 동일 패턴 적용 권장:
+
+```make
+CHECK_RTSC = ../_tools/check_rtsc_claim.sh
+all: check $(DOC).pdf
+check:
+	@bash $(CHECK_RTSC) .
+```
+
+### Test fixtures
+
+`PAPERS/_test_fixtures/` 에 3 개의 minimal `main.tex` stub:
+
+| fixture | claim | expected |
+|---|---|---|
+| `test_no_claim/` | RTSC claim 없음 | PASS (silent) |
+| `test_guarded_rtsc_claim/` | `RTSC absorbed=true (Nb is LTS, not RTSC)` | PASS (guarded) |
+| `test_unguarded_rtsc_claim/` | `first RTSC absorbed=true record` (disclaimer 없음) | FAIL (no companion record) |
+
+Smoke test:
+
+```bash
+for f in PAPERS/_test_fixtures/*/; do
+  echo "== $f =="
+  bash PAPERS/_tools/check_rtsc_claim.sh "$f"; echo "exit=$?"
+done
+```
 
 ---
 
