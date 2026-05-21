@@ -5020,3 +5020,139 @@
   audit 완성 — invariant audit 의 generalization (κ-69 closure entry
   의 second-instance · κ-70 D118 의 third-instance) shape 일관성
   확인.
+
+- 2026-05-22 — **phase κ-70 — G37 LANDED · D119 3rd cell first-flip
+  (Ufo/plasma Stage-2 · JET-like mid-Ohmic single shot · λ_D ·
+  `mean_rel_err = 2.21e-06` numeric-equivalence PASS) · R9 = 3/4
+  LANDED**. κ-70 R9 의 critical-path 진척: G36 (D118 pre-code
+  decision · 2026-05-22 LANDED · code 0) 위에서 G37 의 실 measurement
+  axis full land — schema 1-field 확장 + producer trio 신설 + 3rd
+  record-type invariant auto-extension audit.
+
+  본 cycle 의 5-step (κ-69 G33 D117 mirror 의 직접 land):
+
+  - **step 1 — UfoVerifyRecord.measuredOracle field 추가** (`bea00e8`).
+    `measuredOracle: MeasuredOracleRef?` 1줄 + CodingKey 1줄 + 22-line
+    D106 carve-out docstring (Stage-2 sister-substrate fusion plasma
+    diagnostic 적용 · Stage-4..7 warp/wormhole/dim/use 명시 제외 ·
+    `measuredOracle = nil` + `isIllustrativePhysics=true` 의 G30
+    invariant exempt 분기 박제). κ-69 G33 AuraVerifyRecord D117 의
+    schema 확장 1:1 mirror — 새 record 생성 0 · 새 field 1줄 ·
+    schema-half cost.
+
+  - **step 2 — jet_pulse_fetcher.py 신설** (hexa-lang PR #291 `6187d499`
+    · 335 line). Anonymous HTTPS 의 caller-supplied `$JET_PULSE_URL`
+    override path (D86-clean) + synthetic JET-like mid-Ohmic stationary
+    fallback (D118 exit-criterion-δ permitted shape · Keilhacker 1999
+    JET D-T 1997 DTE1 textbook reference operating point n_e ≈ 5e19
+    m⁻³ + T_e ≈ 10 keV 위 ±2% uniform fluctuation · seed=0
+    deterministic · `data_source = synthetic_jet_like_mid_ohmic` 명시).
+    N=50 (n_e_m3, T_e_eV) pair sidecar + meta JSON emit. 안 anonymous
+    open access 가능한 real JET pulse archive 가 2026-05 시점에 없는
+    상황 (EUROfusion portal SSO + IMAS UDA REST token 필요) — 본 honest
+    fallback layer 의 audit trail 이 record-internal.
+
+  - **step 3 — jet_plasma_measured_oracle.py + _plasma_lambda_d_batch.
+    hexa 신설** (같은 hexa-lang PR · 497 + 110 line). 4-stage producer
+    pipeline: (1) fetcher dispatch, (2) trusted-bridge λ_D via plasmapy.
+    formulary.lengths.Debye_length (primary path · 본 env 의 numpy
+    ABI mismatch 로 ImportError → `math`-CODATA-2022 textbook closed-
+    form fallback `bridge_id = math-codata2022-textbook-closed-form`),
+    (3) hexa-native `_plasma_lambda_d_batch.hexa` 가 `plasma_metrics_
+    kernel::lambda_d` 호출 (κ-65 `pilot-plasma_metrics` 41/41 PASS @
+    rel_err = 0.0 IEEE-754 bit-exact substrate-parity floor 위 build),
+    (4) per-step rel_err + mean/max stats + UfoVerifyRecord-shaped
+    JSON emit. `absorbed=true` EXPLICITLY set when `mean_rel_err ≤
+    0.05` (D118 threshold · κ-68/κ-69 5% mirror).
+
+    실 measurement 결과: `mean_rel_err = 2.21e-06` · `max_rel_err =
+    4.44e-06` · N=50 · threshold=0.05 · 4 orders below threshold =
+    **PASS comfortable**. PASS shape = numeric-equivalence (D117 G33
+    mirror · NOT D110 G29 predict-vs-measure shape) — hexa kernel
+    closed-form + math-fallback bridge closed-form 이 same-CODATA-
+    same-formula 이라 residual rel_err 은 IEEE-754 rounding + hexa
+    `println(str(lam_d))` ASCII roundtrip 6-7 digit truncation noise.
+    Honest disclosure: 본 PASS 가 *modeling-axis honesty* 의 evidence
+    가 아니라 *substrate-parity 41/41 bit-exact* 의 measurement-axis
+    확장 (실 JET-like measured n_e/T_e 위 closed-form formula
+    evaluation) — D117 mirror.
+
+  - **step 4 — XCTest 3rd-record-type invariant auto-extension** (`bea00e8`
+    · AbsorbedNeedsMeasuredOracleTests.swift 50-line 추가 +
+    HexaNativeAbsorbedTests.swift 3 fixture `measuredOracle: nil`
+    backfill). 새 test `testUfoVerifyRecordCoveredByInvariantNoCodeChange`
+    가 3 assertion (PASS branch · conflation guard · D106 Stage-4..7
+    carve-out branch) 으로 invariant helper code 변경 0 으로 Ufo도
+    `(absorbed, measuredOracle, isIllustrativePhysics)` triple governed
+    됨을 박제. **3 cell × 동일 predicate × helper edit 0 = strongest
+    evidence cycle** — G30 record-type-agnostic 설계의 generalization
+    audit 가 κ-68 G30 (1st instance) → κ-69 G33 (2nd instance) → κ-70
+    G37 (3rd instance) 의 progression 으로 confirmed. cockpit 전체
+    77 tests · 1 skipped · 0 failures (AbsorbedNeedsMeasuredOracleTests
+    5/5 · HexaNativeAbsorbedTests 8/8 · 기타 64+ green).
+
+  - **step 5 — D119 + ARCH §11.5 G37 [x] flip + PLAN.md (본 entry) +
+    NEXT_SESSIONS.md P-⑭ closure marker** — 본 cycle 동시 land.
+    D119 (D118 직후 자연 순서 · D117 직접 parent · D110 grandparent
+    mirror) 박제 · 4-layer honest disclosure (synthetic fallback +
+    math-fallback bridge + str roundtrip noise + numeric-equivalence
+    shape) · cross-link 14-entry. ARCH §11.5 G37 5/5 exit criterion
+    [x] check + measured numbers 박제. NEXT_SESSIONS.md P-⑭ 본문 head
+    R9 status 갱신 (2/4 → 3/4 LANDED) + (c) G37 entry 의 historical-
+    reference flag + (d) G38 closure 가 next-pickup critical-path.
+
+  - **κ-70 R9 진척**: 4 G-item 중 G35 + G36 + G37 `[x]` (G35 =
+    candidate-research note 박제 2026-05-22 · G36 = D118 3rd cell
+    pick 박제 2026-05-22 · G37 = D119 3rd cell first-flip 박제
+    2026-05-22 본 entry). **G38 still `[ ]`** — G38 = κ-70 R9 closure
+    박제 (4/4 LANDED · κ-69 R8 closure entry mirror · 또는 partial-
+    land cycle boundary) 가 다음 lowest-friction critical-path.
+    `next horizon (κ-71+)` 4 후보 line item = G38 의 closure entry
+    의 핵심 박제 obligation.
+
+  - **next pickup 명시**: **G38** = κ-70 R9 closure entry (κ-69 R8
+    closure entry pattern 의 κ-70 version). G35..G37 누적 LANDED 박제
+    + PASS shape honest disclosure (D119 의 numeric-equivalence shape
+    `mean_rel_err = 2.21e-06` · D117 mirror not D110) + XCTest invariant
+    3rd carrier auto-extension audit confirmed cross-link + `next
+    horizon (κ-71+)` placeholder (G37-β real JET raw timeseries +
+    plasmapy bridge default-path + ω_p / Larmor / ln Λ port + 다른
+    cell measured-oracle round · κ-69 closure entry의 4-item list
+    동형). est = 0.3-0.5 session (doc edit · code 0).
+
+  - **수정 파일 7개** (3 hexa-lang + 4 demiurge):
+    - hexa-lang (PR #291 `6187d499` merged 2026-05-22): `stdlib/fusion/
+      jet_pulse_fetcher.py` (NEW 335) + `stdlib/fusion/jet_plasma_
+      measured_oracle.py` (NEW 497) + `stdlib/fusion/_plasma_lambda_d_
+      batch.hexa` (NEW 110).
+    - demiurge (`bea00e8` commit · cockpit): `cockpit/Sources/Demiurge
+      Core/Models/UfoVerifyRecord.swift` (+22) + `cockpit/Tests/
+      DemiurgeCoreTests/AbsorbedNeedsMeasuredOracleTests.swift`
+      (+91 · `testUfoVerifyRecordCoveredByInvariantNoCodeChange`
+      신설) + `cockpit/Tests/DemiurgeCoreTests/HexaNativeAbsorbedTests.
+      swift` (+9 · 3 fixture `measuredOracle: nil` backfill).
+    - demiurge (본 doc cycle): `design.md` (D119 entry 추가) +
+      `ARCH.md` (§11.5 G37 row `[ ]` → `[x]` flip + 5/5 exit criterion
+      [x] + §11.4 intro Round 9 G37 LANDED 표면 갱신) + `PLAN.md`
+      (본 entry) + `NEXT_SESSIONS.md` (P-⑭ R9 head 3/4 LANDED 갱신 +
+      G37 historical-reference flag + G38 next-pickup focus).
+
+  g3 — 본 land 는 실 measurement axis full land. cell `absorbed`
+  실 flip (Ufo Stage-2) · stored `absorbed=true` 가 D95 computed
+  projection 의 부산물 아닌 *measured-oracle PASS의 explicit writer
+  set* (`jet_plasma_measured_oracle.py` 의 `absorbed = bool(pass_
+  flag)` line). 다른 cell 회귀 0 (`swift test` 77/0 · Energy/solar
+  G29 / Aura/EEG G33 fixture path 영향 0). 본 PASS 의 numeric-
+  equivalence shape (D117 mirror not D110) 은 honest middle ground
+  의 *recognised limit* 으로 4-line scope_caveats 에 박제 — modeling-
+  axis honesty 의 elevate path 는 κ-71+ scope 의 ω_p / Larmor / ln
+  Λ port + plasmapy bridge default-path + real JET raw timeseries
+  fetch axis. D80/D86/D103/D106/D116 모두 preserved. RFC 013 §6.11
+  status `LANDED` 유지 (κ-68 closure 상태 · κ-70 R9 는 same-invariant
+  의 third-instance generalization audit · RFC status 자체는 미flip ·
+  narrative cross-link만 add via D119). κ-68 G29 → κ-69 G33 → κ-70
+  G37 의 3-instance progression 으로 first-flip pattern (schema 확장
+  + producer wire + measured-oracle PASS + invariant audit) 의 3rd
+  instance audit 완성 — G30 invariant 의 record-type-agnostic 설계
+  의 strongest evidence cycle confirmed (3 cell × 동일 predicate ×
+  helper edit 0).

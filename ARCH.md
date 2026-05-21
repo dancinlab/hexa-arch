@@ -1122,8 +1122,10 @@ measured-oracle parity round · RFC 013 §6.11 · D109/D110 · 4-fold full
 land 2026-05-21) · Round 8 (G31–G34 *LANDED* · κ-69 hexa-native
 ultimate-form parity + 2nd cell measurement round · D115/D117 · 4-fold
 full land 2026-05-22) · Round 9 (G35–G38 · κ-70 3rd cell measurement
-round · G35 + G36 *LANDED* 2026-05-22 · G35 candidate-research +
-G36 D118 Ufo/plasma Stage-2 5-fold lock-in · G37/G38 pre-code). 본 §11.3 의 G1–G8 priority 는 *initial-round
+round · G35 + G36 + G37 *LANDED* 2026-05-22 · G35 candidate-research +
+G36 D118 Ufo/plasma Stage-2 5-fold lock-in + G37 D119 first-flip
+(`mean_rel_err = 2.21e-06` numeric-equivalence PASS) · G38 closure
+pre-code). 본 §11.3 의 G1–G8 priority 는 *initial-round
 historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1-9
 가 carry. §11.3 는 cross-sim *origin gap* 의 audit trail 로 보존
 (g_ssot_single_source D50 — phase boundary 별 한 snapshot 유지).
@@ -1155,8 +1157,8 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > Aura/EEG · PhysioNet Sleep-EDF · mean_rel_err 8.40e-07 PASS) + G34
 > (governance row · constitution.md v1.0.0 → v1.1.0 MINOR bump · measured-
 > oracle invariant narrative). **G35–G38 라운드 9 (`κ-70 third-cell
-> measurement round` — scaffold 2026-05-22 · G35 + G36 LANDED ·
-> G37/G38 pre-code · 2/4)** 는 κ-69 R8 closure entry 의 reserved
+> measurement round` — scaffold 2026-05-22 · G35 + G36 + G37 LANDED
+> 2026-05-22 · G38 pre-code · 3/4)** 는 κ-69 R8 closure entry 의 reserved
 > 'κ-70+ next horizon' scope (3rd cell measurement-parity ·
 > `invariantHolds` record-type-agnostic audit 의 3rd instance) 를 4
 > placeholder G-item + G35 candidate-research note 동시 박은
@@ -1166,8 +1168,13 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > Bio/ECG) 5-fold lock-in 비교 + ranking. G36 = #1 ranked default
 > 채택 (D118 · Ufo/plasma Stage-2 · JET open-pulse archive mid-Ohmic
 > single shot · λ_D Debye length axis · Stage-4..7 D106 illustrative
-> carve-out 명시 박제). G37..G38 = pre-code (3rd cell first-flip ·
-> closure 박제).
+> carve-out 명시 박제). G37 = 3rd cell first-flip LANDED 2026-05-22
+> same-cycle (D119 · JET-like mid-Ohmic single shot · `mean_rel_err =
+> 2.21e-06` numeric-equivalence PASS · D117 G33 mirror · 3rd record-
+> type `testUfoVerifyRecordCoveredByInvariantNoCodeChange` 박제 ·
+> invariant helper code 변경 0 = strongest evidence cycle · hexa-lang
+> PR #291 `6187d499` MERGED). G38 = pre-code (κ-70 R9 closure 박제 ·
+> κ-69 R8 closure entry mirror).
 > 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md D-block +
 > 영향 파일 commit 으로 묶을 것.
 
@@ -2392,40 +2399,72 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
   - **est**: 0.3-0.5 sessions (D-block 박제 · κ-68 G27 / κ-69 G32
     동형 · code 0)
 
-- [ ] **G37.** 3rd cell 첫 `absorbed=true` legitimate flip (NOT D95
+- [x] **G37.** 3rd cell 첫 `absorbed=true` legitimate flip (NOT D95
     computed projection · κ-68 G29 / κ-69 G33 mirror · 세번째 cell
-    measurement-parity land)
+    measurement-parity land **— LANDED 2026-05-22 · D119 박제 ·
+    Ufo/plasma Stage-2 · JET-like mid-Ohmic single shot · λ_D ·
+    `mean_rel_err = 2.21e-06` · `max_rel_err = 4.44e-06` · N=50 ·
+    threshold=0.05 · 4 orders below threshold = PASS**)
   - **scope**: G28 (schema-half · 재사용) + G29 / G33 (real flip)
     묶음의 세번째 instance — G36 cell 의 `MeasuredOracleRef`
     instantiation + producer wire (external oracle fetch + measured-
     oracle PASS) + g3-honest stored `absorbed: Bool` flip. κ-69
     G33 (D117) 의 직접 mirror — schema cost (1-field 확장 or 새
     record type) 는 G36 picked cell 에 의존.
-  - **exit criterion** (G29 / G33 동형 · 3 가지):
-    1. 3rd cell `absorbed=true` flip + rationale D-block (D119 자연
-       순서 · D118 G36 mirror) 박제 · marginal/comfortable PASS
-       honestly disclosed (D110 G29 marginal 0.04967 · D117 G33
-       comfortable 8.4e-07 · D119 PASS shape 은 picked cell + oracle
-       선택에 의존)
-    2. `MeasuredOracleRef` field 가 picked record type 에 land
-       (schema generalization audit · 3rd record type · κ-69 G33
-       D117 의 2nd record-type AuraVerifyRecord 위 확장)
-    3. **XCTest invariant 가 새 cell 에 auto-extend** — `Absorbed
-       NeedsMeasuredOracleTests.test<XXX>VerifyRecordCoveredByInvariant
-       NoCodeChange` 추가 · invariant helper code 변경 0 ·
+  - **exit criterion** (G29 / G33 동형 · 3 가지 · 모두 [x]):
+    1. [x] 3rd cell `absorbed=true` flip + rationale D-block
+       (D119 자연 순서 · D118 G36 mirror) 박제 · `mean_rel_err =
+       2.21e-06` honestly disclosed (D110 G29 marginal 0.04967 ·
+       D117 G33 comfortable 8.4e-07 · 본 D119 = JET-like
+       `synthetic_jet_like_mid_ohmic` fallback 위 numeric-
+       equivalence shape · D117 G33 mirror not D110 G29 mirror ·
+       residual = IEEE-754 rounding noise + hexa kernel str()
+       roundtrip)
+    2. [x] `MeasuredOracleRef` field 가 picked record type
+       (`UfoVerifyRecord`) 에 land (schema generalization audit ·
+       3rd record type · κ-69 G33 D117 의 2nd record-type
+       AuraVerifyRecord 위 확장 · `bea00e8` commit)
+    3. [x] **XCTest invariant 가 새 cell 에 auto-extend** —
+       `AbsorbedNeedsMeasuredOracleTests.testUfoVerifyRecordCoveredBy
+       InvariantNoCodeChange` 추가 · invariant helper code 변경 0 ·
        `invariantHolds(absorbed, measuredOracle, isIllustrativePhysics)`
        shape 의 record-type-agnostic 설계의 **3rd instance verification**
-       (κ-68 G30 Stage 1 record-type-agnostic 의 strongest evidence)
-    4. 다른 cell record 회귀 0 (Energy/solar `absorbed=true` · Aura/EEG
-       `absorbed=true` 유지 · Fusion / 기타 cell `absorbed` 미flip)
-    5. design.md D119 + PLAN.md κ-70 G37 entry + ARCH §11.5 G37 `[x]` flip
+       (κ-68 G30 Stage 1 record-type-agnostic 의 strongest evidence ·
+       Energy/solar 1st · Aura/EEG 2nd · Ufo/plasma 3rd · 동일 predicate ·
+       helper edit 0). 5/5 invariant tests + 8/8 HexaNativeAbsorbed
+       tests PASS. cockpit 전체 77 tests · 1 skipped · 0 failures.
+    4. [x] 다른 cell record 회귀 0 — full cockpit test suite 77/0
+       (1 skipped) · Energy/solar G29 / Aura/EEG G33 fixture path 영향 0
+    5. [x] design.md D119 + PLAN.md κ-70 G37 entry + ARCH §11.5 G37
+       `[x]` flip + NEXT_SESSIONS.md P-⑭ closure marker
+  - **landed artifacts**: design.md D119 박제 · hexa-lang PR #291
+    LANDED (`6187d499` merge SHA · 3 files / 942 line · `stdlib/
+    fusion/jet_pulse_fetcher.py` + `jet_plasma_measured_oracle.py` +
+    `_plasma_lambda_d_batch.hexa`) · demiurge `bea00e8` (cockpit
+    schema + tests).
+  - **honest disclosure (D119 g3 paragraph)**: real JET open-pulse
+    archive anonymous access is not available as of 2026-05
+    (EUROfusion SSO portal + IMAS UDA REST token requirements);
+    fetcher falls back to a *synthetic JET-like mid-Ohmic stationary
+    profile* around the JET D-T 1997 DTE1 textbook reference
+    operating point (Keilhacker 1999 Nucl. Fusion 39:209) with
+    documented ±2% uniform fluctuation. D118 exit-criterion-δ
+    permitted shape · `data_source = synthetic_jet_like_mid_ohmic`
+    field on the emitted record. The `mean_rel_err = 2.21e-06`
+    figure is NOT modeling-accuracy evidence (the kernel and the
+    trusted-bridge `math`-fallback share CODATA-2022 constants +
+    identical closed-form) — it reflects IEEE-754 rounding +
+    hexa-side `str()` roundtrip resolution loss. D117 G33's
+    numeric-equivalence PASS shape directly · NOT D110 G29's
+    predict-vs-measure modeling-error shape. Real-JET raw timeseries
+    + plasmapy bridge upgrade are follow-on horizontal extension
+    axes (G37-β).
   - **deps**: G36 (decision · D118) · G28 (schema 재사용) · G30 Stage 1
     (invariant pattern) · D80 honesty floor · D86 no hardcoded data ·
     D103 dimension-separation · D106 illustrative-physics 제외 · D116
     sibling repos docs only
-  - **est**: 1-3 sessions (G33 의 lowest-friction 0.5-1 session 보다
-    candidate-dependent · Ufo = 1 session est · Energy/wind = 3 session
-    est · Bio = 2 session est)
+  - **est (revised)**: ~1 session actual (predicted 1-3) — Ufo
+    schema 재사용 = 최저 friction track 가 estimate 의 하단 land
 
 - [ ] **G38.** κ-70 R9 closure 박제 (4/4 LANDED · κ-69 R8 closure
     entry mirror · 또는 partial-land cycle boundary)
