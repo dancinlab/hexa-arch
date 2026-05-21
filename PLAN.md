@@ -4641,3 +4641,78 @@
     G34 `[x]` 유지 · G32 + G33 still `[ ]`). ARCH §11.4 G31
     block 의 G31β sub-bullet append + bridge_stack 표기 갱신 +
     ARCH `## Log` 새 entry 박힘 (본 entry 와 cross-consistent).
+
+- 2026-05-22 — **phase κ-69 — G32 LANDED · D115 2nd cell pick (Aura/EEG ·
+  PhysioNet Sleep-EDF) 5-fold lock-in 박제 · code 0**. κ-69 R8 의 pre-code
+  decision gate (κ-68 G27 / D109 의 동형 mirror) 가 같은 cycle 안에 closure —
+  research note `inbox/notes/k69-g32-candidate-research-2026-05-21.md` (144
+  line · 3 finalist analysis) 의 #1 ranked pick (Aura/EEG) default 채택
+  path. design.md D115 stub (reserved D-number) 가 정식 5-fold lock-in
+  decision 으로 replace:
+  - **5-fold lock-in 박제** (D109 mirror 형식 · 5 row table):
+    - **cell**: `AuraVerifyRecord` (cockpit · 이미 존재 · `hexaNativeParity`
+      carrier) + `domains/aura.md` EEG signal-proc 경로
+    - **external oracle**: PhysioNet **Sleep-EDF Expanded** (CC-BY · 153
+      PSG · 100 Hz EEG Fpz-Cz/Pz-Oz · 30-s epochs · anonymous wget · auth
+      없음)
+    - **bridge stack**: `stdlib/aura/aura_mne.py` (MNE-Python EEG signal-
+      proc substrate adapter · 이미 존재) → `stdlib/kernels/signal_proc/
+      mne_psd_kernel.py` (Welch PSD oracle-companion · 이미 존재) →
+      hexa-native `dft_naive.hexa` (substrate-parity = `pilot-dft_naive`
+      17/17 PASS rel_err ≤ 1e-12)
+    - **hexa-native scope**: `stdlib/kernels/signal_proc/dft_naive.hexa`
+      (naive O(N²) DFT · `pilot-dft_naive` 17/17 PASS) · 측정 axis =
+      alpha-band (8-13 Hz) integrated PSD
+    - **PASS criterion**: `mean_rel_err ≤ 0.05` on alpha-band integrated
+      power across N=100 30-second eyes-closed REM/Wake epochs (solar G29
+      5% threshold mirror · single-subject default e.g. SC4001E0)
+  - **회피 후보 2개 reject** (research note Candidate B/C 분석 인용):
+    - B (Energy/wind · NREL Wind Toolkit): bridge + kernel 둘 다 신설 필요
+      (1-3 session · G31 mirror scale) · same-record schema axis 약함
+      (G33 generalization payoff 0) · NREL WTK HSDS auth 필요.
+    - C (Ufo/plasma · IMAS): substrate-parity 41/41 bit-exact 가장 강하나
+      formula-evaluation honesty floor 약함 (측정 n_e/T_e → modeled λ_D
+      역방향 axis · solar G29 의 modeled vs measured GHI prediction shape
+      보다 약함) · Stage-4..7 D106 carve-out 명시 필요 · IMAS 2025 신규
+      access pattern 불확실.
+  - **ARCH §11.4 G32 row 복원 + flip** (`e8f34f6` G31β commit 의
+    silent-loss 정정 동시): 이전 commit 이 G31β narrative append 시
+    G32 list-item header line (`- [ ] **G32.** ...`) 을 silently
+    소실시켜 G32 body 가 G31 의 nested 자식처럼 표면화되어 있었음.
+    본 cycle 이 header 복원 + `[x]` flip + D115 cite + research note
+    audit trail 동시 land — G31β cleanup 의 honest follow-up.
+  - **수정 파일 3개**: `design.md` (D115 stub replace · 5-fold lock-in
+    decision · κ-68 G27/D109 mirror shape) · `ARCH.md` (§11.4 Round 8
+    G32 row 복원 + `[x]` flip + D115 D-block sub-entry) · `PLAN.md`
+    (본 entry).
+  - **κ-69 R8 진척**: 4 G-item 중 G31 + G32 + G34 `[x]` (G31 = ultimate-
+    form parity origin/main · G32 = 2nd cell pick D115 · G34 = governance
+    Stage 2 row). **G33 still `[ ]`** — κ-69 의 마지막 lowest-friction
+    critical-path. G33 = G32 cell (Aura/EEG) 의 첫 `absorbed=true`
+    legitimate flip (κ-68 G29 mirror · `MeasuredOracleRef` field 가
+    `AuraVerifyRecord` 에 land = schema generalization audit 의 second
+    record type instance · 2-4 session est).
+  - **next pickup 명시**: **G33** = Aura/EEG measured-oracle first flip.
+    가 D115 5-fold lock-in 위 build — (1) `AuraVerifyRecord.swift` schema
+    확장 (`measuredOracle: MeasuredOracleRef?` field 1줄 + JSON CodingKeys ·
+    G28 `EnergyVerifyRecord` 1:1 mirror) · (2) PhysioNet Sleep-EDF fetch
+    adapter (`stdlib/aura/sleep_edf_fetcher.py` 신설 · anonymous wget +
+    EDF parse) · (3) producer wire (`aura_mne.py` 의 measured-oracle JSON
+    emit · 480-sample equivalent N=100 epoch path) · (4) PASS criterion
+    측정 + `absorbed=true` legitimate flip · (5) ARCH §11.4 G33 [x] flip +
+    design.md D117 (D116 직후 next-D · κ-68 G29/D110 mirror shape).
+    G30 Stage 1 XCTest invariant (`AbsorbedNeedsMeasuredOracleTests.swift`)
+    가 `AuraVerifyRecord` 의 새 `measuredOracle` field 위에서도 자동 적용
+    — G28 schema-half 의 typed enforcement 가 second carrier 로 확장됨이
+    G33 의 invariant audit closure.
+  g3 — G32 = doc-only land (code 0 · test 0) · 0.3 session est_actual.
+  Research note pre-existing (`k69-g32-candidate-research-2026-05-21.md`
+  · 144 line · 3 finalist · Aura/EEG #1 ranked) 가 본 cycle 의 decision
+  rationale 의 load-bearing audit trail — 본 D115 가 그 위 default 채택
+  path 의 박제. 새 측정 0 · 새 stored field 0 · 새 `.demi` row 0 · 새
+  hexa-lang artifact 0 · cell flip 0. RFC 013 §6.11 status `LANDED` 유지
+  (κ-68 closure 상태 · κ-69 의 second-cell mirror 는 RFC 013 ultimate-
+  form parity follow-on axis 라 RFC status 자체는 미flip). κ-69 R8 의
+  G32 closure 로 critical-path 가 G33 으로 deepen — G32 pre-code decision
+  gate 가 다음 first-flip 작업 (Aura/EEG MeasuredOracleRef · 2-4 session
+  est) 의 entry point.

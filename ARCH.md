@@ -2138,7 +2138,10 @@ measurement round (scaffold · pre-code)**
     default kept · (ii) Kasten airmass form equivalence vs
     `1/(cos(z)+0.50572*(96.07995-z)^-1.6364)` verified · (iii)
     `HEXA_LANG` env var workaround for worktree-local imports.
-    R8 pre-code decision gate · D106 illustrative gate 제외)
+
+- [x] **G32.** 다음 cell pick + measured-oracle source 결정 (κ-69
+    R8 pre-code decision gate · D106 illustrative gate 제외 ·
+    **D115 land 2026-05-22 · Aura/EEG (PhysioNet Sleep-EDF)**)
   - **scope**: G27 (κ-68) 와 동형 — cell 선정 + 외부 measured
     oracle + bridge stack + hexa-native scope + PASS criterion 의
     5-fold lock-in decision. 후보 cluster:
@@ -2150,18 +2153,42 @@ measurement round (scaffold · pre-code)**
       만 선택
     - **Mobility / Grid / Energy `wind` sub-cell** — 또 다른
       Energy 변종 (G29 의 solar 와 별 cell)
+  - **D115** (κ-69 G32 land · 2026-05-22 · Aura/EEG picked): cell =
+    **Aura/EEG** (cockpit `AuraVerifyRecord` carrier + hexa-lang
+    `stdlib/kernels/signal_proc/dft_naive.hexa` substrate). 외부
+    measured oracle = **PhysioNet Sleep-EDF Expanded** (CC-BY · 153
+    PSG · 100 Hz EEG Fpz-Cz/Pz-Oz · 30-s epochs · anonymous wget).
+    bridge stack = **MNE-Python signal-proc trusted** (`stdlib/aura/
+    aura_mne.py` 이미 존재 · substrate-parity = `pilot-dft_naive`
+    17/17 PASS rel_err ≤ 1e-12). hexa-native scope = **`dft_naive.
+    hexa` (naive O(N²) DFT) · alpha-band (8-13 Hz) integrated PSD
+    axis**. PASS criterion = **`mean_rel_err ≤ 0.05` on alpha-band
+    integrated power across N=100 30-s eyes-closed REM/Wake epochs**
+    (solar G29 5% mirror). 회피 후보 2개 (B Energy/wind = bridge +
+    kernel 둘 다 신설 필요 · auth · same-record schema axis 약함 ·
+    C Ufo/plasma = formula-evaluation honesty floor 약함 · IMAS
+    access 불확실 · Stage-4..7 D106 carve-out 필요) — rationale
+    명시. code 0 (decision-only).
+  - **audit trail**: `inbox/notes/k69-g32-candidate-research-2026-05-
+    21.md` (144 line · 3 finalist analysis · Aura/EEG #1 ranked ·
+    Candidate A 5-fold lock-in articulated + Candidate B/C trade-
+    off 분석).
   - **avoid**:
     - D106 illustrative-physics gate 적용 cell (RFC 013 §6.12
       anti-conflation · MeasuredOracleRef 가 illustrative cell
       에는 적용 불가)
     - D95 computed-projection 만으로 만족하는 cell (substrate-
       parity 가 아닌 measurement-parity 가 본 round 의 점)
+    - ChipAnalyze (chip §B substrate-axis · §12.1 (e) fifo_mem
+      RTLIL Memory emit 등 cross-axis 충돌 회피)
   - **exit criterion**: design.md D115 (κ-69 G32 land) record ·
     5-fold sub-decision 명시 (cell · external oracle · bridge
     stack · hexa-native scope · PASS criterion) · code 변경 0
+    [x] LANDED 2026-05-22 (D115)
   - **deps**: G31 (G29-β 가 우선 land 되어 endpoint pattern 정착)
     · D106 (illustrative gate 제외) · D103 (dimension separation)
-  - **est**: 0.3-0.5 sessions (decision-only · code 0)
+  - **est**: 0.3-0.5 sessions (decision-only · code 0) · est_actual
+    = 0.3 session (research note pre-existing · default 채택 path)
 
 - [ ] **G33.** G32 cell 의 첫 `absorbed=true` legitimate flip
     (κ-69 measurement-parity 두번째 land · κ-68 G29 mirror)
