@@ -591,7 +591,7 @@ RTSC absorbed=true 후보가 미래 발견되면 다음 record 셋 동시 존재
 |---|---|---|---|
 | **이미 있음**: `sim.hexa` / `sim_adapter.py` | BCS · McMillan · Allen-Dynes · WHH | weak-coupling SC well, 20% scatter | M5 cohort |
 | **EPW** (Quantum ESPRESSO) | Anisotropic full Eliashberg with Wannier interpolation | DFT-precision (Nb 10.5 vs 9.25 K = 13.6%) | `https://epw-code.org`, MP.md P3 |
-| **BEE-NET** (2024) | Bootstrapped graph NN, predict α²F + Tc | **MAE 0.87 K** vs DFT-Allen-Dynes | `arxiv:2406.14524` https://arxiv.org/pdf/2406.14524 · Nature `s41524-026-01964-8` https://www.nature.com/articles/s41524-026-01964-8 — 1.3M cand → 741 stable |
+| **BETE-NET** (Gibson et al. 2025) | Bootstrapped **Tempered** Equivariant graph NN, predict α²F + Tc | **MAE 0.87 K** vs DFT-Allen-Dynes | **primary**: `arxiv:2401.16611` https://arxiv.org/abs/2401.16611 (npj Comput. Mater. 11:11, 2025) · github `henniggroup/BETE-NET` (notebook-shaped, no pip) · 별 paper `arxiv:2406.14524` (Lee/Hattrick-Simpers ridge-regression, 다른 모델) · Nature `s41524-026-01964-8` https://www.nature.com/articles/s41524-026-01964-8 — 1.3M cand → 741 stable. honest 정정: §9 first draft 는 "BEE-NET" 오기 + arxiv:2406.14524 가 primary citation 인 척 — N2 cohort 이 catch, 본 row 정정. |
 | **DOS rescaling** (2025) | High-throughput Tc estimator from DOS at E_F | scaling law | `arxiv:2508.18371` https://arxiv.org/pdf/2508.18371 |
 | **AI-accel SC discovery** (2026) | End-to-end pipeline w/ elemental substitution + MLIP | Best 2026 SOTA | `https://www.nature.com/articles/s41524-026-01964-8` |
 | **First-principles + ML** cuprates | Pairing strength factors from features | qualitative | `arxiv:2305.08038` https://arxiv.org/pdf/2305.08038 |
@@ -647,7 +647,7 @@ solar pyranometer (§4.2.1.b absorbed=true precedent · `exports/energy/verify/2
 | cohort | 산출물 | 외부 라이브러리 |
 |---|---|---|
 | **N1** | `stdlib/material/csp_adapter.py` — CALYPSO/USPEX/AIRSS thin wrapper, MP 캐시와 cross-check | CALYPSO · USPEX · AIRSS · OpenCSP |
-| **N2** | `stdlib/material/beenet_adapter.py` — BEE-NET ML model inference, sim_adapter 와 Tc cross-validation | BEE-NET (HuggingFace weights · `arxiv:2406.14524`) |
+| **N2** | `stdlib/material/beenet_adapter.py` — **BETE-NET** ML model inference (filename 은 본 §9 첫 draft 의 오기 유지 · canonical 모델명 = BETE-NET), sim_adapter 와 Tc cross-validation | **BETE-NET** primary: `arxiv:2401.16611` (Gibson et al. npj Comput. Mater. 2025) · github `henniggroup/BETE-NET` (no pip · `$BETE_NET_ROOT` env clone 의무) · §9.2 honest 정정 참조 |
 | **N3** | `stdlib/material/synthesis_route_adapter.py` — ASKCOS thin wrapper, Tier 2 recipe 자동 제안 | ASKCOS (`arxiv:2501.01835`) |
 | **N4** | `stdlib/material/cross_code_dft.py` — QE+ABINIT+(MP cache) ensemble, (d) sim analog | Quantum ESPRESSO · ABINIT · pymatgen-io-validation |
 
@@ -659,7 +659,9 @@ deep-research session 에서 surfaced 된 모든 arxiv ID — 각각 §9.x sub-s
 
 - `arxiv:2509.10293` — OpenCSP: Deep Learning Framework for CSP from Ambient to High Pressure (2025)
   · https://arxiv.org/abs/2509.10293 · https://arxiv.org/html/2509.10293v1
-- `arxiv:2406.14524` — High-Tc superconductor candidates proposed by machine learning · BEE-NET intro
+- `arxiv:2401.16611` — **BETE-NET primary citation** (Gibson et al., npj Comput. Mater. 11:11, 2025): Bootstrapped Tempered Equivariant graph NN for SC prediction
+  · https://arxiv.org/abs/2401.16611
+- `arxiv:2406.14524` — High-Tc superconductor candidates proposed by machine learning (Lee/Hattrick-Simpers ridge-regression — **별 모델, BETE-NET 아님**; §9 first draft 의 오기 honest 정정)
   · https://arxiv.org/abs/2406.14524 · https://arxiv.org/pdf/2406.14524
 - `arxiv:2508.18371` — High-throughput superconducting Tc predictions through density of states rescaling (2025)
   · https://arxiv.org/abs/2508.18371 · https://arxiv.org/pdf/2508.18371
