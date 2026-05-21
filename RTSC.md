@@ -566,8 +566,152 @@ RTSC absorbed=true 후보가 미래 발견되면 다음 record 셋 동시 존재
 
 ---
 
+## 9. 5-gate 시뮬레이션 stack — 외부 라이브러리 deep-research
+
+§8.9 의 5-gate 는 *진짜 RTSC absorbed=true* 의 SOLE 정의이지만, **시뮬레이션** 으로 *각 gate 별 funnel* 을 만들 수 있다. honest 노트: **시뮬레이션은 §8.7 Tier 1 honest限界 — absorbed=true 영구 불가** (예측 ≠ 측정 · R4 invariant 보호). 그러나 5-gate 의 *시뮬레이션 PASS* 자체는 의미 있는 funnel (candidate filtering · 후속 wet-lab 우선순위 정렬).
+
+본 §9 는 deep-research (2026-05-21) 결과의 영구 보관 — 각 gate 별 open-source 라이브러리 + 최신 arxiv 인덱스.
+
+### 9.1 (a) 합성 가능성 시뮬레이션
+
+| 도구 | 알고리즘 / 영역 | 라이선스 | 라이브러리 / arxiv |
+|---|---|---|---|
+| **CALYPSO** | Particle Swarm Optimization, crystal structure prediction | Academic free | `https://en.wikipedia.org/wiki/Crystal_structure_prediction` |
+| **USPEX** | Evolutionary GA, global structure search | Academic free | Oganov et al. — 다수 SC discovery 케이스 |
+| **AIRSS** | Random sampling + symmetry constraints | **GPL2 open** | Pickard, dense hydride 적용 사례 |
+| **XtalOpt** | Open-source evolutionary GA | open | `https://www.researchgate.net/publication/220258586` |
+| **OpenCSP** (2025) | **Deep learning** CSP, ambient → high-pressure | open | `arxiv:2509.10293` https://arxiv.org/html/2509.10293v1 |
+| **ASKCOS** (MIT) | Synthesis route prediction (retrosynthesis + condition + score) | Open-source | `arxiv:2501.01835` https://arxiv.org/pdf/2501.01835 · `ACS Accounts` https://pubs.acs.org/doi/abs/10.1021/acs.accounts.5c00155 |
+| **pymatgen Phase Diagram** | Thermodynamic phase stability + decomposition | open BSD | already in MP.md P1 |
+| **Materials Project bulk dump** | CALPHAD-derived stability across 150K+ materials | CC-BY-4.0 | MP.md Phase 1.2 (이미 31 cache 안착) |
+
+### 9.2 (b) Tc 시뮬레이션
+
+| 도구 | 영역 / 모델 | 정확도 | 라이브러리 / arxiv |
+|---|---|---|---|
+| **이미 있음**: `sim.hexa` / `sim_adapter.py` | BCS · McMillan · Allen-Dynes · WHH | weak-coupling SC well, 20% scatter | M5 cohort |
+| **EPW** (Quantum ESPRESSO) | Anisotropic full Eliashberg with Wannier interpolation | DFT-precision (Nb 10.5 vs 9.25 K = 13.6%) | `https://epw-code.org`, MP.md P3 |
+| **BEE-NET** (2024) | Bootstrapped graph NN, predict α²F + Tc | **MAE 0.87 K** vs DFT-Allen-Dynes | `arxiv:2406.14524` https://arxiv.org/pdf/2406.14524 · Nature `s41524-026-01964-8` https://www.nature.com/articles/s41524-026-01964-8 — 1.3M cand → 741 stable |
+| **DOS rescaling** (2025) | High-throughput Tc estimator from DOS at E_F | scaling law | `arxiv:2508.18371` https://arxiv.org/pdf/2508.18371 |
+| **AI-accel SC discovery** (2026) | End-to-end pipeline w/ elemental substitution + MLIP | Best 2026 SOTA | `https://www.nature.com/articles/s41524-026-01964-8` |
+| **First-principles + ML** cuprates | Pairing strength factors from features | qualitative | `arxiv:2305.08038` https://arxiv.org/pdf/2305.08038 |
+
+### 9.3 (c) 압력-의존 SC 시뮬레이션
+
+| 도구 | 영역 | 라이브러리 / arxiv |
+|---|---|---|
+| **QE + EPW at varying P** | DFT 압력 sweep, Eliashberg 각 P 점 | already in MP.md P3 |
+| **ABINIT** | DFT + DFPT for high-P phonons | `abinit.org`, GPL |
+| **Phonopy** | Pressure-dependent phonon dispersion + free energy | open BSD |
+| **GNN force field for hydrides** (2024) | Universal MLFF for hydride relaxation under arbitrary P | `arxiv:2312.12694` https://arxiv.org/abs/2312.12694 — 900 hydride · 122 stable · Tc > 39K |
+| **NCBI room-temp H₂-type** (2024) | Quasi-atomic H₂ hydride prediction | `PMC PMC11425200` https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11425200/ |
+
+### 9.4 (d) "다중 독립 lab 재현" 의 simulation analog
+
+"epistemic 독립" 을 numerical 로 재현 — cross-code / cross-functional / ensemble uncertainty:
+
+| 도구 | 영역 | 라이브러리 |
+|---|---|---|
+| **pymatgen-io-validation** | VASP ↔ Materials Project cross-check (코드 outputs validation) | `https://github.com/materialsproject/pymatgen-io-validation/` |
+| **MatBench** v0.1 | DFT formation energy 예측 benchmark suite | `https://matbench.materialsproject.org` |
+| **Cross-code DFT** | QE vs ABINIT vs VASP — 같은 material, 다른 implementation → 결과 비교 | manual or pymatgen-io-* |
+| **Cross-functional check** | PBE vs SCAN vs HSE — 같은 코드, 다른 exchange-correlation | manual sweep |
+| **ML ensemble uncertainty** | BEE-NET bootstrap, MEGNet ensemble, GNN dropout-MC | 개별 모델 + ensemble disagreement metric |
+
+→ "독립 lab ≈ 3 독립 코드/functional/모델 의 합의" 로 *시뮬레이션 영역에서 재현* 가능. 다만 wet-lab 의 *epistemic 다양성* (다른 instrument · sample batch · operator) 은 simulation 으로 substitute 못 함 — 진짜 (d) 만족 아님.
+
+### 9.5 (e) Measurement-oracle parity — 이미 있음
+
+solar pyranometer (§4.2.1.b absorbed=true precedent · `exports/energy/verify/2026-05-21T03-07-39Z/...pyranometer.json`) · Nb BCS attestation (§4.2.1.b, §8.10) pattern. 외부 ref dataset 모음:
+
+- **HTS Modelling Workgroup** Jc(B,T,θ) shared files — `https://htsmodelling.com`
+- **SuperCon (NIMS)** — 실험 Tc 데이터베이스 (register-only)
+- **arxiv supplementary** datasets — paper별 (free)
+
+### 9.6 시뮬레이션 limit (각 gate sim 결과의 진짜 의미)
+
+| gate | sim 결과의 의미 |
+|---|---|
+| (a) sim PASS | "DFT 가 stable predict + ASKCOS 가 합성 route 제안" → *진짜 합성 가능* 보장 X |
+| (b) sim PASS | BEE-NET/Eliashberg 가 Tc>270K 예측 → *진짜 측정* 아님 |
+| (c) sim PASS | ambient P 에서 stable predict → *실제 합성 후 측정* 미확인 |
+| (d) sim PASS | cross-code 3-way 합의 → wet-lab *epistemic 독립* 아님 |
+| (e) sim ≈ sim | model vs model parity → measurement-oracle 부재 |
+
+→ 5-gate **시뮬레이션** PASS 시 → `gate_type=simulation-only-prediction` · `absorbed=false 영구` (Tier 1 honest限界 그대로). 의미는: "이 후보가 wet-lab 우선순위 상위" — *candidate funnel* 역할.
+
+### 9.7 4-cohort 발사 후보 (RTSC.md §9 → demiurge stdlib transition)
+
+본 §9 deep-research 결과를 *실제 producer* 로 구현하는 cohort 발사 후보 — 각각 `gate_type=simulation-only-prediction` 명시 + R4 invariant 보호 (5-gate sim PASS 라도 absorbed=true claim 자동 reject).
+
+| cohort | 산출물 | 외부 라이브러리 |
+|---|---|---|
+| **N1** | `stdlib/material/csp_adapter.py` — CALYPSO/USPEX/AIRSS thin wrapper, MP 캐시와 cross-check | CALYPSO · USPEX · AIRSS · OpenCSP |
+| **N2** | `stdlib/material/beenet_adapter.py` — BEE-NET ML model inference, sim_adapter 와 Tc cross-validation | BEE-NET (HuggingFace weights · `arxiv:2406.14524`) |
+| **N3** | `stdlib/material/synthesis_route_adapter.py` — ASKCOS thin wrapper, Tier 2 recipe 자동 제안 | ASKCOS (`arxiv:2501.01835`) |
+| **N4** | `stdlib/material/cross_code_dft.py` — QE+ABINIT+(MP cache) ensemble, (d) sim analog | Quantum ESPRESSO · ABINIT · pymatgen-io-validation |
+
+각 cohort 의 산출물 record 는 `gate_type=simulation-only-prediction` · `absorbed=false 영구` 명시 (R4 invariant 보호).
+
+### 9.8 arxiv 참고 인덱스 (2024-2026 deep-research, full URL)
+
+deep-research session 에서 surfaced 된 모든 arxiv ID — 각각 §9.x sub-section 에서 인용. 영구 보존 (link rot 대비):
+
+- `arxiv:2509.10293` — OpenCSP: Deep Learning Framework for CSP from Ambient to High Pressure (2025)
+  · https://arxiv.org/abs/2509.10293 · https://arxiv.org/html/2509.10293v1
+- `arxiv:2406.14524` — High-Tc superconductor candidates proposed by machine learning · BEE-NET intro
+  · https://arxiv.org/abs/2406.14524 · https://arxiv.org/pdf/2406.14524
+- `arxiv:2508.18371` — High-throughput superconducting Tc predictions through density of states rescaling (2025)
+  · https://arxiv.org/abs/2508.18371 · https://arxiv.org/pdf/2508.18371
+- `arxiv:2501.01835` — ASKCOS: an open source software suite for synthesis planning (2025)
+  · https://arxiv.org/abs/2501.01835 · https://arxiv.org/pdf/2501.01835
+- `arxiv:2312.12694` — Data-driven Design of High Pressure Hydride Superconductors using DFT and Deep Learning
+  · https://arxiv.org/abs/2312.12694 · https://arxiv.org/pdf/2312.12694
+- `arxiv:2305.08038` — First Principles and Machine Learning Identify Key Pairing Strength Factors of Cuprate Superconductors
+  · https://arxiv.org/abs/2305.08038 · https://arxiv.org/pdf/2305.08038
+- `arxiv:2505.11964` — Accelerating the Search for Superconductors Using Machine Learning (2025 review)
+  · https://arxiv.org/abs/2505.11964 · https://arxiv.org/pdf/2505.11964
+- `arxiv:2511.03865` — AI-Driven Discovery of High-Temperature Superconductors via Materials Genome Initiative
+  · https://arxiv.org/abs/2511.03865 · https://arxiv.org/pdf/2511.03865 (§9.2 SOTA pipeline)
+- `arxiv:0811.2883` — Pecher / Sirois 3-D FEM HTS magnetization (legacy HTS-grade reference)
+  · https://arxiv.org/abs/0811.2883 · https://arxiv.org/pdf/0811.2883
+- `arxiv:1908.02176` — H-formulation AC loss review (§4.2.1.c 의 root reference)
+  · https://arxiv.org/abs/1908.02176 · https://arxiv.org/pdf/1908.02176
+
+### 9.9 Web non-arxiv 참고 URL
+
+- Nature `s41524-026-01964-8` — Complete AI-accelerated SC discovery workflow (2026 best SOTA)
+  · https://www.nature.com/articles/s41524-026-01964-8
+- Nature `s41524-024-01443-y` — Deep learning generative CSP (2024)
+  · https://www.nature.com/articles/s41524-024-01443-y
+- NCBI `PMC11425200` — Room-Temperature SC in Quasi-Atomic H₂ Hydrides at High Pressure (2024)
+  · https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11425200/
+- `pymatgen-io-validation` — github (DFT cross-validation)
+  · https://github.com/materialsproject/pymatgen-io-validation/
+- `MatBench` — matbench.materialsproject.org
+  · https://matbench.materialsproject.org
+- `epw-code.org` — EPW (Eliashberg in QE)
+  · https://epw-code.org
+- `abinit.org` — ABINIT DFT
+  · https://abinit.org
+- `materialsproject.org` — MP REST API + bulk dump
+  · https://next-gen.materialsproject.org/api
+- `htsmodelling.com` — HTS Modelling Workgroup shared files
+  · https://htsmodelling.com
+- `crystallography.net` — COD (Crystallography Open DB)
+  · https://crystallography.net
+- `aflowlib.duke.edu` — AFLOW DB
+  · http://aflowlib.duke.edu
+- `supercon.nims.go.jp` — NIMS SuperCon DB (register-only)
+  · https://supercon.nims.go.jp
+- `pvlib-python.readthedocs.io` — pvlib (energy domain absorbed=true precedent)
+  · https://pvlib-python.readthedocs.io
+
+---
+
 ## Log
 
+- **2026-05-21 KST** — **§9 신설** (5-gate 시뮬레이션 stack · 외부 라이브러리 deep-research 영구 보관). §8.9 의 5-gate 별 open-source 라이브러리 + 2024-2026 arxiv reference 인덱스. 5 sub-section (9.1 합성가능성 sim · 9.2 Tc sim · 9.3 압력-의존 sim · 9.4 cross-code "독립" analog · 9.5 oracle parity) + 9.6 시뮬레이션 limit table + 9.7 4-cohort 발사 후보 (N1 CSP adapter · N2 BEE-NET adapter · N3 ASKCOS adapter · N4 cross-code DFT) + 9.8 arxiv 인덱스 (10 papers, full URL) + 9.9 non-arxiv URL 인덱스 (13 sources). honest: 시뮬레이션 PASS 라도 `gate_type=simulation-only-prediction` · `absorbed=false 영구` (R4 invariant 보호). 의미는 candidate funnel — wet-lab 우선순위 정렬용.
 - **2026-05-21 KST** — opened. 5축 분리 + 본 세션 cell(solenoid·HTS·getdp·verify·linear-A-φ) 진행 시작. domain rename 은 후속 PR 로 보류.
 - **2026-05-21 KST** — V1 closed-form (Lorenz + Wheeler) producer landing. `exports/rtsc/verify/2026-05-21T05-27-14Z/rtsc_verify_20260521T052714Z.json` — B_center=69.4 mT, L=431 μH, W=2.155 J. CLI dispatch (`demiurge action 검증 rtsc`) 정상 동작. V2 getdp FEM stage 는 install-gated skip (getdp.info 다운로드 connection-flaky).
 - **2026-05-21 KST** — `RtscVerifyRecord` 5-axis 스키마 (Axes / Geometry / Headline / ClosedForm / FEM / CrossCheck) Swift Codable 컴파일 통과. `RtscVerifyProducer` nested-stamp-dir 버그 수정 (Swift가 stamp dir 만든 다음 Python도 또 만들던 문제).
