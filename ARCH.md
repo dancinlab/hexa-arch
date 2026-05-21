@@ -39,6 +39,18 @@
 > 2026-05-20) · design.md D80 · raises `g_hexa_native` (D14+D18)
 > from absorption-time preference to absolute endpoint rule.
 >
+> **Orthogonal to the hexa-native endpoint axis is the *execution venue*
+> axis** — where the FLOPs actually run. Heavy / install-gated /
+> cross-platform-audit / GPU compute may route through `pool` (a
+> first-class infrastructure layer · `~/core/pool/` CLI · canonical
+> precedent at `~/core/hexa-lang/stdlib/material/cross_code_dft.py::
+> _pool_cli_present`). Pool is a *venue, not a verb* (POOL.md §3.5) —
+> the 7-verb spine and the hexa-native endpoint rule are unchanged
+> by pool dispatch. Records that route through pool surface
+> `provenance.pool_host` + `provenance.pool_command`; R4
+> `absorbed=false` 영구 carries over (POOL.md §3.2). Cross-link:
+> `POOL.md` (this repo · ~517 line · 7 § spec).
+>
 > Examples:
 > - **endpoint-compliant**: chip §B sweep_oracle_parity.hexa
 >   (κ-43 / D70) — first dynamic `absorbed=true`, BECAUSE the
@@ -2511,6 +2523,16 @@ the narrative anchor + Tier-1/2/3 shape; detail SSOTs live in
 > is still OPEN; the §12 axes close the latter without changing the
 > former. Closure of a §12 axis removes the `provisional=true`
 > demotion risk implied by §0, but is NOT itself a cell flip.
+>
+> **infrastructure-axis distinction** — Many §12 substrate-axis measurements
+> can route their heavy compute through the `pool` CLI infrastructure
+> layer (e.g. chip §B substrate-axis ABC cross-platform reproducibility
+> audit ran on ubu-2 per `inbox/notes/2026-05-21-pool-gate_v3-abc-
+> diagnosis.md`). Pool is a *venue, not an endpoint* — closing a §12
+> substrate-axis via pool dispatch still requires the hexa-native parity
+> port to satisfy §0. Cross-link: `POOL.md` for the routing taxonomy +
+> honest invariants + the `_pool_cli_present` canonical adapter
+> precedent.
 
 ### 12.1 chip §B — rfc_006 §5 area-oracle parity (yosys absorption)
 

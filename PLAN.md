@@ -5156,3 +5156,76 @@
   instance audit 완성 — G30 invariant 의 record-type-agnostic 설계
   의 strongest evidence cycle confirmed (3 cell × 동일 predicate ×
   helper edit 0).
+
+- 2026-05-22 — **POOL.md 신설 · pool CLI as first-class infrastructure
+  layer · κ-70 R9 3/4 LANDED state 보강**. 본 cycle 의 doc-only land
+  (no D-block · no code · no cell flip). 5-section spec + 5 MD update.
+
+  **POOL.md** (~517 line · 7 §): §1 goal (pool CLI as canonical
+  external-compute routing layer — 5-point first-class rationale ·
+  RTSC §8.7 (a)(b)(c)(d)(e) gate pattern mirror) · §2 routing taxonomy
+  (5 row: build/CI cross-platform verify · heavy science compute ·
+  large-data fetch · GPU/accelerator workload · sandboxed risky · 각
+  gate_type 명시) · §3 honest invariants (5 sub: pool does NOT sync
+  filesystems · R4 carry-over absorbed=false 영구 · provenance must
+  cite pool_host · re-verify locally before commit · pool is a venue
+  not a verb) · §4 cohort routing examples (4 sub: RTSC §9.9.1
+  cross_code_dft `_pool_cli_present` canonical precedent · NUCLEAR
+  §6.1 HFBTHO routing potential · κ-rounds local vs pool heuristic
+  table · `pool on all` parallel fanout) · §5 invocation patterns
+  (7 sub: canonical wrapper `~/core/pool/` + `~/.hx/bin/pool` shim ·
+  9 verbs · sync mechanism = none honest · auth = ssh BatchMode no
+  token · output retrieval = explicit rsync · `pool init` 8 features
+  incl. OOM-resilience block · hexa-native port blocked on `env()` +
+  `exec_capture()` runtime stubs) · §6 anti-patterns (6 sub: trivial
+  compute · must re-verify locally · don't push from pool · don't
+  embed cohort verbs (constitution Principle I) · don't conflate with
+  sync · don't assume host up) · §7 citations (pool CLI itself · 6
+  existing demiurge pool routing references · honesty invariants
+  cited · future axes deferred — Phase 2 wiring + reservation ledger
+  + hexa-native port + companion sidecar plugin).
+
+  **MD update sweep** (5 file · cross-link only · 0 substantive
+  content drift):
+  - **PLAN.md** (본 entry) · κ-70 R9 3/4 LANDED 상태 + POOL.md
+    신설 박제.
+  - **NEXT_SESSIONS.md** P-⑭ head + new P-⑮ pool integration pickup
+    note · R9 status confirm + POOL.md cross-link.
+  - **ARCH.md** §11.5 G37 row [x] mirror confirm (already 박힘 · 본
+    cycle 새 byte 0) · §12 (substrate-axis open axes) intro 에
+    POOL.md cross-link 추가 (pool routing 가 §12 axes 의 다수가 H-*
+    handoff 와 만나는 infrastructure 층) · §0 first principle 보충
+    line (pool 은 venue 임 · 새 endpoint 아님).
+  - **RTSC.md** §9.9.1 cross_code_dft 부분 1줄 → POOL.md cross-link
+    (`_pool_cli_present` canonical precedent · 별 spec).
+  - **NUCLEAR.md** §6.1 N6 first-land paragraph 1줄 → POOL.md cross-
+    link (HFBTHO routing potential · install-gated 현 status).
+
+  **Honest scope** — 본 land 는 *infrastructure-layer doc 만*. pool
+  CLI 자체 변경 0 · `~/core/pool/` 변경 0 · `~/core/hexa-lang/stdlib/
+  material/cross_code_dft.py` 변경 0. 실 dispatch wiring (Phase 2 ·
+  `pool run qe_scf ...`) 은 후속 RTSC.md §9.9.1 Phase 2 scope.
+  D-number stale 의도 — POOL.md 는 *spec/narrative* SSOT (RTSC.md /
+  NUCLEAR.md 의 doc-sibling shape) · 새 D 必須 아님. 후속 PR 에서
+  pool routing 의 governance rule (e.g., AGENTS.tape `@D g_pool_
+  exec_only`) 박는 경우에 D120 자연 발생.
+
+  **κ-70 cumulative state**: G35 (research note) + G36 (D118 cell
+  pick · Ufo/plasma Stage-2) + G37 (D119 first-flip · `mean_rel_err
+  = 2.21e-06` numeric-equivalence PASS) LANDED. G38 (R9 closure 박제)
+  still pending — 본 POOL.md land 는 G38 의 critical-path 일부 아님
+  (orthogonal infrastructure axis). G38 next-pickup 별도 cycle.
+
+  **수정 파일 6개** (1 신규 + 5 update): `POOL.md` (NEW 517 line) +
+  `PLAN.md` (본 entry · +~50 line) + `NEXT_SESSIONS.md` (P-⑭ head
+  status confirm + new P-⑮ pool routing pickup) + `ARCH.md` (§0 +
+  §12 cross-link · 2 줄) + `RTSC.md` (§9.9.1 cross-link · 1 줄) +
+  `NUCLEAR.md` (§6.1 cross-link · 1 줄).
+
+  g3 — POOL.md 는 *current* state 만 박제 (Phase 1 wrap-as-is) ·
+  prescriptive future features 명시 §7.4 deferred 박제 · pool CLI
+  command name 은 *discovered* `pool` (그대로) · `~/.hx/bin/pool`
+  shim 경로 verified (symlink → `~/.hx/packages/pool/bin/pool`) ·
+  `~/core/pool/bin/pool` Python source verified. 모든 invariant
+  (R4 absorbed=false 영구 · D80 hexa-native endpoint · D106
+  illustrative gate · D116 sibling repos docs only) preserved.

@@ -716,6 +716,8 @@ deep-research session 에서 surfaced 된 모든 arxiv ID — 각각 §9.x sub-s
 
 본 §9 의 4-cohort (N1-N4) 는 **Path B (wrap-as-is)** 로 첫 land — Path A (hexa-native port) 는 *hot 한 closed-form 후처리* 에 한정. 본 프로젝트의 기존 패턴 (D72 thin adapter — getdp_hts.py · pyfemm_magnetics.py · mp_query.py · cube_producer.py · hexa_rtsc_crosslink.py · h_formulation_adapter.py — 전부 B) 과 정합. 유일한 successful Path A case 는 M5 `sim.hexa` (BCS/McMillan/AD/WHH 4 closed-form, ~200 lines, libm 0 K parity).
 
+> **Infrastructure cross-link (2026-05-22)**: N4 `cross_code_dft.py` carries the canonical `_pool_cli_present()` helper for **first-class pool routing** of heavy QE / ABINIT dispatch (gate_type=`pool-unavailable` / `heavy-run-not-opted-in` / `simulation-only-prediction`). Pool is the canonical external-compute routing layer — see `POOL.md` for the routing taxonomy + honest invariants + Phase 1 wrap-as-is shape. Phase 2 wiring (`pool run qe_scf ...` actual dispatch) follows POOL.md §4.1 precedent.
+
 #### B→A migration 4-phase 일정
 
 | Phase | 작업 | 산출물 | 추정 |

@@ -52,6 +52,14 @@
 > MERGED) · **G38 still open** (G38 = κ-70 R9 closure 박제 · κ-69
 > R8 closure entry mirror · 0.3-0.5 session est · doc edit · code 0).
 >
+> **P-⑮ (pool CLI first-class infrastructure follow-on)** — 2026-05-22
+> POOL.md landed (~517 line · 7 § · canonical wrapper + 5-row routing
+> taxonomy + honest invariants + 4 cohort examples + 9 verb reference +
+> 6 anti-patterns + 4 future deferred axes). Follow-on cohorts:
+> (a) cross_code_dft Phase 2 wiring · (b) NUCLEAR §6.1 HFBTHO pool
+> promotion · (c) dispatcher-side reservation ledger · (d) hexa-native
+> port wire when upstream `env()`/`exec_capture()` stubs land.
+>
 > **H-* (heavy-substrate measurement sessions, new 2026-05-20)** —
 > H-1 unblocks all (hexa-lang live-tree re-align); H-2..H-7 each
 > install one heavy substrate (Geant4 / OpenMC / CARLA / Drake /
@@ -961,6 +969,115 @@ same-cycle · remaining exits below):
 > (testAuraVerifyRecordCoveredByInvariantNoCodeChange) 가 κ-70 G37 에서
 > 3rd record-type 위 확장 — record-type-agnostic 설계의 strongest
 > evidence cycle.
+
+---
+
+## P-⑮ — pool CLI as first-class infrastructure (POOL.md follow-on)
+
+**Use this when:** the POOL.md spec landed (2026-05-22) and a cohort
+wants to **promote ad-hoc ssh-to-ubu-2 habit into a typed pool dispatch
+in its adapter**. POOL.md (`~/core/demiurge/POOL.md` · ~517 line · 7 §)
+documents the canonical wrapper (`~/core/pool/bin/pool` + `~/.hx/bin/
+pool` shim · 9 verbs · ssh BatchMode auth · no sync), the routing
+taxonomy (5 row · build/CI · heavy science · large-data · GPU ·
+sandboxed risky), and the honest invariants (pool does NOT sync
+filesystems · R4 absorbed=false 영구 · provenance must cite pool_host ·
+re-verify locally · venue not verb). Reference precedent already in
+production: RTSC §9.9.1 `cross_code_dft.py::_pool_cli_present`.
+
+```
+demiurge pool CLI first-class promotion session.
+Repo: ~/core/demiurge (records · spec · cross-link) +
+      ~/core/hexa-lang (substrate adapters that compose pool) +
+      ~/core/pool (pool CLI itself — usually untouched).
+Read first:
+  - POOL.md (this repo · 7 § · current Phase 1 wrap-as-is shape)
+  - ~/core/pool/README.md (9 verbs + state schema)
+  - ~/core/pool/TODO.md (LANDED · REVERTED · hexa-native port phasing)
+  - ~/core/hexa-lang/stdlib/material/cross_code_dft.py
+    (`_pool_cli_present` canonical precedent + 4-output gate_type)
+  - inbox/notes/2026-05-21-pool-gate_v3-abc-diagnosis.md
+    (chip rfc006 §5 cross-platform audit precedent)
+
+Pick one (or scope-as-you-can — these are independent gates):
+
+(a) Phase 2 wiring of cross_code_dft heavy path.
+    Move `gate_type=heavy-run-not-opted-in` (current Phase 1) →
+    actual `pool on <host> -- bash -lc 'qe_scf <input> > <out>.json'`
+    dispatch when `DEMIURGE_DFT_HEAVY_RUN=1` AND `_pool_cli_present`.
+    Requires QE / ABINIT on the target host + input file generation +
+    output retrieval. RTSC §9.9.1 Phase 2 scope. 2-4 session est.
+
+(b) Promote a different cohort to pool routing.
+    Candidates (current honest skip with no pool helper):
+    - NUCLEAR §6.1 N6 HFBTHO (Fortran 95) — install-gated on macOS arm64
+      historically; ubu-1/ubu-2 Linux build more tractable. POOL.md §4.2
+      potential.
+    - NEXT_SESSIONS H-2 Geant4 antimatter (multi-hour C++ build).
+    - NEXT_SESSIONS H-3 OpenMC + ENDF/B-VIII.0 (~3 GB data) — but the
+      H-3 historical blocker is osx-arm64 + Linux pool unreachable,
+      not pool itself.
+    Per cohort: add `_pool_cli_present()` helper · opt-in env var ·
+    4 honest gate_type outputs (mirror cross_code_dft shape).
+    Per cohort: ~1 session.
+
+(c) Dispatcher-side reservation ledger (pool/TODO.md roadmap item).
+    `pool on <host> <cmd...> --reserve ram=17G,disk=100G,wall=30m` +
+    `~/.pool/active_tickets.json` per-host commitment sum + dispatch
+    denied if `host.capacity − active_commitment − headroom <
+    reservation`. Prevents the 2026-05-21 OOM incident at the
+    dispatcher layer (host-side defenses already in place via
+    `pool init` OOM-resilience block). 2-3 session est, pool repo
+    contribution.
+
+(d) Hexa-native port wire.
+    Phase 1 draft `~/core/pool/bin/pool.hexa` (~210 LoC) compiles
+    cleanly but blocked on 2 runtime stubs (`env(name)` + `exec_
+    capture(cmd)`) per `hexa-lang/inbox/patches/runtime-env-and-
+    exec-capture-stubs-block-cli-tools.md`. When the upstream stubs
+    land, wire pool.hexa as the entry; retire bin/pool Python.
+    Cross-repo (hexa-lang runtime PR + pool repo install hook). 1-2
+    session post-upstream.
+
+Gate (g3 — REQUIRED for any path):
+  - any record that runs *any* substep on pool MUST cite
+    `provenance.pool_host` + `provenance.pool_command` (POOL.md §3.3).
+  - `absorbed=false 영구` for sim records — pool routing does NOT
+    promote (POOL.md §3.2 R4 carry-over).
+  - re-verify locally where feasible (POOL.md §3.4 + §6.2) — single-
+    host claim is weaker than local + pool agreement.
+  - do NOT embed cohort verbs into pool itself (POOL.md §6.4 ·
+    pool constitution Principle I "Minimal — Single File, Zero Deps").
+
+NOT (g3 — non-negotiable):
+  - Do NOT silently pretend "the file is on the remote because I
+    edited it locally" (POOL.md §3.1 + §6.5 — pool does NOT sync
+    filesystems).
+  - Do NOT push from pool hosts (POOL.md §6.3) — they have their own
+    git checkouts that may be stale.
+  - Do NOT add `pool autosync` / `pool sync` (pool/TODO.md "Future
+    verbs deferred indefinitely") — keeps the dispatch layer honest.
+  - Do NOT replace `_pool_cli_present` precedent's 4-output gate_type
+    shape (POOL.md §4.1) — Phase 1 means honest skip with audit
+    field, not silent fallback.
+
+Exit criterion (any one ends honestly):
+  (α) Phase 2 wiring of one heavy-compute adapter (a)/(b) + first
+      record cited with `provenance.pool_host` populated + honest
+      gate_type emit, OR
+  (β) Reservation ledger (c) lands at `pool/TODO.md` LANDED row +
+      ticket schema + dispatch denial path, OR
+  (γ) Hexa-native port (d) lands when upstream stubs ready + bin/pool
+      Python retired, OR
+  (δ) Scope-bounded progress + honest next-pickup note appended to
+      this P-⑮ section.
+```
+
+> **POOL.md status (2026-05-22)**: spec landed (Phase 1 wrap-as-is
+> documented). Pool CLI itself unchanged. cross_code_dft.py
+> precedent unchanged. No D-block (POOL.md is doc-only · D-number
+> stale intentional · D120 will arrive when a governance row
+> (e.g., `@D g_pool_exec_only` AGENTS.tape) is needed).
 
 ---
 

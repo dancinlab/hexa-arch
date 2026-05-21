@@ -201,6 +201,8 @@ Mirror of RTSC §9.9.1 Phase 1 wrap-as-is — single-cohort first-land, then swe
 
 **Rationale**: HFBTHO is the most-mature open-source HFB binary · BSk22/24/27 cross-validation reference table is openly cited · matches RTSC §9 N4 cross-code DFT pattern (sim_adapter → mp_query → csp_adapter shape) closest.
 
+> **Infrastructure cross-link (2026-05-22)**: HFBTHO is a Fortran 95 binary — install-gated on macOS arm64 historically; Linux pool hosts (`ubu-1` / `ubu-2`) more tractable. Promotion to first-class `pool` routing (mirror of RTSC §9.9.1 N4 `_pool_cli_present` precedent) is a follow-on cohort — see `POOL.md` §4.2 (HFBTHO routing potential · install-gated currently). Current Phase 1 honest skip path (`install-gated` / `weights-missing` / `network-fail`) does NOT yet route through pool; that wiring is `NEXT_SESSIONS.md` P-⑮ scope.
+
 **Adapter**: `hexa-lang/stdlib/nuclear/hfbtho_adapter.py`
 
 **Honest skip paths** (mirror RTSC §9.9.1 Phase 1):
