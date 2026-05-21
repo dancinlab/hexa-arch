@@ -1,9 +1,10 @@
 # NEXT_SESSIONS — copy-paste session-pickup prompts
 
-> 2026-05-21 · demiurge origin/main `8b46c95` (κ-68 closure +
-> κ-69 opening + ARCH §12 신설 + G31a wrapper half landed) ·
-> hexa-lang PR #263 OPEN (`740964a0` · G31a wrapper · κ-69 first
-> cross-repo partial-land). 4-Phase design-complete,
+> 2026-05-21 · demiurge origin/main `3338e2c` (κ-68 closure +
+> κ-69 opening + ARCH §12 신설 + R8 2/4 LANDED: G31 full + G34
+> governance row) · hexa-lang PR #263 MERGED `8eec8e7` (G31a
+> wrapper + G31b producer integration same-cycle). 4-Phase
+> design-complete,
 > macOS cockpit workbench built (rfc_012 IMPLEMENTED), κ-47..κ-49
 > swept ROI 1→18 (17 cell dispatch · 잔여=0 substrate side), κ-51
 > cern+synth absorbed=true, **κ-66 D80 sweep closed at 13 hexa-native
@@ -23,8 +24,9 @@
 > in-progress)**, **P-⑫ (Q3 advisory cross-cohort follow-up +
 > chem substrate seed watch)**; **P-⑬ (κ-69 hexa-native ultimate-
 > form parity + next-cell round, ARCH §11.4 Round 8 G31..G34)** ←
-> κ-69 opening 2026-05-21 · G31a wrapper half landed (hexa-lang
-> PR #263 OPEN) · G31b / G32 / G33 / G34 open.
+> κ-69 opening 2026-05-21 · **R8 2/4 LANDED** (G31 full via
+> hexa-lang PR #263 MERGED `8eec8e7` · G34 governance row
+> `3338e2c`) · **G32 / G33 still open**.
 >
 > **H-* (heavy-substrate measurement sessions, new 2026-05-20)** —
 > H-1 unblocks all (hexa-lang live-tree re-align); H-2..H-7 each
@@ -636,11 +638,15 @@ Exit criterion (any one ends honestly):
 ## P-⑬ — κ-69 hexa-native ultimate-form parity + next-cell round (ARCH §11.4 Round 8 · post-κ-68)
 
 **κ-69 opening (2026-05-21 · 같은 cycle as κ-68 closure)**: ARCH
-§11.4 Round 8 scaffold (G31..G34) pre-code 박힘 + ARCH §12 신설
-(chip §B substrate-axis 잔여 로드맵 이관 from rm'd YOSYS.md) +
-**G31a wrapper half landed** (hexa-lang PR #263 OPEN · `740964a0` ·
-κ-69 first cross-repo partial-land). Remaining queued: G31b producer
-integration · G32 cell pick · G33 flip · G34 constitution.md Stage 2.
+§11.4 Round 8 (G31..G34) 박힘 + ARCH §12 신설 (chip §B substrate-axis
+잔여 로드맵 이관 from rm'd YOSYS.md). **R8 2/4 LANDED same-cycle**:
+G31 fully landed (hexa-lang PR #263 MERGED `8eec8e7` · G31a wrapper
++ G31b producer integration) + G34 governance row landed (`3338e2c`
+· constitution.md v1.0.0 populate `99ccbc1` + measured-oracle
+invariant). Remaining open: **G32 cell pick** (D111 decision · code 0
+· research note `inbox/notes/k69-g32-candidate-research-2026-05-21.md`
+ranks Aura/EEG #1) · **G33 first-flip** (G32 cell measured-oracle
+PASS · κ-68 G29 mirror).
 
 **Use this when:** you continue κ-69 R8 work. ARCH.md §11.4 Round 8
 는 G31..G34 의 full scope (scope · deps · est · exit criterion ·
@@ -667,16 +673,10 @@ Repo: ~/core/demiurge · branch from origin/main. Read first:
 Open axes (pick whichever is honest for this session — they are
 independent gates):
 
-(a) G31b — Energy/solar producer integration (κ-69 first close)
-    deps: hexa-lang PR #263 merged. swap
-    `stdlib/energy/nrel_midc_pyranometer.py` `_compute_modeled()`
-    의 `loc.get_solarposition(times)` → subprocess `hexa run
-    _solar_position_cli.hexa` · 480-sample mean rel_err 유지 verify
-    · `bridgeStack` 표기 `"hexa_native_solar_position + pvlib
-    Ineichen"` 갱신 · `EnergyVerifyRecord` `provisional=true` 강등
-    risk 제거. ARCH §11.4 G31 `[~]` → `[x]` flip.
-    est: 1-2 session. cross-repo: hexa-lang merge gate (PR #263) +
-    demiurge producer wire.
+(a) G31b — **LANDED 2026-05-21** (hexa-lang PR #263 MERGED `8eec8e7`
+    · G31a wrapper + G31b producer integration same-cycle · ARCH
+    §11.4 G31 `[x]` flip via `84d4f66`). Historical reference for
+    next-cell mirror pattern — superseded by (b)/(c) for next pickup.
 
 (b) G32 — 다음 cell pick + measured-oracle source decision (κ-69
     R8 pre-code decision gate). G27 (κ-68) 와 동형 — 5-fold lock-in
@@ -698,43 +698,36 @@ independent gates):
     (invariant pattern).
     est: 2-4 session.
 
-(d) G34 — G30 Stage 2 constitution.md governance row
-    (`.specify/memory/constitution.md` populate 후 · κ-69 closure
-    block). `absorbed=true ⇔ measuredOracle.isMeasuredOraclePASS=
-    true` invariant 의 narrative governance row + D110 + G30
-    Stage 1 cross-link + D106 carve-out 명시.
-    deps: constitution.md populate (별 work) · G30 Stage 1
-    (`fee34cc`) · G33 (두번째 cell row 갱신).
-    est: 0.3-0.5 session.
+(d) G34 — **LANDED 2026-05-21** (constitution.md v1.0.0 populate
+    `99ccbc1` + governance row land `3338e2c` · ARCH §11.4 G34
+    `[x]` flip · measured-oracle invariant narrative). Historical
+    reference — G33 의 두번째 cell row 갱신 시 본 row pattern 참조.
 
-Gate (g3 — REQUIRED):
-  - G31b land = NREL MIDC 480-sample mean rel_err drift ≤ ε
-    + `bridgeStack` field update audit + hexa-lang PR #263
-    merged (hexa-lang session 측 별 axis · 본 세션은 그 후 swap).
+Gate (g3 — REQUIRED for remaining open axes):
   - G32 land = design.md D111 박제 (5-fold sub-decision · code 0).
   - G33 land = stored `absorbed: Bool` true · measured oracle PASS
     근거 record cite · 다른 cell 회귀 0.
-  - G34 land = constitution.md governance row populate + XCTest
-    invariant cross-link audit.
 
 NOT (g3 — non-negotiable):
-  - Do NOT touch hexa-lang sibling repo 의 §12.1 (e) fifo_mem
-    RTLIL Memory emit axis — 다른 agent 가 active 작업 중
-    (`inbox/PATCHES.yaml` 504-line WIP). 본 세션은 chip §B
-    substrate-axis 미접촉.
+  - Do NOT touch hexa-lang sibling repo 의 chip §B substrate-axis
+    work — 별 agent 가 active 작업 중. **§12.1 (e) fifo_mem 2-D
+    LHS Option A LANDED** (hexa-lang `c4b35b13` + `a4a032af`
+    2026-05-21 · own-scope CLOSED · §5 absolute area gap ~98%
+    잔존 via (f)..(i)). 본 세션은 chip §B substrate-axis 미접촉.
   - Do NOT trigger `absorbed=true` from D95 computed projection —
     κ-68 D103 separation 유지.
   - Do NOT include illustrative-physics cells in G32/G33 — D106.
   - Do NOT hardcode oracle dataset path — D86 floor.
-  - Do NOT bundle G31b + G33 in one session if both require
-    cross-repo merge — multi-repo discipline (κ-68 G28 pattern).
+  - Do NOT bundle G32 decision + G33 first-flip in one session if
+    both require cross-repo merge — multi-repo discipline (κ-68
+    G28 pattern).
 
 Exit criterion (any one ends honestly):
-  (α) G31b LANDED + ARCH §11.4 G31 `[x]` flip + PLAN.md κ-69
-      G31 close entry + hexa-lang PR #263 merged, OR
-  (β) G32 LANDED (D111 박제 · code 0) + scope-bounded next-pickup
+  (α) G32 LANDED (D111 박제 · code 0) + scope-bounded next-pickup
       note + ARCH §11.4 G32 `[x]` flip, OR
-  (γ) G31b + G32 묶음 land + next-pickup pointer to G33/G34, OR
+  (β) G33 LANDED (두번째 cell first-flip · measured-oracle PASS) +
+      ARCH §11.4 G33 `[x]` flip + κ-69 closure 박제, OR
+  (γ) G32 + G33 묶음 land + κ-69 closure (R8 4/4 LANDED), OR
   (δ) Scope-bounded sub-progress + honest next-pickup note in
       this P-⑬ section + ARCH §11.4 partial flag (`[~]`) update.
 ```

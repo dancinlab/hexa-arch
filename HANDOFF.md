@@ -231,16 +231,22 @@ actual progress** — preserved in `design.md` and the audit trail.
   Energy 도메인 의 첫 cell 에 한해 honest update — 다른 cell / 다른
   도메인 의 `absorbed=true` 는 여전히 없음 (G33/G34 axis · κ-69).
 - κ-69 opening (2026-05-21 같은 사이클): ARCH §11.4 Round 8 scaffold
-  G31..G34 pre-code 박힘 + ARCH §12 신설 (chip §B substrate-axis
-  잔여 로드맵 이관 from rm'd YOSYS.md). G31a wrapper half landed
-  (hexa-lang PR #263 OPEN · partial-land · κ-69 의 first cross-repo
-  partial). 자세한 현재 진행 axis = `NEXT_SESSIONS.md` P-⑬.
+  G31..G34 박힘 + ARCH §12 신설 (chip §B substrate-axis 잔여 로드맵
+  이관 from rm'd YOSYS.md). **G31 fully LANDED** (hexa-lang PR #263
+  MERGED `8eec8e7` · G31a wrapper + G31b producer integration
+  same-cycle) + **G34 governance row LANDED** (`3338e2c` ·
+  constitution.md v1.0.0 populate `99ccbc1` + measured-oracle
+  invariant). Round 8 = 2/4 LANDED (G31 ✓ · G34 ✓) · 2/4 [ ] (G32
+  cell pick · G33 first-flip). 자세한 현재 진행 axis =
+  `NEXT_SESSIONS.md` P-⑬.
 - chip §B full-curve — substrate-side `measurement_gate` 여전히 OPEN.
   ARCH §12.1 (Tier-1 (0..i) / Tier-2 / Tier-3 · 8-16 session est) 가
-  잔여 axis 의 narrative anchor. **§12.1 (e) fifo_mem RTLIL Memory
-  emit** 은 hexa-lang sibling repo 측에 별 agent 가 활성 작업 중
-  (`inbox/PATCHES.yaml` 504-line WIP) — demiurge 세션은 이 axis
-  미접촉. chip §B / §D = `absorbed=false`.
+  잔여 axis 의 narrative anchor. **§12.1 (e) fifo_mem 2-D LHS** 는
+  hexa-lang `c4b35b13` (Option A flat $dff demux · router_d4 area
+  +2.16× · d6 +2.17× · ABC accepts) + `a4a032af` (width-aware D-wire)
+  로 LANDED — Tier-1 (e) own-scope CLOSED, 단 §5 absolute area gap
+  ~98% 잔존 (gate closure 는 (f)..(i) 잔여). chip §B / §D =
+  `absorbed=false`.
 - Seam records — 0 (both rfc_007/008 v0, `records/` intentionally
   empty — no fabrication).
 - 3D real USDZ — 0 (`exports/` holds zero geometry; component
@@ -272,14 +278,15 @@ SSOT** (재사용 stdlib · 도구 · 흡수 전부 — 2026-05-19 user directiv
 **4-Phase 설계 design-complete · workbench live (rfc_012 IMPLEMENTED)
 · κ-68 closure (2026-05-21) RFC 013 §6.11 LANDED · Energy/solar 첫
 cell `absorbed=true` legitimate flip (D110 · hexa-lang `b8d35920`
-PR #259 MERGED) · κ-69 opening (같은 cycle) ARCH §11.4 Round 8 scaffold
-(G31..G34) + §12 신설 + G31a wrapper half landed (hexa-lang PR #263
-OPEN · partial-land) · chip §B 잔여 axis (§12.1 Tier-1/2/3) measurement
-_gate 여전히 OPEN**. 다음 = `NEXT_SESSIONS.md` P-⑬ (κ-69 horizon ·
-G31b producer integration + G32 cell-pick decision + G33 flip + G34
-constitution.md row) + P-⑩ (κ-68 historical · 본 closure 박제 후
-참조용) · chip §B substrate-axis 는 ARCH §12.1 + sibling repo 측
-별 agent active (§12.1 (e) fifo_mem · 본 세션 미접촉).
+PR #259 MERGED) · κ-69 opening (같은 cycle) ARCH §11.4 Round 8
+(G31..G34) + §12 신설 · **R8 2/4 LANDED** (G31 full via hexa-lang
+PR #263 MERGED `8eec8e7` · G34 governance row `3338e2c` +
+constitution.md v1.0.0 `99ccbc1`) · chip §B 잔여 axis (§12.1
+Tier-1/2/3) measurement_gate 여전히 OPEN (단 §12.1 (e) fifo_mem
+LANDED via hexa-lang `c4b35b13`+`a4a032af`)**. 다음 = `NEXT_SESSIONS.md`
+P-⑬ (κ-69 horizon · G32 cell-pick decision + G33 flip) + P-⑩
+(κ-68 historical · 참조용) · chip §B substrate-axis 는 ARCH §12.1
++ sibling repo 측 별 agent active.
 ```
 
 > SSOT note: this HANDOFF + CHARTER are the architecture/why SSOT; PLAN.md
