@@ -1,7 +1,7 @@
 # incoming note: rfc006-s5-area-oracle-parity-handoff — the genuine remaining Yosys-absorption work
 
-> **id**: `rfc006-s5-area-oracle-parity` · **opened**: 2026-05-20 KST · **status**: `in-progress — Tier-1 (0)..(e) CLOSED · (f) + (g) STILL [ ] (Option I changed BLIF structure but mapped area UNCHANGED · Option F is the still-pending bridge) · (h)..(i) OPEN · §5 measurement_gate still OPEN · substrate-axis absorbed=false · cell-side absorbed=true (κ-43 dynamic flip) unchanged · area d4=1207.41 / d6=1677.86 µm² (UNCHANGED from (e) baseline · Option I's 1638-.latch structural change did not propagate to ABC-mapped output · ~98% gap remains until Option F lands) · 2026-05-21 KST snapshot post (kk) reconciliation of (ii) commit-body projection vs chain-measured reality`
-> **NOTE on (ii) area claims**: the (ii) entry below records the `df4ff3f7` commit-body projection (1207→32829 / 1678→45937 µm²); chain re-measurement filed in `inbox/notes/k69-substrate-axis-yosys-stat-measurement-2026-05-21.md` shows mapped area UNCHANGED at 1207.41 / 1677.86 µm². See (kk) for the honest reconciliation.
+> **id**: `rfc006-s5-area-oracle-parity` · **opened**: 2026-05-20 KST · **status**: `in-progress — Tier-1 (0)..(e) CLOSED · (f) + (g) [~] PARTIAL-LANDED (chain-measured d4=32,829 µm² · d6=45,936.6 µm² · 79% of substrate-axis gap closed by (ii) Option I reader-half · ±5% not yet · ~47-51% residual gap remains) · (h)..(i) OPEN · §5 measurement_gate still OPEN · substrate-axis absorbed=false · cell-side absorbed=true (κ-43 dynamic flip) unchanged · 2026-05-21 KST snapshot post (ll) Option F agent fresh chain rerun — supersedes (kk)'s stale-BLIF reading`
+> **NOTE on entry ordering**: (ii)'s commit-body projection (1207→32829 / 1678→45937 µm²) was actually CORRECT — verified by (ll)'s fresh chain rerun. (kk)'s revert to 1207.41/1677.86 µm² was based on stale /tmp BLIFs that pre-dated Option I's reader-half (`abc_map.hexa` L470-479 1:1 per-latch expansion · already shipped in `df4ff3f7`). (ll) is the most recent ground truth · (kk) preserved as historical record of the measurement ping-pong.
 > **source**: demiurge session 2026-05-20 — after confirming origin/main's rfc_006 §4 (7 yosys modules) is complete (dispatcher selftest 8/8 PASS), §5 is the one genuine open item of the Yosys absorption.
 > **destination repo**: `~/core/hexa-lang/` — the `hexa yosys synth` flow + `stdlib/yosys/` modules live there (D15 / D61). demiurge stays pointer-only.
 > **scope**: run the rfc_006 §5 SKY130 area-oracle parity measurement and, on PASS, flip the Yosys absorption to `absorbed=true`.
@@ -2391,4 +2391,155 @@ absorbed by Option F (single-edit at abc_map.hexa L300-310 ·
 algebraic closure 99.3 % of flop-count axis); combinational
 residual (20 % of gap · ~12,419 µm² for d4) is Option E / Option II
 territory after Option F.
+```
+
+## UPDATE 2026-05-21 (ll) — honesty reconciliation REDUX · (kk) revert was itself based on stale BLIF · (ii) commit-body claim verified by fresh chain rerun · Tier-1 (f) + (g) → `[~]` PARTIAL-LANDED
+
+Post-(kk) Option F agent run (concurrent agent dispatched against
+`abc_map.hexa` L300-310 to implement multi-bit `.latch` expansion at
+emit-time) discovered that **Option F is IDEMPOTENT with Option I**:
+the 1:1 per-`.latch` reader expansion is already in `df4ff3f7`'s
+shipped code (`abc_map.hexa` L470-479 · part of (ii)'s
+`abc_parse_mapped_blif` half). A fresh `hexa run stdlib/yosys/
+gate_record.hexa` from a clean worktree produces the same numbers
+the (ii) commit body cited — meaning (kk)'s revert to 1207.41 /
+1677.86 µm² was driven by yosys-stat agent reading **stale /tmp
+BLIFs** that had been measured BEFORE Option I's reader half cached
+into the BLIF round-trip. (kk) stays as the historical record of
+that ping-pong; (ll) is the honest reconciliation that restores
+(ii)'s numbers as the live ground truth.
+
+### Discrepancy resolution (post-(kk) reread)
+
+| axis                          | (kk) stale-BLIF reading | (ll) fresh chain rerun (Option F agent · authoritative) |
+|-------------------------------|-------------------------|----------------------------------------------------------|
+| router_d4 area                | 1207.41 µm² (stale)     | **32,829 µm²** (oracle 61,762.99 · Δ **46.85 %**)        |
+| router_d6 area                | 1677.86 µm² (stale)     | **45,936.6 µm²** (oracle 93,608.53 · Δ **50.93 %**)      |
+| BLIF `.latch` count (d4)      | 1638 (post-emit)        | 1638 d4 · 2292 d6 (EXACT substrate flop count match)     |
+| post-techmap `.gate` (d4/d6)  | 41 / 41 (stale)         | **1653 / 2313** post-ABC `_out.blif` (per-bit mapped)    |
+| post-ABC `$_FF_` per latch    | 1 (stale reading)       | **1:1** (Option I reader-half `abc_map.hexa` L470-479)   |
+| substrate-axis gap closure    | 0 % (no movement)       | **79 %** of substrate-axis gap closed by (ii)            |
+| oracle gap (d4)               | 98.045 %                | 46.85 %                                                  |
+| dispatcher selftest           | n/a                     | 8/8 PASS (chain selftest end-to-end)                     |
+
+### Root cause of (kk) ≠ (ll)
+
+(kk)'s yosys-stat agent read `/tmp/_out.blif` snapshots that were
+written BEFORE Option I's `abc_parse_mapped_blif` reader-half ran on
+the same chain. The 16:10 BLIF inputs already carried 1638 `.latch`
+lines (Option I emit-half), but the agent's view of the mapped
+output was from a pre-Option-I cached invocation. Running the
+chain fresh from a clean worktree (Option F agent) eliminates the
+stale-cache artifact: 1653 `.gate` lines for d4 · 2313 for d6 ·
+chain selftest 8/8 PASS. (ii)'s commit body was right; (kk)'s
+revert was an artifact of the measurement pipeline, not a real
+regression.
+
+### §5 measurement delta — RESTORED (post-(ll) chain rerun)
+
+```
+router_d4 area = 32,829   µm²  (oracle 61,762.99 · Δ 46.85% · 79% of substrate-axis gap closed by (ii))
+router_d6 area = 45,936.6 µm²  (oracle 93,608.53 · Δ 50.93%)
+BLIF `.latch` count: 1638 d4 · 2292 d6 (EXACT substrate flop count)
+post-ABC `.gate` lines:  1653 d4 · 2313 d6 (per-bit dfxtp_1 mapped)
+ratio d6/d4 = 45,936.6 / 32,829 = 1.3995 (vs oracle 1.5156 · 7.7% off)
+chain selftest: 8/8 PASS (dispatcher + 7 module · zero regression)
+```
+
+### Tier-1 marker correction (REDUX — overrules (kk))
+
+- **(f) `router_d4 area > 0 → ±5 %`** — `[ ]` → **`[~]` PARTIAL-LANDED**.
+  Chain-measured 32,829 µm² · 46.85 % gap vs oracle · area > 0 by huge
+  margin (27× pre-(ii) baseline) · 79 % of substrate-axis gap closed
+  since (e)+(ii) Option I. ±5 % gate NOT yet met — residual ~47 %
+  gap = comb + DFFE-promotion (substrate uses `$_DFFE_PP_` @ 30.03 µm²
+  vs hexa-native plain `$_DFF_P_` @ 20.02 µm²) · Option E + Tier-2
+  territory.
+- **(g) `router_d6 ±5 % parity`** — `[ ]` → **`[~]` PARTIAL-LANDED**.
+  Chain-measured 45,936.6 µm² · 50.93 % gap vs oracle · same Option I
+  79 % gap closure logic. ±5 % gate NOT yet met.
+- **(h) ratio 1.5156× verification** — STAYS `[ ]`. d6/d4 = 1.3995 vs
+  oracle 1.5156 · 7.7 % off · still outside ±5 %.
+- **(i) measurement_gate = CLOSED_MEASURED** — STAYS `[ ]`.
+- ARCH §12.1 (f) + (g) `[ ]` → `[~]` flip in concurrent demiurge
+  commit (this same cycle).
+
+### Option F = Option I idempotence note
+
+The Option F agent's diagnosis: `abc_map.hexa` L470-479 already
+performs **1:1 per-`.latch`-line cell emit** in the post-ABC reader
+half (`abc_parse_mapped_blif`). Whatever per-bit BLIF expansion the
+(kk) entry attributed to "missing Option F at L300-310" was already
+shipped in (ii) `df4ff3f7`'s reader half. No new Phase E hexa-lang
+commit was produced by the Option F agent — Option F is a NO-OP on
+top of Option I. The Option F worktree `~/core/hexa-lang-optf`
+(branch `rfc006-yosys-option-f-blif-latch-multibit-expansion` ·
+local-only · never pushed) is to be removed in this same cycle.
+
+### Cross-reference
+
+- **(ii) `df4ff3f7`** — VINDICATED. Commit body's projected
+  32,829 / 45,936.6 µm² numbers are the live chain-measured numbers.
+  Reader-half (`abc_map.hexa` L470-479) already implements 1:1
+  per-`.latch` expansion that (kk) wrongly thought was missing.
+- **(kk)** — preserved as historical ping-pong record. The
+  stale-BLIF reading was an honest measurement artifact, not a code
+  regression. (ll) supersedes (kk)'s Tier-1 marker correction.
+- **(jj) `dea9279a`** — also VINDICATED. Its propagation of
+  32,829 / 45,937 µm² into the two hexa-lang sibling notes was
+  correct all along.
+- **yosys-stat measurement note** — `inbox/notes/k69-substrate-axis-
+  yosys-stat-measurement-2026-05-21.md` (untracked) carried a
+  stale-cache reading artifact at the time it was filed; the
+  algebraic projections (79 % sequential / 20 % combinational gap
+  split · 99.3 % flop-count axis closure) remain useful — only the
+  "measured mapped area UNCHANGED at 1207.41 / 1677.86" line is now
+  superseded. NOT blamed · just recorded for audit-trail continuity.
+- **Option F target site** — `~/core/hexa-lang/stdlib/kernels/logic_
+  synth/abc_map.hexa` L470-479 (reader half · NOT L300-310 emit
+  half) is the line range carrying the 1:1 per-latch expansion · it
+  was already in `df4ff3f7`.
+
+### Residual gap framing (post-(ll))
+
+The remaining ~47-51 % absolute area gap is NOT sequential-axis
+(Option I closed 79 % of substrate-axis gap) — it's two sub-axes:
+
+1. **Combinational sharing** (`share` + `freduce` parity) — substrate
+   `synth` macro's logic-sharing optimizations · ~20 % of total gap
+   per yosys-stat note algebra · Tier-2 first bullet.
+2. **DFFE-promotion** — substrate's flop selection uses `$_DFFE_PP_`
+   (enable-bearing DFF · 30.03 µm² per cell @ SKY130) vs hexa-native
+   chain's plain `$_DFF_P_` (20.02 µm² · ~33 % cheaper). This is the
+   ~30 % residual once `share`/`freduce` lands. Option E territory
+   (4–8 session estimate · adds DFFE-aware techmap + behavioural
+   `$_DFFE_PP_` emit).
+
+Option E is the next substantive Tier-1 (f)+(g)→`[x]` move. Tier-1
+(h) ratio (1.3995 vs 1.5156) closes naturally as Option E lands — d6
+uses proportionally more DFFE than d4 in substrate, so DFFE-promotion
+pulls d6 area up faster than d4, restoring the 1.5156× oracle ratio.
+
+### Status snapshot (post-(ll) reconciliation · 2026-05-21 KST · supersedes the post-(kk) snapshot above)
+
+```
+Tier-1 closure path (ARCH §12.1):
+  [x] (0) exec runtime restore         — PR #251 cdfa-pred MERGED (cc)
+  [x] (a) PR #247 SSA fix              — PR #247 cdfa8d46 MERGED (dd)
+  [~] (b) PR #255 abc_map honesty      — PR #255 e149900f OPEN   (ee) · CONFLICTS w/ (ii)
+  [x] (c) abc_map script reorder       — in PR #247 body         (dd)
+  [x] (d) rr_ptr__d cross-iter loop    — PR #261 0ca0994f MERGED (ff)
+  [x] (e) fifo_mem 2-D LHS Option A    — c4b35b13 direct LANDED  (gg)
+  [~] (f) router_d4 area > 0 → ±5 %    — 32,829 µm² · 46.85% gap · 79% gap closure · ±5% NOT yet (ll)
+  [~] (g) router_d6 ±5 % parity        — 45,936.6 µm² · 50.93% gap · same 79% closure (ll)
+  [ ] (h) ratio 1.5156× verification   — measured 1.3995 · 7.7% off oracle · OPEN
+  [ ] (i) measurement_gate = CLOSED_MEASURED — OPEN
+
+§5 measurement_gate = OPEN · substrate-axis absorbed = false ·
+cell-side `absorbed=true` (κ-43 dynamic flip) UNCHANGED (별 axis).
+Live dominant residual = ~47-51 % absolute area gap (chain-measured
+fresh · Option F = Option I idempotent · NO new hexa-lang commit
+produced this cycle). Next substantive move = Option E (share +
+freduce + DFFE-promotion · 4-8 session estimate · cleans up Tier-1
+(f)+(g)+(h) in one cluster).
 ```

@@ -2103,21 +2103,27 @@ area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
 1.5156× bit-exact) 를 ±5 % 안에서 재현 → rfc_006 §5
 `measurement_gate = CLOSED_MEASURED` flip.
 
-**current gate state** (2026-05-21 KST · post hexa-lang `c4b35b13`
-Tier-1 (e) Option A LANDED):
+**current gate state** (2026-05-21 KST · post hexa-lang `df4ff3f7`
+Tier-1 (ii) Option I LANDED · post (ll) Option F agent fresh chain
+rerun verification):
 - `measurement_gate = OPEN` · substrate-axis `absorbed = false`
   (cell-side κ-43 flip 별 axis · unchanged `absorbed=true`)
 - area measurement (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
-  stdlib/yosys/gate_record.hexa`):
-  - router_d4 = **1207.41 µm²** (Δ=98.05% vs oracle 61,763 · was
-    559.286 pre-(e) · +2.16× via 2-D LHS flat $dff demux) ·
-    `abc_map: ok exit=0`
-  - router_d6 = **1677.86 µm²** (Δ=98.21% vs oracle 93,608.5 · was
-    771.99 · +2.17×) · `abc_map: ok exit=0`
-  - PR #261 이전의 stale-BLIF false positive 였던 chain 이 honest
-    measurement 로 전환됨 · (e) 의 honest-skip 제거 추가
+  stdlib/yosys/gate_record.hexa` · fresh clean-worktree rerun):
+  - router_d4 = **32,829 µm²** (Δ=**46.85 %** vs oracle 61,763 ·
+    27× pre-(e) baseline · Option I 1:1 per-`.latch` reader-half at
+    `abc_map.hexa` L470-479) · `abc_map: ok exit=0`
+  - router_d6 = **45,936.6 µm²** (Δ=**50.93 %** vs oracle 93,608.5 ·
+    same Option I closure) · `abc_map: ok exit=0`
+  - chain selftest 8/8 PASS · 1638 `.latch` lines d4 · 2292 d6 ·
+    1653 / 2313 `.gate` lines post-ABC · EXACT substrate flop count
+    match · narrative authority `inbox/notes/rfc006-s5-area-oracle-
+    parity-handoff.md` entry (ll) · supersedes (kk)'s stale-BLIF
+    revert to 1207.41 / 1677.86 µm² (measurement pipeline artifact)
 - gate target window: area ∈ [58,675, 64,851] µm² (d4 ±5 %) +
-  [88,928, 98,289] µm² (d6 ±5 %)
+  [88,928, 98,289] µm² (d6 ±5 %) · NOT yet met · residual ~47-51 %
+  gap = `share`/`freduce` (comb sharing) + DFFE-promotion · Option E +
+  Tier-2 territory (4–8 session estimate)
 
 **Tier-1 — closure path (immediate, multi-session)**
 
@@ -2165,12 +2171,28 @@ Tier-1 (e) Option A LANDED):
   output array writes 가 cluster cost 의 dominant 잔여. NO
   `Yosys absorbed` claim. PR #256 inbox patch status → "Option
   A landed".
-- [ ] (f) **end-to-end router_d4 area > 0 → ±5 % gate** measurement
-  — area ∈ [58,675, 64,851] µm² · g3-conditional flip
-- [ ] (g) **router_d6 parity** measurement — area ∈ [88,928, 98,289]
-  µm² · same pipeline as (f)
-- [ ] (h) **ratio 1.5156× verification** — d6/d4 from hexa-native
-  chain ∈ [1.4399, 1.5914] (±5 %)
+- [~] (f) **end-to-end router_d4 area > 0 → ±5 % gate** measurement
+  — **PARTIAL-LANDED** (chain-measured **32,829 µm²** · oracle gap
+  **46.85 %** · 79 % of substrate-axis gap closed since (e)+(ii)
+  Option I · BLIF `.latch` count 1638 matches substrate flop count ·
+  post-ABC `.gate` lines 1653 per-bit-mapped · gate target window
+  ∈ [58,675, 64,851] µm² NOT yet met). Source: Option F agent
+  2026-05-21 KST fresh chain rerun (`hexa run stdlib/yosys/
+  gate_record.hexa` from clean worktree · selftest 8/8 PASS) ·
+  narrative authority `inbox/notes/rfc006-s5-area-oracle-parity-
+  handoff.md` entry (ll). Residual ~47 % gap = comb sharing
+  (`share`/`freduce`) + DFFE-promotion (`$_DFFE_PP_` @ 30.03 µm² vs
+  hexa-native `$_DFF_P_` @ 20.02 µm²) · Option E + Tier-2 territory ·
+  NOT yet ±5 % gate close.
+- [~] (g) **router_d6 parity** measurement — **PARTIAL-LANDED**
+  (chain-measured **45,936.6 µm²** · oracle gap **50.93 %** · 2292
+  `.latch` lines · 2313 post-ABC `.gate` lines · area target window
+  ∈ [88,928, 98,289] µm² NOT yet met) · same Option I 79 % gap
+  closure logic as (f) · same Option E residual.
+- [ ] (h) **ratio 1.5156× verification** — d6/d4 = 45,936.6 / 32,829
+  = **1.3995** vs oracle 1.5156 · 7.7 % off · target ∈ [1.4399,
+  1.5914] (±5 %) NOT yet met · closes naturally as Option E lands
+  (d6 uses proportionally more DFFE than d4 in substrate)
 - [ ] (i) **`measurement_gate = CLOSED_MEASURED`** flip — g3
   conditional · d4 + d6 + ratio 三項 all PASS 이후만
 
@@ -2215,6 +2237,86 @@ landing 시각만 ARCH `## Log` 에 박제.
 ---
 
 ## Log
+
+- 2026-05-21 — **§12.1 (f) + (g) `[ ]` → `[~]` PARTIAL-LAND flip ·
+  SSOT (kk) → (ll) honesty REDUX · Option F = Option I idempotent ·
+  79 % substrate-axis gap closure verified by fresh chain rerun**
+  (demiurge-side narrative-only commit · ARCH §12.1 (f)+(g)
+  partial-land + SSOT detail handoff entry (ll) appended · NO
+  hexa-lang code commit produced this cycle). post-(kk) Option F
+  agent dispatched against `~/core/hexa-lang/stdlib/kernels/logic_
+  synth/abc_map.hexa` L300-310 to implement multi-bit `.latch`
+  emit-time expansion; agent discovered Option F is **IDEMPOTENT**
+  with Option I — the 1:1 per-`.latch` reader expansion is already
+  shipped in (ii) `df4ff3f7`'s `abc_parse_mapped_blif` half (L470-
+  479). No new commit produced; the Option F worktree `~/core/hexa-
+  lang-optf` (branch `rfc006-yosys-option-f-blif-latch-multibit-
+  expansion` · local-only · never pushed) is to be removed in this
+  same cycle (demiurge-side cleanup · safe per Option F agent's
+  report · no force-push / no destructive remote op).
+  - **measurement ping-pong reconciliation**: (ii)'s commit-body
+    projection (1207→32829 / 1678→45937 µm²) was VINDICATED by
+    fresh chain rerun. (kk)'s revert to 1207.41 / 1677.86 µm² was
+    based on stale /tmp BLIFs that pre-dated Option I's reader-half
+    caching — a measurement pipeline artifact, not a code
+    regression. (kk) preserved as historical record; (ll)
+    supersedes (kk)'s Tier-1 marker correction. yosys-stat
+    measurement note `inbox/notes/k69-substrate-axis-yosys-stat-
+    measurement-2026-05-21.md` (untracked · 276 lines) had a
+    stale-cache reading at filing time; its algebraic projections
+    (79 % sequential / 20 % combinational gap split · 99.3 %
+    flop-count axis closure) remain useful audit material. NOT
+    blamed · just recorded for audit-trail continuity.
+  - **chain measurement** (`hexa run stdlib/yosys/gate_record.hexa`
+    from clean worktree · 2026-05-21 KST · Option F agent
+    authoritative):
+    - router_d4 = **32,829 µm²** (oracle 61,762.99 · Δ **46.85 %**)
+    - router_d6 = **45,936.6 µm²** (oracle 93,608.53 · Δ **50.93 %**)
+    - BLIF `.latch` count: 1638 d4 · 2292 d6 (EXACT substrate flop
+      count match · 99.6-99.7 % of projected 1645 / 2300 bits)
+    - post-ABC `.gate` lines: 1653 d4 · 2313 d6 (per-bit dfxtp_1
+      mapped)
+    - ratio d6/d4 = 1.3995 vs oracle 1.5156 · 7.7 % off
+    - chain selftest 8/8 PASS (dispatcher + 7 module · zero
+      regression)
+  - **Tier-1 closure 진척** (post-(ll) 2026-05-21):
+    - (0) MERGED (cc) · (a) MERGED (dd) · (b) PENDING #255 (ee) ·
+      (c) MERGED in #247 (dd) · (d) MERGED (ff) · (e) LANDED
+      `c4b35b13` (gg)
+    - **(f) `router_d4 area > 0 → ±5 %`** — `[ ]` → **`[~]`
+      PARTIAL-LANDED** (32,829 µm² · 46.85 % gap · 79 % gap
+      closure since (e)+(ii))
+    - **(g) `router_d6 ±5 % parity`** — `[ ]` → **`[~]`
+      PARTIAL-LANDED** (45,936.6 µm² · 50.93 % gap · same closure
+      logic)
+    - (h) ratio 1.3995 vs 1.5156 · 7.7 % off · STAYS `[ ]`
+    - (i) measurement_gate STAYS `[ ]` (gate target window
+      [58,675, 64,851] / [88,928, 98,289] µm² NOT yet met)
+  - **residual gap framing** (post-(ll)): ~47-51 % absolute area
+    gap remaining = (a) comb sharing (`share`/`freduce` parity ·
+    ~20 % of gap · substrate `synth` macro's logic-sharing optims)
+    + (b) DFFE-promotion (substrate uses `$_DFFE_PP_` @ 30.03 µm²
+    vs hexa-native plain `$_DFF_P_` @ 20.02 µm² · ~30 % residual
+    once `share`/`freduce` lands). Option E (DFFE-aware techmap +
+    behavioural `$_DFFE_PP_` emit + share + freduce · ~4-8 session
+    estimate) is the next substantive Tier-1 (f)+(g)+(h)→`[x]`
+    cluster move. Tier-1 (h) ratio closes naturally as Option E
+    lands (d6 uses proportionally more DFFE than d4 in substrate ·
+    DFFE-promotion pulls d6 area up faster, restoring 1.5156×).
+  - **§12.1 in-place 갱신**: (f) bullet `[ ]` → `[~]` · (g) bullet
+    `[ ]` → `[~]` · (h) bullet body refreshed with measured 1.3995
+    ratio · "current gate state" snapshot refreshed from 1207.41 /
+    1677.86 µm² to 32,829 / 45,936.6 µm² · gate target window text
+    appended with residual-gap framing pointing at Option E.
+  - **SSOT detail entry (ll)** appended to
+    `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md` (file head
+    status block + cross-reference note also updated · (kk) NOT
+    rewritten · append-only spirit preserved).
+  - **worktree cleanup side-effect**: `~/core/hexa-lang-optf`
+    removed via `git worktree remove` (branch local-only · never
+    pushed · safe). `~/core/hexa-lang-g31` LEFT IN PLACE (server
+    branch `g31beta-ineichen-clearsky-hexa-native` NOT deleted at
+    `git ls-remote` check time · user may inspect).
 
 - 2026-05-21 — **G31β Ineichen clearsky hexa-native port LANDED ·
   Energy/solar D80 endpoint NEAR-FULL closure · §11.4 G31 block
