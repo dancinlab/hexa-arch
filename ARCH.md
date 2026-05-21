@@ -2428,6 +2428,25 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-22 — **🎉🎉 κ-69 R8 4/4 CLOSURE + chip RTL + ActionDispatch
+  generalization 동시 LAND** (3 axis same cycle):
+  - **κ-69 R8 4/4 CLOSURE** (사용자 별 axis · `8402ed2`): G33 LANDED
+    D117 2nd cell first-flip (Aura/EEG · PhysioNet Sleep-EDF ·
+    `mean_rel_err 8.4e-07` vs threshold 0.05 · **7-orders-of-magnitude
+    margin** · κ-68 G29 의 marginal 0.04967 보다 훨씬 honest).
+    R8 grid (G31 G29-β + G32 + G33 + G34) 모두 4/4 wired · κ-69
+    phase boundary 완전 마감.
+  - **PR #10 LANDED** (`552060b6`): chip.demi 7-cell + 5 simple
+    chip RTL (counter4 · pwm8 · uart_tx · crc8 · spi_master).
+  - **PR #11 LANDED** (`9dacf30f`): ActionDispatch generic dispatch
+    foundation · -73 LOC · default → cellrun route · 13 hardcoded
+    cases 제거 (sscb 6 + firmware 7) · 3 dead statics 제거.
+  - **남은 hardcoded**: 37 cases · 16+ legacy domains 잔존 · 각각
+    per-domain D111 Phase C migration target (firmware 패턴 mirror).
+  - **bio · chem 처리 방향 user 결정 territory** (3 옵션 brief):
+    A 즉시 walkthrough · B D116 migration 선행 · **C hybrid (in-silico
+    먼저 · wet-lab 후속 · recommended)**.
+
 - 2026-05-22 — **🚨 D111 Phase C generalization directive 박제 ·
   "던지는 도메인마다 모든 과정에 특정 도메인에 맞춘 하드코딩이
   없어야 된다"** + firmware D111 Phase C reference closure (single
