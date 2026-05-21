@@ -1,0 +1,177 @@
+# chip.demi — verb-cell manifest for the chip (칩 설계 · deep domain)
+# SSOT scripts in ~/core/hexa-lang/stdlib/chip/ (NEW · scripts pending —
+# Step 2/3 cascade; this manifest declares the wiring shape only).
+# Existing chip substrate (per chip §B / §D): ~/core/hexa-lang/stdlib/yosys/
+# (read_verilog · passes · abc_map · liberty · write_sdc · gate_record) +
+# SKY130 PDK + ABC — κ-43 chip 도메인 substrate=true (yosys absorbed,
+# clean-room phase-a; OpenROAD P&R + Magic DRC honest-gap downstream).
+# Sibling: ~/core/hexa-chip/ (ARCH §4.4 hexa-lang sibling).
+# Generic dispatcher: ~/core/hexa-lang/stdlib/cockpit/cellrun.hexa
+# Demiurge witness: ActionDispatch → CellrunDispatch.run("chip", verb)
+#
+# Format: cellrun.hexa Phase A dialect — [cell.<verb>] section headers,
+# key=value lines, scope_caveats as multi-line [ "...", "..." ] array.
+# Required keys per cell: substrate, script, record_kind, output_dir,
+# gate_default, absorbed_default.
+#
+# Script paths are RELATIVE to ~/core/hexa-lang/ (the hexa_lang_root
+# tunable, env-overridable via HEXA_CELLRUN_HEXA_LANG_ROOT).
+#
+# Citations (anchored, not repeated per-cell):
+#   - Yosys (YosysHQ, ISC) — open-source RTL synthesis (chip §B absorbed)
+#   - ABC (Berkeley · UC Regents) — logic optimization + technology mapping
+#   - SKY130 PDK (Google + SkyWater · Apache-2.0) — open-source 130 nm node
+#   - IEEE Std 1364-2005 — Verilog synthesizable subset reference
+#   - rfc_001_chip_domain.md — chip 7-verb deep map (HANDOFF.md §5)
+#
+# Domain caveat (applies to every cell): clean-room public-surface
+# absorption ONLY — OpenROAD P&R, Magic DRC, OpenSTA signoff, full
+# tapeout flow 不在 (chip §D honest-gap roster). 5 reference RTL below
+# = small didactic chips, NOT tapeout-ready.
+
+# --- UNWIRED: specify (RTL spec scaffold pending) ----------------------------
+# Phase A cellrun.hexa has no explicit `unwired = true` key — these
+# cells honest-skip via "script missing" (rc=2) since stdlib/chip/specify.py
+# does not yet exist. That IS the honest-gap path until producer lands.
+[cell.specify]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/specify.py
+record_kind       = chip_specify_record
+output_dir        = exports/chip/specify
+required_deps     = python3
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "chip + specify scaffold pending — RTL requirements.json template producer 미작성.",
+  "Input candidate: archive/comb/rtl/<name>.v · output: top-module name, port roster, target freq, area budget, PDK target.",
+  "domains/chip.md + HANDOFF.md §5 가 SSOT 후보; Python wrapper 가 그것을 record JSON 으로 변환 (~50 line firmware-stub-style).",
+]
+
+# --- UNWIRED: structure ------------------------------------------------------
+[cell.structure]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/structure.py
+record_kind       = chip_structure_record
+output_dir        = exports/chip/structure
+required_deps     = python3
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "chip + structure pending — module hierarchy + port graph + clock/reset tree extraction producer 미작성.",
+  "stdlib/yosys/read_verilog.hexa (Phase A · κ-43) 가 frontend; structure cell 은 RTLIL → JSON dump 의 cellrun adapter.",
+  "networkx module-DAG candidate (router_d{4,6}.v 패턴 reuse).",
+]
+
+# --- UNWIRED: design ---------------------------------------------------------
+[cell.design]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/design.py
+record_kind       = chip_design_record
+output_dir        = exports/chip/design
+required_deps     = python3
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "chip + design pending — area/freq/power design-space exploration producer 미작성.",
+  "Synth (yosys+abc) ↔ Verify (eq check) 사이의 design-space loop 가 자연스러운 위치.",
+  "downstream: OpenROAD floorplan/placement 흡수 후 PPA tradeoff 본격화.",
+]
+
+# --- UNWIRED: analyze --------------------------------------------------------
+# Pre-synth RTL lint + static analysis cell (slang-style · timing-pre-est).
+# Currently script-absent → rc=2 honest-skip.
+[cell.analyze]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/analyze.py
+record_kind       = chip_analyze_record
+output_dir        = exports/chip/analyze
+required_deps     = python3
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "chip + analyze pending — RTL lint (unused signals · latch inference · multi-driver) producer 미작성.",
+  "yosys `check` + `proc; opt; check` 가 thin shim 후보; full slang 흡수는 honest-gap.",
+  "Combinational depth + critical-path estimate (pre-tech-map) downstream of stdlib/yosys/passes.hexa.",
+]
+
+# --- WIRED (substrate κ-43 · script-shim pending): synthesize ----------------
+# Yosys + ABC + SKY130 substrate 흡수 완료 (clean-room phase-a, chip §B);
+# cellrun.hexa-side Python wrapper 는 stdlib/chip/synthesize.py 로 들어가야
+# generic 7-verb dispatch 와 통일 (현재 stdlib/yosys/* 는 hexa-internal
+# unit kernel; cellrun adapter 미작성 → rc=2 까지는 다른 unwired cell 과
+# 동일 path · 실제 yosys CLI 호출은 wrapper 가 land 후).
+[cell.synthesize]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/synthesize.py
+record_kind       = chip_synthesize_record
+output_dir        = exports/chip/synthesize
+required_deps     = python3, yosys
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "Substrate κ-43 absorbed: yosys (clean-room phase-a · stdlib/yosys/*) + ABC + SKY130 PDK.",
+  "cellrun adapter (stdlib/chip/synthesize.py) 미작성 → 현재 rc=2 honest-skip; adapter land 후 yosys -p 'synth; abc -liberty sky130' 실행.",
+  "absorbed=true 조건: stdlib/yosys phase-b (always_ff · generate-for · multi-bit assign) + OpenROAD P&R + Magic DRC + OpenSTA signoff 4종 동시.",
+]
+
+# --- WIRED (substrate · script-shim pending): verify -------------------------
+# yosys equivalence check (post-synth eq pre-synth) via `equiv_make` +
+# `equiv_simple` flow; cellrun adapter 는 stdlib/chip/verify.py.
+[cell.verify]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/verify.py
+record_kind       = chip_verify_record
+output_dir        = exports/chip/verify
+required_deps     = python3, yosys
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "Substrate: yosys equiv_make · equiv_induct · equiv_simple flow (combinational equivalence pre vs post-synth).",
+  "cellrun adapter (stdlib/chip/verify.py) 미작성 → 현재 rc=2 honest-skip.",
+  "Formal sequential equivalence (SymbiYosys / Yosys SBY) honest-gap; UVM/cocotb dynamic verify 흡수 不在.",
+  "Tapeout signoff (post-P&R LVS · DRC · STA) ≠ cellrun verify; chip §D handoff cell 의 책임.",
+]
+
+# --- UNWIRED: handoff --------------------------------------------------------
+[cell.handoff]
+substrate         = python3
+python_candidates = python3.13, python3.12, python3
+script            = stdlib/chip/handoff.py
+record_kind       = chip_handoff_record
+output_dir        = exports/chip/handoff
+required_deps     = python3
+gate_default      = OPEN
+absorbed_default  = false
+scope_caveats     = [
+  "chip + handoff pending — tapeout checklist (GDSII export · DRC clean · LVS match · STA timing-met · IR-drop) producer 미작성.",
+  "firmware/handoff.py 패턴 reuse; 다만 chip handoff 는 fab 인수 (SkyWater MPW Shuttle · Efabless OpenMPW) 까지 포함이라 훨씬 무거움.",
+  "absorbed=true 조건: tapeout-clean GDSII + DRC + LVS + STA + IR-drop + IO ring + power-grid 6종 동시 (chip §D).",
+]
+
+# --- Reference chip examples (informational; not consumed by cellrun yet) ----
+# Verilog-2005 synthesizable RTL under archive/comb/rtl/:
+#   counter4.v     — 4-bit synchronous up-counter (4 DFF · ~25 LOC)
+#   pwm8.v         — 8-bit PWM controller (8 DFF + comparator · ~35 LOC)
+#   uart_tx.v      — UART TX 8N1 (5-state FSM · ~95 LOC)
+#   crc8.v         — CRC-8 CCITT poly 0x07 (8 DFF + XOR tree · ~50 LOC)
+#   spi_master.v   — SPI master 4-pin 8-bit MSB-first (3-state FSM · ~120 LOC)
+#
+# Existing comb-side chips (κ-43 substrate validation; chip §B):
+#   router_d4.v · router_d6.v — degree-{4,6} 2D mesh router (router family)
+#
+# Each chip can be dispatched via:
+#   swift run DemiurgeCLI action <verb> chip --rtl archive/comb/rtl/<name>.v
+# (--rtl flag = chip-specific input · Tier-2 cockpit dispatch enhancement
+# · current Phase 1 default = first RTL or per-cellrun-arg passthrough.)
+#
+# 5-chip walkthrough (D111 Phase C) iterates:
+#   for chip in [counter4, pwm8, uart_tx, crc8, spi_master]:
+#     for verb in [specify, structure, design, analyze, synthesize, verify, handoff]:
+#       swift run DemiurgeCLI action <verb> chip --rtl archive/comb/rtl/<chip>.v
+# producing 5 × 7 = 35 record JSONs under exports/chip/<verb>/.
