@@ -12,11 +12,12 @@
 - **pickup-blocked** — toolchain / cross-session dependency
 - **archive** — reference / methodology, no further action
 
-## Index (37 entries)
+## Index (38 entries)
 
 | filename | status | reference | one-liner |
 |---|---|---|---|
 | `2026-05-21-hexa-exec-broken-pipe.md` | pickup-open | hexa runtime / self/runtime.c popen | hexa `exec` subprocess broken — empty stdout + "broken pipe" on all commands. Scope: `self/runtime.c` popen / pipe handling — NOT a stdlib bug. Filed by other session (rfc_006 §5 work). Bonus discovery: `str(float)` emits literal `(float)` token (filed separately). Blocks `stdlib/yosys/gate_record.hexa` end-to-end measurement. Pickup = hexa runtime debug session. |
+| `2026-05-21-pool-gate_v3-abc-diagnosis.md` | archive | κ-69 / chip §B / rfc006 §5 substrate-axis | pool cross-platform (Mac arm64 vs ubu-2 Linux x86_64) re-execution of `/tmp/gate_v3` ABC mapping reproduced **identical** failure mode — confirms two `gate_v3` BLIF-emitter bugs (multi-output sky130 cells like `fa_1` fanin serialization · net-node fanin invariant) + wrapper honest-violation (`[abc_map] exit=0` masking Abort trap 6 / Linux assertion as `[OK]`). Platform-invariant ⇒ NOT a macOS abc build issue. Two honest conclusions: (1) wrapper must propagate abc non-zero exit · (2) fix lives in `~/core/hexa-lang/build/artifacts/gate_v3.c` RTLIL→BLIF converter. Pool value reframed: cross-platform falsification of platform-hypothesis, not raw parallelization. Cited from ARCH §12 / rfc006 §5 trail. |
 | `absorption-empty-cells-research-2026-05-20.md` | resolved | κ-47..κ-49 | Deep-research source for ROI 1→18 sweep; all 10 targets dispatched |
 | `brand-name-demiurge-pair-with-phanes.md` | resolved | D23/D24/D25 | Brand-rename approved + executed 2026-05-19 |
 | `cern_analyze_producer_alternative_decision_2026-05-20.md` | resolved | D74 / κ-51 | ProducerRegistry Option C picked, default = xsuite-tracking |

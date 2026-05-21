@@ -2241,6 +2241,95 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-21 — **`f4defee` surprise-rider audit · material-falsifier
+  axis narrative bracket** (retrospective · 15-file rider on a
+  2-file-intended commit · 1852 line ride-along · ARCH/§2 DAG &
+  §11.4 G-items intentionally unchanged · this entry IS the
+  narrative anchor the rider lacked at push time). The push-titled
+  commit `f4defee` (`docs(inbox): yosys-stat measurement note →
+  INDEX (37 entries ...)`) intended to commit two files
+  (`inbox/INDEX.md` + the κ-69 substrate-axis yosys-stat note) but
+  swept up **13 pre-staged files** from a prior session's work — a
+  coherent **RTSC.md §8.7 Tier 4 material-falsifier** feature
+  drop. Honest framing: the code was correct, the rider was a
+  staging-hygiene miss, **NOT** a content miss. Files in the
+  rider (axis identification):
+  - **Loader (1 · Tier 4 dispatcher)**:
+    `cockpit/Sources/DemiurgeCore/Loaders/MaterialFalsifierDispatch.swift`
+    (438 line) — consumes (Tier 1 ConductorRecord · Tier 2
+    SynthesisRecipeRecord · Tier 3 MeasurementRecord[]) triple,
+    emits MaterialVerdictRecord scoring 6 falsifiers
+    (F-RTSC-{1,2,3} + F-SC-{1,2,3}) per RTSC.md §8.4 9-test
+    characterization matrix. g3 honest stance baked in:
+    dispatching-succeeded ≠ falsifier-passed ·
+    `absorbed=false` ALWAYS even on `aggregateVerdict=PASSES-ALL`
+    · `replicatedByIndependentLabs` carried forward NEVER
+    auto-incremented · missing input ⇒ `SKIPPED-MISSING-INPUT`
+    NEVER fabricated PASS.
+  - **Models (5 · 4-tier record schemas)**:
+    `ConductorMaterial.swift` (77) ·
+    `ConductorRecord.swift` (110 · Tier 1 material→device handoff
+    · `lk99Hypothetical` family forced `absorbed=false` forever +
+    `gate_type="empirically-unproven"`) ·
+    `SynthesisRecipeRecord.swift` (104 · Tier 2 recipe) ·
+    `MeasurementRecord.swift` (159 · Tier 3 measurement) ·
+    `MaterialVerdictRecord.swift` (154 · Tier 4 verdict).
+  - **Tests (1)**: `MaterialFalsifierDispatchTests.swift` (130
+    line · DemiurgeCoreTests).
+  - **Exports (5 · seed fixtures · live JSON)**:
+    `exports/conductor/rebco_hts_baseline.json` (REBCO 2G HTS
+    baseline · SuperPower-class Tc=92K · `absorbed=false` first
+    ingest per §8.5) ·
+    `exports/synthesis_recipe/lk99_lee2023.json` (LK99 Lee 2023
+    recipe seed) ·
+    `exports/measurement/jc_b_theta/superpower_2g_baseline.json`
+    (Jc(B,θ) baseline) ·
+    `exports/measurement/2026-05-21T08-58-24Z.json` (stamped
+    measurement instance) ·
+    `exports/falsifier/lk99_lee2023_v1/2026-05-21T08-58-24Z.json`
+    (Tier 4 dispatch verdict instance).
+  - **Inbox note (1 · detail SSOT)**:
+    `inbox/notes/2026-05-21-pool-gate_v3-abc-diagnosis.md` (59
+    line) — orthogonal `chip` axis · pool cross-platform
+    re-execution diagnosed `/tmp/gate_v3` BLIF emitter bug
+    (multi-output sky130 cell fanin + net-node fanin invariant)
+    NOT a macOS abc issue. Not part of this material-falsifier
+    drop; the file rode along under the same staging-hygiene
+    miss. INDEX entry added in same commit as this audit (Phase
+    C).
+  **Axis identification**: The 14 feature files (loader + 5
+  models + 1 test + 5 exports + 1 inbox note for pool-gate is
+  separate) implement the **rtsc/material domain** verb cell
+  `falsify` (= 7-verb spine §3 · "verify" verb specialized to
+  material-side falsifier dispatch per RTSC.md §8.7 Tier 4).
+  Domain placement per §2: **rtsc** (foundation level · sibling
+  `hexa-rtsc` is the producer per the file's own header
+  comments) with cross-edges to **matter** (conductor compound
+  · `rebco_hts_baseline`) and **chem** (synthesis recipe ·
+  `lk99_lee2023`). The §2 DAG is **unchanged** — these are
+  verb-cell implementations, not new domain nodes/edges. The
+  §7 records-gates-honesty contract is the load-bearing axis
+  here: every new record obeys `absorbed=false` until
+  cross-lab attestation · `measurement_gate` stays GATE_OPEN
+  on Tier 4 dispatch alone · explicit `SKIPPED-MISSING-INPUT`
+  rather than fabricated PASS. **§11.4 G-items unchanged**:
+  this drop is NOT a κ-69 R8 G-item (G31..G34 are
+  substrate-axis · chip §B); it's an independent records-axis
+  cell-flip-prep drop with its own (not-yet-filed) D-block.
+  **§12 unchanged**: §12 is substrate-axis (chip · yosys ·
+  hexa-lang), this is records-axis (cockpit · RTSC §8). The
+  prior commit's title remains correct for its 2 intended
+  files; this entry brackets the other 13 files retroactively.
+  Lesson re-anchored (echoing the (kk)/(ll) staging-hygiene
+  thread): `git status --short` BEFORE `git add` · explicit
+  paths only · `git add -A` and bare `git commit` are the
+  rider-attractors. **No code modified in this entry — pure
+  narrative anchor; the rider files have been on
+  `origin/main` since `f4defee` push and remain there
+  unchanged**. Detail SSOT for pool-gate axis (orthogonal):
+  `inbox/notes/2026-05-21-pool-gate_v3-abc-diagnosis.md` (added
+  to INDEX in same audit commit).
+
 - 2026-05-21 — **§12.1 (b) `[~]` → `[x]` LANDED · PR #255 abc_map
   honesty MERGED `e4f79e26` post-Option-I rebase clean** (cross-repo
   bracket close · Tier-1 (b) own-scope CLOSED). hexa-lang PR #255
