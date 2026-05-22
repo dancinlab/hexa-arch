@@ -129,7 +129,132 @@ to hexa-atlas n6 "Tc 300K" being a *target*, not a measurement.
   prediction`, exactly like the RTSC H₃X records.
 - Upstream `hexa-space/mondaloy/` remains `SPEC_ONLY` v1.0.0.
 
-## §7. Cross-references
+## §7. Design ideas — forward (설계 아이디어, arxiv/web deep-research)
+
+> **Naming note**: the publicly-disclosed SpaceX alloy is **SX500** (the
+> SX250 → SX300 → SX500 lineage). "MondAloy" is the upstream
+> `hexa-space` draft's label; treat the two as the same target. SX500 is
+> publicly characterised as a "modern Inconel-derivative" rated for
+> **~800 atm (810 bar) hot oxygen-rich gas** with "extreme oxidation
+> resistance", castable **and** 3D-printable, used in the Raptor
+> ox-rich turbopump / preburner / chamber.
+
+How demiurge would *design* an SX500/MondAloy-class alloy from scratch —
+a concrete 7-verb pass, every step proprietary-free:
+
+1. **SPECIFY — the ox-rich envelope.** Unlike turbine superalloys
+   (fuel-side, reducing), this alloy faces **hot oxygen** at 810 bar.
+   The design target is therefore *not* peak creep strength but a
+   **slow-growing, self-healing, well-adherent oxide scale with no
+   separate coating** — SX500's public claim is a *bare* alloy, a
+   deliberate break from the RD-170/RD-180 solution (inert **enamel
+   coating** on every hot-oxygen surface). Coating-free is the headline
+   design constraint.
+2. **ARCHITECT — the composition space.** Ni-base + ~5 strengtheners.
+   Public Ni-superalloy practice bounds the menu: Cr (Cr₂O₃ former),
+   Al (α-Al₂O₃ former, the better scale in ox-rich), Co (γ′ solvus +
+   stacking-fault control), Mo/W/Ta/Re (solid-solution + γ′
+   strengthening), Ti/Nb (γ′ formers), and reactive elements
+   **Y/Hf/Zr** (scale adhesion — the "reactive-element effect").
+3. **DESIGN — CALPHAD funnel.** Mirror the published precedent that
+   narrowed **779,625 composition combinations → 12 alloys** via
+   Thermo-Calc / OpenCALPHAD (TCNI database): filter on γ/γ′ phase
+   fraction, freezing range, density, castability, processing window.
+   For the ox-rich target, *add an oxidation criterion*: bias toward
+   **alumina-forming** compositions (Al activity high enough to sustain
+   a continuous α-Al₂O₃ layer — the classic "third-element effect"
+   needs Cr to getter O before Al, then Al takes over).
+4. **ANALYZE ⟲ — DFT + ML.** (a) DFT O-vacancy formation energy +
+   oxide-scale adhesion energy → rank candidates for ox-rich survival
+   (same el-ph/DFPT machinery as the RTSC pipeline, different
+   observable). (b) Physics-descriptor ML for creep strength
+   (arxiv:2212.06755 — superalloy microchemistry → creep from physical
+   descriptors). (c) Hybrid CNN-LSTM for oxidation-kinetics prediction
+   (recent literature). Iterate composition back into DESIGN.
+5. **SYNTHESIZE — printability gate.** SX500 is cast *and* additively
+   manufactured. The design must pass a hot-cracking / weldability
+   window — this prunes the highest-γ′ (highest-strength) compositions,
+   a real trade SX500's metallurgy team must have made. demiurge models
+   this as a hard constraint, not an afterthought.
+6. **VERIFY — analog measurement.** Cast a *public-composition*
+   alumina-forming Ni alloy (e.g., a Haynes-282-class or René-N5-class
+   reference) and measure ox-rich scale growth; this validates the
+   pipeline on an analog before any SX500-class claim (the same
+   discipline RTSC used — validate on H₃S, then predict novel H₃X).
+7. **HANDOFF — to the chip/component meta-conductor.** A verified
+   alloy envelope feeds the component-domain FEM (chamber-wall thermal
+   + creep life), closing the materials → component seam.
+
+**The single biggest design lever** (deep-research synthesis): ox-rich
+combustion rewards an **α-Al₂O₃-forming** alloy over a Cr₂O₃-forming
+one — Cr₂O₃ volatilises as CrO₃/CrO₂(OH)₂ above ~1300 K in the presence
+of O₂/H₂O, while α-Al₂O₃ is stable far higher. SX500's "extreme
+oxidation resistance" almost certainly rests on a reactive-element-
+stabilised alumina scale. That is a *proprietary-free, physically
+derivable* design conclusion.
+
+## §8. Reverse-engineering ideas — 역설계 (public-surface only, D1)
+
+How to bound / infer the SX500-MondAloy composition **without** the
+trade secret — clean-room, public-surface only (governance D1: no
+trade-secret extraction, no closed-binary RE; this is *constraint
+triangulation*, which is legitimate):
+
+1. **Constraint triangulation.** Intersect every public spec — 810 bar
+   burst · hot O₂ · "modern Inconel-derivative" · castable +
+   3D-printable · bare-alloy (coating-free) ox resistance · Raptor-3
+   chamber service temperature class. Each constraint carves the
+   Ni-Cr-Al-Co-(refractory) space; the *intersection* is a small
+   region. SX500 lives in it — a verified **bounding box**, not a
+   single guessed point.
+2. **Patent forensics.** Search USPTO / Espacenet for assignee
+   **"Space Exploration Technologies"** (and known SpaceX metallurgist
+   inventor names) in CPC class **C22C19/05** (Ni-base alloys) filed
+   ~2017-2025. Alloy patents routinely disclose **composition ranges**
+   even when the commercial product name stays secret — the published
+   range *is* a reverse-engineering result, fully legal to cite.
+3. **Oxide-scale forensics on public hardware.** Raptor 3 chamber /
+   bell photographs after hot-fire: oxide-scale **colour** discriminates
+   the protective oxide — green/dark = Cr₂O₃-dominant, pale-grey/white
+   = Al₂O₃-dominant. This is a free, public, non-destructive read on
+   the Al-vs-Cr balance of the scale (and hence of the alloy).
+4. **Process-of-elimination via the §7 forward pipeline.** Run the
+   CALPHAD + DFT + ML design funnel against *all* public SX500
+   constraints simultaneously. Whichever composition family *uniquely*
+   satisfies all of them is the reverse-engineered envelope — SX500 is
+   "somewhere in that family". This converts RE into a forward
+   simulation problem (no secret needed).
+5. **Analog benchmarking against declassified prior art.** SX500 is an
+   *evolution* of public Ni-superalloy science, not a discontinuity.
+   Bracket it with: Inconel 625/718, Haynes 282, René N5/N6, and the
+   declassified RD-170/RD-180 ox-rich materials literature. The public
+   alumina-forming-superalloy envelope upper-bounds SX500's novelty.
+6. **ML inverse design as the RE engine.** Feed the public performance
+   spec into a generalist inverse-design model — e.g. **MATAI**
+   (arxiv:2511.10108, generalist ML property-prediction + inverse
+   design for advanced alloys), the neural-network Ni-superalloy
+   designer (arxiv:1803.03039), or generative DL for refractory alloys
+   (arxiv:2108.12019). The model **outputs composition candidates that
+   meet the spec**. Those candidates are a *de facto* reverse
+   engineering — not the trade secret, but **functionally equivalent**,
+   and entirely proprietary-free.
+7. **The honest boundary (d6).** RE yields a *candidate matching the
+   public spec*, never SX500 itself. With no measured oracle against
+   the actual SpaceX alloy, the verdict stays
+   `gate_type=simulation-only-prediction`, `absorbed=false`. **But this
+   is the d2 breakthrough**: a functionally-equivalent *open* alloy
+   sidesteps the trade-secret wall entirely — demiurge's deliverable is
+   an open SX500-class superalloy, publishable, not a stolen secret.
+
+> **Why RE here is legitimate (not a violation):** governance D1 bans
+> closed-binary decompilation, license/DRM circumvention, and
+> trade-secret *extraction*. Constraint triangulation, patent reading,
+> public-photo forensics, and forward simulation are all **public-
+> surface clean-room** — the same standard every demiurge
+> absorption-RFC already meets. The output is an *independently
+> derived* open alloy, not a copy.
+
+## §9. Cross-references
 
 - `hexa-space/mondaloy/mondaloy.md` — upstream n=6 structural-pattern
   draft (2026-05-07) + `verify_mondaloy.hexa` count-lattice script
