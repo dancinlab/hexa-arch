@@ -1191,7 +1191,17 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > SSOT = `project.tape @D d6` [Spec Kit `.specify/memory/constitution.md`
 > 제거 `ab0724c` 이후 · G34 의 constitution R1 → `@D d6` migration
 > `e458d3c` 의 successor] 의 3-carrier audit COMPLETE PATCH update ·
-> code 0).
+> code 0). **G39–G42 라운드 10 (`κ-71 fourth-cell measurement round`
+> — scaffold 2026-05-22 · G39..G42 모두 `[ ]` pre-code)** 는 κ-70 R9
+> closure entry 의 'next horizon (κ-71+)' scope 를 4 placeholder
+> G-item + G39 candidate-research note (`inbox/notes/2026-05-22-k71-
+> horizon-candidate-research.md` · 3 finalist Energy/wind · Bio/ECG ·
+> Chem/Arrhenius · ranking advisory #1 Energy/wind) 동시 박은 scaffold
+> 로 시작 → G40 cell-pick decision 은 다음 cycle 별 session. **κ-71
+> structural inflection**: lowest-friction 1-field-extension carrier
+> 가 κ-70 으로 소진 (`FusionVerifyRecord` 만 잔여 `[HP][✗]` 이나 D106
+> illustrative 영구-잠김) — 모든 κ-71 후보가 새 VerifyRecord 신설 또는
+> producer-side 새 sub-cell 경로 신설 cost 를 짐 (§11.6).
 > 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md D-block +
 > 영향 파일 commit 으로 묶을 것.
 
@@ -2535,6 +2545,209 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     flip (본 row) · 단일 commit.
   - **est**: 0.3-0.5 session (κ-69 R8 closure entry mirror · doc
     edit · code 0) — actual ≈ 0.3 session
+
+---
+
+### 11.6 G39–G42 implementation checklist (κ-71 R10 · 4th cell measurement round · scaffold)
+
+**라운드 10 — κ-71 fourth-cell measured-oracle round (scaffold · pre-code)**
+
+> κ-70 R9 closure entry (`e818218`) 의 'next horizon (κ-71+)' 약속
+> 이행 — Round 10 scaffold 박음. 4 axis 묶음: (a) **G39** 4th cell
+> candidate research 박제 (이번 cycle 동시 land · `inbox/notes/
+> 2026-05-22-k71-horizon-candidate-research.md` cite) · (b) **G40**
+> 4th cell pick + measured-oracle source 5-fold lock-in decision
+> (κ-68 G27 / κ-69 G32 / κ-70 G36 동형 · pre-code decision gate ·
+> D120 자연 순서) · (c) **G41** 4th cell 첫 `absorbed=true` legitimate
+> flip (κ-68 G29 / κ-69 G33 / κ-70 G37 mirror · `MeasuredOracleRef`
+> schema 재사용 · `invariantHolds` record-type-agnostic audit 의
+> **4th instance**) · (d) **G42** κ-71 closure 박제 (R10 4/4 LANDED ·
+> κ-70 R9 closure entry mirror). code 변경 0 — ARCH narrative 만 4
+> placeholder G-item 박는다. 각 항목 진행되면 `[x]` 로 박고 PLAN
+> κ-71 entry + design.md D-block + 영향 파일 commit 으로 묶을 것.
+> illustrative-physics gate (D106) 가 적용된 cell 은 본 round 의
+> absorbed flip 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
+>
+> **κ-71 structural inflection (honest 박제)**: κ-70 의 Ufo 는
+> `hexaNativeParity` carrier 이면서 `measuredOracle` field 가 없는
+> *마지막* 1-field-extension 후보였다 (Aura G33 mirror · 최저 friction).
+> 그 패턴이 κ-70 으로 소진 — 남은 유일 `[HP][✗]` carrier
+> (`FusionVerifyRecord`) 는 D106 illustrative-physics 로 영구 잠김
+> (mc_transport · `MeasuredOracleRef` 부착 불가). 따라서 **κ-71 의
+> 어떤 후보도 κ-69/κ-70 의 "1-field 확장 = 최저 friction" 패턴을
+> 재현 불가** — 모든 후보가 새 VerifyRecord 신설 (Bio/Chem) 또는
+> 기존 record 재사용 + producer-side 새 sub-cell 경로 신설 (Energy/
+> wind) 중 하나. κ-71 critical-path 는 κ-68..κ-70 보다 substrate-side
+> 또는 schema-side 한 단계 더 무겁다.
+
+- [ ] **G39.** 4th cell candidate research 박제 (κ-71 R10 pre-decision
+    scaffold · 2026-05-22 land same-cycle as Round 10 opening)
+  - **scope**: κ-70 G36 candidate-research note (3 finalist · Ufo/
+    plasma #1 picked → D118) 의 successor — 4th cell 후보 cluster 의
+    5-fold lock-in articulation. κ-70 G36 note 의 Candidate B (Energy/
+    wind) + C (Bio/ECG) 는 κ-71 carry · 새 finalist 1 (Chem/Arrhenius)
+    추가. 본 G39 = decision 가이드 only, user pick 은 G40.
+  - **artifact**: `inbox/notes/2026-05-22-k71-horizon-candidate-
+    research.md` — 3 finalist (Energy/wind · Bio/ECG · Chem/Arrhenius)
+    의 5-fold lock-in 비교표 + ranking + open question + cross-
+    reference + κ-71 structural-inflection 박제. RANK 제안 (advisory
+    only):
+    - #1 Energy/wind (NREL Wind Toolkit · IEC 61400-12 power curve ·
+      **prediction-shape 강함** = D110 G29 mirror · D117/D119 numeric-
+      equivalence 약점 보완 · 그러나 `power_curve_kernel.hexa`
+      substrate 신설 1-3 session [`pilot-power_curve` 부재 confirmed] ·
+      HSDS token honesty floor weakness)
+    - #2 Bio/ECG (PhysioNet MIT-BIH anonymous wget · NEW DOMAIN signal ·
+      `pilot-bio_align_nw` 36/36 @ rel_err=0 substrate floor 견고
+      [option b] · 그러나 `BioVerifyRecord` 신설 cost 가장 무거움)
+    - #3 Chem/Arrhenius (NIST/Cantera · `arrhenius_kernel` 6/6 reuse ·
+      그러나 substrate floor 가장 약함 = `pilot-chem_arrhenius`
+      Stage-0 *self-test only* · no external oracle yet)
+  - **exit criterion**:
+    - candidate-research note 박제 [ ] (`inbox/notes/2026-05-22-k71-
+      horizon-candidate-research.md` · 본 cycle land)
+    - 3 finalist 의 5-fold lock-in dimension articulated [ ]
+    - ranking 제안 + open question + structural-inflection 명시 [ ]
+    - D-block 미land [ ] (G40 시점 land · D120 자연 순서)
+    - 새 code 0 · 새 stored field 0 · 새 `.demi` row 0
+  - **deps**: κ-70 R9 4/4 closure (G35..G38 · `e818218`) · `inbox/
+    notes/2026-05-22-k70-horizon-candidate-research.md` (template +
+    B/C carry) · `domains/PILOTS.demi` (substrate-parity floor
+    inventory · `pilot-bio_align_nw` 36/36 · `pilot-chem_arrhenius`
+    6/6 self-test · `pilot-power_curve` 부재)
+  - **est**: 0.3 session (research note + ARCH scaffold + NEXT_SESSIONS
+    + PLAN entry · 본 cycle land = 1 commit)
+
+- [ ] **G40.** 4th cell pick + measured-oracle source 결정 (κ-71 R10
+    pre-code decision gate · κ-68 G27 / κ-69 G32 / κ-70 G36 동형 ·
+    D106 illustrative gate 제외)
+  - **scope**: G27 (κ-68 · D109) + G32 (κ-69 · D115) + G36 (κ-70 ·
+    D118) 와 동형 — cell 선정 + 외부 measured oracle + bridge stack +
+    hexa-native scope + PASS criterion 의 5-fold lock-in decision.
+    후보 cluster (G39 research note 의 3 finalist · ranking advisory):
+    - **#1 Energy/wind** — NREL Wind Toolkit (HSDS REST · token 필요) ·
+      IEC 61400-12 power curve · 새 `stdlib/kernels/wind/power_curve_
+      kernel.hexa` 신설 (G31 mirror · 1-3 session · `pilot-power_curve`
+      row PILOTS.demi 신설 포함) · `EnergyWindVerifyRecord` 신설
+      (default · sub-cell separation) or `EnergyVerifyRecord` 재사용 ·
+      **prediction-shape** (D110 G29 mirror · honesty floor re-elevate)
+    - **#2 Bio/ECG** — PhysioNet MIT-BIH (anonymous wget) · QRS R-peak
+      interval (option a · Pan-Tompkins `qrs_detector.hexa` 신설) or
+      Durbin §2.3 sequence alignment (option b · `pilot-bio_align_nw`
+      36/36 reuse · discrete-integer-exact shape) · 새 `BioVerifyRecord.
+      swift` 신설 (NEW DOMAIN · ~40 줄)
+    - **#3 Chem/Arrhenius** — NIST WebBook / Cantera reference k(T) ·
+      `arrhenius_kernel` 6/6 self-test reuse · 새 `ChemVerifyRecord.
+      swift` 신설 (NEW DOMAIN) · substrate floor weakness (Stage-0
+      self-test-only · D-block disclosure 필요)
+  - **avoid** (D106 anti-conflation invariants · G27 / G32 / G36 mirror):
+    - Fusion `mc_transport` cell — D106 illustrative-physics gate ·
+      `MeasuredOracleRef` 적용 불가 (`FusionVerifyRecord` 가 유일
+      잔여 `[HP][✗]` 1-field 후보지만 영구-잠김)
+    - Ufo Stage-4..7 propulsion — D106 illustrative · 본 round 의
+      `absorbed` flip 대상 아님
+    - D95 computed-projection 만으로 만족하는 cell — measurement-
+      parity 가 본 round 의 점
+    - ChipAnalyze (chip §B substrate-axis · §12.1 active · 다른 agent
+      활성 작업 중 · cross-axis 충돌 회피)
+    - hardcoded oracle dataset path — D86 floor 위반
+  - **exit criterion** (G27 / G32 / G36 동형):
+    - design.md `### Decision 120` 박제 · 5-fold lock-in default
+      baked-in (cell · external oracle · bridge stack · hexa-native
+      scope · PASS criterion)
+    - candidate-research note (G39 artifact) cite + 회피 후보 reject
+      rationale 명시
+    - `MeasuredOracleRef` schema 재사용 audit (G28 `4a1a087` · κ-68
+      land · κ-69 G33 + κ-70 G37 reuse confirmed)
+    - 새 code 0 · 새 stored field 0 · 새 `.demi` row 0
+    - PLAN.md κ-71 G40 LANDED entry + ARCH §11.6 G40 `[ ]` → `[x]` flip
+  - **deps**: G39 (research note 박제) · `inbox/notes/2026-05-22-k71-
+    horizon-candidate-research.md` (3 finalist analysis) · G28 schema
+    (`MeasuredOracleRef.swift` · `4a1a087`) · D80 / D86 / D103 / D106 /
+    D116 floors
+  - **est**: 0.3-0.5 sessions (D-block 박제 · κ-68 G27 / κ-69 G32 /
+    κ-70 G36 동형 · code 0). **#1 Energy/wind 채택 시** substrate
+    kernel land (`power_curve_kernel.hexa`) 가 G40↔G41 사이 별 cycle
+    의 1-3 session partial-land (G31 mirror) — κ-71 critical-path 가
+    κ-68..κ-70 보다 substrate-side 1-step 길어짐
+
+- [ ] **G41.** 4th cell 첫 `absorbed=true` legitimate flip (NOT D95
+    computed projection · κ-68 G29 / κ-69 G33 / κ-70 G37 mirror ·
+    네번째 cell measurement-parity land)
+  - **scope**: G28 (schema-half · 재사용) + G29 / G33 / G37 (real
+    flip) 묶음의 네번째 instance — G40 cell 의 `MeasuredOracleRef`
+    instantiation + producer wire (external oracle fetch + measured-
+    oracle PASS) + g3-honest stored `absorbed: Bool` flip. κ-70 G37
+    (D119) 의 직접 mirror — schema cost (새 record type · κ-71 은
+    1-field 확장 후보 없음) + substrate-side cost (Energy/wind 채택
+    시 `power_curve_kernel.hexa` 선행 land) 는 G40 picked cell 에 의존.
+  - **exit criterion** (G29 / G33 / G37 동형 · 5 가지 · 모두 [ ]):
+    1. [ ] 4th cell `absorbed=true` flip + rationale D-block (D121
+       자연 순서 · D120 G40 mirror) 박제 · `mean_rel_err` honestly
+       disclosed (D110 G29 marginal 0.04988 prediction · D117 G33
+       comfortable 8.4e-07 numeric-equivalence · D119 G37 2.21e-06
+       numeric-equivalence · 본 D121 의 PASS shape = G40 picked cell +
+       oracle 선택에 의존 [Energy/wind = prediction shape D110 mirror ·
+       Bio option-b = discrete-integer-exact rel_err=0 새 shape ·
+       Chem = numeric-equivalence D119 mirror])
+    2. [ ] `MeasuredOracleRef` field 가 picked record type에 land
+       (schema generalization audit · **4th record type** · κ-70 G37
+       D119 의 3rd record-type 위 확장)
+    3. [ ] **XCTest invariant 가 새 cell 에 auto-extend** — invariant
+       helper code 변경 0 · `invariantHolds(absorbed, measuredOracle,
+       isIllustrativePhysics)` shape 의 record-type-agnostic 설계의
+       **4th instance verification** (Energy/solar 1st · Aura/EEG 2nd ·
+       Ufo/plasma 3rd · κ-71 cell 4th · 동일 predicate · helper edit
+       0). 3rd 가 이미 strongest evidence — 4th 는 redundant
+       confirmation (NEW DOMAIN 또는 prediction re-elevate 가 주 가치)
+    4. [ ] 다른 cell record 회귀 0 — full cockpit test suite PASS
+       (Energy/solar G29 · Aura/EEG G33 · Ufo/plasma G37 fixture
+       path 영향 0)
+    5. [ ] design.md D121 + PLAN.md κ-71 G41 entry + ARCH §11.6 G41
+       `[x]` flip + NEXT_SESSIONS pickup closure marker
+  - **deps**: G40 (decision · D120) · G28 (schema 재사용) · G30 Stage 1
+    (invariant pattern) · D80 / D86 / D103 / D106 / D116 floors ·
+    (#1 Energy/wind 채택 시) `power_curve_kernel.hexa` substrate land
+  - **est**: 1-3 session (G40 picked cell 의 substrate/schema cost
+    의존 · κ-71 은 1-field 확장 후보 없어 κ-70 Ufo [~1 session 최저
+    friction] 보다 큼 · Energy/wind 채택 시 substrate kernel 선행
+    cycle 포함)
+
+- [ ] **G42.** κ-71 R10 closure 박제 (4/4 LANDED · κ-70 R9 closure
+    entry mirror)
+  - **scope**: κ-70 R9 4/4 CLOSURE entry (PLAN.md 2026-05-22 ·
+    `## 진행 로그`) 의 동형 mirror — κ-71 R10 closure 박제. G39..G41
+    누적 LANDED → closure entry. R9 의 "next horizon (κ-71+)" 4 후보
+    line 의 evolved successor = "next horizon (κ-72+)" 4 후보 (G40
+    picked cell 의 follow-on axis + 잔여 candidate cluster + 5th cell
+    measured-oracle round · honestly placeholder). governance row
+    contribution = `project.tape @D d6` 의 **4th-carrier audit framing
+    PATCH update** (G38 의 3-carrier COMPLETE → 4-carrier · `@D d6`
+    self-rule "edit this row in-place except for PATCH wording" 준수).
+  - **exit criterion** (G38 closure entry mirror · 모두 [ ]):
+    - [ ] κ-71 R10 4 G-item 누적 LANDED 박제 (G39 [ ] research note ·
+      G40 [ ] D120 · G41 [ ] D121 · G42 [ ] 본 entry)
+    - [ ] PASS shape honest disclosure (G40 picked cell + oracle 의
+      shape · D110 prediction / D117·D119 numeric-equivalence / Bio
+      option-b discrete-exact 중 어느 것인지 명시 · 4-cell shape
+      spectrum 박제)
+    - [ ] XCTest invariant 4th carrier auto-extension audit confirmed
+      (G41 exit criterion #3 cross-link · invariant helper edit 0 ·
+      4 record type × 동일 predicate = record-type-agnostic 설계의
+      redundant-confirmation evidence)
+    - [ ] D106 illustrative carve-out governance-affirmed OUT of
+      measured-oracle scope 유지 (`@D d6` dont= line · RFC 013 §6.12)
+    - [ ] `next horizon (κ-72+)` placeholder 박제 (κ-70 closure entry
+      의 4-item list 동형 · PLAN.md κ-71 R10 closure entry body)
+    - [ ] design.md / PLAN.md / ARCH §11.6 / project.tape / NEXT_
+      SESSIONS 의 cross-consistent state
+  - **deps**: G39 + G40 + G41 누적 LANDED · κ-70 R9 closure entry
+    pattern (PLAN.md) · `project.tape @D d6` (governance row) · RFC
+    013 §6.11 LANDED status 유지 (κ-71 R10 = same-invariant 의 fourth-
+    instance generalization audit · RFC status 미flip · narrative
+    cross-link만 add via D121)
+  - **est**: 0.3-0.5 session (κ-70 R9 closure entry mirror · doc
+    edit · code 0)
 
 ---
 

@@ -5330,3 +5330,72 @@
   명시 affirmed (anti-conflation). 다른 cell 회귀 0 · invariant 변경
   0 · 모든 floor (D80/D86/D103/D106/D116) preserved. κ-70 R9 의 자연
   끝 — 다음 round (κ-71+) 은 별 cycle.
+
+- 2026-05-22 — **phase κ-71 — R10 horizon OPENED · ARCH §11.6 신설
+  (G39-G42 scaffold) + 4th-cell 3-candidate research note · R10 1/4
+  LANDED (G39 candidate-research) · code 0**. κ-70 R9 4/4 CLOSURE
+  (`e818218` · G38 LANDED) 의 'next horizon (κ-71+)' line item ("다른
+  cell measured-oracle round") 의 첫 이행. κ-68 G27 → κ-69 G32 → κ-70
+  G36 의 cell-pick-from-scaffold split 패턴 mirror — 본 cycle 은 G39
+  (candidate research + scaffold) 만 land · G40 cell-pick decision 은
+  다음 별 cycle (pre-pick 금지 · ranking advisory only).
+  - **κ-71 R10 scaffold 박제** (ARCH §11.6 G39..G42 · 모두 `[ ]` 외
+    G39 `[ ]`-pending-but-research-landed): G39 = 4th cell candidate
+    research (Energy/wind · Bio/ECG · Chem/Arrhenius 3 finalist · 5-fold
+    lock-in 비교 + ranking + open question) · G40 = 4th cell pick +
+    measured-oracle 5-fold lock-in decision (D120 자연 순서 · κ-68 G27
+    / κ-69 G32 / κ-70 G36 동형) · G41 = 4th cell 첫 `absorbed=true`
+    legitimate flip (κ-70 G37 mirror · D121 · `invariantHolds` 4th
+    instance) · G42 = κ-71 R10 closure (κ-70 R9 closure entry mirror ·
+    `@D d6` 4th-carrier audit PATCH).
+  - **3-candidate research note** (`inbox/notes/2026-05-22-k71-horizon-
+    candidate-research.md` · κ-70 G36 note 의 successor · Candidate
+    B/C carry):
+    - **#1 Energy/wind** (NREL Wind Toolkit · IEC 61400-12 power curve ·
+      **prediction-shape 강함** = D110 G29 mirror · D117/D119 numeric-
+      equivalence 약점 보완 · 그러나 `power_curve_kernel.hexa` substrate
+      신설 1-3 session [`pilot-power_curve` 부재 confirmed] · HSDS token
+      honesty floor weakness)
+    - **#2 Bio/ECG** (PhysioNet MIT-BIH anonymous wget · NEW DOMAIN
+      signal · `pilot-bio_align_nw` 36/36 @ rel_err=0 substrate floor
+      견고 [option b] · 그러나 `BioVerifyRecord` 신설 cost 가장 무거움)
+    - **#3 Chem/Arrhenius** (NIST/Cantera · `arrhenius_kernel` 6/6
+      reuse · 그러나 substrate floor 가장 약함 = `pilot-chem_arrhenius`
+      Stage-0 *self-test only* · no external oracle yet)
+  - **κ-71 structural inflection (핵심 honest finding)**: VerifyRecord
+    inventory audit 결과 — κ-70 의 Ufo 가 `hexaNativeParity` carrier
+    이면서 `measuredOracle` 가 없는 *마지막* 1-field-extension 후보
+    였음 (Aura G33 mirror · 최저 friction). 남은 유일 `[HP][✗]` carrier
+    (`FusionVerifyRecord`) 는 D106 illustrative-physics 영구-잠김
+    (mc_transport · `MeasuredOracleRef` 부착 불가 · RFC 013 §6.12).
+    따라서 κ-71 의 어떤 후보도 κ-69/κ-70 의 "1-field 확장 = 최저
+    friction" 패턴 재현 불가 — 모든 후보가 새 VerifyRecord 신설 (Bio/
+    Chem) 또는 기존 record 재사용 + producer-side 새 sub-cell 경로
+    신설 (Energy/wind) cost 를 짐. κ-71 critical-path 는 κ-68..κ-70
+    보다 substrate-side 또는 schema-side 한 단계 더 무겁다.
+  - **next pickup 명시**: **G40** = 4th cell pick (D120 · #1 Energy/
+    wind advisory default · 또는 #2 Bio / #3 Chem honest choice) ·
+    code 0 · 별 cycle. Energy/wind 채택 시 G40↔G41 사이 별 cycle 의
+    `power_curve_kernel.hexa` G31-mirror substrate partial-land.
+  - **next horizon (κ-72+)** placeholder (κ-70 closure entry 의 4-item
+    동형 · honestly placeholder · G42 의 closure entry obligation):
+    G40 picked cell 의 follow-on axis + 잔여 candidate cluster (Bio/Chem
+    중 미채택) + 5th cell measured-oracle round + Ufo G37-β real JET
+    raw timeseries.
+  - **D-number stale 의도**: G39 scaffold = D-block 미생성 (κ-68/κ-69/
+    κ-70 scaffold opening 도 D-block 없이 land · D-block 은 G40 cell
+    pick 시점 land = D120 자연 순서 · `grep -nE '^### Decision' design.
+    md | tail -1` = D119 확인). design.md 변경 0.
+  - **RFC 013 §6.11 status `LANDED` 유지** (κ-71 R10 = same-invariant
+    의 fourth-instance generalization audit · RFC status 미flip).
+  - **수정 파일 4개** (모두 demiurge · doc edit · code 0): `inbox/notes/
+    2026-05-22-k71-horizon-candidate-research.md` (NEW · 3 finalist
+    5-fold lock-in) · `ARCH.md` (§11.6 신설 G39..G42 scaffold + §11.4
+    intro Round 10 surface 갱신) · `PLAN.md` (본 entry) · `NEXT_
+    SESSIONS.md` (P-⑯ κ-71 cold-pickup brief + head refresh).
+  g3 — 본 land 는 horizon-opening scaffold (code 0 · Swift/Python/hexa
+  변경 0 · D-block 0 · 새 stored field 0 · 새 `.demi` row 0). 어떤
+  cell 의 `absorbed=true` 도 flip 안 됨 · cell pick 미수행 (ranking
+  advisory only · G40 가 decision gate). 모든 floor (D80/D86/D103/D106/
+  D116) preserved. κ-68 G27 / κ-69 G32 / κ-70 G36 의 cell-pick-from-
+  scaffold split 패턴 1:1 mirror — pre-pick 금지.

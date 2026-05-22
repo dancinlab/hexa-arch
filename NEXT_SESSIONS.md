@@ -58,6 +58,18 @@
 > migration `e458d3c` 의 successor · code 0 · 다음 horizon = κ-71+
 > Ufo/plasma follow-on cluster).
 >
+> **P-⑯ (κ-71 fourth-cell measured-oracle round, ARCH §11.6 Round 10
+> G39..G42) — OPEN 2026-05-22** · **R10 1/4 LANDED** (G39 candidate-
+> research note `inbox/notes/2026-05-22-k71-horizon-candidate-research.
+> md` · 3 finalist: Energy/wind · Bio/ECG · Chem/Arrhenius · ranking
+> advisory **#1 Energy/wind** [prediction-shape D110 mirror · 그러나
+> `power_curve_kernel.hexa` substrate 신설 1-3 session · HSDS token
+> floor] · code 0). **G40 (4th cell pick · D120) 가 다음 critical-
+> path** · 별 cycle 별 session. **κ-71 structural inflection**: 1-field-
+> extension carrier 가 κ-70 으로 소진 (`FusionVerifyRecord` 만 잔여
+> `[HP][✗]` 이나 D106 illustrative 영구-잠김) — 모든 κ-71 후보가
+> 새 VerifyRecord 신설 또는 producer-side 새 sub-cell 경로 신설 cost.
+>
 > **P-⑮ (pool CLI first-class infrastructure follow-on)** — 2026-05-22
 > POOL.md landed (~517 line · 7 § · canonical wrapper + 5-row routing
 > taxonomy + honest invariants + 4 cohort examples + 9 verb reference +
@@ -985,6 +997,135 @@ Exit criterion (all CLOSED — κ-70 R9 4/4 LANDED 2026-05-22):
 > (testAuraVerifyRecordCoveredByInvariantNoCodeChange) 가 κ-70 G37 에서
 > 3rd record-type 위 확장 — record-type-agnostic 설계의 strongest
 > evidence cycle.
+
+---
+
+## P-⑯ — κ-71 fourth-cell measured-oracle round (ARCH §11.6 Round 10 · post-κ-70)
+
+**κ-71 opening (2026-05-22 · 같은 cycle as κ-70 R9 4/4 CLOSURE
+`e818218`)**: ARCH §11.6 Round 10 (G39..G42) 박힘 + 4th-cell 3-candidate
+research note 동시 land (`inbox/notes/2026-05-22-k71-horizon-candidate-
+research.md`). **R10 1/4 LANDED same-cycle**: G39 candidate-research
+박제 (Energy/wind · Bio/ECG · Chem/Arrhenius 3 finalist · ranking
+advisory #1 Energy/wind · code 0). **G40..G42 still `[ ]`** — G40 (4th
+cell pick · D120) 가 다음 lowest-friction critical-path · 별 cycle 별
+session.
+
+**κ-71 structural inflection (필독)**: κ-70 의 Ufo 가 *마지막* 1-field-
+extension carrier 였음 (Aura G33 mirror · 최저 friction). 남은 유일
+`[HP][✗]` carrier (`FusionVerifyRecord`) 는 D106 illustrative 영구-
+잠김. 따라서 κ-71 의 어떤 후보도 κ-69/κ-70 의 "1-field 확장 = 최저
+friction" 패턴 재현 불가 — 모든 후보가 새 VerifyRecord 신설 (Bio/Chem)
+또는 기존 record 재사용 + producer-side 새 sub-cell 경로 신설 (Energy/
+wind) cost 를 짐. κ-71 critical-path 는 κ-68..κ-70 보다 substrate-side
+또는 schema-side 한 단계 더 무겁다.
+
+**Use this when:** you continue κ-71 R10 work. ARCH.md §11.6 Round 10 은
+G39..G42 의 full scope (scope · deps · est · exit criterion · avoid) 를
+가지고 있다 — 본 prompt 는 그 narrative 를 *next-session pickup* 형태로
+framing 만; **detail 은 ARCH §11.6 G39..G42 + research note 참조**,
+본문 중복 금지.
+
+```
+demiurge κ-71 Round 10 session pickup.
+Repo: ~/core/demiurge · branch from origin/main. Read first:
+  - ARCH.md §11.6 Round 10 (G39..G42 full scope · est · exit
+    criterion) — 본 prompt 의 detail SSOT
+  - inbox/notes/2026-05-22-k71-horizon-candidate-research.md (3
+    finalist 5-fold lock-in · ranking advisory: #1 Energy/wind ·
+    #2 Bio/ECG · #3 Chem/Arrhenius · κ-71 structural-inflection 박제)
+  - ARCH.md §11.5 Round 9 (G35..G38 LANDED · κ-70 R9 closure
+    template · κ-71 R10 의 직접 mirror)
+  - design.md D118/D119 (κ-70 G36/G37) + D115/D117 (κ-69 G32/G33) +
+    D109/D110 (κ-68 G27/G29) — G40/G41 D-block 의 parent + grandparent
+    templates
+  - inbox/notes/2026-05-22-k70-horizon-candidate-research.md (κ-70
+    G36 의 candidate-digest · 본 round 의 template · B/C carry)
+  - proposals/rfc_013_hexa_native_parity_connection.md §6.11 (LANDED
+    · κ-71 R10 는 same-invariant 의 fourth-instance generalization audit)
+
+Open axes (pick whichever is honest for this session — they are
+independent gates, except G41 depends on G40, and G42 depends on G41):
+
+(a) G39 — **LANDED 2026-05-22** (candidate-research note 박제 ·
+    `inbox/notes/2026-05-22-k71-horizon-candidate-research.md`).
+    Historical reference for G40 pickup.
+
+(b) G40 — 4th cell pick + measured-oracle source decision (κ-71 R10
+    pre-code decision gate · κ-68 G27 / κ-69 G32 / κ-70 G36 동형 ·
+    code 0 · D120 박제). #1 ranked advisory = **Energy/wind**:
+    - cell: 새 `EnergyWindVerifyRecord` (default · sub-cell separation ·
+      4th-record-type audit) or `EnergyVerifyRecord` 재사용
+    - external oracle: NREL Wind Toolkit (HSDS REST · token 필요) ·
+      IEC 61400-12 power curve 대 measured turbine output
+    - bridge stack: (신설) `stdlib/energy/wtk_fetcher.py` → hexa-native
+      `power_curve_kernel.hexa` (신설 — `pilot-power_curve` 부재)
+    - hexa-native scope: 새 `stdlib/kernels/wind/power_curve_kernel.
+      hexa` (IEC 61400-12 · G31 mirror substrate land 1-3 session)
+    - PASS criterion: `mean_rel_err ≤ 0.05` over wind_speed ∈ [4,25]
+      m/s (prediction-shape · D110 G29 mirror · honesty floor re-elevate)
+    회피 후보 reject rationale 명시 (Bio = `BioVerifyRecord` 신설 cost
+    가장 무거움 · Chem = `pilot-chem_arrhenius` Stage-0 self-test-only
+    substrate floor weakness). #2/#3 (Bio/Chem) 도 honest choice —
+    research note 의 "이 후보가 #1 으로 올라가려면" 조건 참조.
+
+(c) G41 — G40 cell 의 첫 `absorbed=true` legitimate flip (κ-68 G29 /
+    κ-69 G33 / κ-70 G37 mirror · 네번째 cell measurement-parity land ·
+    D121 박제). Energy/wind 채택 시 `power_curve_kernel.hexa` substrate
+    land 가 G40↔G41 사이 별 cycle 선행. PASS shape = G40 picked cell +
+    oracle 선택 의존 (Energy/wind prediction D110 mirror · Bio option-b
+    discrete-exact rel_err=0 새 shape · Chem numeric-equivalence D119
+    mirror). `MeasuredOracleRef` field 가 4th record type 에 land +
+    XCTest invariant 4th carrier auto-extension (helper edit 0).
+
+(d) G42 — κ-71 R10 closure 박제 (4/4 LANDED · κ-70 R9 closure entry
+    mirror · `next horizon (κ-72+)` placeholder · governance row
+    `@D d6` 4th-carrier audit PATCH update). 0.3-0.5 session est.
+
+Gate (g3 — REQUIRED for all open axes):
+  - G40 land = design.md D120 박제 + Energy/wind (or picked) 5-fold
+    lock-in + code 0 + 회피 후보 reject rationale.
+  - G41 land = stored `absorbed: Bool` true + measured-oracle PASS +
+    다른 cell 회귀 0 (`swift test`) + XCTest 4th carrier auto-
+    extension audit + (Energy/wind 시) `power_curve_kernel.hexa`
+    substrate land 선행.
+  - G42 land = R10 4/4 박제 + `next horizon (κ-72+)` placeholder.
+
+NOT (g3 — non-negotiable):
+  - Do NOT touch hexa-lang chip §B substrate-axis work (§12.1 · 별
+    agent active · [[feedback-parallel-agent-cap]]).
+  - Do NOT trigger `absorbed=true` from D95 computed projection — D103.
+  - Do NOT include illustrative-physics cells (D106) — Fusion
+    mc_transport · Ufo Stage-4..7. (`FusionVerifyRecord` 가 유일
+    잔여 `[HP][✗]` 1-field 후보지만 영구-잠김 — 후보 아님.)
+  - Do NOT hardcode oracle dataset path — D86 floor. (Energy/wind
+    HSDS token = env-var/CLI only · token-gating 시 synthetic
+    fallback 의 `data_source` disclosure = Ufo G37 mirror.)
+  - Do NOT bundle G40 decision + G41 first-flip in one session if
+    both require cross-repo merge — multi-repo discipline.
+  - Do NOT skip G39 research note cite in D120 body — decision
+    rationale 가 G39 ranking 위 build.
+
+Exit criterion:
+  (α) G40 LANDED (D120 박제 · code 0) + scope-bounded next-pickup
+      note + ARCH §11.6 G40 `[x]` flip, OR
+  (β) G41 LANDED (네번째 cell first-flip · measured-oracle PASS) +
+      ARCH §11.6 G41 `[x]` flip + invariant 4th-carrier audit +
+      (Energy/wind 시) substrate kernel 선행 land, OR
+  (γ) G41 + G42 묶음 land + κ-71 closure (R10 4/4 LANDED via G42), OR
+  (δ) Scope-bounded sub-progress + honest next-pickup note.
+```
+
+> **Pattern note (κ-68 → κ-69 → κ-70 → κ-71 progression)**: κ-68 = 1st
+> cell (Energy/solar D110 · marginal PASS prediction-shape) · κ-69 = 2nd
+> cell + ultimate-form (Aura/EEG D117 · comfortable numeric-equivalence) ·
+> κ-70 = 3rd cell (Ufo/plasma D119 · numeric-equivalence · 3rd record-type
+> invariant audit = strongest evidence cycle) · κ-71 = 4th cell (G40
+> picked cell · PASS shape 의존 · `invariantHolds` 4th instance redundant-
+> confirmation). **κ-71 structural inflection**: 1-field-extension carrier
+> 가 κ-70 으로 소진 — 모든 κ-71 후보가 record-side 또는 substrate-side
+> 신설 cost · #1 Energy/wind 는 prediction-shape re-elevate (D110 mirror ·
+> D117/D119 numeric-equivalence 약점 보완) 가 주 motivation.
 
 ---
 
