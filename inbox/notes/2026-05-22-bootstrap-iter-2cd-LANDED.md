@@ -117,10 +117,13 @@ not flaky and not introduced by my change (it sits on top of my fix).
 
 PR #276 (`feat(self/runtime): stdlib/regex G3 runtime backend — POSIX
 regcomp/regexec glue`) is OPEN. Its last bootstrap checks (run `26237360745`) are
-stale RED (predate this fix). #276 was blocked by the same Linux Stage 0 substrate;
-with iter-2c/2d merged + iter-2b (#295) merged, #276 should be re-runnable. **Not
-merged here — that is the regex track's call.** Re-run `gh pr checks 276` /
-rebase #276 on the new main to confirm.
+stale RED (predate this fix). #276 is now `mergeStateStatus=DIRTY` (merge conflict
+vs new main). It was blocked by the same Linux Stage 0 substrate; with iter-2c/2d +
+iter-2b (#295) merged, the substrate is solved for linux-x86_64 + macOS. **Action
+for the regex track** (NOT done here — their call): rebase `regex-runtime-backend`
+on new main `e118396d` (resolves DIRTY), then a fresh CI run should clear
+linux-x86_64 + macOS. linux-arm64 will still fail pending iter-2e (§6). So #276 is
+UNBLOCKABLE on 2/3 platforms after a rebase; full green needs iter-2e too.
 
 ## 6. iter-2e CHAIN — linux-arm64 Stage 1 transpile segfault (DEFER · needs sign-off)
 
