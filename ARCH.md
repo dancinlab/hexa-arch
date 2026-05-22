@@ -4,7 +4,7 @@
 > moving parts fit together, what data flows where, what the contracts
 > are. The complementary files are:
 >
-> - `design.md` — gated D-decision audit trail (one decision = one
+> - `DESIGN.md` — gated D-decision audit trail (one decision = one
 >   `### Decision N` block, numbered SSOT)
 > - `PLAN.md` — append-only progress log (κ-N phase entries)
 > - `AGENTS.tape` — enforced rules (`@D` governance + `@F` denies)
@@ -36,7 +36,7 @@
 > pass.
 >
 > Authority: AGENTS.tape `@D g_hexa_only` (INDEX top, body block,
-> 2026-05-20) · design.md D80 · raises `g_hexa_native` (D14+D18)
+> 2026-05-20) · DESIGN.md D80 · raises `g_hexa_native` (D14+D18)
 > from absorption-time preference to absolute endpoint rule.
 >
 > **Orthogonal to the hexa-native endpoint axis is the *execution venue*
@@ -481,7 +481,7 @@ ActionDispatch.dispatch(verb, domain)                                    [Swift 
   manifest 섹션으로 자연 흡수 (Swift ProducerRegistry class 도
   cellrun.hexa 안 selection logic 으로 흡수)
 
-**Cross-link**: design.md D111 (full rationale + rejected
+**Cross-link**: DESIGN.md D111 (full rationale + rejected
 alternatives + Phase A..E) · D112 (Verb canonical → English wire
 form · bug #2 fix) · D113 (payload flattening · sibling .meta.json
 roll-up) · **D114** (stdlib SSOT enforcement · code-shape × repo
@@ -638,7 +638,7 @@ over-claim, closed-binary RE, silent skip, premature tombstone.
 
 ## 10. Cross-link
 
-- decisions audit:  `design.md` (D1..D78)
+- decisions audit:  `DESIGN.md` (D1..D78)
 - progress log:     `PLAN.md` (κ-1..κ-N)
 - governance rules: `AGENTS.tape` (`@D` + `@F`)
 - machine index:    `ARCH.tape`
@@ -1196,7 +1196,7 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > G-item + G39 candidate-research note (`inbox/notes/2026-05-22-k71-
 > horizon-candidate-research.md` · 3 finalist Energy/wind · Bio/ECG ·
 > Chem/Arrhenius · ranking advisory #1 Energy/wind) 동시 박은 scaffold
-> 로 시작 → **G40 cell-pick decision LANDED (design.md D120 · Energy/
+> 로 시작 → **G40 cell-pick decision LANDED (DESIGN.md D120 · Energy/
 > wind sub-cell #1 picked · 새 `EnergyWindVerifyRecord` · NREL WTK
 > HSDS IEC 61400-12 power curve · 새 `power_curve_kernel.hexa`
 > [substrate floor ZERO] + 새 `wtk_fetcher.py` · prediction-shape
@@ -1225,7 +1225,7 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > partial-closure precedent**: κ-71 R10 이 첫 PARTIAL · κ-72 R11 의
 > 어떤 framing 도 PARTIAL 가능성 명시 인정 — R4 invariant 가 작동
 > 하는 증거지 design 실패 아님 (§11.7).
-> 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md D-block +
+> 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + DESIGN.md D-block +
 > 영향 파일 commit 으로 묶을 것.
 
 **라운드 1 — fundamental (D78 + sibling + falsifier schema)**
@@ -1830,7 +1830,7 @@ geodesy WGS84, 2026-05-20)**
     D87..D107 누적 SSOT 정합)
   - **eea2804** (D108): κ-67 sweep (D87..D107 · D104 reserved · 20
     결정 · 13+ commit) 의 **누적 closure** 를 PLAN.md κ-67 entry ·
-    GOAL.md "현재 위치" + Log · design.md D108 entry 3-지점에 한
+    GOAL.md "현재 위치" + Log · DESIGN.md D108 entry 3-지점에 한
     사이클로 박제. 새 code 0, 새 stored field 0, 새 `.demi` row 0,
     새 RFC 0 — *문서 SSOT 3개* 의 결정-감사추적 정합화만. κ-67
     sweep 의 사실은 이미 D87..D107 + RFC 013 §6 + ARCH §11.4 +
@@ -1846,7 +1846,7 @@ geodesy WGS84, 2026-05-20)**
   - edit:
     - `PLAN.md` `## 진행 로그` 끝에 phase κ-67 closure entry
     - `GOAL.md` "현재 정직한 위치" + `## Log` κ-67 entry
-    - `design.md` D108 entry (κ-67 closure 박제)
+    - `DESIGN.md` D108 entry (κ-67 closure 박제)
   - exit:
     - 3 doc SSOT cross-link 정합 (PLAN κ-67 ↔ GOAL position+Log ↔
       design D108)
@@ -1934,7 +1934,7 @@ in-progress)**
 > D103 docstring 이 가드하는 axis 의 첫 실 land — substrate-parity ≠
 > measurement-parity 의 honest floor 를 처음으로 measured 쪽에서 land.
 > 4 placeholder G-item — 진행되면 `[x]` 로 박고 PLAN κ-68 entry +
-> design.md D-block + 영향 파일 commit 으로 묶는다. illustrative-
+> DESIGN.md D-block + 영향 파일 commit 으로 묶는다. illustrative-
 > physics gate (D106) 가 적용된 cell 은 본 round 의 absorbed flip
 > 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
 
@@ -1957,7 +1957,7 @@ in-progress)**
     D95 (computed projection 격리) · D103 (dimension-separation
     docstring) · D106 (illustrative-physics 제외)
   - exit:
-    - design.md `### Decision 109` 박제 · 5 sub-decision default
+    - DESIGN.md `### Decision 109` 박제 · 5 sub-decision default
       baked-in
     - 새 code 0 · 새 stored field 0 · 새 `.demi` row 0
     - PLAN.md κ-68 opening entry · ARCH §11.4 G27 `[ ]` → `[x]`
@@ -2019,7 +2019,7 @@ in-progress)**
       20260520T190739Z_nrel_midc_pyranometer.json` (real record ·
       `absorbed=true` · measured_oracle PASS · all 8 typed field
       populated by real fetch).
-    - design.md D110 (G29 land record · marginal pass rationale ·
+    - DESIGN.md D110 (G29 land record · marginal pass rationale ·
       4 G29-β follow-on axis).
     - PLAN.md `## 진행 로그` κ-68 G29 entry.
   - **D80 g_hexa_only**: hexa-native `solar_position_kernel` 의
@@ -2049,7 +2049,7 @@ in-progress)**
     - 다른 cell record 회귀 0 [x] (Fusion / Aura / Ufo /
       ChipAnalyze 등 모든 다른 cell 의 `absorbed` 미flip · synth
       fixtures 만 변경)
-    - design.md D110 [x] · PLAN.md κ-68 G29 entry [x]
+    - DESIGN.md D110 [x] · PLAN.md κ-68 G29 entry [x]
     - swift build/test PASS [x] (63 test · 회귀 0 · G30 Stage 1
       invariant 가 본 record shape verified)
 
@@ -2114,7 +2114,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 > G27..G29 와 동형 pick→wire→flip 구조) · (c) **G30 Stage 2**
 > constitution.md governance row land (κ-68 R7 에서 DEFERRED).
 > code 변경 0 — ARCH narrative 만 4 placeholder G-item 박는다.
-> 각 항목 진행되면 `[x]` 로 박고 PLAN κ-69 entry + design.md
+> 각 항목 진행되면 `[x]` 로 박고 PLAN κ-69 entry + DESIGN.md
 > D-block + 영향 파일 commit 으로 묶을 것.
 
 - [x] **G31.** G29-β — Energy/solar cell `solar_position_kernel`
@@ -2257,7 +2257,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       parity 가 아닌 measurement-parity 가 본 round 의 점)
     - ChipAnalyze (chip §B substrate-axis · §12.1 (e) fifo_mem
       RTLIL Memory emit 등 cross-axis 충돌 회피)
-  - **exit criterion**: design.md D115 (κ-69 G32 land) record ·
+  - **exit criterion**: DESIGN.md D115 (κ-69 G32 land) record ·
     5-fold sub-decision 명시 (cell · external oracle · bridge
     stack · hexa-native scope · PASS criterion) · code 변경 0
     [x] LANDED 2026-05-22 (D115)
@@ -2278,7 +2278,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     field 박는 작업
   - **exit criterion**:
     - G32-picked cell `absorbed=true` flip · marginal/comfortable
-      PASS rationale design.md D-block 박제 [x] LANDED 2026-05-22
+      PASS rationale DESIGN.md D-block 박제 [x] LANDED 2026-05-22
       (D117 · `mean_rel_err = 8.40e-07` · `max_rel_err = 2.79e-06`
       · N=100 30-s Wake/REM epochs · subject SC4001E0 · channel
       EEG Fpz-Cz · sfreq 100 Hz · alpha 8-13 Hz · median_scale =
@@ -2350,7 +2350,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 > instance) · (d) **G38** κ-70 closure 박제 (R9 4/4 LANDED · κ-69 R8
 > closure entry mirror · 또는 horizontal extension 의 cycle boundary).
 > code 변경 0 — ARCH narrative 만 4 placeholder G-item 박는다. 각
-> 항목 진행되면 `[x]` 로 박고 PLAN κ-70 entry + design.md D-block +
+> 항목 진행되면 `[x]` 로 박고 PLAN κ-70 entry + DESIGN.md D-block +
 > 영향 파일 commit 으로 묶을 것. illustrative-physics gate (D106) 가
 > 적용된 cell 은 본 round 의 absorbed flip 대상 아님 — RFC 013 §6.12
 > anti-conflation 유지.
@@ -2432,7 +2432,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       활성 작업 중 · cross-axis 충돌 회피)
     - hardcoded oracle dataset path — D86 floor 위반
   - **exit criterion** (G27 / G32 동형):
-    - design.md `### Decision 118` 박제 · 5-fold lock-in default
+    - DESIGN.md `### Decision 118` 박제 · 5-fold lock-in default
       baked-in (cell · external oracle · bridge stack · hexa-native
       scope · PASS criterion)
     - candidate-research note (G35 artifact) cite + 회피 후보 reject
@@ -2485,9 +2485,9 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
        tests PASS. cockpit 전체 77 tests · 1 skipped · 0 failures.
     4. [x] 다른 cell record 회귀 0 — full cockpit test suite 77/0
        (1 skipped) · Energy/solar G29 / Aura/EEG G33 fixture path 영향 0
-    5. [x] design.md D119 + PLAN.md κ-70 G37 entry + ARCH §11.5 G37
+    5. [x] DESIGN.md D119 + PLAN.md κ-70 G37 entry + ARCH §11.5 G37
        `[x]` flip + NEXT_SESSIONS (archived) P-⑭ closure marker
-  - **landed artifacts**: design.md D119 박제 · hexa-lang PR #291
+  - **landed artifacts**: DESIGN.md D119 박제 · hexa-lang PR #291
     LANDED (`6187d499` merge SHA · 3 files / 942 line · `stdlib/
     fusion/jet_pulse_fetcher.py` + `jet_plasma_measured_oracle.py` +
     `_plasma_lambda_d_batch.hexa`) · demiurge `bea00e8` (cockpit
@@ -2555,7 +2555,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     - [x] `next horizon (κ-71+)` placeholder 박제 (Ufo/plasma follow-on
       axis cluster · κ-69 closure entry의 4-item list 동형 · PLAN.md
       κ-70 R9 closure entry body)
-    - [x] design.md / PLAN.md / ARCH §11.5 / project.tape / NEXT_SESSIONS
+    - [x] DESIGN.md / PLAN.md / ARCH §11.5 / project.tape / NEXT_SESSIONS
       의 cross-consistent state
   - **deps**: G35 + G36 + G37 누적 LANDED · κ-69 R8 closure entry
     pattern (PLAN.md) · `project.tape @D d6` (governance row · `e458d3c`) ·
@@ -2576,7 +2576,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 **라운드 10 — κ-71 fourth-cell measured-oracle round (R10 4/4 LANDED · G41 D121→D122 same-day flip)**
 
 > **R10 status (2026-05-22)**: G39 candidate-research note LANDED
-> (`cdc418e` scaffold) · **G40 cell pick LANDED · design.md D120**
+> (`cdc418e` scaffold) · **G40 cell pick LANDED · DESIGN.md D120**
 > (Energy/wind sub-cell #1 ranked · 새 `EnergyWindVerifyRecord` ·
 > NREL WTK HSDS IEC 61400-12 power curve · 새 `power_curve_kernel.
 > hexa` [substrate floor ZERO] + 새 `wtk_fetcher.py` · prediction-
@@ -2596,7 +2596,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 > **4th instance**) · (d) **G42** κ-71 closure 박제 (R10 4/4 LANDED ·
 > κ-70 R9 closure entry mirror). code 변경 0 — ARCH narrative 만 4
 > placeholder G-item 박는다. 각 항목 진행되면 `[x]` 로 박고 PLAN
-> κ-71 entry + design.md D-block + 영향 파일 commit 으로 묶을 것.
+> κ-71 entry + DESIGN.md D-block + 영향 파일 commit 으로 묶을 것.
 > illustrative-physics gate (D106) 가 적용된 cell 은 본 round 의
 > absorbed flip 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
 >
@@ -2652,7 +2652,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 
 - [x] **G40.** 4th cell pick + measured-oracle source 결정 (κ-71 R10
     pre-code decision gate · κ-68 G27 / κ-69 G32 / κ-70 G36 동형 ·
-    D106 illustrative gate 제외) — **LANDED 2026-05-22 · design.md
+    D106 illustrative gate 제외) — **LANDED 2026-05-22 · DESIGN.md
     D120** (Energy/wind sub-cell #1 ranked default · 새 `EnergyWind
     VerifyRecord` carrier · NREL Wind Toolkit HSDS IEC 61400-12
     power curve · 새 `stdlib/kernels/wind/power_curve_kernel.hexa`
@@ -2701,7 +2701,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       활성 작업 중 · cross-axis 충돌 회피)
     - hardcoded oracle dataset path — D86 floor 위반
   - **exit criterion** (G27 / G32 / G36 동형 · 모두 [x]):
-    - [x] design.md `### Decision 120` 박제 · 5-fold lock-in default
+    - [x] DESIGN.md `### Decision 120` 박제 · 5-fold lock-in default
       baked-in (cell = 새 `EnergyWindVerifyRecord` · external oracle =
       NREL WTK HSDS · bridge = 새 `wtk_fetcher.py` → 새 `power_curve_
       kernel.hexa` · hexa-native scope = `power_curve_kernel.hexa`
@@ -2758,7 +2758,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     preserved** (sparse-fit vs full-table asymmetry · numeric-
     equivalence trap avoided · D110 mirror · D110/D122 honesty contract
     encoded in kernel doc-comment). R4 invariant respected at flip.
-    See design.md D122.
+    See DESIGN.md D122.
   - **scope**: G28 (schema-half · 재사용) + G29 / G33 / G37 (real
     flip) 묶음의 네번째 instance — G40 cell 의 `MeasuredOracleRef`
     instantiation + producer wire (external oracle fetch + measured-
@@ -2792,7 +2792,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
        (Energy/solar G29 · Aura/EEG G33 · Ufo/plasma G37 fixture
        path 영향 0 · D121 absorbed=false fixture + D122 absorbed=true
        fixture coexist)
-    5. [x] design.md D121 + **D122** + PLAN.md κ-71 G41 entry + ARCH
+    5. [x] DESIGN.md D121 + **D122** + PLAN.md κ-71 G41 entry + ARCH
        §11.6 G41 `[~]` → `[x]` flip + κ-71 R10 4/4 proper closure
        (G42 row PATCH 3/4 → 4/4)
   - **deps**: G40 (decision · D120) · G28 (schema 재사용) · G30 Stage 1
@@ -2843,7 +2843,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       measured-oracle scope 유지 (`@D d6` dont= line · RFC 013 §6.12)
     - [ ] `next horizon (κ-72+)` placeholder 박제 (κ-70 closure entry
       의 4-item list 동형 · PLAN.md κ-71 R10 closure entry body)
-    - [ ] design.md / PLAN.md / ARCH §11.6 / project.tape / NEXT_
+    - [ ] DESIGN.md / PLAN.md / ARCH §11.6 / project.tape / NEXT_
       SESSIONS 의 cross-consistent state
   - **deps**: G39 + G40 + G41 누적 LANDED · κ-70 R9 closure entry
     pattern (PLAN.md) · `project.tape @D d6` (governance row) · RFC
@@ -2885,7 +2885,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 >   §11.8 (post-κ-72-closure) = Framing B shape.
 >
 > code 변경 0 — ARCH narrative 만 4 placeholder G-item 박는다. 각
-> 항목 진행되면 `[x]` 로 박고 PLAN κ-72 entry + design.md D-block
+> 항목 진행되면 `[x]` 로 박고 PLAN κ-72 entry + DESIGN.md D-block
 > (D122/D123 자연 순서) + 영향 파일 commit 으로 묶을 것.
 > illustrative-physics gate (D106) 가 적용된 cell 은 본 round 의
 > `absorbed` flip 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
@@ -2920,7 +2920,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       signal · G41 stays `[~]` indefinite · PARTIAL-risk repeat)
     - Framing C (hybrid · κ-72 = A · κ-73 = B · best of both · κ-73
       scaffold 추가 obligation)
-  - **artifact**: 본 G43 land 시점 = `design.md ### Decision 122`
+  - **artifact**: 본 G43 land 시점 = `DESIGN.md ### Decision 122`
     박제 (Framing A 채택 시 = "resumption-track 선정" D-block · Path
     (i)/(ii) 중 1 명시 · Framing B/C 채택 시 = "5th cell pick" or
     "hybrid sequence commit" D-block). κ-71 G40 D120 mirror style.
@@ -2929,7 +2929,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       참조 · "이 framing 이 #1 으로 올라가려면" 조건 hit 여부)
     - [ ] (Framing A 시) Path (i)/(ii)/(iii) 중 1 명시 · Path (iii)
       anti-pattern reject rationale 동반
-    - [ ] design.md D122 박제 · κ-71 G40 D120 mirror style ·
+    - [ ] DESIGN.md D122 박제 · κ-71 G40 D120 mirror style ·
       5-fold lock-in (Framing A 시) OR 5-fold lock-in (Framing B 시 ·
       cell + external oracle + bridge + hexa-native + PASS criterion ·
       κ-71 G40 D120 동형)
@@ -2959,7 +2959,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       Python ref · hexa-lang PR mirror PR #308 pattern · κ-71 G41
       substrate sub-phase mirror (`inbox/notes/2026-05-22-k71-g41-
       substrate-LANDED.md` 동형)
-    - **Framing A · Path (ii)**: `design.md ### Decision 122` body
+    - **Framing A · Path (ii)**: `DESIGN.md ### Decision 122` body
       가 새 PASS criterion 정의 (operating-regime weight by energy
       yield · Weibull · per-bin weight 등) · code 거의 0 (producer
       update only if criterion shape changes input shape) · honest
@@ -2977,12 +2977,12 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       - [ ] `pilot-power_curve` row PILOTS.demi 갱신 (v0.2.0 reference)
       - [ ] 새 stored field 0 · 새 `.demi` row 0 (kernel only)
     - **Framing A · Path (ii)**:
-      - [ ] design.md D122 박제 · 새 PASS criterion 정의 + cherry-
+      - [ ] DESIGN.md D122 박제 · 새 PASS criterion 정의 + cherry-
         pick disclosure ("D120 PASS 0.05 unchanged · weighting
         redefined" 또는 "PASS threshold changed honestly")
       - [ ] producer code change disclosed (if any · D86 floor 유지)
     - **Framing B**:
-      - [ ] design.md D122 박제 (5th cell pick · 5-fold lock-in ·
+      - [ ] DESIGN.md D122 박제 (5th cell pick · 5-fold lock-in ·
         κ-71 G40 D120 mirror style)
       - [ ] candidate-research note cite + 회피 후보 reject rationale
       - [ ] `MeasuredOracleRef` schema 재사용 audit (5th record-type
@@ -3024,7 +3024,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       4. [ ] 4-record-type audit 변경 0 (이미 confirmed · 4-record
          그대로 · κ-71 D121 #4 mirror)
       5. [ ] 다른 cell record 회귀 0 — full cockpit test suite PASS
-      6. [ ] design.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
+      6. [ ] DESIGN.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
          `[x]` (PASS 시) 또는 `[~]` (FAIL 시 · PARTIAL)
     - **Framing B**:
       1. [ ] 5th cell `absorbed=true` flip + D123 박제 · κ-71 G41
@@ -3037,7 +3037,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
          isIllustrativePhysics)` shape · 5 record type × 동일
          predicate × helper edit 0
       4. [ ] 다른 cell record 회귀 0
-      5. [ ] design.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
+      5. [ ] DESIGN.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
          flip
   - **deps**: G44 (substrate refinement OR D-block OR 5th cell pick) ·
     G28 (`MeasuredOracleRef.swift` schema · κ-72 G45 = 4th instance
@@ -3082,7 +3082,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
       measured-oracle scope 유지 (`@D d6` dont= line · RFC 013 §6.12)
     - [ ] `next horizon (κ-73+)` placeholder 박제 (κ-71 closure entry
       의 4-item list 동형 · honest)
-    - [ ] design.md / PLAN.md / ARCH §11.7 / project.tape / NEXT_
+    - [ ] DESIGN.md / PLAN.md / ARCH §11.7 / project.tape / NEXT_
       SESSIONS 의 cross-consistent state
     - [ ] R11 closure shape 명시: **4/4 LANDED** (G45 PASS) 또는
       **honest 3/4 + G45 `[~]` PARTIAL** (G45 FAIL · κ-71 R10 패턴

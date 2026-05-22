@@ -415,7 +415,7 @@ scope_caveats:
 
 ### 8.7 demiurge 영역으로 들이려면 — 4-tier expansion path
 
-§8.3 의 "모든 합성 루트 = demiurge ✗" 는 **현재의 상태이지 영구 한정이 아님**. demiurge clean-room (`design.md` D1) 은 "public-surface 측정 / 시뮬레이션 / typed record" 까지 허용 — *물리적 합성 자체* 만 바깥. 그래서 4-tier 로 쪼개면 각 tier 가 독립 PR 로 demiurge 영역에 들어올 수 있음.
+§8.3 의 "모든 합성 루트 = demiurge ✗" 는 **현재의 상태이지 영구 한정이 아님**. demiurge clean-room (`DESIGN.md` D1) 은 "public-surface 측정 / 시뮬레이션 / typed record" 까지 허용 — *물리적 합성 자체* 만 바깥. 그래서 4-tier 로 쪼개면 각 tier 가 독립 PR 로 demiurge 영역에 들어올 수 있음.
 
 #### Tier 1 — Computational synthesis (first-principles 시뮬레이션)
 - **무엇**: BCS · McMillan · Allen-Dynes · Eliashberg 로 Tc 예측. λ · ω_log · μ* 가 입력.

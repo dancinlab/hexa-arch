@@ -24,7 +24,7 @@
 ## 무엇인가 (IS)
 
 - 분야-무관 **7-verb** (`명세→구조→설계→해석⟲→합성→검증→인계`, 9
-  라이프사이클 cited — `design.md` D5) 로 설계를 계산·검증
+  라이프사이클 cited — `DESIGN.md` D5) 로 설계를 계산·검증
 - **메타-컨덕터** (D11): 물질합성→칩아키텍쳐→부품설계를 직렬로,
   각 pass 의 HANDOFF → 다음 pass 의 SPECIFY (rfc_004 §3/§4)
 - 외부 선행기술을 **공개면 clean-room** (D1) 으로 흡수 → hexa-native
@@ -51,12 +51,12 @@
 **4-Phase 설계 design-complete · macOS cockpit workbench 골격 live ·
 wired·absorbed·측정 record 모두 0.**
 north-star 불변. 아래는 *카테고리* 서술 — D-번호·RFC건수·cockpit
-phase 같은 수치의 SSOT 는 `design.md` / `PLAN.md` (g_ssot_single_source):
+phase 같은 수치의 SSOT 는 `DESIGN.md` / `PLAN.md` (g_ssot_single_source):
 
 - ✅ **설계 골격 완결**: 7-verb spine cited (9 라이프사이클·D5) ·
   **15 도메인 공개면 맵** (13 Cohort cited + `component.md` +
   `matter/` D17 pointer) · **RFC 묶음** (`proposals/rfc_*` —
-  booksim·e2e·seam·cockpit 4-spec) · **design.md 결정 감사추적** ·
+  booksim·e2e·seam·cockpit 4-spec) · **DESIGN.md 결정 감사추적** ·
   AGENTS.tape 거버넌스 · CHARTER+HANDOFF reconciled.
 - ✅ **hexa-matter measured-parity 검증됨 (단 hexa-lang 소유 — D17)**:
   selftest **38/38** · parity **29/29** 는 실측 사실이나 **hexa-lang
@@ -167,7 +167,7 @@ phase 같은 수치의 SSOT 는 `design.md` / `PLAN.md` (g_ssot_single_source):
 
 ## cross-link
 
-- `design.md` — 결정 감사추적 (gated picks SSOT — D-번호 SSOT)
+- `DESIGN.md` — 결정 감사추적 (gated picks SSOT — D-번호 SSOT)
 - `AGENTS.tape` — 강제 거버넌스 (`g_stdlib_ownership`·g3·`@F`)
 - `CHARTER.md` + `HANDOFF.md` — mission / arch / why
 - `PLAN.md` — `## 계획`(GUI 완성까지 forward) + `## 진행 로그`(append-only)

@@ -13,7 +13,7 @@
 > 를 통과할 때만 부여된다 (D17 · D61 · 아래 「hexa 포팅 단계」 §).
 > substrate 단계에 영구히 머무는 것은 **흡수 실패**다 — 새 producer
 > 는 substrate 로 시작하되, hexa-native 포팅이 명시적 다음 목표로
-> 기록되어야 한다 (PLAN.md κ entry + design.md D-decision).
+> 기록되어야 한다 (PLAN.md κ entry + DESIGN.md D-decision).
 
 - demiurge 는 **메타-컨덕터** — 자체 GUI(cockpit) + 7-verb spine +
   typed record schema 를 가짐.
@@ -108,7 +108,7 @@ N×M 폭발을 막기 위해 **2-layer** — 같은 FEM·MC·graph 커널을 도
   패턴은 매핑 5+ 시점 (premature abstraction 회피).
 
 ### ⑤ HONESTY — provenance · gate · g3
-- **SSOT**: `AGENTS.tape` 의 `g3_no_over_claim` + `design.md` D-decisions
+- **SSOT**: `AGENTS.tape` 의 `g3_no_over_claim` + `DESIGN.md` D-decisions
 - **무엇이 들어가나**: `absorbed=true` 의 정의 · gate 4-state 의 의미
   (OPEN / B_PINNED_MET / CLOSED_MEASURED / FAILED) · scope_caveats
   작성 규칙
@@ -213,7 +213,7 @@ dormant.
 5. **매핑** — ActionDispatch.runEngineTool 에 case 추가 (D53 정합).
 6. **g3 gate** — scope_caveats · measurement_gate · absorbed 정직
    설정. 측정 없으면 GATE_OPEN.
-7. **D-decision** — `design.md` 에 새 producer 도입 결정 기록.
+7. **D-decision** — `DESIGN.md` 에 새 producer 도입 결정 기록.
 8. **PLAN κ entry** — `PLAN.md` `## 진행 로그` 에 append-only.
 
 ## 현재까지 흡수된 producer
@@ -380,7 +380,7 @@ D17 / D61 정합 미러.
 2. `hexa-lang/stdlib/<DOMAIN>/<tool>.py` — 표준 sample, 측정 한 점.
 3. demiurge Swift `<Domain><Verb>Producer.swift` (spawn) +
    `<Domain>Record.swift` typed + `ActionDispatch` case.
-4. `design.md` D-num + `PLAN.md` κ-num + `ABSORPTION.md` ④ 표 row
+4. `DESIGN.md` D-num + `PLAN.md` κ-num + `ABSORPTION.md` ④ 표 row
    추가 + `exports/<DOMAIN>/` record emit.
 5. 빌드 green + `swift run DemiurgeCLI action <verb> <DOMAIN>` 검증.
 6. commit (push 는 사용자 결정).

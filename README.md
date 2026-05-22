@@ -13,7 +13,7 @@
 > LANDED (NUCLEAR.md spec + N6 HFBTHO + N7 WKB α-decay + Phase 4 #1
 > microkernel port 31/31 parity bit-exact). g3 honest — see `PLAN.md`
 > for measured distance, `HANDOFF.md` for session-stamp summary,
-> `design.md` for the decision audit trail.
+> `DESIGN.md` for the decision audit trail.
 > Family: **typed-interface consumer** (not absorber) of `hexa-lang`,
 > the **sole SSOT** for reusable stdlib / tools / absorbed modules
 > (D15 / D17 + 2026-05-19 user directive); demiurge is the consumer-
@@ -72,7 +72,7 @@ vs 기존: hexa-matter = 물질을 계산, hexa-bio = 분자를 계산, **demiur
 - `CHARTER.md` — mission · scope · 비목표 · 도메인 모델
 - `GOAL.md` — 한 문장 north-star + 무엇이 아닌가/무엇인가 + 정직한
   현 위치(g3)
-- `design.md` — **결정 감사추적** (gated picks SSOT — D-번호 SSOT)
+- `DESIGN.md` — **결정 감사추적** (gated picks SSOT — D-번호 SSOT)
 - `PLAN.md` — 진행 / 측정 거리, append-only `## 진행 로그` ·
   cockpit κ-phase build log (수치·phase SSOT)
 - `AGENTS.tape` — 강제 거버넌스 (`g_stdlib_ownership` ·
@@ -102,7 +102,7 @@ vs 기존: hexa-matter = 물질을 계산, hexa-bio = 분자를 계산, **demiur
   stdlib home is `hexa-lang/<domain>` (booksim / matter pattern).
 
 ## Current state (snapshot, g3 — *카테고리* only; 수치·phase 는
-PLAN.md / design.md SSOT)
+PLAN.md / DESIGN.md SSOT)
 
 **Design-complete (4-Phase 로드맵):**
 
@@ -146,4 +146,4 @@ PLAN.md / design.md SSOT)
 - 어떤 도메인도 `absorbed=true` 아님.
 
 외부 매핑 = `HANDOFF.md` §5; 측정 거리 = `PLAN.md`; 결정 =
-`design.md`; cross-repo / post-completion 핸드오프 = `NEXT_SESSIONS.md`.
+`DESIGN.md`; cross-repo / post-completion 핸드오프 = `NEXT_SESSIONS.md`.

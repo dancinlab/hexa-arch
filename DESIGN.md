@@ -1,10 +1,10 @@
-# design — decision audit trail (live pointer)
+# DESIGN — decision audit trail (live pointer)
 
-> Architecture/why SSOT = [`./CHARTER.md`](./CHARTER.md) + [`./HANDOFF.md`](./HANDOFF.md) · progress SSOT = [`./PLAN.md`](./PLAN.md). This file is the live spec — the chronological decision log (every gated D-number with `picked` / `rationale` / `anchors`) lives in [`./design.log.md`](./design.log.md). D-numbers are referenced across CHARTER / HANDOFF / GOAL / ARCH / PLAN / RTSC / NUCLEAR / RFC files; the log is the SSOT for those numbers.
+> Architecture/why SSOT = [`./CHARTER.md`](./CHARTER.md) + [`./HANDOFF.md`](./HANDOFF.md) · progress SSOT = [`./PLAN.md`](./PLAN.md). This file is the live spec — the chronological decision log (every gated D-number with `picked` / `rationale` / `anchors`) lives in [`./DESIGN.log.md`](./DESIGN.log.md). D-numbers are referenced across CHARTER / HANDOFF / GOAL / ARCH / PLAN / RTSC / NUCLEAR / RFC files; the log is the SSOT for those numbers.
 
 ## How new decisions land
 
-- One `### Decision N — <title>` block appended at the tail of `design.log.md` (never edited in place — gated, irreversible audit trail).
+- One `### Decision N — <title>` block appended at the tail of `DESIGN.log.md` (never edited in place — gated, irreversible audit trail).
 - Each block carries: `**picked**` (the chosen option), `**rationale**` (cited bullets · governance link), optional `**anchors**` (PR / commit / file pointers). No prose outside this shape — keep the audit terse and citation-grade.
 - Cross-link every new Decision to: prior superseded D-numbers (state explicitly), the RFC it lands on (`proposals/rfc_0NN_*.md`), and the AGENTS.tape `@F` / `g*` clauses it engages.
 - Governance: no over-claim (`g3`); decision text must be falsifiable (numbers cited or framed as scaffold) — not aspirational.
@@ -20,4 +20,4 @@
 
 ---
 
-Historical decision blocks (D1 → D122 → …) are in [`./design.log.md`](./design.log.md).
+Historical decision blocks (D1 → D122 → …) are in [`./DESIGN.log.md`](./DESIGN.log.md).

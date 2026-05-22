@@ -476,7 +476,7 @@ canonical) is the correct shape for case (a).
 - RTSC.md §9.6 — sim PASS still means `gate_type=simulation-only-
   prediction` regardless of compute venue.
 - NUCLEAR.md §3 — same R4 invariant carry-over for nuclear records.
-- design.md D116 (sibling repos = docs only) — `~/core/pool/` is the
+- DESIGN.md D116 (sibling repos = docs only) — `~/core/pool/` is the
   pool CLI's own infrastructure repo, NOT a demiurge doc-sibling.
   POOL.md (this file) is the doc-side anchor.
 
