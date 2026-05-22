@@ -224,6 +224,24 @@ Each proposal: mechanism · LOC/config cost · Principle I impact · which of th
 
 ---
 
+## ✅ §6.0 LANDED 2026-05-22 19:40 KST — P1 partial (safe subset · catch-22 회피)
+
+`gh api -X PUT repos/dancinlab/hexa-lang/branches/main/protection` applied as `dancinlife` (admin verified). **Status-checks 의도적으로 omit** — 현재 main CI 가 chronic 11-wipe regression 으로 red · 만약 strict status-checks 를 enable 했다면 모든 PR 영구 unmergeable (catch-22 · 자기 fix 자체 불가). 회피책: enforce_admins + required_linear_history + require_last_push_approval 조합이 status-checks 없이도 11/11 historic wipes 차단:
+
+- `enforce_admins: true` ← admin 도 direct push 불가 (class (d) 10/11 차단)
+- `required_linear_history: true` ← merge commits with arbitrary base 차단 (stale-base class (b) 1/11 차단)
+- `allow_force_pushes: false` · `allow_deletions: false`
+- `require_last_push_approval: true` ← PR 가 stale base 로 push 되면 prior approval 자동 dismiss
+- `dismiss_stale_reviews: true`
+- `required_approving_review_count: 0` ← sole-maintainer self-merge OK
+- `required_status_checks: null` ← deferred · main CI 회복 후 P1.full
+
+**Next step (deferred)**: `strict: true` + 4 checks (bootstrap macos-arm64 · linux-arm64 · linux-x86_64 · grace-consent) — main CI green 후 추가.
+
+**Verification path**: 다음 commit attempt (PR #320 · #325 등) 가 PR-path 강제 · linear-history 강제 · stale-base auto-dismiss 실증. 12th-wipe 시도 시 차단 evidence 캡처 가능.
+
+---
+
 ## §6 Recommended next action — land P1 FIRST
 
 **Concrete first step** (admin-only · `dancinlife`):
