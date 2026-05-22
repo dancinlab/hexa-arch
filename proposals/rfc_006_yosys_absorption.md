@@ -132,3 +132,78 @@ rate-limit-safe scoped work (rfc_003 pattern), gated by §5.
 rfc_001/003 (NoC-sim absorption + clean-room idiom) · rfc_048
 (bounded-subprocess precedent) · `archive/comb/rtl/` (RTL + netlist +
 oracle) · HANDOFF §4/§5.
+
+---
+
+## 10. Status — 2026-05-22 progress snapshot (g3-honest)
+
+> **Status remains §5 OPEN — no `Yosys absorbed` claim.** Significant
+> measured progression across multi-session campaign. Gate flip
+> conditions (§5) NOT yet met.
+
+### §4 modules — all 7 land-CLOSED on hexa-lang/stdlib/yosys/
+- `rtlil.hexa` · `read_verilog.hexa` · `passes.hexa` · `liberty.hexa`
+  · `abc_map.hexa` · `write_verilog.hexa` · `gate_record.hexa`
+  (orchestrator + §5 measurement gate runner)
+- Selftest cumulative: read_verilog 87/87 · passes 49/49 · abc_map
+  12/12 · rtlil 11/11 · liberty 8/8 — **ALL PASS, 0 regressions**.
+
+### §5 measurement progression (router_d4, oracle = 61,762.99 µm²)
+
+| stage | d4 area (µm²) | Δ vs oracle | gap to ±5 % |
+|-------|--------------:|-------------:|-------------:|
+| campaign start (pre-Option-A) | 559 | 99.10 % | n/a |
+| Option A+I (2-D LHS demux + BLIF per-bit `.latch`) | 32,829 | 46.85 % | n/a |
+| per-bit connect buffer | 45,492 | 26.34 % | n/a |
+| Piece 1 (`$dffe` + `edfxtp_1`) | 49,092 | 20.52 % | n/a |
+| Path-a richer elab | 50,256 | 18.63 % | n/a |
+| `.inputs/.outputs` per-bit shadow | 55,060 | 10.85 % | 3,694 |
+| abc dedup + multi-bit `$eq` + SSA width | **55,546** | **10.07 %** | **3,208** |
+| T79c post-paren bracket-select (post route_xy) | — pending measurement — | — | — |
+
+**Cumulative: 559 → 55,546 µm² (99.4× area, Δ 99.10 % → 10.07 %, 89.0 pp
+reduction).** §5 ±5 % gate target [58,754 ; 64,939] still **OPEN**.
+
+### §5 d6 (oracle = 93,608.53 µm², ratio 1.5156× ± 5 %)
+- last validated: 68,696 µm² (Δ 26.61 %) post Piece-1 era
+- d6 measurement infrastructure unblocked by `pass_cut_and_remap`
+  O(n³) → O(n) hashmap (commit `7691133b`) + `_passes_fuse_complex_
+  cells` index (`6a5cadb6`) — memory 19 GB → 256 MB on mini
+- post route_xy + perf measurement pending (mini back online
+  2026-05-22 20:07 after 7+h crash)
+- substrate yosys 0.33 reference on ubu-2: **98,247.98 µm²**
+  (`comb/rtl/flat_v2k/router_d6.v` sv2v-flat, d6/d4 ratio = 1.528;
+  cited 1.5156 differs +0.8 % due to packing/abc-script recipe)
+
+### Substrate infrastructure (PR #297 follow-on, this campaign)
+ubu-2 x86_64 Linux self-host substantially unblocked (5 layer fixes,
+on PR #322 alongside §5 work):
+1. `hexa_pipe_buf_enlarge_kernel` fake-FILE* `fileno` decode (parse)
+2. `pthread_t → void*` cast for Linux glibc (outer build)
+3. Linux `-Wl,--allow-multiple-definition` (link)
+4. retired-shim bridge (`hexa_read_file`/`str_trim`/`write_file`) for
+   stale dist hexa_v2 transpiler (April 2026)
+5. `HEXA_MEM_CAP_MB=0` on Linux module_loader spawn (flatten unblock)
+
+Result: ubu-2 runs the full §5 d4 hexa-native pipeline end-to-end
+through `dfflibmap_sky130`. Final ABC `read_blif` fails on multi-
+output `sky130_fd_sc_hd__fa_1` cell — substrate ABC version drift
+(ubu-2 yosys-abc 0.65 stricter than mini standalone abc).
+
+### Outstanding work to flip §5 gate
+1. T79c measurement on mini (bg-dispatched 2026-05-22 21:18) — does
+   it close the 3.2 k µm² `out_valid` cone collapse?
+2. If not — read_verilog comb-always SSA for-body dyn-idx READ
+   lowering (out_ready[grant_out] mux explicit fire)
+3. Optional follow-on (cross-host parity): ABC `fa_1` multi-output
+   `.gate` emit split for yosys-abc 0.65 compat
+4. On §5 d4 + d6 ±5 % PASS: gate_record.hexa verdict → `Yosys
+   absorbed=true` + this doc §10 flip + hexa-lang/compiler/PLAN.md
+   §5 status
+
+> **g3 honesty (per HANDOFF §4 + AGENTS.tape D15):** Δ 10.07 % is
+> measured-pass-fail, NOT "almost there" hand-waving. The remaining
+> 5 pp is fully cited, fully reproducible, and **the line "Yosys
+> absorbed" will not appear in this repository or any downstream
+> until the §5 gate measurement records PASS.** Multi-session
+> campaign work is logged in `hexa-lang/inbox/notes/` + PR #322.
