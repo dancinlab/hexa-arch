@@ -3275,6 +3275,77 @@ landing 시각만 ARCH `## Log` 에 박제.
 
 ## Log
 
+- 2026-05-22 — **🏁 D116 Phase C + D111 generic dispatch cycle CLOSURE**
+  거대 multi-day cycle 의 종합 마감 narrative · @D d3+d4+d5 (project.tape
+  governance) 본격 enforcement 달성:
+  - **D116 Phase C — 4 sibling repos attested docs-only**:
+    - hexa-bio (PR #1 · -155k LOC source · substrate 0)
+    - hexa-rtsc (PR #7 · -14k · 1 straggler)
+    - hexa-matter (PR #1 · -23.5k · 17.4K migration 100× estimate-off)
+    - hexa-sscb (PR #1 · -2316 · 20/20 byte-matched)
+    - 4 stdlib targets land: stdlib/bio (644 files) · stdlib/rtsc (142)
+      · stdlib/matter (261) · stdlib/sscb (37+expansion)
+    - **~155k LOC 사이드 substrate → hexa-lang 단일 canonical home**
+      (@D d3 본격 enforcement · 첫 4 sibling 완성)
+  - **D111 generic dispatch maturity**:
+    - ActionDispatch.swift 1121 → 511 LOC (-610 · PR #11 default→cellrun
+      + PR #13 6-domain + PR #15 chip+7 + PR #16 cleanup + PR #305 hook)
+    - 18 도메인 .demi manifest · 25 .demi total (INDEX/PILOTS/등 포함)
+    - matter+bio in-silico 4 verbs × 2 도메인 = 8 cells completed-form
+      (rc=0 · PR #313 verb shims · D106 illustrative · absorbed=false g3)
+    - 사용자 directive "특정 도메인 하드코딩 없어야" 90%+ 달성
+  - **🚨 5 inadvertent wipes 모두 복구 (security crisis 통과)**:
+    1. `88c00246` cellrun.hexa wipe → PR #272 restore
+    2. `3a4282ec` structure.py wipe → PR #275
+    3. `f221d2ba` 313-file clobber → merge restored
+    4. `bf406f08` 307-file (ironic "wipe-guard keyword" commit) → PR #303
+    5. `de1be840` **566-file + hook gut** (perf-scoreboard bundle) →
+       PR #311 restore + hook activated (`core.hooksPath=.githooks`)
+    - **PR #305 wipe-guard hook 3-tier hardening** (Tier 1 narrow ·
+      Tier 2 tree-wide >50 files OR >5k lines · Tier 3 protected-subtree
+      stdlib/<domain>/) · merge-commit skip · `restore`/`sunset`/
+      `attestation` prefix escape
+    - **C agent (sunset) STOP+report safety-constraint 가 wipe #5
+      발견** · ground-truth verify pattern 작동 검증
+    - **6 PRs safety-check round 가 5 BLOCKED + 1 CLOSED** (모두
+      stale-base reverse-diff wipe trap · 325k-1.6M deletions 차단)
+  - **session memory 저장 (cross-session 학습)**:
+    - `project_hexa_lang_recurring_wipes` — attestation 전 ground-truth
+      재확인 필수 · 5× 재발 패턴
+    - `feedback_pointer_manifests_track_identity` — INDEX.demi /
+      SUBSTRATE_LINKS.demi 는 identity 추적 · scripts 아님 · 재pointer
+      금지 (Tier ② AGENTS.tape `@I` 위반)
+  - **남은 owner territory follow-ups**:
+    1. `de1be840` author 의도 audit (perf commit 안 substrate wipe 가
+       accidental 인지)
+    2. `.githooks/*` branch protection (같은 commit 에서 hook+content
+       동시 변경 차단)
+    3. CI-side mass-delete guard (server-enforced · local hook 우회
+       차단)
+    4. ~16 sibling repos attestation (codex 442 · brain 245 · cern 49
+       · chip 153 · aura 45 · 등 · 각 multi-PR migration campaign 먼저)
+    5. 5 BLOCKED PRs (#283 #264 #256 #249 #124) cherry-pick re-roll
+       (commit SHA 보존됨)
+    6. chip/cern/aura cellrun-wired domain 의 sibling substrate migration
+       campaigns (multi-PR per domain)
+    7. _python_bridge sunset retry (post-stable main · 3 LVAD port + 102
+       file delete with `sunset` prefix · hook-safe)
+    8. matter+bio shim → bio.demi manifest flip (substrate=python3
+       activation · 별 cycle)
+    9. chem in-silico shim (stdlib/chem 신설 + RDKit/Psi4 substrate ·
+       hexa-chem empty)
+    10. project.tape `@D` do/dont placeholder filling (cycle 시작 시
+        identified · sample-row 들 채우기 · governance maturity)
+  - **session 통계**:
+    - 누적 PRs merged this session: ~30+ (SSCB walkthrough 10 + D116
+      migrations + attestations + wipe restores + governance · 등)
+    - LOC delta hexa-lang: +~180k migration · -~155k attestation =
+      ~25k net positive (substrate consolidation)
+    - LOC delta demiurge cockpit: -610 ActionDispatch + 4 typed records
+      + 4 .demi manifests = net negative (D111 enforcement)
+    - inbox/notes: 5 research artifacts (D114 audit · D116 inventory
+      · attestation prep · wipe-governance proposal · 종합)
+
 - 2026-05-22 — **κ-70 R9 G36 LANDED · D118 3rd cell pick (Ufo/plasma
   Stage-2) 5-fold lock-in · code 0 · R9 = 2/4 LANDED**. κ-69 G32 (D115)
   / κ-68 G27 (D109) 의 동형 mirror — pre-code decision gate. Research
