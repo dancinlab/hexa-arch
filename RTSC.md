@@ -1027,6 +1027,11 @@ novel_material_funnel.py <element_pool> <stoichiometry_constraints> <out_dir>
 
 ## Log
 
+- **2026-05-22 KST** — **노벨 후보 3-트랙 발사 + 외부 클라우드 sizing 교훈** (§9.14 신설 보류, project.tape d8 v1.4). 그룹-16 H₃X 시리즈 동시 발사:
+  - **H₃Se** (ubu-1, Se+3H Im-3m 4-atom, a≈2.95Å) — measured zero (novel for experiment) · 6×6×6 q DFT 진행 중
+  - **H₃Te** (ubu-2, Te+3H, a≈3.1Å · Te pseudo dn → n 변형으로 정상화) — 진행 중
+  - **H₃Po** (ubu-1 chained · Po dn USPP scalar-relativistic, ecut 70/700) — H₃Se 완료 후 자동 발사 (group-16 시리즈 완성, 미발표 prediction)
+  - **외부 가속 시도**: RunPod CPU pod 천장 8 vCPU 확인 (`docs.runpod.io/flash/configuration/cpu-types`, sweet-spot 없음, 우리 워크로드 부적합) → Vast.ai 전환. Vast.ai *CPU-only* offers 15+ 모두 `no_such_ask` ($257 credit · email_verified=true · has_rented=true 상태에서도 systemic block, root cause 불명); **Vast.ai GPU offers 정상 rent** (offer 36440479 Titan Xp 56vCPU 10GB $0.048/h 첫 시도 성공) → GPU 사용 안 하고 host CPU만 활용 가능. SSH 접근은 등록 pubkey 의 priv가 disk OR active keychain 필수 (`vast.ssh_priv` 가 missing `dancinlab.keychain-db` 에 → `secret get` 빈 출력 silent, ssh `invalid format` 실패). 인스턴스 destroy 처리 (idle billing 방지). project.tape d8 v1.4 + PATCH update 로 거버넌스화.
 - **2026-05-22 KST** — **DFT 돌파 + 합성-증명 capstone** (§9.11.H/I · §9.12 · §9.13). 종합:
   - **ambient-ML 한계 cross-confirm** (§9.11.H/I): BETE-NET + ALIGNN 둘 다 hydride λ 0.34-0.48 (vs 측정 ~2.0) 로 실패 — 실패가 *λ(전자-포논 결합)* 에 국한 (ω_log 는 맞음). figshare 21370572 = dataset (별도 hydride 모델 없음). ambient-ML path 소진.
   - **DFT el-ph 파이프라인 가동** (pool:ubu-1/2 · conda QE 7.5 · apt 6.7 FORTIFY-broken 우회 · `electron_phonon='simple'`): structure → pw.x → ph.x → α²F/λ/ω_log → Allen-Dynes Tc.
