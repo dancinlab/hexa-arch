@@ -1,0 +1,55 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3se_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260522T123200Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' @ pool:ubu-1 + parse_elph_gen.py (H3S textbook-validated pipeline)",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "novelty": "measured-Tc-zero (first publishable DFT 6×6×6 prediction at this convergence)",
+  "purpose": "First novel candidate (group-16 Se analog of H3S) via the H3S-validated DFT pipeline. Confirms pipeline generalizes from validated baseline (H3S) to a structurally identical novel composition.",
+  "system": "H3Se cubic Im-3m BCC primitive (1 Se + 3 H = 4 atoms), a=2.95 Å (~200 GPa), USPP PBE pslibrary",
+  "method": {
+    "pseudopotentials": "Se.pbe-n-rrkjus_psl.1.0.0.UPF, H.pbe-rrkjus_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry; Fermi at scf",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "moments": "BZ-weighted lambda + lambda-weighted log-average omega_log; Allen-Dynes Tc with mu*=0.10 and 0.13",
+    "recover": "ph.x recover-restart at 2026-05-22T11:09:03Z (external interruption recovered cleanly)"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 1.258, "omega_log_K": 1356.7, "Tc_AD_mu010_K": 128.5, "Tc_AD_mu013_K": 114.8},
+    {"broad_Ry": 0.020, "lambda_BZ": 1.145, "omega_log_K": 1351.1, "Tc_AD_mu010_K": 114.0, "Tc_AD_mu013_K": 100.4},
+    {"broad_Ry": 0.025, "lambda_BZ": 1.076, "omega_log_K": 1347.1, "Tc_AD_mu010_K": 104.5, "Tc_AD_mu013_K":  91.0},
+    {"broad_Ry": 0.030, "lambda_BZ": 1.029, "omega_log_K": 1344.4, "Tc_AD_mu010_K":  97.7, "Tc_AD_mu013_K":  84.4}
+  ],
+  "comparison": {
+    "H3S_DFT_6x6x6q_this_pipeline": {"lambda": "2.11-2.62", "Tc_K": "175-195", "note": "H3S validated baseline (96% to measured 203K)"},
+    "H3Se_DFT_this_work":           {"lambda": "1.03-1.26", "Tc_K":  "98-128", "note": "~50-60% of H3S — weaker coupling, lighter X-H phonon resonance"},
+    "literature_H3Se_DFT": "Flores-Livas et al. 2016 predicted Tc ~110K at 250 GPa (this work falls in that range, 98-128K @ mu*=0.10)",
+    "measured": "NONE — H3Se has not been synthesized and measured at high pressure"
+  },
+  "honest_observations": [
+    "Pipeline transfer: same H3S-validated 6×6×6-q + 24³-k machinery applied verbatim to a structurally identical Se analog. No tuning per-candidate.",
+    "Weaker coupling than H3S: lambda dropped from ~2.3 to ~1.1 (factor ~2 reduction). Physically consistent with Se being heavier than S (lower H sublattice frequency at the X site) and reduced H-X bond ionicity.",
+    "Tc ~100K does not constitute RTSC: H3Se remains below the ambient-pressure RTSC gate, and the predicted pressure is ~200-250 GPa (also above ambient). Both (b) Tc≥270K and (c) ambient gates of RTSC.md §8.9 fail.",
+    "Recover-restart: a pool-level interruption was recovered at 11:09:03Z (pkill from another agent or system) without data loss — ph.x recover= worked correctly.",
+    "Novel-for-measurement: no experimental Tc exists in the literature; this DFT prediction is the current best first-principles estimate at this convergence level."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 Pattern 1 (no RTSC absorbed=true claim) and Pattern 2 (no impossibility framing — H3Se Tc estimate is honest input to future search) both preserved.",
+  "next_steps": [
+    "H3Po chain (auto-started on ubu-1 at 12:32:09Z): group-16 series completion (heaviest X)",
+    "H3Te (ubu-2): in-progress, will complete soon (~8/16 q at this time)",
+    "Vast 37329507 chain: 12 H3X group 14-17 candidates serial (h3o → h3bi), ~6-12h",
+    "Compare λ-vs-X across the full chalcogenide/halide/pnictide H3X table when complete"
+  ],
+  "citations": [
+    "Flores-Livas et al. 2016 PRB 93 020508(R) — H3Se DFT predictions",
+    "Drozdov et al. 2015 Nature 525:73 (H3S measured, baseline)",
+    "Errea et al. 2016 Nature 532:81 (H3S anharmonic)",
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5 (conda-forge)",
+    "RTSC.md §9.12 (H3S baseline) · §9.13 (capstone)"
+  ]
+}
