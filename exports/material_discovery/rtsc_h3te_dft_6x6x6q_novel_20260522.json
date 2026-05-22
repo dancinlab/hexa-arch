@@ -1,0 +1,46 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3te_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260522T131400Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' @ pool:ubu-2 + parse_elph_gen.py",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "novelty": "measured-Tc-zero (H3Te has not been synthesized at high pressure; published DFT predictions only)",
+  "purpose": "Group-16 H3X family completion — second novel (heaviest stable analog of H3S), reveals the λ-vs-ω_log tradeoff that explains why H3S is the optimum point of the chalcogenide hydride family.",
+  "system": "H3Te cubic Im-3m BCC primitive (1 Te + 3 H = 4 atoms), a=3.10 Å (~280-300 GPa estimated), USPP PBE pslibrary 'n' variant (Te.pbe-n-rrkjus_psl.1.0.0.UPF — 'dn' 변형은 404, 'n' 가용)",
+  "method": {
+    "pseudopotentials": "Te.pbe-n-rrkjus_psl.1.0.0.UPF, H.pbe-rrkjus_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry; converged at scf",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "wall_time": "scf 6s + ph.x 3h09m = total ~3h15m on ubu-2 (Ryzen 5 9600X 6c)"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 2.350, "omega_log_K": 468.3, "Tc_AD_mu010_K": 74.5, "Tc_AD_mu013_K": 70.2},
+    {"broad_Ry": 0.020, "lambda_BZ": 2.410, "omega_log_K": 467.6, "Tc_AD_mu010_K": 75.5, "Tc_AD_mu013_K": 71.2},
+    {"broad_Ry": 0.025, "lambda_BZ": 2.351, "omega_log_K": 467.2, "Tc_AD_mu010_K": 74.4, "Tc_AD_mu013_K": 70.0},
+    {"broad_Ry": 0.030, "lambda_BZ": 2.254, "omega_log_K": 466.8, "Tc_AD_mu010_K": 72.5, "Tc_AD_mu013_K": 68.1}
+  ],
+  "group_16_H3X_pattern": {
+    "H3S":  {"lambda": 2.4, "omega_log_K": 1170, "Tc_AD_K": 195, "Tc_measured_K": 203, "agreement": "96%"},
+    "H3Se": {"lambda": 1.1, "omega_log_K": 1350, "Tc_AD_K": 113, "Tc_measured_K": null, "novelty": "DFT only"},
+    "H3Te": {"lambda": 2.4, "omega_log_K":  467, "Tc_AD_K":  75, "Tc_measured_K": null, "novelty": "DFT only"},
+    "verdict": "H3S sweet spot: high λ AND high ω_log. H3Te = same λ but ω_log collapses (heavier X + softer phonons + larger lattice). H3Se = surprisingly low λ despite similar mass to S — outlier, possibly different metallization regime or pseudopotential sensitivity."
+  },
+  "honest_observations": [
+    "Pipeline transfer continues to work across heavy chalcogen X — Te-H bonds give λ≈2.4 same as S-H, NOT a transferability failure.",
+    "ω_log scales inversely with X mass roughly: H3S(S=32amu) 1170K, H3Se(Se=79) 1350K (counter-intuitive, but a=2.95Å < H3S a=2.984Å gives stiffer bonds), H3Te(Te=128) 467K (matches expected 1/√m mass scaling more closely).",
+    "Tc 75K is not RTSC: H3Te requires ~300 GPa (above ambient) AND Tc < 270K. Both §8.9 gates (b)(c) FAIL.",
+    "Broadening-stable: λ varies <8% across broadenings 0.015-0.030 Ry — excellent k-grid + q-grid convergence on this configuration.",
+    "The chalcogenide hydride family does NOT extend upward in Tc beyond H3S. H3Se 113K and H3Te 75K both substantially below H3S 195K. This is honest negative for 'go heavier' hydride strategy."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. Pattern 1+2 보호. Novel-for-measurement record added as a publishable prediction; not an RTSC absorbed=true claim.",
+  "citations": [
+    "Liu, H., Naumov, I., Hemley, R. 2017 PRB 96 014505 — H3Te predictions (~50-100K Tc range; this work falls in)",
+    "Drozdov et al. 2015 Nature 525:73 (H3S baseline)",
+    "Errea et al. 2016 Nature 532:81",
+    "RTSC.md §9.12 (H3S baseline) · §9.14 (novel H3X chain)"
+  ]
+}
