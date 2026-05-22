@@ -882,6 +882,27 @@ publication-grade CIF (Drozdov 2015 · Somayazulu 2019 · Troyan 2021 · Ma 2022
 
 **R4 보호**: 모든 record `absorbed=false` · `gate_type=simulation-only-prediction` · `domain=material`. Pattern 1+2 무손상 — null result 가 *돌파 path refine* (goal 폐기 아님).
 
+#### I. a2F → Allen-Dynes λ-underprediction 진단 + DFT path 가동 (2026-05-22 · pool:ubu-1)
+
+§H 의 end-to-end Tc 실패를 *분해* 하기 위해 `jv_supercon_a2F_alignn` (α²F(ω) 직접 예측 · JARVIS-SuperconDB 0-100 meV 100-bin grid · figshare 21370572) → λ=2∫α²F/ω dω · ω_log → sim.hexa Allen-Dynes (μ*=0.1). record: `exports/material_discovery/rtsc_a2f_allendynes_lambda_diagnosis_20260522.json`.
+
+**핵심 진단 — 실패는 λ (전자-포논 결합) 에 국한, ω_log 아님**:
+
+| material | ALIGNN λ | true λ (lit) | ω_log (K) | Tc_AD | measured | rel_err |
+|---|---:|---:|---:|---:|---:|---:|
+| H₃S | 0.48 | ~2.0 | 216 | 2.2 | 203 | 98.9% |
+| LaH₁₀ | 0.45 | ~2.2 | 223 | 1.8 | 250 | 99.3% |
+| CaH₆ | 0.43 | ~2.3 | 161 | 1.0 | 215 | 99.5% |
+| YH₆ | 0.34 | ~2.5 | 253 | 0.3 | 224 | 99.9% |
+| Nb₃Sn | 0.95 | ~1.7 | 157 | 10.0 | 18.3 | 45.1% |
+| V₃Si | 0.77 | ~1.0 | 162 | 6.9 | 17.1 | 59.6% |
+
+→ ω_log 은 대략 맞음 (hydride H-phonon → 216-253 K 고주파, 물리적). **λ 만 4-5× 과소예측** (hydride 0.34-0.48 vs true ~2.0-2.5). ambient JARVIS-SuperconDB 가 λ~2 결합을 학습한 적 없어 extrapolate 불가 — 정밀한 numerical fingerprint.
+
+**Cross-path 종합**: 3개 독립 ALIGNN/BETE-NET route (BETE-NET end-to-end Tc · jv_supercon_tc end-to-end · a2F-분해 → Allen-Dynes) *전부* hydride 에서 같은 λ-underprediction 으로 실패. figshare 21370572 = *dataset* (별도 hydride 모델 아님 · 동일 jv_supercon 에 baked). **ambient-ML path 소진**.
+
+**돌파 path 가동 — direct DFT electron-phonon (QE)**: pool:ubu-1 에 `apt quantum-espresso 6.7` 설치 → **pw.x · ph.x · q2r.x · matdyn.x · epw.x · lambda.x** 전부 land (source build 불필요 · OpenMPI+ScaLAPACK 동반). ph.x DFPT 는 실제 high-P lattice 에서 λ·α²F 를 *first-principles* 로 계산 — **pressure-aware by construction · ML 훈련분포 무관**. hydride λ~2 를 복원할 수 있는 유일한 route. H₃S (Im-3m · 4 atom/cell · ~150 GPa) = tractable validation case (§9.12 · task #1-5 진행).
+
 ### 9.10 N5 cohort 신설 — novel-discovery funnel (compositional space exploration)
 
 §9.7 의 N1-N4 는 *KNOWN candidate* (특정 화학식이 주어진 경우) 의 시뮬레이션. **N5 cohort 는 *unknown novel composition* 을 *compositional space 에서 탐색* 하여 RTSC 후보 funnel 을 emit** — Nature `s41524-026-01964-8` 의 1.3M cand → 741 stable funnel 패턴 + arxiv:2511.03865 의 Materials Genome HTS discovery 워크플로 본받음.

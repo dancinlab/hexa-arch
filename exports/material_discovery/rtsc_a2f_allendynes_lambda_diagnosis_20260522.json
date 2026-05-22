@@ -1,0 +1,37 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "alignn_a2f_allendynes_lambda_underprediction_diagnosis",
+  "stamp": "20260522T040000Z",
+  "producer": "run_a2f_allendynes.py@ubu-1 (jv_supercon_a2F_alignn -> sim.hexa Allen-Dynes, mu*=0.1)",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "host": "pool:ubu-1",
+  "method": "ALIGNN jv_supercon_a2F_alignn predicts alpha2F(omega) on 100-bin 0-100 meV grid (JARVIS-SuperconDB spec); integrated to lambda = 2*sum(a2F/w)*dw and wlog = exp((2/lambda)*sum(a2F*ln(w)/w)*dw); Allen-Dynes Tc with mu*=0.1.",
+  "grid_spec": "JARVIS-SuperconDB: alpha2F from 0 to 100 meV, 100 points; columns a2F/wlog/lamb (figshare 21370572). 1 meV = 11.604 K.",
+  "results": [
+    {"name": "Nb3Sn",  "fam": "A15",          "lambda": 0.947, "wlog_K": 157.4, "tc_AD": 10.05, "measured": 18.3, "rel_err": 45.1, "true_lambda_approx": 1.7},
+    {"name": "V3Si",   "fam": "A15",          "lambda": 0.765, "wlog_K": 162.2, "tc_AD": 6.91,  "measured": 17.1, "rel_err": 59.6, "true_lambda_approx": 1.0},
+    {"name": "FeSe",   "fam": "Fe-chalc",     "lambda": 0.551, "wlog_K": 225.5, "tc_AD": 3.93,  "measured": 8.0,  "rel_err": 50.9, "true_lambda_approx": 0.5},
+    {"name": "LaFeAsO","fam": "Fe-pnictide",  "lambda": 0.934, "wlog_K": 43.4,  "tc_AD": 2.71,  "measured": 26.0, "rel_err": 89.6, "true_lambda_approx": null},
+    {"name": "H3S",    "fam": "hydride high-P","lambda": 0.477,"wlog_K": 216.1, "tc_AD": 2.17,  "measured": 203,  "rel_err": 98.9, "true_lambda_approx": 2.0},
+    {"name": "LaH10",  "fam": "hydride high-P","lambda": 0.454,"wlog_K": 222.9, "tc_AD": 1.79,  "measured": 250,  "rel_err": 99.3, "true_lambda_approx": 2.2},
+    {"name": "BaKBiO3","fam": "bismuthate",   "lambda": 0.748, "wlog_K": 31.6,  "tc_AD": 1.28,  "measured": 30.0, "rel_err": 95.7, "true_lambda_approx": 1.0},
+    {"name": "BaPbO3", "fam": "bismuthate",   "lambda": 0.721, "wlog_K": 30.3,  "tc_AD": 1.13,  "measured": 0.5,  "rel_err": 125.9,"true_lambda_approx": 0.2},
+    {"name": "CaH6",   "fam": "hydride high-P","lambda": 0.431,"wlog_K": 160.5, "tc_AD": 1.0,   "measured": 215,  "rel_err": 99.5, "true_lambda_approx": 2.3},
+    {"name": "MgH6",   "fam": "hydride theory","lambda": 0.395,"wlog_K": 179.3, "tc_AD": 0.7,   "measured": 260,  "rel_err": 99.7, "true_lambda_approx": 2.5},
+    {"name": "YH6",    "fam": "hydride high-P","lambda": 0.335,"wlog_K": 252.6, "tc_AD": 0.32,  "measured": 224,  "rel_err": 99.9, "true_lambda_approx": 2.5}
+  ],
+  "key_diagnosis": "The failure is localized to lambda (electron-phonon coupling), NOT omega_log. For hydrides the model predicts lambda 0.34-0.48 when the true high-P value is ~2.0-2.5 (a 4-5x underprediction). omega_log is roughly correct (H3S 216K, LaH10 223K, YH6 253K — high, consistent with H-dominated phonons). This is the precise numerical fingerprint of the ambient training distribution: the JARVIS-SuperconDB never contained lambda~2 coupling, so the GNN cannot extrapolate to it.",
+  "cross_path_synthesis": "Three independent ALIGNN/BETE-NET routes (end-to-end BETE-NET Tc; end-to-end jv_supercon_tc_alignn; a2F-decomposed -> Allen-Dynes) ALL fail on high-P hydrides, all via the same lambda-underprediction mechanism. There is NO distinct public hydride-trained model (figshare 21370572 is the dataset, baked into the same jv_supercon models). Ambient-ML path is exhausted.",
+  "forward_path": "Direct DFT electron-phonon (Quantum ESPRESSO ph.x) computes lambda and alpha2F from first principles at the actual high-P lattice — pressure-aware by construction, no training-distribution dependence. This is the only route that can recover hydride lambda~2. Pool:ubu-1 (12 cores, 30GB, sudo passwordless, QE installable via apt) is the execution host. H3S (Im-3m, 4 atoms/cell, ~150 GPa) is the tractable validation case.",
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. Pattern 1+2 무손상. Null result REFINES path to first-principles DFT — goal not abandoned.",
+  "citations": [
+    "JARVIS-SuperconDB figshare 21370572 (a2F 0-100 meV grid spec)",
+    "arxiv:2312.12694 Wines & Choudhary, Materials Futures 2024 (hydride GNN = ALIGNN on JARVIS, not a distinct model)",
+    "Allen & Dynes 1975 PRB 12 905 (Tc formula)",
+    "sim.hexa Allen-Dynes (M5 cohort)"
+  ]
+}
