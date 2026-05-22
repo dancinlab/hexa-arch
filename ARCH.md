@@ -644,7 +644,6 @@ over-claim, closed-binary RE, silent skip, premature tombstone.
 - machine index:    `ARCH.tape`
 - north-star:       `GOAL.md`
 - absorption recipe:`ABSORPTION.md`
-- next-session work:`NEXT_SESSIONS.md`
 - inbox index:      `inbox/INDEX.md`
 - per-domain spec:  `domains/<name>.md`
 
@@ -2487,7 +2486,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     4. [x] 다른 cell record 회귀 0 — full cockpit test suite 77/0
        (1 skipped) · Energy/solar G29 / Aura/EEG G33 fixture path 영향 0
     5. [x] design.md D119 + PLAN.md κ-70 G37 entry + ARCH §11.5 G37
-       `[x]` flip + NEXT_SESSIONS.md P-⑭ closure marker
+       `[x]` flip + NEXT_SESSIONS (archived) P-⑭ closure marker
   - **landed artifacts**: design.md D119 박제 · hexa-lang PR #291
     LANDED (`6187d499` merge SHA · 3 files / 942 line · `stdlib/
     fusion/jet_pulse_fetcher.py` + `jet_plasma_measured_oracle.py` +
@@ -2564,7 +2563,7 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     third-instance generalization audit · RFC status 미flip · narrative
     cross-link만 add via D119)
   - **landed artifacts**: `project.tape @D d6` (3-carrier audit COMPLETE
-    PATCH update) · PLAN.md κ-70 R9 4/4 CLOSURE entry · NEXT_SESSIONS.md
+    PATCH update) · PLAN.md κ-70 R9 4/4 CLOSURE entry · NEXT_SESSIONS (archived)
     P-⑭ closure marker + κ-71 horizon pointer · ARCH §11.5 G38 `[x]`
     flip (본 row) · 단일 commit.
   - **est**: 0.3-0.5 session (κ-69 R8 closure entry mirror · doc
@@ -3127,149 +3126,13 @@ the narrative anchor + Tier-1/2/3 shape; detail SSOTs live in
 
 ### 12.1 chip §B — rfc_006 §5 area-oracle parity (yosys absorption)
 
-> **inherited 2026-05-21**: 구 root `YOSYS.md` (rm'd at `06a8428`) 의
-> 잔여 Tier-1/2/3 로드맵을 본 절로 이관. Detail SSOT (entry-by-entry
-> 측정-fact + 사이클별 변동 log · 1754 line · entries (o)..(bb)+ 누적)
-> 는 `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md`.
+> Moved 2026-05-22: this section's measurement state · Tier-1 closure
+> sequence · multi-session progression · substrate-host infrastructure
+> log was promoted to top-level **[`./YOSYS.md`](./YOSYS.md)** (spec) +
+> **[`./YOSYS.log.md`](./YOSYS.log.md)** (campaign history). See those
+> two files for the canonical Yosys absorption status. Detail SSOT
+> remains `inbox/notes/rfc006-s5-area-oracle-parity-handoff.md`.
 
-**goal** — hexa-native synth chain 이 substrate yosys+SKY130 의 oracle
-area (router_d4 = 61,762.99 µm² · router_d6 = 93,608.53 µm² · ratio
-1.5156× bit-exact) 를 ±5 % 안에서 재현 → rfc_006 §5
-`measurement_gate = CLOSED_MEASURED` flip.
-
-**current gate state** (2026-05-21 KST · post hexa-lang `df4ff3f7`
-Tier-1 (ii) Option I LANDED · post (ll) Option F agent fresh chain
-rerun verification):
-- `measurement_gate = OPEN` · substrate-axis `absorbed = false`
-  (cell-side κ-43 flip 별 axis · unchanged `absorbed=true`)
-- area measurement (mac-side `HEXA_EXEC_NO_SHELL=1 hexa run
-  stdlib/yosys/gate_record.hexa` · fresh clean-worktree rerun):
-  - router_d4 = **32,829 µm²** (Δ=**46.85 %** vs oracle 61,763 ·
-    27× pre-(e) baseline · Option I 1:1 per-`.latch` reader-half at
-    `abc_map.hexa` L470-479) · `abc_map: ok exit=0`
-  - router_d6 = **45,936.6 µm²** (Δ=**50.93 %** vs oracle 93,608.5 ·
-    same Option I closure) · `abc_map: ok exit=0`
-  - chain selftest 8/8 PASS · 1638 `.latch` lines d4 · 2292 d6 ·
-    1653 / 2313 `.gate` lines post-ABC · EXACT substrate flop count
-    match · narrative authority `inbox/notes/rfc006-s5-area-oracle-
-    parity-handoff.md` entry (ll) · supersedes (kk)'s stale-BLIF
-    revert to 1207.41 / 1677.86 µm² (measurement pipeline artifact)
-- gate target window: area ∈ [58,675, 64,851] µm² (d4 ±5 %) +
-  [88,928, 98,289] µm² (d6 ±5 %) · NOT yet met · residual ~47-51 %
-  gap = `share`/`freduce` (comb sharing) + DFFE-promotion · Option E +
-  Tier-2 territory (4–8 session estimate)
-
-**Tier-1 — closure path (immediate, multi-session)**
-
-- [x] (0) **exec runtime restore** — upstream PR #251 (hexa-lang
-  cycle 66 `8ea4b75e`) MERGED; popen/spawn stubs 복구 → `hexa exec`
-  chain testable
-- [x] (a) **PR #247 SSA fix** (`8dd1e677` + `f4c3c493`) MERGED — `_rv_
-  parse_always` for-handler 의 intra-iteration blocking-LHS chain
-  per-iter SSA renaming (3 helper + read-then-write filter · T73
-  selftest)
-- [x] (b) **PR #255 abc_map honesty** MERGED `e4f79e26` 2026-05-21 —
-  `abc_map.hexa` truncate-before-exec + `combinational loop` stdout
-  pattern + T9/T10 selftest (renumbered from T8/T9 post-Option-I
-  rebase to avoid collision with Option I's T8 multi-bit `.latch`
-  test). stale `_out.blif` false-positive load-bearing guard ·
-  post-Option-I rebase clean (test-section only conflict · abc_map
-  function body untouched) · selftest 10/10 PASS · zero regression
-- [x] (c) **abc_map script reorder** (`read_lib` → `read_blif`) —
-  already in PR #247 `logic_synth/abc_map.hexa` L478-486
-- [x] (d) **`rr_ptr__d` cross-iter comb-loop** — hexa-lang PR #261
-  (`0ca0994f`) MERGED 2026-05-20T19:26:33Z (RFC 073 Phase 3g · SSA
-  pre-loop init redirect); `_rv_parse_always` for-handler 의 SSA
-  chain pre-loop alias (`connect(s__ssa0, s)`) + post-loop publish
-  (`connect(s, s__ssaP)`) 결합으로 발생한 `s__ssa0 = s = s__ssaP`
-  comb cycle 을 `connect_lhs[]` 역방향 scan + pre-loop driver rhs
-  직접 seed 로 해체. cycle 해체 + 외부 readers 는 post-loop publish
-  통해 정확한 값 read. T74c rewrite + T74d regression guard 추가.
-  read_verilog selftest 77/77 · round_trip 12/12 · abc_map 7/7
-  (zero regression). **note**: PR #260 (`rfc006-yosys-ssa-seed-fix`
-  branch) 는 같은 (d) target 의 parallel attempt — superseded by
-  PR #261 · still OPEN
-- [x] (e) **`fifo_mem[*]` 2-D LHS flat `$dff` demux** — hexa-lang
-  `c4b35b13` LANDED 2026-05-21 (Option A · 2-D unpacked array LHS
-  → per-slot `$eq + $and + $mux + $dff` demux · 4 sub-cases:
-  const/dyn × const/dyn). Selftest 78/78 → **79/79 PASS** (+T76).
-  ABC accepts cleanly · `_rv_emit_body_v2` honest-skip 제거.
-  Measured (sky130_fd_sc_hd · 2026-05-21):
-  - router_d4 = **1207.41 µm²** (was 559.286 · +2.16×) · oracle
-    61,762.99 · still ~98% under
-  - router_d6 = **1677.86 µm²** (was 771.99 · +2.17×) · oracle
-    93,608.53 · still ~98% under
-  Follow-up width-aware fix `a4a032af` (D-wire mirror packed
-  width via `_rv_v2_wire_width`) · 79/79 PASS preserved (no area
-  delta — BLIF emitter still collapses multi-bit to single
-  `.latch`). **scope note**: (e) 의 own-scope (area > 0 + ABC
-  accepts + no honest-skip) CLOSED. §5 absolute area gap ~98%
-  잔존 — Option B (RTLIL `$memrd`/`$memwr`) 또는 (f) crossbar
-  output array writes 가 cluster cost 의 dominant 잔여. NO
-  `Yosys absorbed` claim. PR #256 inbox patch status → "Option
-  A landed".
-- [~] (f) **end-to-end router_d4 area > 0 → ±5 % gate** measurement
-  — **PARTIAL-LANDED** (chain-measured **32,829 µm²** · oracle gap
-  **46.85 %** · 79 % of substrate-axis gap closed since (e)+(ii)
-  Option I · BLIF `.latch` count 1638 matches substrate flop count ·
-  post-ABC `.gate` lines 1653 per-bit-mapped · gate target window
-  ∈ [58,675, 64,851] µm² NOT yet met). Source: Option F agent
-  2026-05-21 KST fresh chain rerun (`hexa run stdlib/yosys/
-  gate_record.hexa` from clean worktree · selftest 8/8 PASS) ·
-  narrative authority `inbox/notes/rfc006-s5-area-oracle-parity-
-  handoff.md` entry (ll). Residual ~47 % gap = comb sharing
-  (`share`/`freduce`) + DFFE-promotion (`$_DFFE_PP_` @ 30.03 µm² vs
-  hexa-native `$_DFF_P_` @ 20.02 µm²) · Option E + Tier-2 territory ·
-  NOT yet ±5 % gate close.
-- [~] (g) **router_d6 parity** measurement — **PARTIAL-LANDED**
-  (chain-measured **45,936.6 µm²** · oracle gap **50.93 %** · 2292
-  `.latch` lines · 2313 post-ABC `.gate` lines · area target window
-  ∈ [88,928, 98,289] µm² NOT yet met) · same Option I 79 % gap
-  closure logic as (f) · same Option E residual.
-- [ ] (h) **ratio 1.5156× verification** — d6/d4 = 45,936.6 / 32,829
-  = **1.3995** vs oracle 1.5156 · 7.7 % off · target ∈ [1.4399,
-  1.5914] (±5 %) NOT yet met · closes naturally as Option E lands
-  (d6 uses proportionally more DFFE than d4 in substrate)
-- [ ] (i) **`measurement_gate = CLOSED_MEASURED`** flip — g3
-  conditional · d4 + d6 + ratio 三項 all PASS 이후만
-
-**Tier-2 — post-closure expansion (week+ scope)**
-
-- [ ] **`$adff` / `$sdff` / `$dffe` write_verilog behavioural emit**
-  — reset / enable variants. `always @(posedge clk, posedge rst) if
-  (rst) q <= 0; else q <= d;` round-trip · T14/T15/T16 selftest 가
-  signal. router-class designs 가 사용
-- [ ] **share / freduce parity** — comb-side oracle gap closure
-  (handoff (s) finding: `synth` macro 의 logic-sharing optimizations
-  ~12,806 µm² 차). 옵션 A = `stdlib/kernels/logic_synth/passes.hexa`
-  의 share + freduce impl · 옵션 B = substrate-yosys-as-tail-pass
-  (hexa-native frontend → substrate `synth` tail · D80 endpoint 의
-  hexa-native ultimate-form 와 trade)
-- [ ] **formal equivalence check** — substrate `yosys -p "...
-  equiv_make oracle hexa_native eq; equiv_simple; equiv_status"`
-  reports `0 unproven` · hexa-native ↔ substrate's oracle RTLIL
-  semantic equivalence (§5 cross-verification)
-
-**Tier-3 — announcement + governance close**
-
-- [ ] **`ABSORPTION.md` §178 yosys row** flip → `absorbed=true ·
-  measured area passes ±5 %` · Tier-1 all `[x]` dependency
-- [ ] **rfc_006 §5 closure announcement** — `measurement_gate =
-  CLOSED_MEASURED · absorbed=true · 2026-MM-DD measured` ROADMAP +
-  commit message adoption · ABSORPTION.md updated dependency
-
-**estimate** (post-2026-05-21 (e) Option A LANDED audit): **8–16
-sessions** until gate close. Tier-1 (f) + (g) + (h) + (i) cluster
-가 dominant 잔여 cost (§5 absolute area gap ~98% 잔존 — Option A
-flat $dff 는 substrate `synth_memory_dff` consolidated count 보다
-~10× 비싸므로 ±5 % closure 는 Option B `$memrd`/`$memwr` cells 또는
-crossbar output array writes (Tier-1 (f) territory) 필요); Tier-2 +
-Tier-3 는 gate flip 이후 unlock.
-
-**shape note** — 이 axis 의 work 는 sibling repo `~/core/hexa-lang`
-에서 일어남 (demiurge 측은 narrative emit + ABSORPTION.md row flip
-정도). demiurge 측 commit 0 에 가까운 axis — sibling-repo PR 의
-landing 시각만 ARCH `## Log` 에 박제.
 
 ---
 
