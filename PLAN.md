@@ -5429,3 +5429,91 @@ Resumption (DEFERRED · 별 cycle): (i) kernel refinement multi-segment quadrati
 - session-side memory entries added: `[[reference-hexa-is-compiled]]` (user correction "인터프리터 안쓰는데 컴파일 언어잖아" · grace-consent compiled-checker fix premise) · others incremental.
 
 g3 — 본 land 는 honest partial closure (R4 invariant respected via DEFER · not via fake success). κ-72 horizon = G41 absorbed flip resumption (kernel refinement Path i) + 5th cell measured-oracle round + Bio/Chem candidates · honestly placeholder.
+
+- 2026-05-22 — **phase κ-72 — R11 horizon OPENED · ARCH §11.7 신설
+  (G43-G46 scaffold) + 3-framing horizon research note · R11 0/4
+  LANDED · code 0**. κ-71 R10 honest 3/4 + G41 `[~]` PARTIAL closure
+  (`c82fe0e` · `2ac28b4`) 의 'next horizon (κ-72+)' obligation 의 첫
+  이행. κ-68 G27 → κ-69 G32 → κ-70 G36 → κ-71 G39 의 horizon-opening
+  scaffold 패턴 mirror — 본 cycle 은 §11.7 scaffold + framing-research
+  note 만 land · G43 framing decision 은 다음 별 cycle (pre-pick
+  금지 · ranking advisory only).
+  - **κ-72 R11 scaffold 박제** (ARCH §11.7 G43..G46 · 모두 `[ ]` ·
+    framing-dependent shape baked-in): G43 = framing decision + (A 시)
+    resumption-track decision (Path (i) kernel refinement vs Path (ii)
+    oracle-criterion D-block · D122 자연 순서) · G44 = substrate
+    refinement land (A · Path i) 또는 D-block-only oracle relaxation
+    (A · Path ii) 또는 5th cell pick (B · D122 shift) · G45 = G41
+    first-flip 재시도 (A · `EnergyWindVerifyRecord` 재사용 · 4-record
+    audit unchanged) 또는 5th cell first-flip (B · 새 record · 5-record
+    audit) · G46 = R11 closure (4/4 LANDED 시 첫 "resumed-flip" 라운드 ·
+    또는 honest 3/4 + G45 `[~]` PARTIAL closure 시 κ-71 R10 mirror).
+  - **3-framing horizon research note** (`inbox/notes/2026-05-22-k72-
+    horizon-framing-research.md` · κ-71 G39 candidate-research note
+    의 successor with 새 framing-comparison shape · κ-72 의 round-
+    shape decision):
+    - **Framing A 추천** (G41 resumption · kernel refinement Path (i)
+      OR oracle-criterion D-block Path (ii) · closes open `[~]` ·
+      smallest scope · 4-domain progression broken but honest partial-
+      resumption precedent affirmed). recommendation rationale: κ-71
+      G41 PARTIAL 은 R4 invariant 의 design 작동 증거 · κ-72-A 가
+      그 작동을 *visibly land* (deferred flip eventually arrives via
+      principled resumption · Path i 가 D121 explicit "principled
+      path"). substrate floor 더 이상 ZERO 아님 (`power_curve_kernel.
+      hexa` v0.1.0 MERGED · PR #308). PARTIAL risk lowest.
+    - Framing B (5th cell · Bio/Chem/Matter NEW DOMAIN · κ-71 G39
+      candidate cluster carry · 5-record-type invariant audit ·
+      redundant confirmation · 4-record audit 이미 strongest evidence).
+      G41 stays `[~]` indefinite. PARTIAL-risk repeat. structural-
+      floor cost 가장 무거움 (κ-71 보다 1-step 더 heavy · 새 record +
+      bridge + 가능히 새 kernel).
+    - Framing C (hybrid · κ-72 = Framing A · κ-73 = Framing B). best
+      of both · κ-73 §11.8 scaffold obligation in κ-72 G46 closure
+      entry. 이 분기는 강한 의지가 있을 때만 — Framing C 가 본질적
+      으로 "Framing A this round + commit to Framing B next round."
+  - **κ-72 honest precedent inheritance (핵심 박제)**: κ-71 R10 =
+    첫 honest PARTIAL closure 라운드 (3/4 + G41 `[~]`). 본 R11 의
+    어떤 framing 도 PARTIAL 가능성 명시 인정 — Framing A G45 가
+    refined kernel 위에서 여전히 PASS 못해도 honest 3/4 + G45 `[~]`
+    가 정직한 land · Framing B G45 가 새 record + 새 oracle 위에서
+    PARTIAL 도 동일. **R4 invariant 가 작동하는 design 증거 · 실패
+    아님.** 4/4 LANDED 는 *결과*지 *목표*가 아니다.
+  - **next pickup 명시**: **G43** = framing decision + (Framing A 시)
+    Path (i)/(ii) 선택 (D122 · code 0 · 별 cycle). Framing A · Path
+    (i) 채택 시 G43→G44 사이 별 cycle 의 `power_curve_kernel.hexa`
+    v0.2.0 partial-land (κ-71 G41 substrate sub-phase mirror).
+  - **next horizon (κ-73+)** placeholder (κ-71 closure entry 의 4-item
+    동형 · honestly placeholder · G46 의 closure entry obligation):
+    G43 picked framing 의 follow-on axis + Framing C 채택 시 5th cell
+    candidate cluster (Bio/Chem/Matter) + Energy/wind G37-β real
+    SCADA timeseries via NREL WTK (token available after) + chip §B
+    Tier follow-on.
+  - **D-number stale 의도**: G43 scaffold = D-block 미생성 (κ-68/κ-69/
+    κ-70/κ-71 scaffold opening 도 D-block 없이 land · D-block 은 G43
+    framing decision 또는 G44 cell-pick 시점 land = D122 자연 순서 ·
+    `grep -nE '^### Decision' design.md | tail -1` = D121 확인).
+    design.md 변경 0.
+  - **§11.6 G41 [~] 상태 유지**: 본 §11.7 scaffold 가 land 되어도
+    §11.6 G41 의 `[~]` 는 그대로 · D121 도 그대로 · κ-72-A G45 가
+    PASS 시점에만 §11.6 G41 → `[x]` 로 flip (옆문 flip · D123 cite +
+    D121 supersedes 명시). κ-72-B/C 채택 시 G41 indefinite `[~]`
+    (B 채택 시 영구 · C 채택 시 κ-72-A 완결로 close).
+  - **RFC 013 §6.11 status `LANDED` 유지** (κ-72 R11 = Framing A 시
+    same-invariant 의 fourth-instance flip-completion 또는 Framing B
+    시 fifth-instance generalization audit · RFC status 미flip 둘 다).
+  - **수정 파일 4개** (모두 demiurge · doc edit · code 0): `inbox/
+    notes/2026-05-22-k72-horizon-framing-research.md` (NEW · 3-framing
+    5-fold lock-in + recommended Framing A) · `ARCH.md` (§11.7 신설
+    G43..G46 scaffold + §11.4 intro Round 11 surface 갱신 + κ-71
+    PARTIAL precedent 박제) · `PLAN.md` (본 entry) · `NEXT_SESSIONS.md`
+    (P-⑰ κ-72 cold-pickup brief + head refresh + P-⑯ closure marker).
+  g3 — 본 land 는 horizon-opening scaffold (code 0 · Swift/Python/hexa
+  변경 0 · D-block 0 · 새 stored field 0 · 새 `.demi` row 0). 어떤
+  cell 의 `absorbed=true` 도 flip 안 됨 · framing pick 미수행 (Framing
+  A advisory only · G43 가 decision gate). κ-71 G41 `[~]` 상태 유지 ·
+  D121 supersedes 안 됨. 모든 floor (D80/D86/D103/D106/D116) preserved.
+  κ-68 G27 / κ-69 G32 / κ-70 G36 / κ-71 G39 의 horizon-opening-from-
+  scaffold split 패턴 1:1 mirror — pre-pick 금지. **κ-72 는 첫 round
+  with explicit PARTIAL-tolerance baked into scaffold** — κ-71 PARTIAL
+  precedent 가 honest land 의 새 shape 으로 박힘 (4/4 는 결과지 목표
+  아님).

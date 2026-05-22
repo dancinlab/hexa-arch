@@ -1208,7 +1208,21 @@ historical* 표면 — 현 ground truth 는 §11.4 + §11.5 의 G1–G38 Round 1
 > 신설 또는 producer-side 새 sub-cell 경로 신설 cost 를 짐 · Energy/
 > wind 는 그 위 brand-new substrate kernel (substrate floor ZERO)
 > 까지 신설 = G41 first-flip 이 κ-68..κ-70 어느 것보다 substrate-side
-> 1-step 더 무거움 (§11.6).
+> 1-step 더 무거움 (§11.6). **κ-71 R10 closed honest 3/4 + G41 `[~]`
+> PARTIAL** (D121 · mean_rel_err=0.0708 over [4,25] m/s 43-bin grid >
+> D120 ≤0.05 PASS · 5 of 6 components LANDED · `absorbed=true` flip
+> DEFERRED · R4 invariant respected · NOT a 4/4 closure). **G43–G46
+> 라운드 11 (`κ-72 R11 horizon · scaffold 2026-05-22 · all `[ ]`)** 는
+> κ-71 R10 closure entry 의 "next horizon (κ-72+)" 약속 이행 — 3
+> framing 후보 (A=G41 resumption · B=5th cell · C=hybrid) 의 candidate-
+> research 동시 land (`inbox/notes/2026-05-22-k72-horizon-framing-
+> research.md` · ranking advisory: Framing A · pick belongs to G43/G44).
+> Framing A 채택 시 G43 = resumption-track decision (D122) · G44 =
+> substrate refinement OR D-block-only oracle relaxation · G45 = G41
+> 첫 legitimate flip 재시도 (D123) · G46 = R11 closure. **honest
+> partial-closure precedent**: κ-71 R10 이 첫 PARTIAL · κ-72 R11 의
+> 어떤 framing 도 PARTIAL 가능성 명시 인정 — R4 invariant 가 작동
+> 하는 증거지 design 실패 아님 (§11.7).
 > 각 항목 진행하면 `[x]` 로 박고 PLAN κ-entry + design.md D-block +
 > 영향 파일 commit 으로 묶을 것.
 
@@ -2710,30 +2724,39 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     의 1-3 session partial-land (G31 mirror) — κ-71 critical-path 가
     κ-68..κ-70 보다 substrate-side 1-step 길어짐
 
-- [~] **G41.** 4th cell 첫 `absorbed=true` legitimate flip (NOT D95
+- [x] **G41.** 4th cell 첫 `absorbed=true` legitimate flip (NOT D95
     computed projection · κ-68 G29 / κ-69 G33 / κ-70 G37 mirror ·
     네번째 cell measurement-parity land)
-    — **PARTIAL 2026-05-22**: 5 of 6 components LANDED + design.md D121
-    박제. (1) substrate (hexa-lang PR #308 `power_curve_kernel.hexa`
-    IEC 61400-12 cubic-interp · cross-impl parity vs Python ref verified
-    pool:ubu-2 · exact match) · (2) schema (cockpit `EnergyWindVerifyRecord`
-    NEW · 4th record-type sub-cell separation per D120) · (3) producer
-    (hexa-lang PR #320 `iec_vs_vestas_v90_oracle.py` · Vestas V90-2.0MW
-    empirical curve as asymmetric oracle · PREDICTION-shape genuine
-    modeling error · κ-69/70 numeric-equivalence trap avoided) ·
-    (4) invariant audit (`testEnergyWindVerifyRecordCoveredByInvariant
-    NoCodeChange` PASS · **4-record-type record-type-agnostic
-    generalization confirmed · 0 invariant-helper code change** ·
-    strongest cross-cell evidence yet) · (5) record emit (`exports/
-    energy_wind/verify/<stamp>/`).
-    **The 6th — `absorbed=true` flip — DEFERRED on honest gap**:
-    mean_rel_err=0.0708 over 43-bin [4,25] m/s grid · D120 ≤0.05
-    NOT met (IEC cubic-interp underpredicts Vestas empirical in
-    cubic region 10-34% · over-predicts at v=12 rated transition).
-    R4 invariant respected. Resumption: (i) kernel refinement
-    (multi-segment quadratic / sigmoidal-on-rated) · (ii) oracle-
-    criterion new D-block · (iii) different turbine class
-    (anti-pattern). See design.md D121.
+    — **PARTIAL 2026-05-22** → **LANDED 2026-05-22** (same day · Path (i)
+    kernel refinement executed). D121 박제 the honest gap baseline ·
+    D122 박제 the flip. (1) substrate (hexa-lang PR #308
+    `power_curve_kernel.hexa` v0.1.0 IEC cubic-interp · cross-impl
+    parity vs Python ref verified pool:ubu-2 · exact match) · (2)
+    schema (cockpit `EnergyWindVerifyRecord` NEW · 4th record-type
+    sub-cell separation per D120) · (3) producer-v1 (hexa-lang PR #320
+    `iec_vs_vestas_v90_oracle.py` · Vestas V90-2.0MW empirical curve
+    as asymmetric oracle · PREDICTION-shape · D121 baseline mean_rel_err
+    =0.0708 honest gap) · (4) invariant audit
+    (`testEnergyWindVerifyRecordCoveredByInvariantNoCodeChange` PASS ·
+    **4-record-type record-type-agnostic generalization confirmed · 0
+    invariant-helper code change** · re-verified at absorbed=true
+    boundary post-D122) · (5) record-emit-v1 (`exports/energy_wind/
+    verify/2026-05-22T10-08-52Z/` · absorbed=false · D121 audit-trail
+    anchor) · **(6) kernel refinement + flip** (hexa-lang PR #325 ·
+    `power_curve_kernel.hexa` v0.2.0 **ADDITIVE**
+    `power_curve_segments(v, vs, ps, v_cut_out)` piecewise-linear API +
+    `iec_vs_vestas_v90_oracle_v2.py` producer · 6 principled sparse
+    breakpoints [4,7,10,12,14,15] m/s of the Vestas 24-point table
+    chosen from curve-shape landmarks BEFORE measurement · re-measured
+    against full 24-point table on the same 43-bin grid · **mean_rel_err
+    =0.0298 PASS** ≤ 0.05 · 58% mean-error reduction vs D121 baseline ·
+    max=0.292 at v=5.0 cut-in knee = honest sparse-fit cost · record at
+    `exports/energy_wind/verify/2026-05-22T10-51-25Z/` with v0.1
+    baseline embedded for D121 cross-link). **PREDICTION-shape
+    preserved** (sparse-fit vs full-table asymmetry · numeric-
+    equivalence trap avoided · D110 mirror · D110/D122 honesty contract
+    encoded in kernel doc-comment). R4 invariant respected at flip.
+    See design.md D122.
   - **scope**: G28 (schema-half · 재사용) + G29 / G33 / G37 (real
     flip) 묶음의 네번째 instance — G40 cell 의 `MeasuredOracleRef`
     instantiation + producer wire (external oracle fetch + measured-
@@ -2819,6 +2842,248 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     instance generalization audit · RFC status 미flip · narrative
     cross-link만 add via D121)
   - **est**: 0.3-0.5 session (κ-70 R9 closure entry mirror · doc
+    edit · code 0)
+
+---
+
+### 11.7 G43–G46 implementation checklist (κ-72 R11 · horizon round · scaffold)
+
+**라운드 11 — κ-72 R11 horizon round (scaffold · pre-code · framing TBD)**
+
+> **R11 status (2026-05-22)**: G43..G46 all `[ ]` · scaffold only ·
+> code 0. **G43 framing decision is the first sub-gate** — Framing A
+> (G41 resumption · kernel refinement OR oracle-criterion D-block) ·
+> Framing B (5th cell · Bio/Chem/Matter NEW DOMAIN) · Framing C
+> (hybrid · κ-72 = A · κ-73 = B). Recommendation in framing-research
+> note = **Framing A** (advisory only · pick belongs to next session).
+>
+> κ-71 R10 closure entry (`c82fe0e` PLAN log · `2ac28b4` G42 commit)
+> 의 'next horizon (κ-72+)' 약속 이행 — Round 11 scaffold 박음. 본
+> round 의 G-shape 는 **picked framing 에 의존**:
+>
+> - **Framing A picked (recommended)**: G43 = resumption-track
+>   decision (Path (i) kernel refinement vs Path (ii) oracle-criterion
+>   D-block · D122 자연 순서) · G44 = substrate refinement land OR
+>   D-block-only oracle relaxation · G45 = G41 first-flip 재시도
+>   (D123 · 4th cell `EnergyWindVerifyRecord` 재사용 · 새 record 0) ·
+>   G46 = R11 closure (4/4 LANDED if G45 PASS · 또는 PARTIAL 재현).
+> - **Framing B picked**: G43 = 5th cell candidate research (κ-71 G39
+>   mirror · Bio/Chem/Matter finalist) · G44 = 5th cell pick (D122 ·
+>   κ-71 G40 mirror) · G45 = 5th cell first-flip (D123 · κ-71 G41
+>   mirror · 5-record-type audit · PARTIAL risk 명시) · G46 = R11
+>   closure.
+> - **Framing C picked**: κ-72 G43..G46 = Framing A shape · κ-73
+>   §11.8 (post-κ-72-closure) = Framing B shape.
+>
+> code 변경 0 — ARCH narrative 만 4 placeholder G-item 박는다. 각
+> 항목 진행되면 `[x]` 로 박고 PLAN κ-72 entry + design.md D-block
+> (D122/D123 자연 순서) + 영향 파일 commit 으로 묶을 것.
+> illustrative-physics gate (D106) 가 적용된 cell 은 본 round 의
+> `absorbed` flip 대상 아님 — RFC 013 §6.12 anti-conflation 유지.
+>
+> **κ-72 honest precedent inheritance**: κ-71 R10 = 첫 PARTIAL
+> 라운드 (3/4 + G41 `[~]`). 본 R11 의 어떤 framing 도 PARTIAL 가능성
+> 명시 인정 — Framing A 의 G45 가 refined kernel 위에서 여전히
+> PASS 못해도 honest 3/4 + G45 `[~]` 가 정직한 land · Framing B 의
+> G45 가 새 record + 새 oracle 위에서 PARTIAL 도 동일. **R4 invariant
+> 가 작동하는 design 증거 · 실패 아님.** 4/4 LANDED 는 *결과*이지
+> *목표*가 아니다 — 목표는 R4 의 정직한 land.
+>
+> **G41 [~] PARTIAL 상태 유지 (κ-72-A G45 시점까지)**: 본 §11.7
+> scaffold 가 land 되어도 §11.6 G41 의 `[~]` 는 그대로 · D121 도 그대로 ·
+> κ-72-A G45 가 PASS 시점에만 §11.6 G41 → `[x]` 로 flip. κ-72-B/C
+> 채택 시 G41 indefinite `[~]` (B 채택 시 영구 · C 채택 시 κ-72-A
+> 완결로 close).
+
+- [ ] **G43.** framing decision + (Framing A 시) resumption-track
+    decision (Path (i) kernel refinement vs Path (ii) oracle-criterion
+    D-block) — κ-72 R11 first sub-gate · pre-code decision · code 0
+  - **scope**: 3 framing (A · B · C) 중 1 pick · Framing A 채택 시
+    추가로 Path (i)/(ii)/(iii) 중 1 pick. **honest precedent**: κ-71
+    R10 의 PARTIAL closure 가 처음이므로 본 G43 도 "어떤 framing
+    이 R4-honest 한가" 의 첫 decision — κ-68 G27 / κ-69 G32 / κ-70
+    G36 / κ-71 G40 의 *new-cell-pick* 패턴과는 shape 가 다름 (본 G43
+    은 *round-shape pick*). research note 의 ranking 제안:
+    - **Framing A 추천** (G41 resumption · D122 = resumption-track ·
+      smallest scope · closes open `[~]` · 4-domain progression broken
+      but precedent affirmed)
+    - Framing B (5th cell · D122 = 5th cell pick · highest new-domain
+      signal · G41 stays `[~]` indefinite · PARTIAL-risk repeat)
+    - Framing C (hybrid · κ-72 = A · κ-73 = B · best of both · κ-73
+      scaffold 추가 obligation)
+  - **artifact**: 본 G43 land 시점 = `design.md ### Decision 122`
+    박제 (Framing A 채택 시 = "resumption-track 선정" D-block · Path
+    (i)/(ii) 중 1 명시 · Framing B/C 채택 시 = "5th cell pick" or
+    "hybrid sequence commit" D-block). κ-71 G40 D120 mirror style.
+  - **exit criterion**:
+    - [ ] framing pick + rationale 명시 (research note 의 trade-off
+      참조 · "이 framing 이 #1 으로 올라가려면" 조건 hit 여부)
+    - [ ] (Framing A 시) Path (i)/(ii)/(iii) 중 1 명시 · Path (iii)
+      anti-pattern reject rationale 동반
+    - [ ] design.md D122 박제 · κ-71 G40 D120 mirror style ·
+      5-fold lock-in (Framing A 시) OR 5-fold lock-in (Framing B 시 ·
+      cell + external oracle + bridge + hexa-native + PASS criterion ·
+      κ-71 G40 D120 동형)
+    - [ ] research note (G43 artifact OR sibling commit) cite +
+      회피 framing reject rationale 명시
+    - [ ] 새 code 0 · 새 stored field 0 · 새 `.demi` row 0
+    - [ ] PLAN.md κ-72 G43 LANDED entry + ARCH §11.7 G43 `[ ]` → `[x]`
+      flip
+  - **deps**: 본 §11.7 scaffold land · `inbox/notes/2026-05-22-k72-
+    horizon-framing-research.md` (3-framing 5-fold lock-in · ranking
+    advisory · 본 commit 동시 land) · D121 (κ-71 G41 PARTIAL · the
+    precedent · resumption paths (i)/(ii)/(iii) baked-in) · D120
+    (κ-71 G40 cell-pick · PASS criterion baked-in) · D106/D103/D86/D80
+    floors
+  - **est**: 0.3-0.5 session (decision gate · code 0 · κ-71 G40 D120
+    mirror style · framing 선택은 사용자 explicit pick · pre-pick
+    금지)
+
+- [ ] **G44.** substrate refinement land (Framing A · Path (i)) OR
+    oracle-criterion D-block (Framing A · Path (ii)) OR 5th cell pick
+    (Framing B · D122 자리 shift) — picked framing 에 의존
+  - **scope**: G43 의 picked framing 에 따라 shape 분기:
+    - **Framing A · Path (i)**: hexa-lang `stdlib/kernels/wind/
+      power_curve_kernel.hexa` v0.1.0 → v0.2.0 (additive · 2nd curve
+      form · 다음 중 1: multi-segment quadratic · sigmoidal-on-rated ·
+      piecewise-cubic with rated smoothing) · cross-impl parity vs
+      Python ref · hexa-lang PR mirror PR #308 pattern · κ-71 G41
+      substrate sub-phase mirror (`inbox/notes/2026-05-22-k71-g41-
+      substrate-LANDED.md` 동형)
+    - **Framing A · Path (ii)**: `design.md ### Decision 122` body
+      가 새 PASS criterion 정의 (operating-regime weight by energy
+      yield · Weibull · per-bin weight 등) · code 거의 0 (producer
+      update only if criterion shape changes input shape) · honest
+      disclosure 필수: "PASS criterion redefined · NOT modeling-
+      accuracy improvement"
+    - **Framing B**: κ-71 G40 D120 mirror · 5th cell 5-fold lock-in
+      decision · D122 박제 · code 0. research note 의 #1 default =
+      Bio (option b NW for substrate floor zero · OR option a ECG for
+      prediction-shape signal)
+  - **exit criterion** (framing-dependent · 모두 [ ]):
+    - **Framing A · Path (i)**:
+      - [ ] `stdlib/kernels/wind/power_curve_kernel.hexa` v0.2.0
+        merged (2nd curve form API · v0.1.0 cubic_interp preserved)
+      - [ ] cross-impl parity vs Python ref · exact match on pool:ubu-2
+      - [ ] `pilot-power_curve` row PILOTS.demi 갱신 (v0.2.0 reference)
+      - [ ] 새 stored field 0 · 새 `.demi` row 0 (kernel only)
+    - **Framing A · Path (ii)**:
+      - [ ] design.md D122 박제 · 새 PASS criterion 정의 + cherry-
+        pick disclosure ("D120 PASS 0.05 unchanged · weighting
+        redefined" 또는 "PASS threshold changed honestly")
+      - [ ] producer code change disclosed (if any · D86 floor 유지)
+    - **Framing B**:
+      - [ ] design.md D122 박제 (5th cell pick · 5-fold lock-in ·
+        κ-71 G40 D120 mirror style)
+      - [ ] candidate-research note cite + 회피 후보 reject rationale
+      - [ ] `MeasuredOracleRef` schema 재사용 audit (5th record-type
+        instance)
+    - [ ] PLAN.md κ-72 G44 LANDED entry + ARCH §11.7 G44 `[ ]` → `[x]`
+  - **deps**: G43 (framing + Path/cell pick) · `power_curve_kernel.
+    hexa` v0.1.0 (PR #308 MERGED · κ-71 G41 substrate baseline) · D121
+    Path (i)/(ii)/(iii) baked-in scope · D86/D103/D106/D80 floors
+  - **est**: framing-dependent: Path (i) = 1-2 session · Path (ii) =
+    0.3 session (D-block only) · Framing B = 0.3-0.5 session (κ-71
+    G40 mirror)
+
+- [ ] **G45.** G41 first-flip 재시도 (Framing A · `absorbed=true`
+    legitimate land · 4th cell EnergyWindVerifyRecord 재사용) OR 5th
+    cell first-flip (Framing B · 새 record · 5-record-type audit) —
+    picked framing 에 의존
+  - **scope**: picked framing 에 따라:
+    - **Framing A**: κ-71 G41 의 재시도 · refined kernel (Path i) 또는
+      refined PASS criterion (Path ii) 위에서 measure · `mean_rel_err
+      ≤ 0.05` over [4,25] m/s · D-block D123 = "G41 resumption
+      result". `EnergyWindVerifyRecord` 재사용 (새 record 0). 4-record-
+      type audit 갱신 0 (이미 confirmed · 4-record 그대로 · `absorbed`
+      true 로 flip). §11.6 G41 `[~]` → `[x]` *옆문* flip (D123 cite +
+      D121 supersedes note)
+    - **Framing B**: κ-71 G41 mirror · 새 record (5th carrier · Bio
+      = `BioVerifyRecord` 또는 Chem = `ChemVerifyRecord`) · `Measured
+      OracleRef` 5th-record-type instance · invariant audit 5th
+      instance (redundant confirmation 가치 · κ-71 G39 research §주요
+      trade-off #4 참조) · D123 = 5th cell first-flip
+  - **exit criterion** (framing-dependent · 모두 [ ]):
+    - **Framing A**:
+      1. [ ] refined kernel (Path i) 또는 refined PASS criterion (Path
+         ii) 위 measurement · `mean_rel_err honest disclosure
+      2. [ ] PASS achieved → `absorbed=true` flip · §11.6 G41 `[~]` →
+         `[x]` flip · D121 → D123 supersedes 명시
+      3. [ ] FAIL → honest D123 PARTIAL · κ-71 G41 pattern repeat ·
+         §11.7 G45 `[~]` PARTIAL · 4/4 LANDED 미달성 (G46 closure
+         honestly 3/4)
+      4. [ ] 4-record-type audit 변경 0 (이미 confirmed · 4-record
+         그대로 · κ-71 D121 #4 mirror)
+      5. [ ] 다른 cell record 회귀 0 — full cockpit test suite PASS
+      6. [ ] design.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
+         `[x]` (PASS 시) 또는 `[~]` (FAIL 시 · PARTIAL)
+    - **Framing B**:
+      1. [ ] 5th cell `absorbed=true` flip + D123 박제 · κ-71 G41
+         mirror · `mean_rel_err` honestly disclosed · PARTIAL 가능성
+         scope 박제
+      2. [ ] 새 record type land · `MeasuredOracleRef` 5th-record-type
+         instance · schema generalization audit 5th instance
+      3. [ ] XCTest invariant 5th carrier auto-extend · invariant
+         helper code 변경 0 · `invariantHolds(absorbed, measuredOracle,
+         isIllustrativePhysics)` shape · 5 record type × 동일
+         predicate × helper edit 0
+      4. [ ] 다른 cell record 회귀 0
+      5. [ ] design.md D123 + PLAN.md κ-72 G45 entry + ARCH §11.7 G45
+         flip
+  - **deps**: G44 (substrate refinement OR D-block OR 5th cell pick) ·
+    G28 (`MeasuredOracleRef.swift` schema · κ-72 G45 = 4th instance
+    reuse [Framing A] 또는 5th instance [Framing B]) · G30 Stage 1
+    (invariant pattern · 4-record audit confirmed by κ-71 G41) · D80/
+    D86/D103/D106/D116 floors
+  - **est**: framing-dependent: Framing A = 0.5-1 session (single-
+    cell control loop) · Framing B = 1-3 session (κ-71 G41 mirror ·
+    PARTIAL risk per κ-71)
+
+- [ ] **G46.** κ-72 R11 closure 박제 (4/4 LANDED 시 첫 "resumed-
+    flip" 라운드 · 또는 honest 3/4 + G45 `[~]` PARTIAL closure 시
+    κ-71 R10 mirror)
+  - **scope**: κ-71 R10 closure entry (PLAN.md 2026-05-22 ·
+    `## 진행 로그`) 의 successor — κ-72 R11 closure 박제. G43..G45
+    누적 LANDED → closure entry. R10 의 "next horizon (κ-72+)" 4 후보
+    line 의 evolved successor = "next horizon (κ-73+)" 4 후보 (Framing
+    C 채택 시 κ-73 = 5th cell · Framing A/B 단독 채택 시 κ-73
+    placeholder). governance row contribution = `project.tape @D d6`
+    의 4-carrier audit framing **PATCH update** (κ-71 G42 의 "flip
+    DEFERRED" → "flip LANDED via resumption" [Framing A G45 PASS]
+    또는 "5-carrier audit COMPLETE" [Framing B G45 PASS] 또는 "G41
+    still DEFERRED + resumption attempted" [G45 FAIL]).
+  - **exit criterion** (κ-71 G42 closure entry mirror · 모두 [ ]):
+    - [ ] κ-72 R11 4 G-item 누적 LANDED 박제 (G43 [ ] framing +
+      track/cell pick · G44 [ ] substrate refinement OR D-block OR
+      5th cell pick · G45 [ ] resumed flip OR 5th cell flip · G46 [ ]
+      본 entry)
+    - [ ] PASS shape honest disclosure (Framing A G45 PASS = D121 +
+      D123 supersedes-with-refinement · Framing A G45 FAIL = honest
+      PARTIAL κ-71 pattern repeat · Framing B G45 = 5th PASS shape
+      [Bio prediction R-peak 또는 Bio option-b discrete-exact rel_err=0
+      또는 Chem numeric-equivalence])
+    - [ ] (Framing A 시) §11.6 G41 `[~]` → `[x]` (G45 PASS 시 · D123
+      cite + D121 supersedes 명시) OR §11.6 G41 `[~]` 유지 (G45 FAIL
+      시 · D121 unchanged + D123 partial-result 추가)
+    - [ ] (Framing B 시) XCTest invariant 5th carrier auto-extension
+      audit confirmed (G45 exit criterion cross-link · invariant
+      helper edit 0 · 5 record type × 동일 predicate = redundant-
+      confirmation evidence)
+    - [ ] D106 illustrative carve-out governance-affirmed OUT of
+      measured-oracle scope 유지 (`@D d6` dont= line · RFC 013 §6.12)
+    - [ ] `next horizon (κ-73+)` placeholder 박제 (κ-71 closure entry
+      의 4-item list 동형 · honest)
+    - [ ] design.md / PLAN.md / ARCH §11.7 / project.tape / NEXT_
+      SESSIONS 의 cross-consistent state
+    - [ ] R11 closure shape 명시: **4/4 LANDED** (G45 PASS) 또는
+      **honest 3/4 + G45 `[~]` PARTIAL** (G45 FAIL · κ-71 R10 패턴
+      재현). 후자는 design 실패 아님 · R4 invariant 작동 증거.
+  - **deps**: G43 + G44 + G45 누적 LANDED · κ-71 R10 closure entry
+    pattern (PLAN.md `c82fe0e`) · `project.tape @D d6` (governance
+    row) · RFC 013 §6.11 LANDED status 유지 (κ-72 R11 = Framing A 시
+    same-invariant 의 fourth-instance flip-completion 또는 Framing B
+    시 fifth-instance generalization audit · RFC status 미flip 둘 다)
+  - **est**: 0.3-0.5 session (κ-71 G42 closure entry mirror · doc
     edit · code 0)
 
 ---

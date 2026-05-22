@@ -59,16 +59,31 @@
 > Ufo/plasma follow-on cluster).
 >
 > **P-⑯ (κ-71 fourth-cell measured-oracle round, ARCH §11.6 Round 10
-> G39..G42) — OPEN 2026-05-22** · **R10 1/4 LANDED** (G39 candidate-
-> research note `inbox/notes/2026-05-22-k71-horizon-candidate-research.
-> md` · 3 finalist: Energy/wind · Bio/ECG · Chem/Arrhenius · ranking
-> advisory **#1 Energy/wind** [prediction-shape D110 mirror · 그러나
-> `power_curve_kernel.hexa` substrate 신설 1-3 session · HSDS token
-> floor] · code 0). **G40 (4th cell pick · D120) 가 다음 critical-
-> path** · 별 cycle 별 session. **κ-71 structural inflection**: 1-field-
-> extension carrier 가 κ-70 으로 소진 (`FusionVerifyRecord` 만 잔여
-> `[HP][✗]` 이나 D106 illustrative 영구-잠김) — 모든 κ-71 후보가
-> 새 VerifyRecord 신설 또는 producer-side 새 sub-cell 경로 신설 cost.
+> G39..G42) — CLOSED 2026-05-22** · **honest 3/4 + G41 `[~]` PARTIAL
+> closure** (NOT 4/4). G39 candidate-research LANDED + G40 D120 cell-
+> pick LANDED (Energy/wind · 4th record-type `EnergyWindVerifyRecord` ·
+> NREL WTK / Vestas V90 PREDICTION-shape oracle · `power_curve_kernel.
+> hexa` substrate land) + G41 5 of 6 components LANDED (substrate ·
+> schema · producer · invariant audit · record emit) **`absorbed=true`
+> flip DEFERRED** (mean_rel_err=0.0708 over [4,25] m/s > D120 ≤0.05 ·
+> R4 invariant respected · D121 records honest gap + resumption paths
+> (i)/(ii)/(iii)) + G42 R10 governance closure LANDED (project.tape
+> `@D d6` 4-carrier PATCH · honest 3/4 framing). **4-record-type
+> record-type-agnostic invariant audit CONFIRMED** (0 invariant-helper
+> code change · strongest cross-cell evidence to date · Energy/solar ·
+> Aura/EEG · Ufo/plasma · Energy/wind). historical reference.
+>
+> **P-⑰ (κ-72 R11 horizon round, ARCH §11.7 G43..G46) — OPEN 2026-05-22**
+> · **R11 0/4 LANDED · scaffold + framing-research note same-cycle
+> land · code 0**. 3 framing 후보 (A=G41 resumption · B=5th cell ·
+> C=hybrid) 비교 + 5-fold lock-in 제안 박제 (`inbox/notes/2026-05-22-
+> k72-horizon-framing-research.md` · ranking advisory **Framing A**
+> [closes open `[~]` · smallest scope · honest partial-resumption
+> precedent affirmation]). **G43 (framing decision + (Framing A 시)
+> resumption-track decision · D122) 가 다음 critical-path** · 별 cycle
+> 별 session. **κ-72 honest precedent inheritance**: κ-71 R10 이 첫
+> PARTIAL closure 라운드 · κ-72 의 어떤 framing 도 PARTIAL 가능성 명시
+> 인정 · R4 invariant 작동 증거 · 4/4 는 결과지 목표 아님.
 >
 > **P-⑮ (pool CLI first-class infrastructure follow-on)** — 2026-05-22
 > POOL.md landed (~517 line · 7 § · canonical wrapper + 5-row routing
@@ -1126,6 +1141,184 @@ Exit criterion:
 > 가 κ-70 으로 소진 — 모든 κ-71 후보가 record-side 또는 substrate-side
 > 신설 cost · #1 Energy/wind 는 prediction-shape re-elevate (D110 mirror ·
 > D117/D119 numeric-equivalence 약점 보완) 가 주 motivation.
+>
+> **κ-71 R10 CLOSURE outcome (2026-05-22 historical reference)**:
+> honest **3/4 + G41 `[~]` PARTIAL** closure · NOT 4/4. G39 ✅
+> candidate-research · G40 ✅ D120 (Energy/wind sub-cell 5-fold
+> lock-in) · G41 `[~]` PARTIAL D121 (5 of 6 LANDED · `absorbed=true`
+> flip DEFERRED on mean_rel_err=0.0708 > D120 ≤0.05) · G42 ✅ honest
+> 3/4 closure governance. **4-record-type record-type-agnostic
+> invariant audit CONFIRMED** (0 invariant-helper code change · Energy/
+> solar · Aura/EEG · Ufo/plasma · Energy/wind · strongest cross-cell
+> evidence to date). κ-72 continues in **P-⑰** below.
+
+---
+
+## P-⑰ — κ-72 R11 horizon round (ARCH §11.7 G43..G46 · post-κ-71 R10 honest 3/4 + G41 [~] PARTIAL)
+
+**κ-72 opening (2026-05-22 · 같은 cycle as κ-71 R10 honest 3/4 + G41
+`[~]` PARTIAL closure · `c82fe0e` PLAN log)**: ARCH §11.7 Round 11
+(G43..G46) 박힘 + 3-framing horizon research note 동시 land (`inbox/
+notes/2026-05-22-k72-horizon-framing-research.md`). **R11 0/4 LANDED ·
+scaffold + framing-research only · code 0**. G43..G46 all `[ ]` ·
+G43 (framing decision · D122 자연 순서) 가 다음 lowest-friction
+critical-path · 별 cycle 별 session.
+
+**κ-72 honest precedent inheritance (필독)**: κ-71 R10 은 **첫 honest
+PARTIAL 라운드** — 3/4 + G41 `[~]` PARTIAL closure (D121 ·
+mean_rel_err=0.0708 over [4,25] m/s > D120 ≤0.05 PASS · 5 of 6
+components LANDED · `absorbed=true` flip DEFERRED · R4 invariant
+respected). 본 R11 의 어떤 framing 도 **PARTIAL 가능성 명시 인정** —
+4/4 LANDED 는 *결과*지 *목표*가 아니다. 목표는 R4 의 정직한 land
+(PARTIAL 도 R4 작동의 증거 · design 실패 아님).
+
+**3 framing 후보 (research note ranking advisory · pick belongs to G43)**:
+
+- **Framing A 추천** — κ-72 = G41 resumption (kernel refinement Path
+  (i) OR oracle-criterion D-block Path (ii) · κ-71 G41 의 deferred
+  flip 을 본 round 에서 honest land). closes open `[~]` · smallest
+  scope · 4-domain progression broken but precedent affirmed.
+- Framing B — κ-72 = 5th cell (Bio/Chem/Matter NEW DOMAIN · κ-71
+  G39 candidate cluster carry · 5-record-type invariant audit). G41
+  stays `[~]` indefinite · highest new-domain signal · PARTIAL-risk
+  repeat.
+- Framing C — hybrid · κ-72 = Framing A · κ-73 = Framing B. best
+  of both · κ-73 scaffold obligation in κ-72 closure entry.
+
+**Use this when:** you continue κ-72 R11 work. ARCH.md §11.7 Round
+11 은 G43..G46 의 full scope (scope · deps · est · exit criterion ·
+avoid · framing-dependent shape) 를 가지고 있다 — 본 prompt 는 그
+narrative 를 *next-session pickup* 형태로 framing 만; **detail 은
+ARCH §11.7 G43..G46 + framing-research note 참조**, 본문 중복 금지.
+
+```
+demiurge κ-72 Round 11 session pickup.
+Repo: ~/core/demiurge · branch from origin/main. Read first:
+  - ARCH.md §11.7 Round 11 (G43..G46 full scope · framing-dependent
+    shape · est · exit criterion) — 본 prompt 의 detail SSOT
+  - inbox/notes/2026-05-22-k72-horizon-framing-research.md (3
+    framing 5-fold lock-in · ranking advisory: Framing A [G41
+    resumption · D122 = resumption-track Path i/ii · closes open
+    `[~]` · smallest scope] · Framing B [5th cell · D122 = 5th cell
+    pick · highest new-domain signal] · Framing C [hybrid · κ-72=A ·
+    κ-73=B] · κ-71 honest-precedent inheritance 박제)
+  - ARCH.md §11.6 Round 10 (G39..G42 · κ-71 R10 honest 3/4 + G41
+    `[~]` PARTIAL CLOSURE · 본 round 의 직접 parent · D121 carries
+    resumption paths)
+  - design.md D121 (κ-71 G41 PARTIAL · the precedent this round
+    builds on · 3 resumption paths (i) kernel refinement · (ii)
+    oracle-criterion D-block · (iii) different turbine class
+    [anti-pattern]) + D120 (κ-71 G40 cell-pick · PASS criterion
+    baked-in · `mean_rel_err ≤ 0.05` over [4,25] m/s) + D118/D119
+    (κ-70) + D115/D117 (κ-69) + D109/D110 (κ-68) — grandparent
+    templates
+  - inbox/notes/2026-05-22-k71-horizon-candidate-research.md (κ-71
+    G39 candidate cluster · Bio + Chem 후보 unspent · Framing B/C
+    채택 시 직접 carry source)
+  - proposals/rfc_013_hexa_native_parity_connection.md §6.11
+    (LANDED · κ-72 R11 = Framing A 시 same-invariant fourth-instance
+    flip-completion · Framing B 시 fifth-instance generalization
+    audit · RFC status 미flip 둘 다)
+
+Open axes (pick whichever is honest for this session — they are
+sequenced: G43 → G44 → G45 → G46):
+
+(a) G43 — framing decision + (Framing A 시) resumption-track decision
+    (Path (i) kernel refinement vs Path (ii) oracle-criterion D-block ·
+    pre-code decision gate · code 0 · D122 자연 순서). research note
+    ranking advisory:
+    - **Framing A 추천** (closes open `[~]` · smallest scope · 4-domain
+      progression broken but precedent affirmed). Path (i) sub-pick:
+      multi-segment quadratic / sigmoidal-on-rated / piecewise-cubic
+      with rated smoothing 중 1. D121 explicit "principled path."
+    - Framing B (5th cell · Bio option-b for substrate floor zero ·
+      OR Bio option-a for prediction-shape · OR Chem for Stage-0 →
+      Stage-2 promotion · OR Matter [research note 외 추가 후보])
+    - Framing C (hybrid · 본 round 는 Framing A · κ-73 §11.8 scaffold
+      추가 obligation in G46 closure entry)
+    회피 framing reject rationale 명시.
+
+(b) G44 — Framing A · Path (i) 채택 시: hexa-lang `power_curve_kernel.
+    hexa` v0.1.0 → v0.2.0 (additive 2nd curve form · cross-impl
+    parity vs Python ref · κ-71 G41 substrate sub-phase mirror PR #308
+    pattern). Framing A · Path (ii) 채택 시: D122 새 PASS criterion
+    정의 (cherry-pick disclosure 필수). Framing B 채택 시: 5th cell
+    5-fold lock-in (D122 · κ-71 G40 mirror · `MeasuredOracleRef`
+    schema 재사용 audit).
+
+(c) G45 — Framing A 채택 시: refined kernel/criterion 위 measurement
+    재시도 · PASS 시 `absorbed=true` 첫 legitimate flip on resumption ·
+    §11.6 G41 `[~]` → `[x]` 옆문 flip · D123 (resumption result).
+    FAIL 시 honest D123 PARTIAL · κ-71 G41 pattern repeat 가능.
+    Framing B 채택 시: 5th cell first-flip (κ-71 G41 mirror · 5-record-
+    type audit · `MeasuredOracleRef` 5th instance · D123).
+
+(d) G46 — κ-72 R11 closure 박제 (4/4 LANDED 시 첫 "resumed-flip"
+    라운드 · 또는 honest 3/4 + G45 `[~]` PARTIAL closure 시 κ-71 R10
+    mirror). `next horizon (κ-73+)` placeholder · governance row
+    `@D d6` 4-carrier audit PATCH update ("flip LANDED via resumption"
+    or "5-carrier audit COMPLETE" or "G41 still DEFERRED + resumption
+    attempted").
+
+Gate (g3 — REQUIRED for all open axes):
+  - G43 land = design.md D122 박제 + framing pick + (Framing A 시)
+    Path 선택 + code 0 + 회피 framing reject rationale.
+  - G44 land = framing-dependent (Path i: kernel v0.2.0 substrate
+    parity / Path ii: D-block only / Framing B: 5th cell D122 + 5-fold
+    lock-in).
+  - G45 land = framing-dependent (Framing A: refined measurement +
+    `absorbed` flip OR honest PARTIAL · Framing B: 5th cell first-flip
+    + 5th-record audit · 다른 cell 회귀 0).
+  - G46 land = R11 4/4 박제 OR honest 3/4 + G45 `[~]` PARTIAL 박제 +
+    `next horizon (κ-73+)` placeholder.
+
+NOT (g3 — non-negotiable):
+  - Do NOT touch hexa-lang chip §B substrate-axis work (§12.1 · 별
+    agent active · [[feedback-parallel-agent-cap]]).
+  - Do NOT trigger `absorbed=true` from D95 computed projection — D103.
+  - Do NOT include illustrative-physics cells (D106) — Fusion
+    mc_transport · Ufo Stage-4..7. (`FusionVerifyRecord` 영구-잠김.)
+  - Do NOT hardcode oracle dataset path — D86 floor.
+  - Do NOT pick Path (iii) "different turbine class" — D121 explicit
+    anti-pattern (cherry-picking turbines).
+  - Do NOT bundle G43 decision + G44 substrate land + G45 first-flip
+    in one session if 2+ require cross-repo merge — multi-repo
+    discipline.
+  - Do NOT redefine D120 PASS criterion (0.05 over [4,25]) unless
+    explicitly choosing Path (ii) AND landing a new D-block (D122) ·
+    cherry-pick risk per D121.
+  - Do NOT pretend 4/4 LANDED if G45 FAILs — honest 3/4 + G45 `[~]`
+    PARTIAL is the correct land per κ-71 R10 precedent · R4 violation
+    forbidden.
+  - Do NOT skip framing-research note cite in D122 body — decision
+    rationale 가 framing-research ranking 위 build.
+
+Exit criterion:
+  (α) G43 LANDED (D122 박제 · framing + Path/cell pick · code 0) +
+      scope-bounded next-pickup note + ARCH §11.7 G43 `[x]` flip, OR
+  (β) G44 LANDED (framing-dependent · substrate refinement OR D-block
+      OR 5th cell pick) + ARCH §11.7 G44 `[x]` flip, OR
+  (γ) G45 LANDED (G41 resumed first-flip OR 5th cell first-flip ·
+      PASS or honest PARTIAL) + ARCH §11.7 G45 `[x]` (PASS) or `[~]`
+      (PARTIAL) flip, OR
+  (δ) G45 + G46 묶음 land + κ-72 closure (R11 4/4 LANDED via G46 ·
+      또는 honest 3/4 + G45 `[~]` PARTIAL CLOSURE · κ-71 R10 mirror), OR
+  (ε) Scope-bounded sub-progress + honest next-pickup note.
+```
+
+> **Pattern note (κ-68 → κ-69 → κ-70 → κ-71 → κ-72 progression)**:
+> κ-68 = 1st cell (Energy/solar D110 · marginal PASS prediction-shape ·
+> 4/5 closure · G30 invariant audit start) · κ-69 = 2nd cell + ultimate-
+> form (Aura/EEG D117 · comfortable numeric-equivalence · 4/4 closure) ·
+> κ-70 = 3rd cell (Ufo/plasma D119 · numeric-equivalence · 3rd record-
+> type invariant audit · 4/4 closure) · κ-71 = 4th cell (Energy/wind
+> D120/D121 · PREDICTION-shape PARTIAL · **honest 3/4 + G41 `[~]`
+> closure** · 첫 PARTIAL precedent) · κ-72 = horizon round (Framing
+> A=resumption / B=5th cell / C=hybrid · pick belongs to G43). **κ-72
+> precedent inheritance**: κ-71 PARTIAL 이 첫 사례 — κ-72 도 PARTIAL
+> 가능성 명시 인정 · 4/4 는 결과지 목표 아님 · R4 invariant 작동
+> 증거. Framing A 추천 (closes open `[~]` · smallest scope · honest
+> partial-resumption precedent affirmation).
 
 ---
 
