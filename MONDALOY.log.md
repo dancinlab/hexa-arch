@@ -6,6 +6,21 @@ confirmed state.
 
 ## Log
 
+- **2026-05-22 KST** — **§9.6 §7 forward funnel EXECUTED → single
+  candidate `demiurge-SX500-RE-c1`.** Collapsed the §9.4 envelope to one
+  composition via public superalloy-design rules (no proprietary
+  Thermo-Calc TCNI this session — analytically-tractable funnel):
+  Giggins-Pettit Ni-Cr-Al oxidation map (Al 5.0 wt% + Cr 20 wt% →
+  region III continuous α-Al₂O₃) · γ′/printability window (Al+Ti 6.5
+  → ~35-40 % γ′, AM-processable) · PHACOMP TCP avoidance (Cr≤20,
+  Mo 3.5) · reactive-element effect (Hf 0.3 + Y 0.05). Candidate
+  wt%: Ni bal 57.6 · Cr 20 · Al 5 · Co 12 · Mo 3.5 · Ti 1.5 · Hf 0.3
+  · Y 0.05 · C 0.05 · B 0.005. Estimated: γ′ 35-40 %, α-Al₂O₃
+  parabolic k_p ~1e-13–1e-12, ρ ~8.3 g/cm³, n=6 principal = Ni·Cr·
+  Al·Co·Mo·Ti. Record: `exports/material_discovery/sx500_mondaloy_
+  candidate_c1_20260522.json`. d6: open candidate, not SX500 itself,
+  `absorbed=false`. Next rigor: pycalphad phase-equilibrium + DFT
+  scale-adhesion.
 - **2026-05-22 KST** — **§9 Reverse-engineering EXECUTED** (this
   session). Patent forensics: USPTO/Google-Patents assignee "Space
   Exploration Technologies" class C22C19/05 → **zero SX500 patents** —

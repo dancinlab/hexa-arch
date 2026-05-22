@@ -349,6 +349,62 @@ satisfied). Output is an independently-derived open alloy envelope, R4
 Pattern 1+2 preserved (`absorbed=false`; no impossibility framing — the
 trade-secret wall was met with a concrete breakthrough path per d2).
 
+## §9.6 §7 forward funnel — EXECUTED → single candidate (this session)
+
+The §7 design funnel run on the §9.4 envelope. Honest tool note: a
+rigorous 6-component CALPHAD needs Thermo-Calc TCNI (proprietary,
+unavailable this session); what follows is the **analytically-tractable
+funnel** — established *public* superalloy-design rules applied to
+collapse the envelope to one candidate. `simulation-only-prediction`,
+`absorbed=false`.
+
+**Design rules applied (all public):**
+
+1. **Alumina-former gate (Giggins-Pettit Ni-Cr-Al oxidation map, 1971).**
+   For a continuous protective α-Al₂O₃ scale (oxidation map region III),
+   with Cr ≈ 20 wt% (~22 at%) the Al threshold is ≈ 8-9 at%. Target
+   **Al = 5.0 wt% (≈10.8 at%)** — solidly inside region III, the
+   coating-free ox-rich requirement satisfied with margin.
+2. **γ′ strengthening, printability-capped.** γ′ = Ni₃(Al,Ti) volume
+   fraction set by Al+Ti. René N5 (~70 % γ′) is not printable; Haynes
+   282 (~19 %) is weldable. Target a **moderate ~35-40 % γ′** —
+   **Al 5.0 + Ti 1.5 wt%** — strong but inside the AM-processable window
+   SpaceX is known to push.
+3. **TCP-phase avoidance (PHACOMP / Nv electron-vacancy).** Mo, Cr, W
+   drive embrittling σ/μ phases. Cap **Cr ≤ 20, Mo ≈ 3.5 wt%** — keeps
+   the mean electron-vacancy number below the σ-phase line.
+4. **Reactive-element effect.** **Hf 0.3 wt%** (René N5 uses 0.2) +
+   trace **Y 0.05** — pegs the α-Al₂O₃ scale against thermal-cycling
+   spallation.
+5. **Co for γ′ solvus + SFE.** **Co 12 wt%** raises the γ′ solvus
+   (high-T strength retention) and lowers stacking-fault energy.
+
+**Candidate — `demiurge-SX500-RE-c1` (wt%):**
+
+| Ni | Cr | Al | Co | Mo | Ti | Hf | Y | C | B |
+|---|---|---|---|---|---|---|---|---|---|
+| bal ~57.6 | 20.0 | 5.0 | 12.0 | 3.5 | 1.5 | 0.3 | 0.05 | 0.05 | 0.005 |
+
+**Estimated properties (analytical, public correlations):**
+
+- γ′ volume fraction ≈ **35-40 %** (Al+Ti = 6.5 wt% driver)
+- oxidation: **α-Al₂O₃ parabolic regime**, k_p ~10⁻¹³–10⁻¹² g²·cm⁻⁴·s⁻¹
+  at ~1100 °C — 2-3 orders of magnitude below a Cr₂O₃-former, and (key)
+  **no CrO₃ volatilisation** in ox-rich service
+- density ≈ **8.3 g·cm⁻³** (Ni-base typical)
+- the "n=6" strengthener set is concrete: **Cr · Al · Co · Mo · Ti**
+  (+ Ni base = 6 principal elements; Hf/Y/C/B are micro-additions)
+
+> **Honest verdict.** `demiurge-SX500-RE-c1` is an *independently
+> derived, open* SX500-class candidate — not SpaceX SX500. It is a
+> single point inside the §9.4 envelope, selected by public design
+> rules. `absorbed=false` · `simulation-only-prediction`. The next
+> rigor step (future session, compute permitting): a real CALPHAD
+> phase-equilibrium run (pycalphad + an open Ni-Cr-Al-Co TDB) and a
+> DFT α-Al₂O₃/substrate adhesion-energy check, to confirm the γ′
+> fraction and the scale-adhesion margin numerically. Record:
+> `exports/material_discovery/sx500_mondaloy_candidate_c1_20260522.json`.
+
 ## §10. Cross-references
 
 - `hexa-space/mondaloy/mondaloy.md` — upstream n=6 structural-pattern

@@ -1,0 +1,60 @@
+{
+  "domain": "material",
+  "verb": "design",
+  "kind": "sx500_mondaloy_class_single_candidate_analytical_funnel",
+  "stamp": "20260522T152000Z",
+  "producer": "demiurge MONDALOY.md §9.6 — §7 forward funnel run analytically (public superalloy-design rules: Giggins-Pettit Ni-Cr-Al oxidation map, gamma-prime/printability window, PHACOMP TCP avoidance, reactive-element effect)",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "candidate_id": "demiurge-SX500-RE-c1",
+  "purpose": "Collapse the §9.4 reverse-engineered SX500-class composition envelope to a single defensible candidate via public superalloy-design rules — the §7 forward funnel executed at the analytically-tractable level (no proprietary Thermo-Calc TCNI database available this session).",
+  "parent_envelope": "exports/material_discovery/sx500_mondaloy_reverse_engineered_envelope_20260522.json",
+  "composition_wt_pct": {
+    "Ni": 57.595,
+    "Cr": 20.0,
+    "Al": 5.0,
+    "Co": 12.0,
+    "Mo": 3.5,
+    "Ti": 1.5,
+    "Hf": 0.3,
+    "Y": 0.05,
+    "C": 0.05,
+    "B": 0.005
+  },
+  "design_rules_applied": {
+    "alumina_former_gate": "Giggins-Pettit Ni-Cr-Al oxidation map (1971): Cr~20 wt% (~22 at%) puts the region-III (continuous alpha-Al2O3) Al threshold at ~8-9 at%; Al=5.0 wt% (~10.8 at%) is solidly inside region III => coating-free ox-rich protection.",
+    "gamma_prime_printability": "Al+Ti=6.5 wt% targets ~35-40% gamma-prime volume fraction — strong but inside the additive-manufacturing window (René N5 ~70% gamma-prime is not printable; Haynes 282 ~19% is weldable).",
+    "tcp_avoidance": "PHACOMP / Nv electron-vacancy: Cr<=20, Mo~3.5 wt% keeps mean electron-vacancy below the sigma-phase line.",
+    "reactive_element": "Hf 0.3 wt% + Y 0.05 wt% peg the alpha-Al2O3 scale against thermal-cycle spallation (reactive-element effect; René N5 precedent 0.2 wt% Hf).",
+    "co_solvus": "Co 12 wt% raises gamma-prime solvus (high-T strength retention) and lowers stacking-fault energy."
+  },
+  "estimated_properties": {
+    "gamma_prime_vol_fraction": "35-40 % (Al+Ti driven)",
+    "oxidation_regime": "alpha-Al2O3 parabolic, k_p ~1e-13 to 1e-12 g^2 cm^-4 s^-1 at ~1100 C — 2-3 orders below a Cr2O3-former, NO CrO3 volatilisation in ox-rich service",
+    "density": "~8.3 g/cm^3 (Ni-base typical)",
+    "n6_principal_elements": "Ni · Cr · Al · Co · Mo · Ti (Hf/Y/C/B = micro-additions)"
+  },
+  "honest_observations": [
+    "demiurge-SX500-RE-c1 is an independently-derived OPEN SX500-class candidate, NOT SpaceX SX500. It is a single point inside the §9.4 envelope chosen by public design rules.",
+    "Funnel was run analytically — a rigorous 6-component CALPHAD needs proprietary Thermo-Calc TCNI, unavailable this session. The analytical rules (Giggins-Pettit, PHACOMP, gamma-prime window) are all public and well-validated.",
+    "absorbed=false, simulation-only-prediction — no measured oracle against actual SX500 or against a cast c1 sample.",
+    "The alumina-former conclusion (Al 5 wt% + Cr 20 wt% => region III) is the highest-confidence element — pure oxidation thermodynamics + the classic Ni-Cr-Al map."
+  ],
+  "next_steps": [
+    "pycalphad + open Ni-Cr-Al-Co TDB: real phase-equilibrium run to confirm the 35-40% gamma-prime fraction numerically",
+    "DFT alpha-Al2O3 / Ni-substrate adhesion-energy check (reactive-element margin)",
+    "physics-descriptor ML creep estimate (arxiv:2212.06755 method)",
+    "validate the whole funnel on a public-composition alumina-forming Ni alloy analog (e.g. a Haynes-214-class alloy) before any SX500-class claim"
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material · verb=design. D1 clean-room satisfied (public design rules + public oxidation maps; no trade-secret extraction). R4 Pattern 1+2 preserved — open candidate, no impossibility framing, d2 breakthrough path (open functionally-equivalent alloy) continued from the §9 envelope.",
+  "citations": [
+    "Giggins, C.S. & Pettit, F.S. 1971 J. Electrochem. Soc. 118:1782 — Ni-Cr-Al oxidation map (regions I/II/III)",
+    "Reed, R.C. 'The Superalloys: Fundamentals and Applications' (2006) — gamma-prime, PHACOMP, design rules",
+    "René N5 / Haynes 282 public datasheets — gamma-prime fraction + printability brackets",
+    "arxiv:2212.06755 (ML creep from physical descriptors), ScienceDirect S0927025621007084 (CALPHAD composition funnel)",
+    "MONDALOY.md §7-§9.6 (demiurge domain doc)",
+    "parent: sx500_mondaloy_reverse_engineered_envelope_20260522.json"
+  ]
+}
