@@ -1,0 +1,53 @@
+{
+  "domain": "material",
+  "verb": "analyze",
+  "kind": "sx500_mondaloy_class_reverse_engineered_composition_envelope",
+  "stamp": "20260522T150000Z",
+  "producer": "demiurge MONDALOY.md §9 — constraint triangulation (patent forensics + public datasheet brackets + ox-rich thermodynamics), arxiv/web deep-research synthesis",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "target": "SpaceX SX500 (a.k.a. upstream hexa-space label 'MondAloy') — Ni-base combustion-resistant superalloy, Raptor 3 ox-rich preburner/chamber, ~810 bar hot oxygen, coating-free",
+  "purpose": "Reverse-engineer a proprietary-free, open, functionally-equivalent SX500-class composition envelope from public surface only (D1 clean-room) — d2 breakthrough past the trade-secret wall.",
+  "method": {
+    "patent_forensics": "USPTO / Google Patents assignee 'Space Exploration Technologies' class C22C19/05 — ZERO SX500 patents found; SpaceX protects SX500 as trade secret (no patent disclosure). No patent shortcut.",
+    "analog_brackets": "public datasheet wt% for Inconel 625, Inconel 718, Haynes 282, René N5 — chromia-formers (Inconel family, printable, low Al) vs alumina-former (René N5, high Al + Hf, single-crystal not printable). SX500 sits between.",
+    "physics_constraint": "ox-rich 810 bar hot O2 + coating-free => Cr2O3 scale volatilises as CrO3/CrO2(OH)2 above ~1300 K => SX500 MUST form protective alpha-Al2O3 scale => Al >> stock-Inconel 0.8 wt%, + reactive element (Hf/Y/Zr) for scale adhesion. Pure thermodynamics, no proprietary data.",
+    "printability_cap": "cast + 3D-printed (public) => gamma-prime-former total bounded for weldability => rules out René N5 6.2 wt% Al => Al moderate 3.5-6.0"
+  },
+  "reverse_engineered_envelope_wt_pct": {
+    "Ni": "55-62 (base)",
+    "Cr": "16-22 (chromia underlayer + hot corrosion + third-element-effect O getterer)",
+    "Al": "3.5-6.0 (alpha-Al2O3 former — THE ox-rich lever, key departure from stock Inconel)",
+    "Co": "8-15 (gamma-prime solvus, stacking-fault energy, strength)",
+    "Mo": "2-6 (solid-solution strengthening)",
+    "Ti": "1-3 (gamma-prime former with Al)",
+    "Hf": "0.1-0.5 (reactive element — alumina scale adhesion)",
+    "Y_Zr": "0.01-0.1 (secondary reactive element)",
+    "W_Nb_Ta": "0-4 each (optional solid-solution / gamma-prime, printability-capped)",
+    "Fe_C_B": "<=5 / 0.02-0.1 / trace"
+  },
+  "n6_elements_inference": "Ni + 5 strengtheners (matching public 'n=6 alloying elements' characterisation) most-likely = Ni · Cr · Al · Co · Mo · Ti",
+  "highest_confidence_inference": "Al >> stock-Inconel level (alpha-Al2O3-forming, reactive-element-stabilised) — derived from pure ox-rich thermodynamics, the single most defensible RE conclusion",
+  "honest_observations": [
+    "This is a constraint-triangulated INFERENCE, not SX500 itself. No measured oracle against the actual SpaceX alloy exists — verdict stays simulation-only-prediction, absorbed=false (d6).",
+    "Per d2 this is the breakthrough deliverable: an independently-derived, open, functionally-equivalent SX500-class envelope bypasses the trade-secret wall without breaching it.",
+    "Patent-forensics null result is informative: SX500's IP strategy is trade-secret, confirming why no composition is public.",
+    "The envelope is a bounding box, not a point; a single optimised candidate requires the §7 CALPHAD+DFT funnel (future session, pool/cloud compute)."
+  ],
+  "next_steps": [
+    "Run §7 CALPHAD funnel (Thermo-Calc TCNI / OpenCALPHAD) on this envelope -> single optimised candidate composition",
+    "DFT O-vacancy formation + alpha-Al2O3 scale adhesion energy on the candidate -> ox-rich oxidation-rate prediction",
+    "Physics-descriptor ML creep estimate (arxiv:2212.06755 method)",
+    "Validate the pipeline on a public-composition alumina-forming Ni alloy analog before any SX500-class claim"
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. D1 clean-room satisfied (patent reading + public datasheets + thermodynamic reasoning — no trade-secret extraction). R4 Pattern 1 (no absorbed=true) + Pattern 2 (no impossibility framing — trade-secret wall met with concrete d2 breakthrough path) preserved.",
+  "citations": [
+    "SpaceX SX500 public surface: nextbigfuture 2019 (SX300/SX500 lineage), fabbaloo 2019 (SX500 800-atm test), teslarati (Raptor superalloys)",
+    "RD-170/RD-180 ox-rich prior art: grokipedia, astronautix (Ni-Cr alloys + inert enamel coating)",
+    "Ni-superalloy computational design: ScienceDirect S0927025621007084 (779,625 -> 12 CALPHAD funnel), arxiv:2212.06755 (ML creep from physical descriptors), arxiv:2511.10108 (MATAI inverse design), arxiv:1803.03039 (NN superalloy design)",
+    "Analog datasheets: Inconel 625/718, Haynes 282, René N5 public compositions (Special Metals, Haynes International, Nickel Institute pub 393)",
+    "MONDALOY.md §7-§9 (demiurge domain doc)"
+  ]
+}

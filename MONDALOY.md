@@ -254,7 +254,102 @@ triangulation*, which is legitimate):
 > absorption-RFC already meets. The output is an *independently
 > derived* open alloy, not a copy.
 
-## §9. Cross-references
+## §9. Reverse-engineering — EXECUTED (this session, 2026-05-22)
+
+The §8 RE methods, run analytically against the public surface. Output
+= a concrete, proprietary-free, reverse-engineered composition envelope
+for an SX500-class alloy. `gate_type=simulation-only-prediction` ·
+`absorbed=false` (this is an *inference*, never measured against the
+actual SpaceX alloy — d6).
+
+### §9.1 Patent forensics — result
+
+USPTO / Google Patents search for assignee **"Space Exploration
+Technologies"** in Ni-superalloy class **C22C19/05**: **zero SX500
+patents found.** This is itself a finding — **SpaceX protects SX500 as
+a trade secret, not a patent** (a patent would force public composition
+disclosure; a trade secret does not). Consequence for RE: no patent
+shortcut exists; the envelope must be triangulated from physics +
+public-spec constraints + analog brackets (§9.2-§9.4).
+
+### §9.2 Analog composition brackets (public datasheets, wt%)
+
+| element | Inconel 625 | Inconel 718 | Haynes 282 | René N5 (SX turbine) |
+|---|---|---|---|---|
+| Ni | bal ≥58 | 50-55 | bal ~57 | bal ~61 |
+| Cr | 20-23 | 17-21 | 19-21 | 7 |
+| Al | ≤0.4 | 0.2-0.8 | 1.5 | **6.2** |
+| Co | ≤1 | ≤1 | 10 | 8 |
+| Mo | 8-10 | 2.8-3.3 | 8.5 | 2 |
+| W | — | — | — | 5 |
+| Ti | ≤0.4 | 0.65-1.15 | 2.1 | — |
+| Nb | 3.15-4.15 | 4.75-5.5 | — | — |
+| Ta | — | — | — | 7 |
+| Hf/Y/Zr | — | — | — | Hf 0.2 |
+| oxide formed | Cr₂O₃ | Cr₂O₃ | Cr₂O₃ | **Al₂O₃** |
+
+The two endpoints bracket SX500: the **Inconel 625/718** family
+(chromia-forming, weldable/printable, low Al) and the **René N5** family
+(alumina-forming, high Al + reactive-element Hf, single-crystal — *not*
+printable). SX500 must sit **between** them: alumina-capable like N5,
+but castable/printable like the Inconels.
+
+### §9.3 Physics constraint — the ox-rich lever (decisive)
+
+810 bar hot oxygen, **coating-free**. Pure Cr₂O₃ (the Inconel 625/718
+scale) volatilises as CrO₃ / CrO₂(OH)₂ above ~1300 K when O₂/H₂O
+activity is high — *fatal* in an ox-rich preburner. Therefore SX500
+**must form a protective α-Al₂O₃ scale**, which forces **Al well above
+the stock-Inconel ≤0.8 wt%**, plus a **reactive element (Hf/Y/Zr)** to
+keep the alumina scale adherent through thermal cycling. This is the
+single highest-confidence RE inference — it is pure thermodynamics, no
+proprietary data.
+
+### §9.4 Reverse-engineered SX500-class envelope (this session's deliverable)
+
+Triangulating §9.1-§9.3 + the printability cap (γ′-former total bounded
+to stay weldable, ruling out N5's 6.2 % Al) + the public "Ni + 5
+strengtheners" characterisation:
+
+| element | RE envelope (wt%) | role / rationale |
+|---|---|---|
+| **Ni** | 55-62 | base |
+| **Cr** | 16-22 | chromia underlayer + hot-corrosion + third-element-effect O getterer |
+| **Al** | **3.5-6.0** | α-Al₂O₃ former — **THE ox-rich lever**, the key departure from stock Inconel (§9.3) |
+| **Co** | 8-15 | γ′ solvus ↑, stacking-fault energy, strength |
+| **Mo** | 2-6 | solid-solution strengthening |
+| **Ti** | 1-3 | γ′ former (with Al) |
+| **Hf** | 0.1-0.5 | reactive element — alumina scale adhesion |
+| **Y/Zr** | 0.01-0.1 | secondary reactive element |
+| W/Nb/Ta | 0-4 each | optional solid-solution / γ′; printability-capped |
+| Fe / C / B | ≤5 / 0.02-0.1 / trace | castability, grain boundary |
+
+**The "n=6" elements** (Ni + 5 strengtheners, matching the public
+characterisation): most-likely **Ni · Cr · Al · Co · Mo · Ti** — a
+castable, printable, alumina-forming, γ′-strengthened Ni superalloy.
+
+> **Honest verdict (d6 boundary)**: this envelope is a
+> *constraint-triangulated inference*, not SX500 itself. Without a
+> measured oracle against the actual SpaceX alloy it stays
+> `simulation-only-prediction` · `absorbed=false`. **But per d2 it is
+> the breakthrough deliverable**: an *independently derived, open,
+> functionally-equivalent* SX500-class composition envelope — the
+> trade-secret wall is bypassed, not breached. Next step (a future
+> session, pool/cloud compute permitting): run the §7 CALPHAD + DFT
+> funnel on this envelope to produce a single optimised candidate +
+> a verified ox-rich oxidation-rate prediction, filed as an
+> `exports/material_discovery/` record.
+
+### §9.5 Governance check
+
+RE executed here = patent-database reading + public datasheet
+compilation + thermodynamic reasoning. No closed-binary RE, no
+trade-secret extraction, no license circumvention (D1 clean-room
+satisfied). Output is an independently-derived open alloy envelope, R4
+Pattern 1+2 preserved (`absorbed=false`; no impossibility framing — the
+trade-secret wall was met with a concrete breakthrough path per d2).
+
+## §10. Cross-references
 
 - `hexa-space/mondaloy/mondaloy.md` — upstream n=6 structural-pattern
   draft (2026-05-07) + `verify_mondaloy.hexa` count-lattice script

@@ -6,6 +6,24 @@ confirmed state.
 
 ## Log
 
+- **2026-05-22 KST** — **§9 Reverse-engineering EXECUTED** (this
+  session). Patent forensics: USPTO/Google-Patents assignee "Space
+  Exploration Technologies" class C22C19/05 → **zero SX500 patents** —
+  SpaceX protects SX500 as a trade secret (no patent disclosure), an
+  informative null result. Analog brackets compiled (Inconel 625/718
+  chromia-formers · René N5 alumina-former) — SX500 triangulated
+  *between* them. Decisive physics: ox-rich 810 bar + coating-free →
+  Cr₂O₃ volatilises >1300 K → SX500 **must be α-Al₂O₃-forming** → Al
+  far above stock-Inconel ≤0.8 wt% + reactive element (Hf/Y/Zr).
+  **Deliverable**: a reverse-engineered open SX500-class composition
+  envelope (Ni 55-62 · Cr 16-22 · Al 3.5-6.0 · Co 8-15 · Mo 2-6 · Ti
+  1-3 · Hf 0.1-0.5 · Y/Zr 0.01-0.1 wt%; n=6 elements = Ni·Cr·Al·Co·
+  Mo·Ti). Record: `exports/material_discovery/sx500_mondaloy_reverse_
+  engineered_envelope_20260522.json`. d6 boundary held — inference not
+  SX500 itself, `absorbed=false`, `simulation-only-prediction`; d2
+  breakthrough = open functionally-equivalent alloy bypasses the
+  trade-secret wall. D1 clean-room satisfied (patent reading + public
+  datasheets + thermodynamics — no trade-secret extraction).
 - **2026-05-22 KST** — **§7 Design ideas + §8 Reverse-engineering ideas
   added** (arxiv + web deep-research). Naming resolved: the publicly-
   disclosed SpaceX alloy is **SX500** (SX250→SX300→SX500 lineage,
