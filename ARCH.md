@@ -2710,9 +2710,15 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
     의 1-3 session partial-land (G31 mirror) — κ-71 critical-path 가
     κ-68..κ-70 보다 substrate-side 1-step 길어짐
 
-- [ ] **G41.** 4th cell 첫 `absorbed=true` legitimate flip (NOT D95
+- [~] **G41.** 4th cell 첫 `absorbed=true` legitimate flip (NOT D95
     computed projection · κ-68 G29 / κ-69 G33 / κ-70 G37 mirror ·
     네번째 cell measurement-parity land)
+    — **PARTIAL 2026-05-22**: substrate floor LANDED (hexa-lang PR #308
+    `power_curve_kernel.hexa` · IEC 61400-12 cubic-interp + air-density ·
+    cross-impl parity vs Python ref verified on pool:ubu-2 · exact match).
+    measured-oracle flip DEFERRED (server 529 Overloaded blocked the heavy
+    multi-repo agent · NREL WTK token dependency) — schema/fetcher/producer/
+    flip remain. See `inbox/notes/2026-05-22-k71-g41-substrate-LANDED.md`.
   - **scope**: G28 (schema-half · 재사용) + G29 / G33 / G37 (real
     flip) 묶음의 네번째 instance — G40 cell 의 `MeasuredOracleRef`
     instantiation + producer wire (external oracle fetch + measured-
