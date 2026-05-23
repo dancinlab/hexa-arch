@@ -1,5 +1,21 @@
 # RTSC — axis taxonomy + per-axis progress board
 
+@goal: 상온 상압 초전도체 293K 1atm — 경로 고압 수소화물 파이프라인 검증부터 상압 안정 구조 탐색까지 R4 absorbed false until measured oracle PASS
+
+## Milestones (progress)
+
+- [x] H₃S 측정-grade DFT 6³q — 2015 Drozdov 203K anchor 재현 (Tc_AD 175–195K)
+- [x] CaH₆ 측정-grade DFT — Ma 2022 215K vs 213K (2K 정합 · clathrate topology)
+- [x] H₃X 5/8 LANDED + d7 wall α²F grid ceiling 100 meV 정량 식별
+- [x] BEE-NET grid-extended (101→140 meV) fine-tune launch — Vast 37496985 4-shard
+- [ ] h3cl 8³q convergence (stable #1 Tc 확정 — 8³q 후 plateau / 추가 grid 판정)
+- [ ] h3o anharmonic SSCHA 안정화 — imaginary mode (−682 cm⁻¹) renormalization
+- [ ] ambient-stable hydride 탐색 (§9.10 N5 funnel · 압력 < 50 GPa 후보)
+- [ ] 압력 < 50 GPa AND stable AND Tc > 200K 후보 발견
+- [ ] wet-lab handoff (Tier 2 recipe-as-record · §8 4-tier 경유)
+- [ ] measured-oracle PASS → RTSC absorbed=true (최종 d5 invariant 충족)
+
+
 > Root-level domain expansion. SSOT for "the rtsc work" until each axis
 > moves to its own UPPERCASE.md (ai-native principle 4 — domain-meta-domain).
 >
