@@ -24,7 +24,7 @@
 
 > base 도메인 — sub-domain (TTR-CREAM · TTR-MN) share. M2 first-principles + M5 MD/QM 가 native 🔵/🟢 path.
 
-- [ ] V1 TTR base claim inventory + tier triage (🔵/🟢/🟡/🟠) — M1/M2/M4/M6 공유 부분 → `TTR/verify/V1_claim_inventory.md`
-- [ ] V2 🔵 push — 산화환원 ΔG · chelator log K · photo 양자수율 · 분해 1차 kinetics · SC permeability ratio → `hexa verify --expr` + atlas register → `TTR/verify/V2_formal_identities.md`
-- [ ] V3 🟢 push — 잉크-활성분자 DFT (pool ubu-1/2) · SC lipid MD (RunPod GPU per @D d7) · TDDFT photo-cleavage (pool) · diffusion FEA (local CPU) → `TTR/verify/V3_numerical_recompute.md`
-- [ ] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 wet-lab deferred (ex-vivo M8/M9) → `TTR/verify/V4_tier_ledger.md`
+- [x] V1 TTR base claim inventory + tier triage (🔵/🟢/🟡/🟠) — M1/M2/M4/M6 공유 부분 → `TTR/verify/V1_claim_inventory.md`
+- [x] V2 🔵 push — 산화환원 ΔG · chelator log K · photo 양자수율 · 분해 1차 kinetics · SC permeability ratio → `hexa verify --expr` + atlas register → `TTR/verify/V2_formal_identities.md`
+- [x] V3 🟢 push — 잉크-활성분자 DFT (pool ubu-1/2) · SC lipid MD (RunPod GPU per @D d7) · TDDFT photo-cleavage (pool) · diffusion FEA (local CPU) → `TTR/verify/V3_numerical_recompute.md`
+- [x] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 wet-lab deferred (ex-vivo M8/M9) → `TTR/verify/V4_tier_ledger.md`
