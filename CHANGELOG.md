@@ -8,6 +8,15 @@ For the full audit trail, see `git log`.
 
 ## 2026-05-24
 
+### 2026-05-24 cycle 9-full batch (4 commits + 2 sibling · d7 wall grid-ceiling 발견)
+
+- **d7 wall mechanistic root — α²F grid ceiling** (RTSC §9.14) — ALIGNN α²F head 출력 grid = **0–100 meV 100-bin** (천장 100 meV). DFT ω_log 가 천장 초과/근접 (h3cl **107.9 meV** 초과 · h3o **94.5 meV** 근접) → 고압 H-derived stretching mode 가 grid 위에 살아 표현할 bin 부재 = ω_log under-prediction 의 root. 2 결손 채널: ① high-ω truncation · ② acoustic-edge sign-pathology (λ_dens = 2a²F/ω·dω 의 1/ω 가중이 음수 α²F 폭증 — h3o 0.5 meV bin **λ_dens=−0.489**, neg-λ 의 82%). d7 = "ML training-distribution wall" 의 정확 물리 = grid ceiling; breakthrough = first-principles DFT 또는 grid-extended retrain.
+- **canonical numerical SSOT 지정** (`e60925d`) — 모든 H₃X DFT numerical value 의 single source-of-truth 를 `exports/material_discovery/rtsc_h3<X>_dft_6x6x6q_*.json` (Tier 2 schema · provenance) 로 명시 + README; §9 표 + RTSC.log.md 는 human-readable snapshot (값 불일치 시 JSON authority).
+- **5 LANDED H₃X Tier 2 JSON** (`e9081b7`) — h3o/h3po/h3cl/h3f/h3si atlas-ready Tier 2 record 박제.
+- **cycle 10 atlas closure log** (`42cec9b`) — 5 LANDED atlas-ready + ALIGNN 9/9 + CaH₆ root cause + g48 handoff track.
+- **sibling: sidecar g54 + g55** — commons governance 후속.
+- **sibling: hexa-lang PR #557 OPEN** — Vast.ai upstream 흡수 (d9 경로).
+
 ### 2026-05-24 cycle 7-8 batch (4 commits + 2 sibling · κ-74 out-of-band audit)
 
 - **RTSC §9 4/8 LANDED · h3o novel 191 K headline** (`9e786fe`) — H₃O Vast 재스캔 회수 (group-16 light O · 6³q · λ_BZ=2.31–2.73 · ω_log=1089–1111 K · Tc(μ=0.10)=**171–191 K** · celldm=4.899). group-16 sweet-spot ladder 5-point mono 강화 (H₃S 203K → h3o 191K → H₃Se 113K → H₃Te 75K → H₃Po 48K). 잔여 4 active pods (h3n · h3p · h3as · h3br) + h3c serial · CaH₆ pool:ubu-1 DEAD (OOM SIGKILL, Vast live).

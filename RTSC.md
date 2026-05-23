@@ -1094,6 +1094,21 @@ cycle 6 + 7 합쳐 9/9 H₃X family-wide ALIGNN per-candidate baseline 완주 (p
 
 **R4 보호** (모든 결과): `absorbed=false` · `gate_type=simulation-only-prediction` · domain=material · ALIGNN = ambient-trained Tier-1 prediction (measurement-oracle 아님). family-wide null/sign 결과가 RTSC absorbed=true 와 무관 — pure d7 wall 메커니즘 정량화 layer.
 
+##### d7 wall mechanistic root — α²F grid ceiling (2026-05-24)
+
+ALIGNN per-candidate α²F(ω) head 의 출력 grid 는 **0–100 meV · 100-bin** (천장 100 meV) — 즉 100 meV 위 진동 모드를 표현할 bin 자체가 없다. 고압 hydride 의 H-derived stretching mode 가 이 천장을 넘어 살아 ω_log under-prediction 의 root cause 가 된다:
+
+| candidate | DFT ω_log (meV) | vs grid ceiling 100 meV |
+|---|---:|---|
+| H₃Cl | **107.9** | **천장 초과** — H-stretch bin 부재 |
+| H₃O  | **94.5**  | 천장 근접 — high-ω tail truncated |
+
+**2 결손 채널** (별개): ① **high-ω truncation** — H-stretch mode (>100 meV) 가 grid 위에 살아 ω_log 를 끌어내림 (정상 λ 후보의 ω_log 15× under 의 root). ② **acoustic-edge sign-pathology** — λ_density = 2·α²F/ω·dω 의 1/ω 가중이 ω→0 에서 음수 α²F 를 폭증시킴 (h3o 0.5 meV bin λ_dens = **−0.489**, neg-λ 의 82%). sign-pathology(음수 λ)는 high-ω truncation 과 독립 채널.
+
+**BEE-NET 구조적 해결 가능성**: a²F≥0 clamp + EMDLoss 로 sign-pathology 채널은 봉합 가능하나, 동일 0–100 meV grid 를 쓰면 high-ω truncation 은 잔존 → **grid 확장 retrain** 이 필수 조건. 설계: `inbox/notes/d7-wall-beenet-poc-design-2026-05-24.md`.
+
+**d7 governance 부합**: "ML training-distribution wall" 의 정확한 물리 = **α²F grid ceiling** (고압 H-mode 가 ambient-ML grid 밖). breakthrough = first-principles DFT (천장 무제한 — H₃S 6³q 측정-grade 입증) 또는 grid-extended ALIGNN/BEE-NET retrain. ML 더 돌리기로는 천장 못 넘음 (d7 dont).
+
 #### Harness — `process_completed_pod.sh`
 
 | 항목 | 값 |
