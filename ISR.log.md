@@ -2,6 +2,24 @@
 
 Append-only history sister of `ISR.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T03:00:00Z — V2 🔵 closed-form push (7 identities) 완료
+
+- [x] §0 hexa verify CLI signature 확인
+- [x] §1 Hill — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §2 Cheng-Prusoff — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §3 Beer-Lambert — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §4 exp release — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §5 LDL Δ% — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §6 Higuchi — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §7 Fick 1차 — verdict 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence)
+- [x] §Σ atlas register PR count: 0 (HONEST DEGRADE per --from-verify · 🟠 시 PR 미생성)
+- [x] 산출물 `ISR/verify/V2_formal_identities.md` (~430 lines)
+
+🔑 verdict 분포: 🔵 0 / 🟢 0 / 🟡 0 / 🟠 7 / 🔴 0 / ⚪ 7 — `hexa verify --expr` calc kernel 에 bio fn 부재 + float arg 거부 (int-only) 발견. LLM-judge 0건, 모두 verify CLI verbatim verdict.
+🌱 atlas absorption: 0 identities · PR URLs 없음 (HONEST DEGRADE — calc kernel 부재시 `--from-verify` 가 PR 거부).
+🛡 per @D d2 — 3 breakthrough path surface: path A (verify_cli.hexa::_recompute extend, ~385 LOC) · path B (V3 numerical 우회, NUM-06 PK/PD ODE local CPU) · path C (atlas append-witness --kind F 으로 🟡 citation-locked 직행).
+🥇 다음 milestone 권고 = V3 (path B 직행) — V1 §9.3 top 3 (NUM-06 · NUM-03 · NUM-01) 그대로 진행 가능.
+
 ## 2026-05-25T02:00:00Z — V1 claim inventory + tier triage 완료
 
 - [x] §1 Inventory methodology
