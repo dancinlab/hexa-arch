@@ -2,6 +2,24 @@
 
 Append-only history sister of `LPA.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T22:10:00Z — M5 CETP/PCSK9 보조 완료
+
+- [x] §1 보조 약제 위치 — 5축 (PCSK9i · obicetrapib · niacin · mipomersen · apheresis)
+- [x] §2 PCSK9i evolocumab/alirocumab — Lp(a) ↓ ~25% · FOURIER(O'Donoghue 2019) + ODYSSEY(Bittner 2020) · 한국 ASCVD 2차 급여
+- [x] §3 obicetrapib (Newamsterdam) — ROSE2 Ph2 Lp(a) -56% · BROADWAY/PREVAIL Ph3 readout 2026-27 · 표적 specificity 개선 (no aldosterone)
+- [x] §4 niacin AIM-HIGH/HPS2-THRIVE outcome neutral → FDA 2016 Lp(a) indication 철회
+- [x] §5 mipomersen — apoB ASO HoFH only · 2018 시판 중단 · 한국 미허가
+- [x] §6 apheresis — 독일 강력(-60% acute) · 한국 시설 부재 + 보험 미적용
+- [x] §7 종합 비교표 (PCSK9i · obicetrapib · niacin · mipomersen · apheresis + 참고 pelacarsen/olpasiran)
+- [x] §8 siRNA 출시 전·후 의사결정 — 2026 H1 PCSK9i + 2027 pelacarsen + 2028 olpasiran + obicetrapib 분기
+- [x] 산출물 `LPA/M5_adjunct.md` (175 lines)
+- [ ] 🟠 obicetrapib PREVAIL Ph3 outcome (2026-27 readout)
+
+🔑 핵심 통찰:
+- **siRNA 출시 전 한국 best option = PCSK9 mAb (Lp(a) -25%)** — 잔여 위험 22-23% 미해결
+- **obicetrapib PREVAIL 2026-27 readout** = 경구 dual-effect (LDL -45% + Lp(a) -50%) single molecule 부활 분기점 — CETP class 마지막 생존자
+- niacin/mipomersen = 역사 코너 · apheresis = KR 시설 부재 → 진정한 Lp(a) 차단은 **2027-28 siRNA 도입 대기**
+
 ## 2026-05-24T22:05:00Z — M4 siRNA 3-way 완료
 
 - [x] §1 siRNA 기전 — RISC catalytic vs ASO RNase H1 stoichiometric + GalNAc-ASGPR 간 표적
