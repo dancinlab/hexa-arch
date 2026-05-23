@@ -7,7 +7,7 @@
 - [x] 표적 잉크 클래스 정의 (탄소계 black · 유기 안료 color · 금속 산화물) — first-principles 분자 구조 inventory
 - [ ] 작용기전(MoA) 후보 short-list — 잉크 분해 화학경로 first-principles (oxidation · enzymatic cleavage · chelation · photo-cleavage)
 - [ ] 활성성분 후보 in-silico screening (산화제 · 효소 · chelator · ROS generator) — MoA 별 분자 후보 ≥ 10
-- [ ] 진피 전달(transdermal penetration) 메커니즘 설계 — liposome · nano-emulsion · iontophoresis · microneedle 비교
+- [x] 진피 전달(transdermal penetration) 메커니즘 설계 — liposome · nano-emulsion · iontophoresis · microneedle 비교
 - [ ] 잉크-활성분자 반응 MD/QM 시뮬레이션 + 분해경로 검증 (first-principles, 모델 학습 분포 의존 X)
 - [ ] 안전성: 표피·진피 off-target 손상 예측 — 멜라닌 · 콜라겐 · 혈관 · 면역세포 first-principles
 - [ ] 합성경로 + 제형(formulation) 설계 + 합성 validation (lab-scale ≥ 95% 순도)
