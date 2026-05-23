@@ -13,11 +13,11 @@
 - [x] block-and-lock — LAT 영구 침묵화 → `HERPES/M7_lock.md`
 - [x] T-cell exhaustion 역전 — PD-1 · LAG-3 신경절 침투 → `HERPES/M8_tcell.md`
 - [x] 치료적 mRNA 백신 — BNT163 · mRNA-1608 후속 → `HERPES/M9_mrna.md`
-- [ ] sterilizing cure 임상 엔드포인트 정의 + 검증 프로토콜
+- [x] sterilizing cure 임상 엔드포인트 정의 + 검증 프로토콜 → `HERPES/M10_clinical_protocol.md`
 
 ## verify (🔵 SUPPORTED-FORMAL push · per @D g5 · demiurge 자산 필수)
 
-- [ ] V1 HERPES claim inventory + tier triage (🔵/🟢/🟡/🟠) → `HERPES/verify/V1_claim_inventory.md`
-- [ ] V2 🔵 push — Poisson neuron infection rate · LAT silencing identity · CRISPR cut probability · viral 1차 decay · mRNA vaccine titer Hill → `hexa verify --expr` + atlas register → `HERPES/verify/V2_formal_identities.md`
-- [ ] V3 🟢 push — HSV genome MD (RunPod GPU per @D d7) · LAT chromatin state ODE (local CPU) · CRISPR off-target docking (pool ubu-1/2) · ganglion infiltration PK (local) → `HERPES/verify/V3_numerical_recompute.md`
+- [x] V1 HERPES claim inventory + tier triage → `HERPES/verify/V1_claim_inventory.md` (248 claims · 25🔵 / 44🟢 / 144🟡 / 35🟠 / 0🔴)
+- [x] V2 🔵 push — Poisson · LAT · CRISPR · decay · Hill → `HERPES/verify/V2_formal_identities.md` (5/5 ⚪ fence — hexa verify CLI는 NT-only · 해결 inbox patch 필요)
+- [x] V3 🟢 push → `HERPES/verify/V3_numerical_recompute.md` (2/4 🟢: LAT Markov on ubu-1 + 3-comp PK on ubu-2 · 2/4 🟠: cas-offinder/GRCh38 + bio toolchain 미설치)
 - [ ] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 honest deferred (sterilizing cure → wet-lab essential) → `HERPES/verify/V4_tier_ledger.md`
