@@ -1,5 +1,5 @@
 @V := "tape" :: spec [active]
-  version = "1.4"
+  version = "1.5"
 
 @I := "demiurge" :: identity [active]
   kind     = "Universal hexa-native technical-design architecture (7-verb pipeline · domain-plugin macOS cockpit)"
@@ -43,3 +43,7 @@
 @D d9 := "Vast.ai trouble → hexa-lang inbox" :: governance [required active]
   do   = "Vast finding → `hexa-lang/inbox/patches/<slug>.md` so `hexa cloud` absorbs upstream"
   dont = "paper-over a Vast-discovered `hexa cloud` gap inside the campaign"
+
+@D d10 := "worktree concurrent agent index isolation" :: governance [required active]
+  do   = "sequential commit on main · stage+commit one agent at a time · `git add <explicit-files>` only"
+  dont = "parallel worktree agents staged at once → index leak · stage absorbed into another agent's commit"

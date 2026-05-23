@@ -3095,6 +3095,67 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
   - **est**: 0.3-0.5 session (κ-71 G42 closure entry mirror · doc
     edit · code 0)
 
+### 11.8 κ-73 audit trail (2026-05-23 · out-of-band · non-R-round)
+
+**κ-73 (2026-05-23) — RTSC §9 H3X 8-fanout 3/8 LANDED + d7 wall ALIGNN per-cand 정량화 + cockpit Stage 1+2a Swift rename**
+
+> **κ-73 shape**: §11.4-§11.7 의 per-cell measured-oracle round (R-round
+> · G-checklist) 와 **disjoint** — RTSC `H₃X` superconductor candidate
+> screen 의 fanout 회수 라운드 + d7 wall mechanism 정량화 + cockpit
+> Swift identifier rename (RTSC → HTS proxy framing) 의 3-axis
+> 횡단 cycle. §11.7 κ-72 R11 scaffold 와 **병행 진행** (R11 의 G43
+> framing decision 은 여전히 pending · 본 §11.8 가 R11 을 close 하지
+> 않음).
+>
+> **9-commit batch (cycle 0-5 · `fe16791..019dcbb`)**:
+>
+> 1. `fe16791` — RTSC §9 H₃Po + H₃Cl LANDED · Vast 2/11 회수 · d7 wall
+>    돌파 시그널.
+> 2. `26c4bfb` — PLAN.md + HANDOFF.md absorption follow-up · 7 files
+>    dangling live-pointer references → `.log.md` archive redirect.
+> 3. `adc0852` — h3cl d7 wall 돌파 정량 분석 노트 · group-17 funnel
+>    가설 + DFT/ML 2.9× 비율.
+> 4. `0c1b864` — h3cl 노트 framing 정정 · ALIGNN H3S anchor 인용 명시
+>    (per-candidate ML 미실행 caveat 추가).
+> 5. `4b75289` — RTSC scope-shrink decision B 1단 · RTSC 가설 vs HTS
+>    proxy 명시 · cockpit Swift rename 은 별도 stacked PR.
+> 6. `de45c44` — cockpit Stage 1 `Rtsc*` → `Hts*` rename · View3D +
+>    CoilGeometry (Records/Producer 는 Stage 2).
+> 7. `63d9065` — RTSC §9 3/8 fanout LANDED · H₃F + H₃Si 회수 · d7
+>    wall 메커니즘 ALIGNN per-cand 확정.
+> 8. `4bbe58b` — §9.15 precommit outlier 분석 · h3f/h3cl/h3si vs
+>    prediction 양방향 fail 원인 5-가설.
+> 9. `019dcbb` — cockpit Stage 2a Records `Rtsc` → `Hts` rename ·
+>    Analyze/Verify (Loaders 는 Stage 2b).
+>
+> **d7 wall mechanism (ALIGNN per-cand)** — ALIGNN ω_log measured 대비
+> **~15× under-predict** (group-17 funnel 가설 · DFT/ML 2.9× 비율 ·
+> training-distribution 한계 확정). `@D d7` (first-principles physics
+> breaks ML wall) 의 정량적 실증 · per-candidate ω_log report 가 향후
+> H3X round screen 의 default. RTSC.log §9 narrative 박힘.
+>
+> **cockpit Stage 1+2a Swift rename** — 5 (Stage 1: View3D · CoilGeometry)
+> + 5 (Stage 2a: Records · Analyze · Verify) = 10 파일 identifier rename
+> (`Rtsc*` → `Hts*`); `swift build` PASS; `RTSC5GateEnforcementTests`
+> 6/6 PASS. Stage 2b Loaders 는 후속 stacked PR (separate concern ·
+> ≤200 LOC layer).
+>
+> **scope-shrink decision B** — RTSC `absorbed=true` 가설 vs HTS proxy
+> 의 명시적 분기: 본 round 의 cockpit rename 은 HTS-proxy axis
+> (illustrative-physics framing · D106 family) · RTSC absorbed-flip 은
+> measured oracle ⇔ d6 (별도 round).
+>
+> **exit criterion** (κ-73 closure shape):
+> - [x] 9 commits origin/main 도달 (`fe16791..019dcbb`)
+> - [x] RTSC §9 3/8 LANDED · 5/8 in-progress (`H₃X` 잔여 5 fanout)
+> - [x] ALIGNN per-cand d7 정량화 박제 (RTSC.log §9 · h3cl 노트 2건)
+> - [x] cockpit Stage 1+2a rename · `swift build` PASS · 6/6 test
+> - [x] CHANGELOG.md 2026-05-23 cycle 0-5 batch entry 박제
+> - [x] project.tape v1.5 + `@D d10` worktree index isolation 박제
+> - [ ] RTSC §9 잔여 5/8 fanout 회수 (`H₃X` next batch · next session)
+> - [ ] cockpit Stage 2b Loaders rename (stacked PR · separate layer)
+> - [ ] §11.7 κ-72 R11 G43 framing decision (parallel · 본 §11.8 와 disjoint)
+
 ---
 
 ## 12. Open axes (substrate-side · post-cell-flip)
