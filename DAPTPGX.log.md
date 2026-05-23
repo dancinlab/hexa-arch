@@ -2,6 +2,21 @@
 
 Append-only history sister of `DAPTPGX.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T02:30:00Z — V2 + V4 완료 · DAPTPGX 14/14 (verify phase complete)
+
+- [x] **V2 🔵 atlas push** (315 lines) — honest 0개 🔵 (atlas promoter 0-proposal bug · upstream cycle 의존). 4 shard staged `/tmp/daptpgx-staging/*.n6` · 2 inbox patches 작성 (`hexa-lang-stdlib-bio-stats.md` · `hexa-atlas-pgx-kind-extension.md`) → hexa-lang/inbox/patches/ 로 `cp` 실행 ✅ (demiurge cli upstream handoff 실증)
+- [x] **V4 final ledger** (130 lines) — 30 claim 합산: 🔵 0 + 🟢 5 + 🟡 18 + 🟠 4 + ⚪ 3 + 🔴 0. V2 흡수 후 예상 🔵 4 + 🟢 12 escalation. d6 정직 + d2 breakthrough paths 모두 보존.
+- [x] **CLI+COCKPIT 기여** — DAPTPGX cross-domain evidence section 추가 (NOREFLOW · ISR · LPA 패턴 4번째 reproduction) + 3 spec docs induce (`CLI+COCKPIT/M5_synthesize.md` · `M6_verify.md` · `M7_handoff.md`)
+- 도메인 완수 14/14 — base M1-M11 + verify V1-V4
+
+🔑 V2+V4 통찰:
+- **🔴 FALSIFIED 0개 유지** — V3 ICER/budget sign mismatch는 model gap (V3 naïve "PM→full-year ticag" vs M8 de-escalation 통합) → FALSIFIED 부여 거부, 🟠 reconciliation pending (V3.5 후 sign 일치 예상). d6 핵심 보존.
+- **cross-domain wall 4 reproduction 완료** — biostat kernel 부재 wall은 LPA + ISR + DAPTPGX + HERPES 4 도메인에서 일관. PR #665 (LPA V2 agent 등록) merge 시 17+ identity 일제 🟢→🔵 escalation. 단일 PR로 cross-domain leverage.
+- **demiurge cli upstream cycle 실증** — V2 inbox patches 2개 `cp` 1줄로 hexa-lang/inbox/patches/ land 확인. cross-project handoff = 1 명령. cockpit M7 panel의 핵심 책무 매핑.
+- **3 spec docs induce** — DAPTPGX V1-V4 cycle이 NOREFLOW/ISR/LPA의 cross-domain learning을 결정화 → `CLI+COCKPIT/M5_synthesize.md` (pool/cloud routing + fallback) · `M6_verify.md` (verify 4 path) · `M7_handoff.md` (3-channel handoff + packet yaml). cockpit 구현의 surface 정의 완료.
+
+🎯 **DAPTPGX 14/14 DOMAIN COMPLETE** — base 결정맵 8/8 + 심화 deep research 3/3 + verify phase 4/4. 총 ~7,000 lines 산출. 후속 V2-bis 라운드는 hexa-lang absorb 의존 (외부 trigger).
+
 ## 2026-05-24T23:30:00Z — V1 + V3 verify push (demiurge 자산 simulation 적용)
 
 - [x] **V1 claim inventory** (167 lines) — 30개 numerical claim 추출 + g5 tier triage (🟡 60% · 🟠 30% · ⚪ 10%) · V2/V3 push 후 예상 분포 (🟢 12-14, 🔵 hexa atlas 등록 시 0-2)

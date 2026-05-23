@@ -2,6 +2,21 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T02:30:00Z — DAPTPGX cycle 5 CLI 실증 + 3 spec docs induce (4th reproduction)
+
+- [x] DAPTPGX V1-V4 verify-phase 완료 (M1-M11 + V1-V4 = 14/14)
+- [x] `hexa verify rubric` · `hexa verify --expr phi 100 40` 🔵 · `hexa verify --fence` ⚪ × 4 — M6 surface dispatch 4 path 모두 verbatim 캡처
+- [x] `hexa atlas stats` 16066 nodes 재확인 (NOREFLOW + ISR + LPA와 ATLAS_HASH 동일 = atlas read-only stable)
+- [x] V3 sim — `ssh mini 'hexa run /tmp/v3_recompute.hexa'` 32줄 stdout (HW · phenotype · PM×HBR · ICER · Markov · budget)
+- [x] V3 = 🟢 SUPPORTED-NUMERICAL × 2 (HW 0.6279 vs cited 0.60 within 5pp · PM per100 15.21 vs cited 14-15 exact)
+- [x] V3 sign mismatch 정직 보고 (ICER -3,221 M/QALY vs cited +34) — d6 framing 준수, 🔴 FALSIFIED 거부, 🟠 reconciliation pending
+- [x] V2 promoter 0-proposal bug 만남 → 4 shard staged `/tmp/daptpgx-staging/` + 2 inbox patches
+- [x] `cp inbox/patches/{stdlib-bio-stats,atlas-pgx-kind}.md ~/core/hexa-lang/inbox/patches/daptpgx-*-2026-05-25.md` ✅ — demiurge cli upstream handoff (M7 surface)
+- [x] V4 final ledger — 30 claim 분포 (현 🔵 0 + 🟢 5 → V2-bis 후 🔵 4 + 🟢 12 escalation 예상)
+- [x] **3 spec docs induce 완료** — `CLI+COCKPIT/M5_synthesize.md` · `M6_verify.md` · `M7_handoff.md` (cross-domain learning을 surface spec으로 결정화)
+- [x] CLI+COCKPIT.md DAPTPGX evidence section 추가 (NOREFLOW · ISR · LPA 표 패턴 4번째 확장)
+- [x] cross-domain wall 4th confirmation — pool wrapper 컴파일 bug (ssh fallback 일관) + biostat kernel 부재 (PR #665 merge 시 일제 unblock)
+
 ## 2026-05-25T02:00:00Z — LPA cycle 4 CLI 실증 (3rd reproduction)
 
 - [x] `hexa --version` = 0.1.0-dispatch 작동 — NOREFLOW + ISR과 동일 환경

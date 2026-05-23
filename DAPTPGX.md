@@ -18,6 +18,6 @@
 ## verify (🔵 SUPPORTED-FORMAL push · per @D g5 · demiurge 자산 필수)
 
 - [x] V1 DAPTPGX claim inventory + tier triage (🔵/🟢/🟡/🟠) → `DAPTPGX/verify/V1_claim_inventory.md`
-- [ ] V2 🔵 push — Hardy-Weinberg · diplotype freq · PRI Hill · bleeding score identities → `hexa verify --expr` + atlas register → `DAPTPGX/verify/V2_formal_identities.md`
+- [x] V2 🔵 push (honest 0 — promoter bug · 4 shard staged · 2 inbox patches upstream to hexa-lang) → `DAPTPGX/verify/V2_formal_identities.md`
 - [x] V3 🟢 push (v1) — HW + phenotype 🟢 escalation 성공 · ICER/budget 🟠 DEFERRED (model reconciliation, V3.5 후속) → `DAPTPGX/verify/V3_numerical_recompute.md` + `DAPTPGX/sims/v3_recompute.hexa`
-- [ ] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 honest deferred → `DAPTPGX/verify/V4_tier_ledger.md`
+- [x] V4 final tier ledger — 30 claim (🔵 0 → 4 + 🟢 5 → 12 escalation 예상 V2-bis 후) → `DAPTPGX/verify/V4_tier_ledger.md`

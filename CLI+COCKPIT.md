@@ -176,3 +176,42 @@ hexa-lang PR #665 (V2 agent) → biostat kernel 5개 fn 등록
   │
   ▼ merge 후
 17+ identity × 4 도메인 = 🟢→🔵 동시 escalation 가능
+
+---
+
+## Cross-domain 검증 사례 — DAPTPGX (cycle 5 verify-phase, V1-V4 완료)
+
+DAPTPGX 14/14 milestone (M1-M11 + V1-V4) 완수로 NOREFLOW · ISR · LPA의 cross-domain wall pattern을 4번째 reproduce. 별도 spec 추출 docs를 induce → `CLI+COCKPIT/M5_synthesize.md` · `M6_verify.md` · `M7_handoff.md` (3 surface 정식 spec).
+
+| 본 M? | DAPTPGX 검증 산출 | generic learning |
+|---|---|---|
+| M5 synthesize | `scp v3_recompute.hexa mini:/tmp/ && ssh mini 'hexa run ...'` 32줄 stdout — pool wrapper hexa-compile bug fallback | ssh direct fallback = cross-domain 4번째 (LPA+ISR+NOREFLOW+DAPTPGX) — d7 routing 결정트리에 fallback chain (ubu-1→ubu-2→mini→로컬) 필수 |
+| M6 verify | `hexa verify --fence "..."` 4 claim → ⚪ + `hexa verify --expr phi 100 40` → 🔵 sanity + `hexa atlas stats` 16066 nodes | rubric · fence · expr · atlas-stats 4 dispatch path 모두 verified VERBATIM — M6_verify.md spec의 입력 데이터 |
+| M6 verify | V2 promoter 0-proposal bug — `atlas append-witness` syntactic 성공/promoter reject → 4 shard staged `/tmp/daptpgx-staging/` | atlas register의 hidden gate = promoter health · M6 surface dispatch에 사전체크 step 필요 (M6 spec §8) |
+| M7 handoff | `cp /Users/ghost/core/demiurge/inbox/patches/{stdlib-bio-stats,atlas-pgx-kind}.md ~/core/hexa-lang/inbox/patches/daptpgx-*-2026-05-25.md` ✅ | cross-project handoff = cp 1줄 + frontmatter convention · M7 spec의 살아있는 데이터 |
+| M7 handoff | 6 inbox notes (M11 PGx 라이브러리 인벤토리) + 2 inbox patches (V2 stdlib + atlas extension) = 8 handoff packets | inbox notes (design) vs patches (code spec) 2-channel · cockpit M7 panel 책무 매핑 |
+| V4 ledger | 30 claim final: 🔵 0 + 🟢 5 + 🟡 18 + 🟠 4 + ⚪ 3 + 🔴 0 (V2 흡수 후 🔵 4 + 🟢 12 escalation 예상) | NOREFLOW V1 72-claim + ISR 7-fn + LPA 5-fn과 합산 17+ identity × 4 도메인 → PR #665 merge 시 일제 escalation |
+
+### DAPTPGX V2 4 shards (NOREFLOW + LPA staging 패턴과 동일)
+
+```
+/tmp/daptpgx-staging/
+  atlas.append.witness-...-CYP2C19-kor-PM-freq.n6              (HW: (0.31+0.08)² = 0.1521)
+  atlas.append.witness-...-CYP2C19-kor-IM_plus_PM-freq.n6      (0.4758 + 0.1521 = 0.6279)
+  atlas.append.witness-...-CYP2C19-kor-diplotype-star2_star2.n6 (0.31² = 0.0961)
+  atlas.append.witness-...-HardyWeinberg-identity-binomial.n6   ((p+q)² = p² + 2pq + q²)
+```
+
+PR #665 (LPA V2 agent 등록) merge + DAPTPGX 측 patch (`daptpgx-atlas-pgx-kind-2026-05-25.md`) 흡수 시 4 shard 즉시 🔵 promote.
+
+### CLI+COCKPIT spec docs induce (DAPTPGX 사례 1차 정리)
+
+본 cross-domain 누적 learning을 받아 별도 spec docs 작성:
+
+| spec doc | 내용 | 살아있는 사례 출처 |
+|---|---|---|
+| `CLI+COCKPIT/M5_synthesize.md` | d7 routing 트리 + fallback chain + promoter health + cockpit panel | DAPTPGX V3 sim · V2 promoter bug |
+| `CLI+COCKPIT/M6_verify.md` | rubric/expr/fence/atlas 4 dispatch + cockpit verbatim render rules | DAPTPGX V1 rubric + V2 fence + V3 sim |
+| `CLI+COCKPIT/M7_handoff.md` | 3-channel (inbox/atlas/PR) + packet yaml + d9 commit discipline | DAPTPGX M11 6 notes + V2 2 patches |
+
+→ NOREFLOW · ISR · LPA에서 induced된 generic learning을 spec 형태로 결정화. cockpit 구현은 별도 milestone (본 spec은 surface 정의만).
