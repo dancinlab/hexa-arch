@@ -16,18 +16,18 @@ Spec at [`./RTSC.md`](./RTSC.md). Log entries below preserve session-by-session 
   - [x] verification protocol 명시 (|Tc_pred - Tc_sim| < range_width → PASS)
   - [ ] DFT 결과 도착 시 prediction vs simulation pairwise compare (ETA ~9-15h)
 
-  **표 — 8 H3X precommit prediction** (μ*=0.10, anchor-extrapolation only):
+  **표 — 8 H3X precommit prediction vs 4/8 LANDED actual** (μ*=0.10, anchor-extrapolation only; 2026-05-23 KST closed-loop update; PASS → FAIL above → FAIL below → PENDING 순):
 
-  | name  | group | X mass (amu) | celldm seed (bohr) | ω_log trend (K)        | λ trend          | Tc range (K) AD | confidence |
-  |-------|-------|--------------|---------------------|------------------------|------------------|------------------|------------|
-  | h3o   | 16    | 16.00        | 5.4                 | **~1700-2000** (↑↑)    | 1.5-2.2 (↑sweet) | **150-220**     | LOW        |
-  | h3f   | 17    | 19.00        | 5.3                 | ~1500-1800 (↑)         | 0.7-1.1 (↓)      | 50-100          | MED        |
-  | h3n   | 15    | 14.01        | 5.5                 | **~1800-2100** (↑↑)    | 1.4-1.9 (↑)      | **130-200**     | MED        |
-  | h3si  | 14    | 28.09        | 6.5                 | ~900-1200 (~S/Se 중간) | 0.9-1.3 (mod)    | 50-110          | LOW        |
-  | h3p   | 15    | 30.97        | 6.5                 | ~900-1100              | 1.3-1.8          | 90-150          | MED        |
-  | h3cl  | 17    | 35.45        | 6.3                 | ~800-1000              | 0.7-1.0          | 25-60           | MED        |
-  | h3as  | 15    | 74.92        | 6.7                 | ~500-650               | 1.4-1.9          | 50-95           | MED        |
-  | h3br  | 17    | 79.90        | 6.6                 | ~480-620               | 0.7-1.0          | 12-35           | MED        |
+  | name  | group | X mass (amu) | celldm seed (bohr) | ω_log trend (K)        | λ trend          | Tc range (K) AD | confidence | actual Tc(μ=0.10) | verdict          | axis_violated                     |
+  |-------|-------|--------------|---------------------|------------------------|------------------|------------------|------------|---------------------|------------------|-----------------------------------|
+  | h3si  | 14    | 28.09        | 6.5                 | ~900-1200 (~S/Se 중간) | 0.9-1.3 (mod)    | 50-110          | LOW        | **77-80**           | 🟢 PASS          | —                                 |
+  | h3o   | 16    | 16.00        | 5.4                 | **~1700-2000** (↑↑)    | 1.5-2.2 (↑sweet) | **150-220**     | LOW        | **171-191**         | 🟢 PASS          | —                                 |
+  | h3cl  | 17    | 35.45        | 6.3                 | ~800-1000              | 0.7-1.0          | 25-60           | MED        | **105-134**         | 🔴 FAIL above    | broadening under-conv (λ inflated)|
+  | h3f   | 17    | 19.00        | 5.3                 | ~1500-1800 (↑)         | 0.7-1.1 (↓)      | 50-100          | MED        | **31-33**           | 🔴 FAIL below    | electronegativity-damage > light-X|
+  | h3n   | 15    | 14.01        | 5.5                 | **~1800-2100** (↑↑)    | 1.4-1.9 (↑)      | **130-200**     | MED        | PENDING             | ⏳ PENDING       | —                                 |
+  | h3p   | 15    | 30.97        | 6.5                 | ~900-1100              | 1.3-1.8          | 90-150          | MED        | PENDING             | ⏳ PENDING       | —                                 |
+  | h3as  | 15    | 74.92        | 6.7                 | ~500-650               | 1.4-1.9          | 50-95           | MED        | PENDING             | ⏳ PENDING       | —                                 |
+  | h3br  | 17    | 79.90        | 6.6                 | ~480-620               | 0.7-1.0          | 12-35           | MED        | PENDING             | ⏳ PENDING       | —                                 |
 
   **ASCII trend diagram — group × atomic mass → Tc**:
 
@@ -51,6 +51,21 @@ Spec at [`./RTSC.md`](./RTSC.md). Log entries below preserve session-by-session 
   ```
 
   **단일후보 spotlight — 왜 h3o가 LOW confidence인가**: O = chemically prone to molecular H₂O formation rather than Im-3m hydride; DFT가 Im-3m metastable로 수렴하면 ω_log >1800K, λ~1.8 가능 (Tc ~200K) — 그러나 phonon imaginary-mode instability 가능성 ≥40% (anchor 외 영역). h3n도 동일 metastability 우려 (NH₃ molecular ground state).
+
+  **§9.15.A Bayesian update — 4/8 LANDED 후 hypothesis 정정 (2026-05-23 KST)**:
+
+  - **falsified — light-X covalent-radius mass-scaling 가설 (group 17)**: h3f (X=F, χ=3.98, m=19 amu) 가 group-17 에서 가장 *낮은* Tc=31-33K 로 측정 ← precommit pred 50-100K. "lighter X → ω_log↑ → Tc↑" 는 group 17 에서 부정. h3cl (X=Cl, χ=3.16, m=35) Tc=105-134K 가 도리어 더 높음 — mass-scaling 방향이 group-16 (H₃S>H₃Se>H₃Te) 와 정반대.
+  - **leading axis — electronegativity-damage dominates** (4/5 outlier evidence): group 17 (χ=2.96-3.98) 가 group 16 (χ=2.20-2.58) 보다 Tc 손해. χ_F=3.98 (highest) → λ 가장 약함 (0.81-0.82) → ω_log 도 ML pred 1500-1800 대비 실제 652-670 (under-pred light-X-ω is misleading: H-F 강한 bond pulls oscillator localized, low ω_log).
+  - **partially falsified — h3cl FAIL above = under-converged hypothesis** (5/5 outlier evidence): broadening sweep monotone (no plateau within tested degauss range) → λ_BZ=1.14-1.41 inflated. 6³ q grid 가 group-17 의 phonon DOS 빠른 변동 영역에서 insufficient. q_grid → 8³ 또는 anharmonic SSCHA 필요.
+  - **reinforced — group 16 sweet-spot 가설**: H₃S(measured 203K) > h3o(novel 191K, LANDED) > H₃Se(novel 113K) > H₃Te(novel 75K) > H₃Po(novel 48K) — light-X 갈수록 Tc↑ monotone 5-point ladder. group 16 만 mass-scaling axis 가 깨끗하게 작동.
+  - **insufficient — group 14·15** (each 1 candidate only): h3si 단독 PASS = pred range 가 충분히 넓어 PASS 가 weak evidence. h3p 도착 시 group-15 ladder 시작 (h3n·h3p·h3as) → h3n LANDED 까지 정정 보류.
+
+  **정정된 hypothesis (current best)**:
+  - group 16 = "sweet, light-X 강화" (reinforce) — Tc ∝ 1/√m_X · χ-paritied.
+  - group 17 = "electronegativity-damage dominant; mass-scaling 가설 폐기" — Tc ≁ 1/√m_X.
+  - group 14·15 = INSUFFICIENT — h3p / h3n / h3as LANDED 대기.
+
+  **정정된 next-critical-test = h3br** (group-17, χ=2.96 < Cl=3.16, m=79.9 amu, celldm 6.6 bohr): χ-damage axis 단독 vs volume 효과 분리. h3br Tc < h3cl Tc 가 확인되면 χ-damage 가설 강화 (heavier X 갈수록 Tc↓ within group 17 처럼 group 16). h3br Tc > h3cl Tc 면 volume/cell-size axis 별도 작동 (under-conv hypothesis 강화). 강도: **CRITICAL** — group-17 이론 정정의 결정타.
 
   **Verification protocol**:
   1. 결과 도착 시 각 후보별 (λ_sim, ω_log_sim, Tc_AD_sim) 추출.
