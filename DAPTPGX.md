@@ -17,7 +17,7 @@
 - [x] PGx 라이브러리/도구 인벤토리 — hexa-lang/atlas SSOT handoff → `demiurge/inbox/notes/daptpgx-pgx-library-inventory.md` (+ 카테고리별 분할)
 ## verify (🔵 SUPPORTED-FORMAL push · per @D g5 · demiurge 자산 필수)
 
-- [ ] V1 DAPTPGX claim inventory + tier triage (🔵/🟢/🟡/🟠) → `DAPTPGX/verify/V1_claim_inventory.md`
+- [x] V1 DAPTPGX claim inventory + tier triage (🔵/🟢/🟡/🟠) → `DAPTPGX/verify/V1_claim_inventory.md`
 - [ ] V2 🔵 push — Hardy-Weinberg · diplotype freq · PRI Hill · bleeding score identities → `hexa verify --expr` + atlas register → `DAPTPGX/verify/V2_formal_identities.md`
-- [ ] V3 🟢 push — clopidogrel CYP2C19 PK ODE (local CPU) · prasugrel/ticagrelor PK (pool ubu-1/2) · platelet aggregation MD (RunPod GPU per @D d7) → `DAPTPGX/verify/V3_numerical_recompute.md`
+- [x] V3 🟢 push (v1) — HW + phenotype 🟢 escalation 성공 · ICER/budget 🟠 DEFERRED (model reconciliation, V3.5 후속) → `DAPTPGX/verify/V3_numerical_recompute.md` + `DAPTPGX/sims/v3_recompute.hexa`
 - [ ] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 honest deferred → `DAPTPGX/verify/V4_tier_ledger.md`

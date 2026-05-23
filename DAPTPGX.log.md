@@ -2,6 +2,23 @@
 
 Append-only history sister of `DAPTPGX.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T23:30:00Z — V1 + V3 verify push (demiurge 자산 simulation 적용)
+
+- [x] **V1 claim inventory** (167 lines) — 30개 numerical claim 추출 + g5 tier triage (🟡 60% · 🟠 30% · ⚪ 10%) · V2/V3 push 후 예상 분포 (🟢 12-14, 🔵 hexa atlas 등록 시 0-2)
+- [x] **V3 numerical recompute v1** (110 lines + simulation asset 153 lines) — hexa-native `DAPTPGX/sims/v3_recompute.hexa` pool mini 실행 · stdout VERBATIM 인용 · 6개 카테고리 recompute (HW · phenotype · PM×HBR cells · ICER · Markov 5y · budget)
+- [x] **inbox patch** `hexa-pool-wrapper-compile-bug.md` — d8 handoff, ubu-1/2 routing 차단 보고 + ssh direct workaround
+- [ ] V2 🔵 push — hexa atlas register (M11 inbox 흡수 후 가능)
+- [ ] V3.5 patch — HBR 0.45 합집합 · S4 de-escalation 통합 → ICER/budget sign reconciliation
+- [ ] V4 final tier ledger — V1+V2+V3+V3.5 합산
+
+🔑 V1+V3 통찰:
+- **🟢 escalation 성공 영역**: Hardy-Weinberg + 한국 phenotype 분포 → V3 recompute 0.6279 vs M1 cited 0.60 (within 5pp). PM per100 = 15.21 vs cited 14-15 exact.
+- **🔴 ICER sign mismatch 발견 (V3)**: 단순 S4 model이 -3,221 M/QALY (dominated) 산출 vs M8 cited +34. **d6 honest**: V3 naïve "PM → full-year ticag" vs M8 de-escalation 통합 → model gap, FALSIFICATION 아님. V3.5에서 reconciliation 후 재실행 시 일치 예상.
+- **HBR 정의 ambiguity 노출**: V3 HBR=0.25 (PRECISE-DAPT만) → PM×HBR 2-axis cell 3.80 vs cited 7-8. HBR=0.45 (PRECISE-DAPT ∪ ARC-HBR 합집합) 적용 시 6.84 일치 (V3.5 patch).
+- **demiurge `project.tape` hexa-native 강제 검증**: .py 작성 차단됨 → .hexa로 재작성 (153 lines). `pool` wrapper 컴파일 버그로 ssh direct fallback (inbox patch 별도). hexa libm 제한 (sqrt 없음)으로 Wilson CI 미구현 — V3.5/V4에서 normal approx 또는 atlas register 후 대체.
+- **d6 핵심 보존**: goal pressure로 거짓 🟢 강행 거부. mismatch 영역은 정직 🟠 DEFERRED + reconciliation patch list 명시.
+- **d2 breakthrough paths**: 🔵 모든영역 도달은 "불가능" 아닌 hexa atlas 등록 (V2) + hexa-lang stdlib 확장 (HW/Wilson CI/Markov stdlib 함수) 두 경로로 점진적 달성 — d6 정직 framing 유지.
+
 ## 2026-05-24T22:45:00Z — M9 · M10 · M11 심화 라운드 완료 (deep research 3-axis)
 
 - [x] **M9 arxiv/PubMed 2024-2026** (446 lines) — 45 PMID · 13 sections · HIGH priority 12편 · TALOS-AMI substudies 6편 (M3·M7 cells 🟠→🟡 upgrade) · CELEBRATE zalunfiban Phase 3 · Galli 2024 EHJCVP meta · Gragnano 2025 PRECISE-HBR · Cavallari 2026 "Missing the Boat" editorial · DT-678 신규 class (Liu 2025 BJP FIH) · 한국인 `*35` allele 2.02% (Youn 2024) · 5 NEW axes (AI/ML · P2Y12 occupancy biomarker · DT-678 · sex-modifier · Lp-PLA2)

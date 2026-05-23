@@ -1,0 +1,190 @@
+// DAPTPGX V3 numerical recompute — hexa-native simulation
+// Recomputes closed-form clinical-epi identities cited across M1-M8.
+// Output captured verbatim as 🟢 SUPPORTED-NUMERICAL evidence per g5.
+//
+// per @D d7 + memory feedback_demiurge_assets_simulation_mandatory:
+//   runs on pool ubu-1/2 (hexa binary present), NOT local ad-hoc.
+//
+// Usage:
+//   scp v3_recompute.hexa ubu-1:/tmp/
+//   ssh ubu-1 'hexa run /tmp/v3_recompute.hexa'
+
+println("=== DAPTPGX V3 numerical recompute (hexa-native) ===")
+println("")
+
+// ----------------------------------------------------------------------
+// 1. Hardy-Weinberg phenotype freq from M1 한국인 CYP2C19 allele freqs
+// ----------------------------------------------------------------------
+// M1 §3: *1=0.59, *2=0.31, *3=0.08, *17=0.02
+let p1  = 0.59
+let p2  = 0.31
+let p3  = 0.08
+let p17 = 0.02
+
+let allele_sum = p1 + p2 + p3 + p17
+println("1_HW_allele_sum =", allele_sum, "(target 1.0)")
+
+// Diplotype freqs (Hardy-Weinberg)
+let d_1_1   = p1 * p1
+let d_1_2   = 2.0 * p1 * p2
+let d_1_3   = 2.0 * p1 * p3
+let d_1_17  = 2.0 * p1 * p17
+let d_2_2   = p2 * p2
+let d_2_3   = 2.0 * p2 * p3
+let d_2_17  = 2.0 * p2 * p17
+let d_3_3   = p3 * p3
+let d_3_17  = 2.0 * p3 * p17
+let d_17_17 = p17 * p17
+
+let dip_sum = d_1_1 + d_1_2 + d_1_3 + d_1_17 + d_2_2 + d_2_3 + d_2_17 + d_3_3 + d_3_17 + d_17_17
+println("1_HW_diplotype_sum =", dip_sum, "(target 1.0)")
+
+// CPIC 2022 phenotype mapping
+let nm = d_1_1
+let rm = d_1_17
+let um = d_17_17
+let im = d_1_2 + d_1_3 + d_2_17 + d_3_17
+let pm = d_2_2 + d_2_3 + d_3_3
+let im_pm = im + pm
+
+println("1_HW_NM =", nm)
+println("1_HW_RM =", rm)
+println("1_HW_UM =", um)
+println("1_HW_IM =", im)
+println("1_HW_PM =", pm)
+println("1_HW_IM_plus_PM =", im_pm, "(M1 cited ~0.60, ±0.05 tolerance)")
+
+// ----------------------------------------------------------------------
+// 2. Per-100 cohort absolute counts (binomial expectation)
+// ----------------------------------------------------------------------
+let n = 100.0
+println("")
+println("2_per100_NM =", nm * n)
+println("2_per100_IM =", im * n)
+println("2_per100_PM =", pm * n, "(M1 cited 14-15)")
+println("2_per100_UM =", um * n)
+
+// ----------------------------------------------------------------------
+// 3. PM × HBR-HIGH joint (independence assumption)
+// ----------------------------------------------------------------------
+// M4: ARC-HBR HIGH ≈ 0.25
+// M7 critical cell adds × procedural complexity ≈ 0.40
+let hbr_high      = 0.25
+let proc_complex  = 0.40
+
+let cell_2axis = pm * hbr_high * n
+let cell_3axis = pm * hbr_high * proc_complex * n
+
+println("")
+println("3_cell_PM_x_HBR_2axis_per100 =", cell_2axis, "(M4 cited 7-8)")
+println("3_cell_PM_x_HBR_x_complex_3axis_per100 =", cell_3axis, "(M7 cited 3-5)")
+
+// ----------------------------------------------------------------------
+// 4. ICER S4 (targeted PGx) vs S1 (universal clopi) — M8 §5
+// ----------------------------------------------------------------------
+// Costs (KRW)
+let clopi_y  = 150.0 * 365.0          // 일 단가 × 365
+let ticag_y  = 2300.0 * 365.0 * 2.0   // bid
+let test_one = 50000.0
+let st_cost     = 15000000.0
+let bleed_cost  = 8000000.0
+
+// Event rates (per patient/year)
+let st_clopi_nm = 0.005
+let st_clopi_pm = 0.015
+let bleed_clopi = 0.012
+let st_ticag    = 0.004
+let bleed_ticag = 0.028   // TICAKOREA
+
+// S1 universal clopi (per 100 patients, 1y)
+let s1_st_per100    = (nm + rm + um + im) * st_clopi_nm * n + pm * st_clopi_pm * n
+let s1_bleed_per100 = bleed_clopi * n
+let s1_drug_per100  = clopi_y * n
+let s1_cost_per100  = s1_drug_per100 + s1_bleed_per100 * bleed_cost + s1_st_per100 * st_cost
+
+// S4 targeted: PM → ticag, rest → clopi
+let s4_st_per100    = pm * st_ticag * n + (nm + rm + um) * st_clopi_nm * n + im * 0.008 * n
+let s4_bleed_per100 = pm * bleed_ticag * n + (1.0 - pm) * bleed_clopi * n
+let s4_drug_per100  = pm * ticag_y * n + (1.0 - pm) * clopi_y * n + test_one * n
+let s4_cost_per100  = s4_drug_per100 + s4_bleed_per100 * bleed_cost + s4_st_per100 * st_cost
+
+// QALY (simplified)
+let qaly_baseline = 0.85
+let qaly_loss_st    = 0.10
+let qaly_loss_bleed = 0.05
+let s1_qaly = qaly_baseline * n - s1_st_per100 * qaly_loss_st - s1_bleed_per100 * qaly_loss_bleed
+let s4_qaly = qaly_baseline * n - s4_st_per100 * qaly_loss_st - s4_bleed_per100 * qaly_loss_bleed
+
+let delta_cost = s4_cost_per100 - s1_cost_per100
+let delta_qaly = s4_qaly - s1_qaly
+
+println("")
+println("4_ICER_s1_cost_per100_KRW =", s1_cost_per100)
+println("4_ICER_s4_cost_per100_KRW =", s4_cost_per100)
+println("4_ICER_delta_cost_KRW =", delta_cost)
+println("4_ICER_s1_qaly =", s1_qaly)
+println("4_ICER_s4_qaly =", s4_qaly)
+println("4_ICER_delta_qaly =", delta_qaly)
+
+// Avoid div-by-zero
+let icer_M = 0.0
+if delta_qaly > 0.001 {
+    icer_M = (delta_cost / delta_qaly) / 1000000.0
+}
+if delta_qaly < -0.001 {
+    icer_M = (delta_cost / delta_qaly) / 1000000.0
+}
+println("4_ICER_M_KRW_per_QALY =", icer_M, "(M8 cited 34, Korea WTP 30)")
+
+// ----------------------------------------------------------------------
+// 5. Markov 1y → 5y (S4) — manual 5-step iteration (matrix^5 unrolled)
+// ----------------------------------------------------------------------
+// State: [event_free, ST, bleed, death]
+// Annual transition rates (4×4 matrix, row-stochastic)
+let death_base = 0.025
+let p_ef = pm * st_ticag + (nm + rm + um) * st_clopi_nm + im * 0.008  // weighted ST rate
+let p_bf = pm * bleed_ticag + (1.0 - pm) * bleed_clopi
+let p_ef_stay = 1.0 - p_ef - p_bf - death_base
+
+// Initial state
+let mut s_ef = 1.0
+let mut s_st = 0.0
+let mut s_bl = 0.0
+let mut s_de = 0.0
+
+// 5-year iteration
+let mut yr = 0
+while yr < 5 {
+    let new_ef = s_ef * p_ef_stay + s_st * 0.5 + s_bl * 0.6
+    let new_st = s_ef * p_ef + s_st * 0.3
+    let new_bl = s_ef * p_bf + s_bl * 0.3
+    let new_de = s_ef * death_base + s_st * 0.2 + s_bl * 0.1 + s_de * 1.0
+    s_ef = new_ef
+    s_st = new_st
+    s_bl = new_bl
+    s_de = new_de
+    yr = yr + 1
+}
+
+println("")
+println("5_markov_5y_event_free =", s_ef)
+println("5_markov_5y_ST =", s_st)
+println("5_markov_5y_bleed =", s_bl)
+println("5_markov_5y_death =", s_de)
+println("5_markov_5y_rowsum =", s_ef + s_st + s_bl + s_de, "(target 1.0)")
+
+// ----------------------------------------------------------------------
+// 6. Budget impact — 80,000 PCI/year × Δcost × 5y
+// ----------------------------------------------------------------------
+let pci_per_y = 80000.0
+let delta_per_patient = delta_cost / n
+let budget_5y = delta_per_patient * pci_per_y * 5.0
+let budget_5y_eok = budget_5y / 100000000.0
+
+println("")
+println("6_budget_delta_per_patient_KRW_per_y =", delta_per_patient)
+println("6_budget_5y_KRW =", budget_5y)
+println("6_budget_5y_EokWon_100M =", budget_5y_eok, "(M8 cited -888 (savings))")
+
+println("")
+println("=== V3 recompute done ===")
