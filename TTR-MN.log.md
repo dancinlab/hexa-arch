@@ -1,5 +1,17 @@
 # TTR-MN — log
 
+## 2026-05-24T07:05Z — M7-MN MN array engineering design landed
+
+- [x] M7-MN — needle 재료 5종 비교 + payload encapsulation 3 strategy + array geometry + 제조/보관/FDA path (`TTR/research/m7_mn_array_engineering.md`)
+  - **primary 재료 = HA** (히알루론산 · 분해 10-30 min · vaccine 선례)
+  - secondary = PVP · PVA · CMC · trehalose (cryo-protectant)
+  - geometry: L=1200 μm × 300/cm² × tip 10 μm (variant 800/1800 μm deep)
+  - payload 3 strategy: CeO₂ NP dispersion · DyP+DFO lyo core trehalose shell · AzoR+ascorbate matrix
+  - 제조: micromold casting (PDMS · centrifugation · CDMO) primary
+  - FDA: 505(b)(2) combination product (CDER lead · CDRH secondary)
+  - SKU 5종 · 비용 $20-60/패치 · 30일 1회 × 12회/년 = $300-500/년 (레이저 1/10)
+  - M8 handoff: thumb-press 30s · wait 1-72 hr · ink removal % endpoint
+
 ## 2026-05-24T06:40Z — M5-MN MD/QM simulation design landed
 
 - [x] M5-MN — 12-cell simulation matrix · force field stack · compute budget (`TTR/research/m5_mn_md_qm_design.md`)
