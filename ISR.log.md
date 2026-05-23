@@ -2,6 +2,23 @@
 
 Append-only history sister of `ISR.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T04:00:00Z — V3 🟢 numerical push first-pass (3 pipelines) 완료
+
+- [x] §0 demiurge 자산 매트릭스 (`hexa cloud` + ubu-1 = aiden-B650M-K · python 3.12.3 · numpy 2.4.4 · scipy 1.17.1; `pool list` 는 compile error → `hexa cloud run ubu-1` 우회)
+- [x] §1 NUM-06 PK/PD ODE 1-comp — verdict ⚪ SPECULATION-FENCED (`hexa verify --fence`) · stdout 30d 99.7% released vs lit 80-90%
+- [x] §2 NUM-03 Mg Tafel ODE — verdict ⚪ SPECULATION-FENCED · stdout 6.27 mm/yr vs BIOSOLVE-IV 12mo (passivation gap 40x)
+- [x] §3 Stokes-Einstein D — verdict ⚪ SPECULATION-FENCED · stdout 1.4-4.1e-11 m²/s vs lit 1e-12 to 1e-11 (upper-bound match)
+- [x] §4 Heavy pipelines plan (NUM-01 DFT · NUM-02 MD · NUM-04 CFD · NUM-05 FEA) — DEFERRED 명시 · cost/atom_id/path A/B/C 매핑
+- [x] §Σ 3 light × verdict 표 (verbatim `hexa verify --fence` 3건)
+- [x] §Δ heavy pipelines 권고: 첫 push = NUM-01 drug-polymer DFT (pool ubu-1 free · $0 · RTSC QE 7.5 전례)
+- [x] 산출물 `ISR/verify/V3_numerical_recompute.md` (342 lines)
+
+🔑 verdict 분포: 🔵 0 / 🟢 0 / 🟡 0 / 🟠 0 / 🔴 0 / ⚪ 3 — `hexa verify --expr` float-arg 미지원 + bio.* kernel 부재 (V2 와 동일 wall). LLM-judge 0건, 모두 `hexa verify` verbatim verdict.
+🌱 heavy pipelines deferred: 4 (NUM-01 DFT · NUM-02 MD · NUM-04 CFD · NUM-05 FEA) — 다음 batch · 첫 push 권고 NUM-01 (pool ubu-1 free · RTSC 전례).
+🛰 demiurge 자산 confirm: `hexa cloud copy-to ubu-1` ×3 (scp exit 0) + `hexa cloud run ubu-1 -- python3 ...` ×3 (remote exit 0) + `hexa verify --fence` ×3. ad-hoc python -c 0 · 로컬 scipy 0 · sympy 0.
+🛡 per @D d2 — 3 ⚪ verdict 도 honest fence + 🟢 승격 path 명시 (hexa-lang inbox `bio.*` kernel patch 3건 — pool.hexa compile error · `--expr` float kernel · `cloud run` heredoc).
+🥇 다음 milestone 권고 = NUM-01 DFT push (V3-2) 또는 V4 ledger 직행 (현 verdict ledger 만으로도 통합 가능).
+
 ## 2026-05-25T03:00:00Z — V2 🔵 closed-form push (7 identities) 완료
 
 - [x] §0 hexa verify CLI signature 확인
