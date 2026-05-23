@@ -1,5 +1,16 @@
 # TTR-MN — log
 
+## 2026-05-24T07:50Z — M10-MN measured-oracle endpoint + IND 패키지 design landed · TTR-MN 7/7 ★
+
+- [x] M10-MN — 4-component measured-oracle PASS gate + IND 패키지 design (`TTR/research/m10_mn_measured_oracle.md`)
+  - 4 component: ① efficacy ≥ 80% removal · ② safety 5-tier all pass · ③ GMP CMC release · ④ FDA IND accepted
+  - FDA Type B pre-IND 미팅 자료 명세 · IND 5 module 구성 · 505(b)(2) path
+  - Phase 1: n=36 healthy volunteer · dose escalation · 6 mo · ~$200-400k
+  - Timeline M9 start → IND filed: 22-24 mo · budget M9-M10 합 ~$600k
+  - Atlas absorption record schema: `hexa atlas register --from-measured-oracle --domain TTR-MN`
+  - **TTR-MN 7/7 milestone all-design completed — design phase 완전 닫힘 (per @D d1)**
+  - 실제 wet-lab + 임상 + FDA filing 은 별 funded execution
+
 ## 2026-05-24T07:35Z — M9-MN in-vivo protocol design landed
 
 - [x] M9-MN — 2-tier in-vivo (SD rat 28일 + Yucatan mini-pig 90일) · 62 animal (`TTR/research/m9_mn_in_vivo_protocol.md`)
