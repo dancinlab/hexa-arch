@@ -9,7 +9,7 @@
 - [ ] 활성성분 후보 in-silico screening (산화제 · 효소 · chelator · ROS generator) — MoA 별 분자 후보 ≥ 10
 - [x] 진피 전달(transdermal penetration) 메커니즘 설계 — liposome · nano-emulsion · iontophoresis · microneedle 비교
 - [ ] 잉크-활성분자 반응 MD/QM 시뮬레이션 + 분해경로 검증 (first-principles, 모델 학습 분포 의존 X)
-- [ ] 안전성: 표피·진피 off-target 손상 예측 — 멜라닌 · 콜라겐 · 혈관 · 면역세포 first-principles
+- [x] 안전성: 표피·진피 off-target 손상 예측 — 멜라닌 · 콜라겐 · 혈관 · 면역세포 first-principles
 - [ ] 합성경로 + 제형(formulation) 설계 + 합성 validation (lab-scale ≥ 95% 순도)
 - [ ] ex-vivo 돼지 피부 PoC — 잉크 주입 → 도포 → 제거율 측정 (제거율 ≥ 50% goal)
 - [ ] in-vivo 동물 효능 (rat / mini-pig 14-90일) — 제거율 ≥ 80%, 흉터 없음, 전신 독성 없음

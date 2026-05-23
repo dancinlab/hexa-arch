@@ -1,5 +1,21 @@
 # TTR — log
 
+## 2026-05-24T05:34Z — M6 off-target safety landed + M2/M6 reconcile
+
+- [x] M6 — 6 off-target × 4 chemistry = 24-cell first-principles risk matrix (`TTR/research/off_target_safety.md`, ~700 lines)
+  - 🔴 critical 3 pair: Melanocyte×Oxidation · Melanocyte×Photo · Collagen×Oxidation
+  - Therapeutic Index 추산: naive Fenton ≈ 10⁻⁹ → ascorbate scavenger ≈ 10⁻⁵ → enzyme mediator ≥ 1
+  - chemistry 우선순위 (M3 constraint): F5 효소 > F3 chelation > F2 reductive ≫ (F1 oxidation 단독 · F4 photo 단독 금지)
+  - molecule X 제약: MW > 60 kDa 또는 ink-surface affinity group
+  - M9 endpoint: HMB-45/Fontana-Masson · multiphoton SHG · cutometer · LC-MS · 5yr melanoma registry
+
+🔀 **M2/M6 reconcile (M3 진입 전 결정사항)**:
+  - M2 default F1(Fenton) → M6 결과로 **demote** (Mel×Ox + Col×Ox 🔴). 살리려면 mitigation 필수: Fe surface-bind + ascorbate scavenger 적층 + depth-targeting
+  - M2 default F4(UV-A+TiO₂) → M6 결과로 **demote** (Mel×Photo 🔴). 살리려면 site-localized MN-tip photo (광역 조사 금지)
+  - M2 d2 wall path "Photo-Fenton hybrid" → MN-tip 국소화 조건부 OK, 광역 조사 form 금지
+  - M3 in-silico screening 우선순위: F5 효소 mediator (AzoR · DyP · peroxidase) → F3 chelation (DFO · siderophore) → F2 reductive (Ascorbate+DFO)
+  - F1/F4은 M3 후순위 (mitigation 입증된 candidate만)
+
 ## 2026-05-24T05:32Z — M2 MoA short-list landed
 
 - [x] M2 — 8 표적 × 5 MoA family feasibility 매트릭스 (`TTR/research/moa_shortlist.md`, 563 lines)
