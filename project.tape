@@ -38,3 +38,7 @@
 @D d8 := "compute sizing for DFT electron-phonon" :: governance [required active]
   do   = "small cells (4-7 atoms) → pool ubu-1/2 free baseline · batch / acceleration → Vast.ai CPU market · ≥20 atoms or dense k-grids → GPU pod"
   dont = "RunPod CPU pods (8-vCPU ceiling) · Vast.ai CPU-only rentals (no_such_ask — use GPU offers, run on host CPU) · pay for GPU on small cells"
+
+@D d9 := "Vast.ai trouble → hexa-lang inbox" :: governance [required active]
+  do   = "Vast finding → `hexa-lang/inbox/patches/<slug>.md` so `hexa cloud` absorbs upstream"
+  dont = "paper-over a Vast-discovered `hexa cloud` gap inside the campaign"
