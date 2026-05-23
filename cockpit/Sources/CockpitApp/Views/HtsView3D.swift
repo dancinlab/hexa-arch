@@ -1,4 +1,4 @@
-// RtscView3D — minimal RealityKit 3D viewer for the rtsc HTS coil.
+// HtsView3D — minimal RealityKit 3D viewer for the HTS coil.
 //
 // Mirror of ComponentView3D's NSViewRepresentable shape, simplified to
 // concentric cylinders (no exploded view, no presets — this is the
@@ -6,7 +6,7 @@
 // view: orbit drag (yaw / pitch), scroll-zoom (ScrollableARView from
 // ComponentView3D is reused), light/dark adaptive sky.
 //
-// HONEST (g3): the rendered geometry is `RtscGeometry.htsSolenoidProxy`
+// HONEST (g3): the rendered geometry is `HtsCoilGeometry.htsSolenoidProxy`
 // — procedural placeholder, not a measured coil.
 
 import SwiftUI
@@ -14,8 +14,8 @@ import RealityKit
 import AppKit
 import DemiurgeCore
 
-struct RtscScene: NSViewRepresentable {
-    let geometry: RtscGeometry
+struct HtsScene: NSViewRepresentable {
+    let geometry: HtsCoilGeometry
     let onScrollZoom: (CGFloat) -> Void
     var yaw: Float
     var pitch: Float
@@ -130,8 +130,8 @@ struct RtscScene: NSViewRepresentable {
     }
 }
 
-struct RtscView3D: View {
-    let geometry: RtscGeometry
+struct HtsView3D: View {
+    let geometry: HtsCoilGeometry
     @State private var yaw: Float = 0.6
     @State private var pitch: Float = 0.25
     @State private var zoom: Float = 1.0
@@ -139,7 +139,7 @@ struct RtscView3D: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .topLeading) {
-                RtscScene(geometry: geometry,
+                HtsScene(geometry: geometry,
                           onScrollZoom: { dy in
                               zoom = max(0.25, min(3.0, zoom + Float(dy) * 0.01))
                           },
@@ -292,7 +292,7 @@ private extension MeshResource {
             indices.append(contentsOf: [i0, i1, o1])
         }
 
-        var descriptor = MeshDescriptor(name: "rtsc_annulus")
+        var descriptor = MeshDescriptor(name: "hts_annulus")
         descriptor.positions = MeshBuffer(positions)
         descriptor.normals = MeshBuffer(normals)
         descriptor.primitives = .triangles(indices)
@@ -364,7 +364,7 @@ private extension MeshResource {
             }
         }
 
-        var d = MeshDescriptor(name: "rtsc_helix_tube")
+        var d = MeshDescriptor(name: "hts_helix_tube")
         d.positions = MeshBuffer(positions)
         d.normals = MeshBuffer(normals)
         d.primitives = .triangles(indices)

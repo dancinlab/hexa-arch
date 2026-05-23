@@ -1,4 +1,4 @@
-// RtscGeometry — minimal SSOT for the rtsc HTS solenoid coil.
+// HtsCoilGeometry — minimal SSOT for the HTS solenoid coil (77K REBCO proxy).
 //
 // Captures the few dimensions the 3D viewer + future USD exporter need
 // to draw an HTS coil cross-section: outer cryostat radius, HTS coil
@@ -15,9 +15,9 @@
 
 import Foundation
 
-/// One concentric ring of an `RtscGeometry` — drawn as a cylinder
+/// One concentric ring of an `HtsCoilGeometry` — drawn as a cylinder
 /// of the given radial extent and length.
-public struct RtscRing: Codable, Equatable, Sendable, Identifiable {
+public struct HtsCoilRing: Codable, Equatable, Sendable, Identifiable {
     public var id: String { name }
     /// Canonical (expert) name, e.g. "Cryostat OVC".
     public let name: String
@@ -47,7 +47,7 @@ public struct RtscRing: Codable, Equatable, Sendable, Identifiable {
     }
 }
 
-public struct RtscGeometry: Codable, Equatable, Sendable {
+public struct HtsCoilGeometry: Codable, Equatable, Sendable {
     public let id: String
     public let displayName: String
     /// Axial length of the solenoid in mm.
@@ -55,10 +55,10 @@ public struct RtscGeometry: Codable, Equatable, Sendable {
     /// Number of turns (for future helix render).
     public let turns: Int
     /// Concentric rings, ordered inside → outside.
-    public let rings: [RtscRing]
+    public let rings: [HtsCoilRing]
 
     public init(id: String, displayName: String, lengthMM: Double,
-                turns: Int, rings: [RtscRing]) {
+                turns: Int, rings: [HtsCoilRing]) {
         self.id = id
         self.displayName = displayName
         self.lengthMM = lengthMM
@@ -69,43 +69,43 @@ public struct RtscGeometry: Codable, Equatable, Sendable {
     /// Procedural lab-scale HTS solenoid preset.
     /// Honest scope: typical numbers from open HTS-coil literature, not
     /// a measured / sourced coil design.
-    public static let htsSolenoidProxy: RtscGeometry = RtscGeometry(
+    public static let htsSolenoidProxy: HtsCoilGeometry = HtsCoilGeometry(
         id: "hts_solenoid_proxy_v1",
         displayName: "HTS Solenoid Proxy (lab-scale)",
         lengthMM: 200.0,
         turns: 120,
         rings: [
-            RtscRing(
+            HtsCoilRing(
                 name: "Bore",
                 plainName: "Sample bore",
                 material: "vacuum / sample volume",
                 innerRadiusMM: 0.0, outerRadiusMM: 25.0,
                 colorHex: "#2A2A2A", opacity: 0.15),
-            RtscRing(
+            HtsCoilRing(
                 name: "Cold Mass Support",
                 plainName: "Inner support",
                 material: "G10 / stainless",
                 innerRadiusMM: 25.0, outerRadiusMM: 30.0,
                 colorHex: "#7A7A7A", opacity: 1.0),
-            RtscRing(
+            HtsCoilRing(
                 name: "HTS Coil",
                 plainName: "Superconducting coil",
                 material: "REBCO HTS tape + Hastelloy",
                 innerRadiusMM: 30.0, outerRadiusMM: 55.0,
                 colorHex: "#D4A53A", opacity: 1.0),
-            RtscRing(
+            HtsCoilRing(
                 name: "Cold Mass Jacket",
                 plainName: "Coil jacket",
                 material: "copper former",
                 innerRadiusMM: 55.0, outerRadiusMM: 60.0,
                 colorHex: "#B87333", opacity: 1.0),
-            RtscRing(
+            HtsCoilRing(
                 name: "Radiation Shield",
                 plainName: "Heat shield",
                 material: "aluminized mylar / MLI",
                 innerRadiusMM: 60.0, outerRadiusMM: 75.0,
                 colorHex: "#C0C0C0", opacity: 0.45),
-            RtscRing(
+            HtsCoilRing(
                 name: "Cryostat OVC",
                 plainName: "Outer vacuum vessel",
                 material: "304L stainless steel",
