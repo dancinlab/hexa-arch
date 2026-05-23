@@ -3152,9 +3152,87 @@ measurement round (LANDED 2026-05-22 · 4/4 CLOSURE)**
 > - [x] cockpit Stage 1+2a rename · `swift build` PASS · 6/6 test
 > - [x] CHANGELOG.md 2026-05-23 cycle 0-5 batch entry 박제
 > - [x] project.tape v1.5 + `@D d10` worktree index isolation 박제
-> - [ ] RTSC §9 잔여 5/8 fanout 회수 (`H₃X` next batch · next session)
-> - [ ] cockpit Stage 2b Loaders rename (stacked PR · separate layer)
-> - [ ] §11.7 κ-72 R11 G43 framing decision (parallel · 본 §11.8 와 disjoint)
+> - [x] **RTSC §9 잔여 5/8 → 4/8 LANDED 진척** (h3o 추가 회수 · 잔여 4 active pods + h3c serial · κ-74 carry-forward)
+> - [ ] cockpit Stage 2b Loaders rename — **재평가** (실질 footprint = wire-format strings only · Agent C 권고 따라 별도 stacked PR 보류 가능, 잔여 risk LOW)
+> - [ ] §11.7 κ-72 R11 G43 framing decision (parallel · 본 §11.8 와 disjoint · 그대로)
+
+### 11.9 κ-74 audit trail (2026-05-24 · out-of-band · non-R-round)
+
+**κ-74 (2026-05-24) — RTSC §9 4/8 LANDED + ALIGNN 9/9 family-wide + d7 wall mechanism 정량 closure + sidecar g54 횡단 + hexa-lang #541/#548**
+
+> **κ-74 shape**: κ-73 (2026-05-23) 의 후속 sibling cycle — RTSC `H₃X`
+> fanout 의 추가 회수 (3/8 → 4/8) + ALIGNN per-candidate baseline 의
+> family-wide 통합 (cycle 6+7 → 9/9) + d7 wall mechanism 정량 closure
+> (sign-pathology 3/9 · Tc-direct cap 4-6 K · DFT/ML 2.9× 비율 박제) +
+> 횡단 sibling-repo audit (sidecar `g47/g54` · hexa-lang #541/#548).
+> §11.7 κ-72 R11 G43 framing decision 은 본 κ-74 와도 disjoint (parallel).
+>
+> **4-commit demiurge batch (cycle 6-8 · `9e786fe..7eda05e`)**:
+>
+> 1. `9e786fe` — RTSC §9 4/8 LANDED · **h3o 191 K novel headline**
+>    (group-16 light · 6³q · λ_BZ=2.31–2.73 · ω_log=1089–1111 K ·
+>    Tc(μ=0.10)=171–191 K · celldm=4.899) · CaH₆ pool:ubu-1 DEAD
+>    (OOM SIGKILL · Vast live).
+> 2. `006819b` — `inbox/notes/h3o-novel-191k-group16-sweet-spot-2026-05-23.md`
+>    + d7 wall breakthrough paths 7개 + INDEX 갱신.
+> 3. `d2060a3` — RTSC.log §9.15 closed-loop bayesian update · actual Tc
+>    + verdict + axis_violated 3 컬럼 · 4 LANDED PASS/FAIL/PENDING 4-zone
+>    정렬 · §9.15.A bayesian sub-section 신설 · light-X covalent-radius
+>    mass-scaling 가설 falsified · group-16 sweet 강화.
+> 4. `7eda05e` — RTSC.md §9.14 신규 sub-section "ALIGNN family-wide d7
+>    wall ML baseline (9/9 후보)" + d7 wall paths 갱신 + h3br critical
+>    test 가설.
+>
+> **2 sibling-repo cross-impact**:
+>
+> - **sidecar `8029c18`** — `commons @D g47` atomic-merge
+>   `inbox/patches/**` PR exemption (maintainer review 보존) · 후속
+>   `4e64f0b` pr-automerge 0.3.0 lockstep + `affc689` + `13afebd`.
+> - **hexa-lang PR #541 MERGED + PR #548 OPEN** — Vast.ai upstream
+>   흡수 (d9 경로 · `hexa cloud` argv-guard + dft-runner nproc fix
+>   후속).
+>
+> **d7 wall mechanism 정량 closure** — ALIGNN family-wide 9/9 의 핵심
+> 발견 4점: ① **sign-pathology 3/9** (h3o · h3po · h3n — light X
+> covalent localization · short H-X bond + anti-bonding projection →
+> λ negative → ω_log degenerate), ② **strong-coupling outlier 2/9**
+> (h3cl λ=0.81 · h3br λ=1.11), ③ **Tc-direct cap 4-6 K family-wide**
+> (max 5.97 K = h3n · ambient ML training-distribution ceiling 정량
+> 확정), ④ **group-15 ML λ 광범위 분산** −0.18~0.58 (group-17
+> 0.5-1.1 대비 더 분산 · polar transition zone 가설). `@D d7`
+> (first-principles physics breaks ML wall) 정량 실증 → `gate_type
+> = simulation-only-prediction` family-wide default 박제.
+>
+> **CaH₆ root cause** — pool:ubu-1 OOM SIGKILL (clathrate cell choice
+> heavy · 24-atom 차수 vs Im-3m 4-atom baseline · `@D d8` compute
+> sizing 위반). 진짜 live = Vast pod 37378728. 학습: pool ubu-1/2
+> baseline 은 4-7 atom 만 · ≥20 atoms 는 GPU pod (d8 재확인).
+>
+> **h3p a priori prediction 박제** — `inbox/notes/h3p-priori-
+> prediction-2026-05-24.md` · group-15 P · ETA ~05:38 KST · pred
+> Tc(μ=0.10) 90–150 K · ALIGNN per-cand λ=0.585 (정상 mid-range ·
+> sign-path 없음). group-15 covalent vs group-16 light-X sweet 가설
+> 의 첫 정량 분리 datapoint. DFT 도착 시 1-line settle path 박제.
+>
+> **scope-shrink decision (Stage 2b re-evaluation)** — κ-73 의 open
+> "cockpit Stage 2b Loaders rename" 재평가: 실질 footprint = wire-format
+> strings only (Swift identifier 사양 변경 0건). Agent C 권고 따라 별도
+> stacked PR 보류 가능 · 잔여 risk LOW · 본 κ-74 와 disjoint.
+>
+> **exit criterion** (κ-74 closure shape):
+> - [x] 4 commits origin/main 도달 (`9e786fe..7eda05e`)
+> - [x] RTSC §9 4/8 LANDED · ALIGNN 9/9 family-wide 박제
+> - [x] d7 wall mechanism 4-point 정량 closure (sign-path 3/9 ·
+>   strong-coupling 2/9 · Tc-direct cap · group-15 분산)
+> - [x] sidecar `g47/g54` 8029c18 횡단 audit · pr-automerge 0.3.0
+>   lockstep
+> - [x] hexa-lang PR #541 MERGED + #548 OPEN (Vast upstream 흡수 ·
+>   d9 경로)
+> - [x] CHANGELOG.md 2026-05-24 cycle 7-8 batch entry 박제
+> - [x] h3p a priori prediction 노트 박제 (DFT settle 1-line update path)
+> - [ ] RTSC §9 잔여 4/8 회수 (h3n · h3p · h3as · h3br · ETA 24-29h)
+> - [ ] h3p DFT settle → group-15 vs group-16 가설 분리 verdict
+> - [ ] h3br critical-test → group-17 χ-damage 단독 분리 (이론 정정 결정타)
 
 ---
 
