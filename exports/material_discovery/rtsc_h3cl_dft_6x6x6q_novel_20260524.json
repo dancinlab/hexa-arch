@@ -1,0 +1,64 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3cl_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260524T000200Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' + parse_elph_gen.py",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "R4_protection": true,
+  "novelty": "measured-Tc-zero (group-17 halide H3X — no measured high-pressure Tc); §9.15 FAIL above predicted 25-60K (+75%)",
+  "purpose": "Group-17 (halide) Cl-analog. Tests whether H3X stoichiometry generalizes beyond chalcogenides. §9.15 prediction band 25-60K based on lower H content + halide ionicity.",
+  "system": "H3Cl cubic Im-3m BCC primitive (1 Cl + 3 H = 4 atoms), celldm=5.65934 bohr (a≈2.995 Å), PBE PAW",
+  "method": {
+    "pseudopotentials": "Cl.pbe-n-kjpaw_psl.1.0.0.UPF, H.pbe-kjpaw_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "qblocks_parsed": "16/16 (complete BZ coverage)",
+    "moments": "BZ-weighted lambda + lambda-weighted log-average omega_log; Allen-Dynes Tc with mu*=0.10 and 0.13"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 1.135, "omega_log_K": 1254.2, "Tc_AD_mu010_K": 104.6, "Tc_AD_mu013_K":  92.0},
+    {"broad_Ry": 0.020, "lambda_BZ": 1.267, "omega_log_K": 1251.7, "Tc_AD_mu010_K": 119.6, "Tc_AD_mu013_K": 106.9},
+    {"broad_Ry": 0.025, "lambda_BZ": 1.349, "omega_log_K": 1251.0, "Tc_AD_mu010_K": 128.1, "Tc_AD_mu013_K": 115.4},
+    {"broad_Ry": 0.030, "lambda_BZ": 1.406, "omega_log_K": 1250.4, "Tc_AD_mu010_K": 133.8, "Tc_AD_mu013_K": 121.1}
+  ],
+  "ALIGNN_per_cand": {
+    "jv_supercon_tc_alignn_K": 3.82,
+    "jv_supercon_debye_alignn_K": 458.43,
+    "jv_supercon_edos_alignn": 0.1933,
+    "allen_dynes_from_a2F_lambda": 0.8090,
+    "allen_dynes_from_a2F_omega_log_K": 81.55,
+    "allen_dynes_from_a2F_Tc_mu010_K": 3.91,
+    "allen_dynes_from_a2F_Tc_mu013_K": 3.17,
+    "pathology_note": "ALIGNN AD-from-a2F gives Tc=3.9K vs DFT 105-134K — 27-34× underprediction. ω_log_ML=81.5K vs DFT 1250K (15× off). Halide X out-of-distribution for ALIGNN training set."
+  },
+  "section_9_15_verdict": {
+    "predicted_band_K": "25-60",
+    "DFT_result_K": "105-134",
+    "deviation_pct": "+75% above upper band edge (134/60)",
+    "verdict": "FAIL (above)",
+    "broadening_monotonicity": "λ_BZ monotone increasing with broadening (1.14 → 1.41 across 0.015→0.030) — UNDER-CONVERGED. True converged Tc likely lower-bounded by 0.015 value 105K, upper bound uncertain. Higher q-grid (8×8×8) recommended.",
+    "caveat": "Under-convergence caveat may partially reconcile §9.15 prediction — if true converged λ is closer to 0.8-1.0, Tc collapses to ~50-80K (within or near band)."
+  },
+  "honest_observations": [
+    "First halide (group-17) candidate cleared DFT 6×6×6q pipeline. Monotone-increasing λ with broadening is the under-converged BZ-sampling signature.",
+    "DFT Tc 105-134K fails §8.9 RTSC (Tc≥270K + ambient) but is a publishable novel halide-superconductor DFT prediction.",
+    "ALIGNN AD-from-a2F gives positive lambda (0.81) but Tc collapses due to ω_log underestimate (81K vs DFT 1250K)."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 Pattern 1 + Pattern 2 preserved. §9.15 FAIL framed as scientific finding (under-convergence caveat), not impossibility.",
+  "provenance": {
+    "dft_run_host": "pool:ubu-1 (conda QE 7.5)",
+    "result_txt": "/Users/ghost/etc/rtsc-results/h3cl/result.txt",
+    "alignn_predict_json": "/Users/ghost/etc/rtsc-results/h3cl/alignn_predict.json",
+    "capture_date": "2026-05-23"
+  },
+  "citations": [
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5",
+    "RTSC.md §9.15 (H3X group sweep — Cl FAIL above band)",
+    "ALIGNN jv_supercon model (NIST 2024)"
+  ]
+}

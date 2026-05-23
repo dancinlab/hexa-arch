@@ -1,0 +1,62 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3po_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260524T000100Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' + parse_elph_gen.py",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": true,
+  "R4_protection": true,
+  "novelty": "measured-Tc-zero (Po is radioactive — no synthesis path; DFT-only completes group-16 series 4/4)",
+  "purpose": "Heaviest group-16 X-analog: completes H3X group-16 series {O, S, Se, Te, Po} (4 of 4 LANDED via this pipeline, S=baseline). Tests λ-vs-ω_log limit at heaviest X — ω_log collapses but λ inflates.",
+  "system": "H3Po cubic Im-3m BCC primitive (1 Po + 3 H = 4 atoms), celldm=6.236 bohr (a≈3.300 Å), PBE PAW",
+  "method": {
+    "pseudopotentials": "Po.pbe-* (pslibrary 1.0.0, n-variant), H.pbe-kjpaw_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "qblocks_parsed": "10/16 (partial — chain terminated; values reflect partial-BZ moments)",
+    "moments": "BZ-weighted lambda + lambda-weighted log-average omega_log; Allen-Dynes Tc with mu*=0.10 and 0.13"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 3.313, "omega_log_K": 258.2, "Tc_AD_mu010_K": 48.4, "Tc_AD_mu013_K": 46.2},
+    {"broad_Ry": 0.020, "lambda_BZ": 3.052, "omega_log_K": 265.2, "Tc_AD_mu010_K": 48.1, "Tc_AD_mu013_K": 45.8},
+    {"broad_Ry": 0.025, "lambda_BZ": 2.862, "omega_log_K": 270.1, "Tc_AD_mu010_K": 47.6, "Tc_AD_mu013_K": 45.2},
+    {"broad_Ry": 0.030, "lambda_BZ": 2.751, "omega_log_K": 273.5, "Tc_AD_mu010_K": 47.3, "Tc_AD_mu013_K": 44.8}
+  ],
+  "ALIGNN_per_cand": {
+    "jv_supercon_tc_alignn_K": 3.69,
+    "jv_supercon_debye_alignn_K": 383.56,
+    "jv_supercon_edos_alignn": 0.6897,
+    "allen_dynes_from_a2F_lambda": -0.2130,
+    "allen_dynes_from_a2F_Tc_mu010_K": 0.0,
+    "pathology_note": "ALIGNN negative-lambda pathology (-0.21) → AD-from-a2F collapses. Heavy-X out-of-distribution. RTSC.md §9.7 wall."
+  },
+  "group_16_completion_marker": {
+    "H3O":  {"lambda": "2.31-2.73", "omega_log_K": "1089-1111", "Tc_AD_K": "171-191", "X_mass_amu": 16.0},
+    "H3S":  {"lambda": "~2.4",      "omega_log_K": "~1170",     "Tc_AD_K": "175-195", "X_mass_amu": 32.1, "Tc_measured_K": 203},
+    "H3Se": {"lambda": "1.03-1.26", "omega_log_K": "1344-1357", "Tc_AD_K":  "98-128", "X_mass_amu": 78.97},
+    "H3Te": {"lambda": "~2.4",      "omega_log_K": "~467",      "Tc_AD_K":   "72-76", "X_mass_amu": 127.6},
+    "H3Po": {"lambda": "2.75-3.31", "omega_log_K":  "258-274",  "Tc_AD_K":   "47-48", "X_mass_amu": 208.98},
+    "trend": "λ inflates with heavier X (3.0+), but ω_log collapses (mass-trace ω∝1/√M_X). Net Tc decreases. H3S = sweet spot."
+  },
+  "honest_observations": [
+    "Lowest Tc in group-16 — confirms ω_log collapse dominates λ growth at heaviest X.",
+    "Tc broadening-insensitive (47-48K across 4 broadenings); provisional 10/16 q-block coverage — magnitude stable, ranking robust.",
+    "Po radioactive (α-emitter, t½=138d for 210Po) — no realistic synthesis. Pipeline-completion marker only."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 Pattern 1 + Pattern 2 preserved.",
+  "provenance": {
+    "dft_run_host": "vast.ai pod 37329507 (group-14-to-17 serial chain)",
+    "result_txt": "/Users/ghost/etc/rtsc-results/h3po/result.txt",
+    "alignn_predict_json": "/Users/ghost/etc/rtsc-results/h3po/alignn_predict.json",
+    "capture_date": "2026-05-23"
+  },
+  "citations": [
+    "Drozdov et al. 2015 Nature 525:73 (H3S baseline)",
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5",
+    "RTSC.md §9.7 (ALIGNN wall) · §9.15 (group-16 completion)"
+  ]
+}

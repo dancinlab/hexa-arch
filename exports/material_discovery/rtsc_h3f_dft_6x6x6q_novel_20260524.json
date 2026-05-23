@@ -1,0 +1,64 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3f_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260524T000300Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' + parse_elph_gen.py",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "R4_protection": true,
+  "novelty": "measured-Tc-zero (group-17 lightest halide); §9.15 FAIL below predicted 50-100K (-38%)",
+  "purpose": "Group-17 lightest-X (F) analog of H3Cl. Tests electronegativity-extreme limit — F is most electronegative; expected to over-localize bonding electrons and damage Fermi-surface DOS for superconductivity.",
+  "system": "H3F cubic Im-3m BCC primitive (1 F + 3 H = 4 atoms), celldm=5.12696 bohr (a≈2.713 Å), PBE PAW",
+  "method": {
+    "pseudopotentials": "F.pbe-n-kjpaw_psl.1.0.0.UPF, H.pbe-kjpaw_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "qblocks_parsed": "16/16 (complete BZ coverage)",
+    "moments": "BZ-weighted lambda + lambda-weighted log-average omega_log; Allen-Dynes Tc with mu*=0.10 and 0.13"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 0.816, "omega_log_K": 652.4, "Tc_AD_mu010_K": 31.8, "Tc_AD_mu013_K": 25.9},
+    {"broad_Ry": 0.020, "lambda_BZ": 0.807, "omega_log_K": 658.6, "Tc_AD_mu010_K": 31.4, "Tc_AD_mu013_K": 25.4},
+    {"broad_Ry": 0.025, "lambda_BZ": 0.814, "omega_log_K": 664.3, "Tc_AD_mu010_K": 32.2, "Tc_AD_mu013_K": 26.2},
+    {"broad_Ry": 0.030, "lambda_BZ": 0.822, "omega_log_K": 670.3, "Tc_AD_mu010_K": 33.2, "Tc_AD_mu013_K": 27.1}
+  ],
+  "ALIGNN_per_cand": {
+    "jv_supercon_tc_alignn_K": 2.93,
+    "jv_supercon_debye_alignn_K": 413.12,
+    "jv_supercon_edos_alignn": -0.1715,
+    "allen_dynes_from_a2F_lambda": 0.5302,
+    "allen_dynes_from_a2F_omega_log_K": 80.62,
+    "allen_dynes_from_a2F_Tc_mu010_K": 1.22,
+    "allen_dynes_from_a2F_Tc_mu013_K": 0.78,
+    "pathology_note": "ALIGNN AD-from-a2F Tc=1.2K vs DFT 31-33K — 26× underprediction. ω_log_ML=80K vs DFT 660K — 8× off. Halide out-of-distribution."
+  },
+  "section_9_15_verdict": {
+    "predicted_band_K": "50-100",
+    "DFT_result_K": "31-33",
+    "deviation_pct": "-38% below lower band edge (31/50)",
+    "verdict": "FAIL (below)",
+    "broadening_monotonicity": "λ_BZ nearly flat (0.807 → 0.822 across 0.015→0.030) — WELL CONVERGED. Result is robust.",
+    "hypothesis_electronegativity_damage": "F's extreme electronegativity (3.98 Pauling) over-localizes H-F bonding charge → reduces N(E_F) Fermi-surface DOS → lambda collapse (0.8 vs Cl's 1.1-1.4). Predicted by §9.15 hypothesis."
+  },
+  "honest_observations": [
+    "Lowest λ_BZ (~0.81) among 5 candidates — confirms electronegativity-damage hypothesis (F most-electronegative anion). Well-converged: Tc 31-33K robust.",
+    "ω_log 652-670K is intermediate — stronger F-H bond softens H-vibration mode (counterintuitive vs Cl's 1250K).",
+    "Anti-monotone halide series: lighter F is WORSE than heavier Cl (105-134K) — distinct from group-16 monotone λ↑/ω_log↓ trend."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 preserved.",
+  "provenance": {
+    "dft_run_host": "vast.ai pod 37329507 (group-14-to-17 serial chain)",
+    "result_txt": "/Users/ghost/etc/rtsc-results/h3f/result.txt",
+    "alignn_predict_json": "/Users/ghost/etc/rtsc-results/h3f/alignn_predict.json",
+    "capture_date": "2026-05-23"
+  },
+  "citations": [
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5",
+    "RTSC.md §9.15 (H3X group sweep — F FAIL below band, electronegativity-damage hypothesis)",
+    "ALIGNN jv_supercon model (NIST 2024)"
+  ]
+}

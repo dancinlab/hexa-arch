@@ -1,0 +1,60 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "h3o_dft_electron_phonon_6x6x6q_novel_prediction",
+  "stamp": "20260524T000000Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x electron_phonon='simple' + parse_elph_gen.py (H3S textbook-validated pipeline)",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "R4_protection": true,
+  "novelty": "measured-Tc-zero (group-16 sweet-spot candidate; no published measured Tc) — DFT prediction Tc(μ*=0.10)=171-191K places H3O between H3S (203K measured) and H3Se (~113K DFT) by ω_log dominance",
+  "purpose": "Group-16 lightest-X analog of H3S. Tests the hypothesis that lighter X drives ω_log up while keeping λ moderately high. Confirms phonon stability (Im-3m, no imaginary modes detected from ph.x parse).",
+  "system": "H3O cubic Im-3m BCC primitive (1 O + 3 H = 4 atoms), celldm=4.89945 bohr (a≈2.593 Å), PBE PAW pslibrary",
+  "method": {
+    "pseudopotentials": "O.pbe-n-kjpaw_psl.1.0.0.UPF, H.pbe-kjpaw_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 24x24x24 k-grid, MP smearing degauss=0.02 Ry",
+    "phonon": "ph.x DFPT ldisp 6x6x6 q (16 irreducible, weights [4,12,12,12,12,12,8,8,12,12,12,8,12,8,12,4]=160), electron_phonon='simple', el_ph_sigma 0.005-0.050 Ry (10 broadenings)",
+    "qblocks_parsed": "16/16 (complete BZ coverage)",
+    "moments": "BZ-weighted lambda + lambda-weighted log-average omega_log; Allen-Dynes Tc with mu*=0.10 and 0.13"
+  },
+  "results_by_broadening": [
+    {"broad_Ry": 0.015, "lambda_BZ": 2.729, "omega_log_K": 1110.8, "Tc_AD_mu010_K": 191.3, "Tc_AD_mu013_K": 181.4},
+    {"broad_Ry": 0.020, "lambda_BZ": 2.479, "omega_log_K": 1096.6, "Tc_AD_mu010_K": 179.8, "Tc_AD_mu013_K": 169.7},
+    {"broad_Ry": 0.025, "lambda_BZ": 2.364, "omega_log_K": 1090.9, "Tc_AD_mu010_K": 174.2, "Tc_AD_mu013_K": 164.1},
+    {"broad_Ry": 0.030, "lambda_BZ": 2.305, "omega_log_K": 1089.4, "Tc_AD_mu010_K": 171.4, "Tc_AD_mu013_K": 161.3}
+  ],
+  "ALIGNN_per_cand": {
+    "jv_supercon_tc_alignn_K": 4.34,
+    "jv_supercon_debye_alignn_K": 494.96,
+    "jv_supercon_edos_alignn": -0.1258,
+    "allen_dynes_from_a2F_lambda": -0.4169,
+    "allen_dynes_from_a2F_Tc_mu010_K": 0.0,
+    "pathology_note": "ALIGNN a2F prediction yields negative lambda (-0.42) → unphysical; AD-from-a2F path collapses. Direct jv_supercon_tc_alignn=4.3K bears no resemblance to DFT 171-191K. ML training-distribution wall (RTSC.md §9.7 / @D d7).",
+    "alignn_version": "2026.4.2"
+  },
+  "stability": {
+    "phonon_imaginary_modes": "0 (Im-3m verified dynamically stable at this celldm)",
+    "metastability_note": "H3O at ambient is unstable (decomposes to H2O+H2). DFT prediction is for high-pressure stoichiometric Im-3m phase — synthesis pressure unmeasured."
+  },
+  "honest_observations": [
+    "Highest DFT Tc among 5 LANDED candidates — surpasses H3Se (98-128K), H3Te (72-76K), approaches H3S (175-195K) baseline.",
+    "Broad=0.015 upper-bound 191K monotone→171K at 0.030; converged value mid-sweep ~174-180K. ω_log ~1090-1111K is the highest in group-16.",
+    "ALIGNN negative-lambda pathology confirms RTSC.md @D d7 — first-principles physics required, not more ML."
+  ],
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 Pattern 1 (no RTSC absorbed=true) and Pattern 2 (no impossibility framing) both preserved.",
+  "provenance": {
+    "dft_run_host": "vast.ai pod 37329507 (group-14-to-17 serial chain)",
+    "result_txt": "/Users/ghost/etc/rtsc-results/h3o/result.txt",
+    "alignn_predict_json": "/Users/ghost/etc/rtsc-results/h3o/alignn_predict.json",
+    "capture_date": "2026-05-23"
+  },
+  "citations": [
+    "Drozdov et al. 2015 Nature 525:73 (H3S measured baseline 203K)",
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5 (conda-forge)",
+    "ALIGNN jv_supercon model (NIST 2024)",
+    "RTSC.md §9.7 (ALIGNN training-distribution wall) · §9.12 (H3S baseline) · §9.15 (H3X group sweep)"
+  ]
+}
