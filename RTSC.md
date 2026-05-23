@@ -998,7 +998,7 @@ record: `exports/material_verdict/lah10_cah6_yh6_dft_elph_extension/20260522.jso
 | **H₃S** (Drozdov 2015) | Im-3m | 4 | 203 K (measured) | ✅ **LANDED** — 6³ q · λ≈2.3 · Tc_AD 175–195 K (§9.12) | `exports/material_discovery/rtsc_h3s_dft_6x6x6q_textbook_proof_20260522.json` |
 | **H₃Se** (Flores-Livas 2016) | Im-3m | 4 | ~110 K (predicted, novel for measurement) | ✅ **LANDED** — 6³ q · λ≈1.0–1.3 · Tc_AD 98–128 K | `exports/material_discovery/rtsc_h3se_dft_6x6x6q_novel_20260522.json` |
 | **H₃Te** (Liu 2017) | Im-3m | 4 | ~50–100 K (predicted, novel for measurement) | ✅ **LANDED** — 6³ q · λ≈2.3–2.4 · ω_log≈467 K · Tc_AD 72–76 K | `exports/material_discovery/rtsc_h3te_dft_6x6x6q_novel_20260522.json` |
-| **H₃Po** | Im-3m | 4 | novel (no published Tc) | ⏳ **in-progress** — Vast.ai pod 자율 계산 · group-16 시리즈 완성 목적 · ETA hours | (emit on done) |
+| **H₃Po** | Im-3m | 4 | novel (no published Tc) | ✅ **LANDED** — 6³ q (16 q-points) · λ_BZ=3.31 (broad=0.015) → 2.75 (broad=0.030) · ω_log=258–273 K · Tc_AD(μ=0.10)=47–48 K · Tc_AD(μ=0.13)=45–46 K · celldm=6.236 (artifacts `~/etc/rtsc-results/h3po/`) | (emit on completed-form export) |
 
 Group-16 verdict (3/4 LANDED): H₃S = sweet spot · H₃Se = weaker coupling outlier · H₃Te = λ matches H₃S but ω_log 추락 (heavy Te). "go heavier hydride" 단순 전략은 chalcogenide family 안에서 dead end 임이 numerically demonstrated (R4 Pattern 2 — breakthrough path 는 ternary / clathrate / ambient frontier · §9.10 N5 / §9.12.A clathrate).
 
@@ -1007,7 +1007,7 @@ Group-16 verdict (3/4 LANDED): H₃S = sweet spot · H₃Se = weaker coupling ou
 | track | status | notes |
 |---|---|---|
 | **CaH₆ sodalite clathrate** (Ma 2022, 7-atom Im-3m, measured 215 K) | ⏳ **in-progress** — -np 15 fresh restart 후 실행 중 | §9.12.A 의 `-np 6` watcher 시도가 부분 진행 후 restart, 다른 cell topology cross-validation 목적 |
-| **H₃X group 14-17 parallel fanout** (8 후보 — h3o · h3f · h3n · h3si · h3p · h3cl · h3as · h3br) | ⏳ **in-progress** — parallel Vast.ai pods, 한 후보 = 한 pod | group 14/15/16/17 의 H₃X 패턴 sweep · novel-prediction 영역 (§9.10 N5 의 candidate funnel pattern) |
+| **H₃X group 14-17 parallel fanout** (8 후보 — h3o · h3f · h3n · h3si · h3p · h3cl · h3as · h3br) | ⏳ **in-progress 1/8 LANDED** — **h3cl 완주** (6³ q full · λ_BZ=1.14–1.41 · ω_log=1250–1254 K · Tc_AD(μ=0.10)=105–134 K · celldm=5.659 · artifacts `~/etc/rtsc-results/h3cl/`) · 나머지 7개 pod 진행 중 (h3o/h3f/h3n/h3si/h3p/h3as/h3br) | group 14/15/16/17 의 H₃X 패턴 sweep · novel-prediction 영역 (§9.10 N5 의 candidate funnel pattern) · **h3cl first-principles λ≈1.4 vs ambient-ML λ≈0.48 — d7 wall 돌파 시그널** |
 | **H₃X group 14-17 serial orchestrator** (h3c → h3n → ... 한 인스턴스) | ⏳ **in-progress** — single Vast.ai instance, serial-chain orchestration | parallel fanout 의 cross-validation · 같은 후보들을 직렬로 흘려 결과 reproducibility 확인 |
 
 본 fanout 의 핵심: §9.12 H₃S 교과서급 6³ q ladder + §9.12.A 4³ q honest baseline 가 *protocol* 으로 박혀 있어 동일 grid 정책으로 group-wide sweep 가능 (per-candidate manual setup 없이 자동화 가능 — `process_completed_pod.sh` 가 schema-uniform record 보장).
