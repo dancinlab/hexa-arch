@@ -2,6 +2,22 @@
 
 Append-only history sister of `NOREFLOW.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T23:15:00Z — M7 통합 ranking 완료 (cycle3) — NOREFLOW 8/8 ✅
+
+- [x] §1 5-axis scoring (efficacy 30% · delivery 20% · safety 25% · 한국 15% · 단계 10%)
+- [x] §2 전체 후보 ranking (~20 row) — Tier-A 5 / Tier-B / Tier-C
+- [x] §3 Tier 분류 + 권고 시나리오
+- [x] §4 d2 wall 돌파 3-path 최종 권고 (CypD-selective · IMR-guided RCT · drug-eluting catheter)
+- [x] §5 한국 first-in-class 3-trial 구상 (NICORADENO-MVO · NMN-PRECON · DERWIRE-PRECLIN)
+- [x] §6 timeline + decision gates (2026-2028 roadmap)
+- [x] §7-8 g5 grade + 참고문헌 14
+- [x] 산출물 `NOREFLOW/M7_rank.md` (295 lines)
+
+🔑 핵심 권고:
+- **Tier-A 3약물 가중 종합**: adenosine IC 4.85 · nicorandil 4.30 · MTP-131 3.40
+- **한국 first-in-class 기회**: Trial-A NICORADENO-MVO (n=500, 8기관, 30-50억, 2-3년)
+- **d2 wall 돌파 우선순위**: Path B (IMR-guided RCT) > Path A (NAD+/NMN pilot) > Path C (drug-eluting frontier)
+
 ## 2026-05-24T23:05:00Z — M8 한국 KAMIR registry 매핑 완료 (cycle2)
 
 - [x] §1 한국 STEMI/PCI registry 4대 (KAMIR/KAMIR-NIH · K-ACTION · KAMIR-V · HOST 시리즈)

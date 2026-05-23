@@ -10,5 +10,5 @@
 - [x] 국소 전달 vs systemic — IC bolus · distal protection · thrombectomy → `NOREFLOW/M4_delivery.md`
 - [x] 임상 측정 endpoint — TIMI flow · MBG · cMRI LGE · IMR → `NOREFLOW/M5_endpoint.md`
 - [x] M6 off-target / 안전성 — 부정맥 · 저혈압 · 출혈 → `NOREFLOW/M6_safety.md`
-- [ ] 후보 통합 ranking + d2 wall breakthrough → `NOREFLOW/M7_rank.md`
+- [x] 후보 통합 ranking + d2 wall breakthrough → `NOREFLOW/M7_rank.md`
 - [x] 한국인 KAMIR / K-ACTION registry 매핑 → `NOREFLOW/M8_korea.md`
