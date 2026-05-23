@@ -29,6 +29,28 @@ characterization · demiurge↔hexa-rtsc handoff schema · g3 honest stance — 
 
 ---
 
+> **Naming note (2026-05-23, scope-shrink decision B)**: 본 도메인 RTSC 는
+> *abstract discovery hypothesis* (§9.12 H₃S · §9.15 H₃X 8-fanout · MONDALOY ·
+> h3cl novel 등) 와 *concrete cockpit proxy* (HTS REBCO 77K · life-hts/cube ·
+> H-formulation) 를 한 우산 아래 함께 다룬다. 현재 cockpit Swift 코드
+> (`RtscView3D` · `RtscGeometry` · `RtscVerifyProducer` 등) 는 전부 **HTS
+> proxy** — 즉 device=솔레노이드 · conductor=HTS REBCO 77K · formulation=GetDP
+> H-formulation cell 하나. RTSC 가설 자체 (상온 R=0) 는 §3.2 material-side 표의
+> "Claim-only RT-SC" 칸과 §9 의 fanout 영역에 속하며 **`absorbed=false` 의
+> simulation-only-prediction** 상태로 박혀 있다. Swift 파일 prefix rename
+> (`Rtsc*` → `Hts*` 또는 `SCMagnet*`) 은 별도 stacked PR 로 분리 처리한다
+> — §6 Domain rename plan 의 코드 footprint(71 grep hit · 7 파일) 영역.
+>
+> ```
+> RTSC (도메인 우산)
+> ├─ abstract:  discovery 가설 (8-fanout H₃X · MONDALOY · h3cl novel)
+> │             → absorbed=false · falsifier preregister · simulation-only
+> └─ proxy:     HTS REBCO 77K (cockpit 3D view · GetDP H-formulation · cube/life-hts)
+>               → 실제 동작 · cross-check Δ=-1.40% · 본 세션 cell
+> ```
+
+---
+
 ## 1. Diagnosis (naming collision)
 
 | 증상 | 위치 | 메모 |
@@ -111,6 +133,10 @@ characterization · demiurge↔hexa-rtsc handoff schema · g3 honest stance — 
 
 ### 3.1 device × verb (device-side)
 
+> 각주 (2026-05-23): 본 테이블의 "HTS" 행 전체 = cockpit Swift proxy (REBCO 77K).
+> "RTSC" 행 = abstract 가설 (상온 R=0, 미재현). 두 행이 한 도메인 우산 아래 공존
+> — naming note 박스 참조.
+
 |              | 솔레노이드 | 팬케이크 | 토로이드 | dipole | quadrupole |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Cu  · analyze | ✗ pyfemm macOS-gated | ○ | — (3-D) | — (별 도메인) | — |
@@ -134,6 +160,10 @@ characterization · demiurge↔hexa-rtsc handoff schema · g3 honest stance — 
 
 ### 4.1 작업 단위 (one cell)
 device=**솔레노이드** · conductor=**HTS REBCO (μ_r≈1)** · solver=**GetDP 3.5.0** · verb=**verify** · formulation=**2-D axisym A-φ 선형 magnetostatic**
+
+> 각주 (2026-05-23): 본 cell 의 conductor = **HTS REBCO 77K proxy** (상온 RTSC 가설
+> 이 아님). 즉 cockpit Swift 의 `Rtsc*` prefix 가 가리키는 실제 물리는 *HTS 77K*.
+> RTSC 가설 (상온) 의 verify 트랙은 §3.2 material-side 표 + §9 fanout 영역.
 
 ### 4.2 진행 상태 (세션 종료 시점 스냅샷)
 

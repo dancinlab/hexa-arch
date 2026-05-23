@@ -4,6 +4,8 @@ Spec at [`./RTSC.md`](./RTSC.md). Log entries below preserve session-by-session 
 
 ## Log
 
+- **2026-05-23 KST** — scope-shrink decision B docs-only 1단 LANDED — RTSC 도메인 우산 아래 *abstract 가설* (8-fanout · MONDALOY · h3cl) 과 *concrete HTS REBCO 77K proxy* (cockpit Swift · GetDP H-formulation) 가 공존함을 §1 직전 naming-note 박스 + §3.1·§4.1 각주로 명시. Swift 파일 prefix rename (`Rtsc*` → `Hts*` 또는 `SCMagnet*`) 은 별도 stacked PR 로 분리. 본 layer = docs-only, code touch 없음.
+
 - **2026-05-23 KST** — **§9.15 Precommit prediction — 8 H3X fanout candidates (group 14-17 screen)**. 결과 ETA 9-15h 전 closed-form 예측을 박아 d35 verifiable goal 충족. anchor: H₃S (λ=2.30, ω_log=1300K, Tc=200K, celldm=6.236 bohr), H₃Se (λ=1.03-1.26, ω_log=850K, Tc=98-128K, celldm=6.4), H₃Te (λ=2.25-2.41, ω_log=280K (broadening-crashed; ~467K stable), Tc=72-76K, celldm=6.7). 외삽 식 — ω_log ≈ ω_S · √(μ_HS/μ_HX) (3H+X reduced mass, μ=3·m_H·m_X/(3·m_H+m_X)), λ는 group-별 hypothesis (16=sweet 2.0-2.4 · 15=strong covalent ~1.5-2.0 · 14=moderate DOS 1.0-1.5 · 17=electronegativity-imbalance suppressed 0.8-1.4), Tc=Allen-Dynes(λ,ω_log,μ*=0.10). celldm seed = covalent radius scaling from H₃S baseline (r_X/r_S × 6.236).
   - [x] anchor table consolidated (group 16 trend captured)
   - [x] 8 candidates 예측 박힘 (h3o · h3f · h3n · h3si · h3p · h3cl · h3as · h3br)
