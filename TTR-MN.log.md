@@ -1,5 +1,15 @@
 # TTR-MN — log
 
+## 2026-05-24T07:35Z — M9-MN in-vivo protocol design landed
+
+- [x] M9-MN — 2-tier in-vivo (SD rat 28일 + Yucatan mini-pig 90일) · 62 animal (`TTR/research/m9_mn_in_vivo_protocol.md`)
+  - Tier 1: 36 rats · screening · 28일 · $50k · gate removal ≥ 60% (Azo) · scar/mel/PK safety
+  - Tier 2: 26 mini-pigs · efficacy + safety · 90일 · multi-cycle 30일×3회 · $300k · @goal "30일 1회" 정합
+  - 5-tier safety stacking (immediate · 24-72h · Day 7-28 · Day 30-90 · 5yr registry) — M6 🔴 cross-ref
+  - Bridging: allometric scaling (BW × 0.13 = mini-pig HED · ÷ 0.16 = human) · MN length variant (rat 800 · pig 1200 · human 1200-1800)
+  - Stop-go matrix · CRO 후보 (Charles River · Covance · Sinclair Bio · WuXi · 한국 KIT)
+  - 총 in-vivo 비용 ~$350k · M10 IND prerequisite
+
 ## 2026-05-24T07:20Z — M8-MN ex-vivo 돼지 피부 PoC protocol design landed
 
 - [x] M8-MN — porcine ear skin ex-vivo · 9 cell experimental matrix (3 payload × 3 ink) + 1 negative (`TTR/research/m8_mn_ex_vivo_protocol.md`)
