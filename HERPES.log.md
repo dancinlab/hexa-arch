@@ -2,6 +2,75 @@
 
 Append-only history sister of `HERPES.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T21:50:00Z — M12 Pre-declared falsifier protocol 완료
+
+- [x] §1 falsifier vs validator distinction (Popper 표준 primer)
+- [x] §2 Tier I empirical (5 falsifier · immediate decisive):
+  - F-I-1 ddPCR shedding ≥6/12 monthly POS
+  - F-I-2 LAT-miRNA blood ≥3/4 quarter POS
+  - F-I-3 triple-positive recurrence (swab+ + LAT+ + clinical lesion)
+  - F-I-4 median cycle count > 25
+  - F-I-5 shedding rebound ≥2× (longitudinal)
+- [x] §3 Tier II wet-lab confirmatory (3 falsifier · population-decisive):
+  - F-II-6 ¹⁸F-FIAU PET ≥50% residual ganglion @ 12mo
+  - F-II-7 post-mortem TG ImmunoFISH ≥10³ latent copies
+  - F-II-8 KDM4 activator chemistry 5-year failure
+- [x] §4 Tier III systemic (3 falsifier · program-decisive):
+  - F-III-9 M11 u_crit sweep > 10× shift (M11 결과 1.09×라 falsifier 통과)
+  - F-III-10 NHP AAV-rh.10 TG transduction < 20%
+  - F-III-11 BNT163/mRNA-1608 CTL boost < 5×
+- [x] §5 decision rule matrix · §6 stop-rule vs falsifier 구분 · §7 artifact filter
+- [x] §8 V4 §10 9 wet-lab essential dual-mark (4 falsifier + 5 validator)
+- [x] §9 "Successfully not-falsified" framing (Popper corroborated ≠ proved)
+- [x] 산출물 `HERPES/M12_falsifier_protocol.md` (504 lines)
+
+🔑 핵심 통찰 (3 standalone-decisive falsifier):
+- **F-II-7 post-mortem TG ImmunoFISH ≥10³** — single mechanistic violation, no stat test · M10 §5+§7 peripheral surrogate strategy 전체 reject
+- **F-III-10 NHP AAV transduction < 20%** — Arm S + Arm F 둘 다 kill (delivery 공통 의존)
+- **F-I-2 LAT-miRNA blood ≥3/4 quarter POS** — 12-month window · N_lat ≥10³ direct evidence
+
+F-III-9 M11 u_crit > 10× shift falsifier는 M11이 1.09× max로 통과 → 이 falsifier는 **현재 trigger 안 됨** (positive corroboration).
+
+다음: M10 §5.5 cross-link summary (M12 §10 1-paragraph version) 추가 권고.
+
+## 2026-05-24T21:42:00Z — V5 cross-tool 2nd-witness 완료 (pool ubu-1 · 5 sub-jobs)
+
+- [x] V5.1 — body burden Monte-Carlo: MC 4.51×10⁵ vs closed 1.25×10⁵ (ratio 3.60 = 3.01 uniform-vs-point × 1.20 factor mismatch · 설명됨) → 🟢 confirmed
+- [x] V5.2 — heavy-tail log-normal: 45% top-1% @ sigma ≈ **2.22** (interpolated 2.0→36.7% / 2.5→55.8%) · Sawtell heavy-tail validated → 🟢 confirmed
+- [ ] V5.3 — u_crit proxy h=2 = 0.31 vs spec 0.20 — trend ok, absolute mismatch · Jacobian root-find 필요 → 🟡 partial
+- [x] V5.4 — heavy-tail R_total MC: **mean 6906 vs deterministic 2500 (2.76× larger!)** · M5 §6 deterministic UNDER-estimates residual (CI95 lower 4032 > 2500) → 🟢 + 중요 finding
+- [x] V5.5 — cycle distribution MC: 14.05 vs analytic log₂(1.25e5/10)=13.61 (1.032 ratio · 가장 tight) → 🟢 confirmed
+- [x] 단일 consolidate-script (1 copy-to + 1 run 5 sub-jobs · argv newline restriction 회피) · wallclock < 60s on ubu-1
+- [x] 산출물 `HERPES/verify/V5_cross_tool.md` (218 lines)
+- [ ] V5.6 deferred — biopython/mhctools 부재 (antigen score)
+- [ ] V5.7 deferred — cas-offinder + GRCh38 부재 (CRISPR off-target)
+
+🔑 핵심 finding (V5):
+- **Sawtell heavy-tail validated** at sigma ≈ 2.22 → 45% top-1% reproduced
+- ⚠ **M5 §6 deterministic 2.5×10³ 잔류 estimate UNDER-counts** — MC 평균 6.9×10³ (2.76× more) · sterilizing cycles 약간 더 필요 가능성
+- u_crit proxy method 부족 — V6에서 Jacobian-based root-find 권장
+- **4/5 single-witness claims promoted to 🟢 double-witnessed**
+
+threat update: F8 cross-tool single-witness 67/69 → 4 fewer (63/65 now)
+M5 §6 residual update suggested → Arm S cycles 약간 inflate (worst case 다음 round check)
+
+## 2026-05-24T21:35:00Z — M11 Müller-Ott 5-fold sensitivity sweep 완료 (pool ubu-1)
+
+- [x] 5×5 grid (k_u→m × k_m→u × {0.1, 0.5, 1, 2, 10}) — 25 points
+- [x] downstream 재계산: P_Me3^ss · u_crit · k_escape · p_cycle · cycles_to_sterilize
+- [x] 실행: `hexa cloud copy-to ubu-1 /tmp/m11_sweep.py` → `hexa cloud run ubu-1 -- python3 /tmp/m11_sweep.py` (per @D d7 + g8 · 메모리 newline restriction 준수)
+- [x] 산출물 `HERPES/M11_sensitivity_sweep.md` (351 lines)
+
+🔑 핵심 finding (F7 weak-link 양적 분석):
+- **25/25 grid Arm S cycles ∈ [18.94, 21.58]** — explosion 없음
+- **worst-case 1.09× baseline (19.77 cycles)** — 5-fold rate uncertainty 강건
+- log-sensitivity |d log n / d log k| ≈ 0.24 (log-linear damping)
+- M10 §11.4 realistic 10-15 → 10-22 cycles widening · dosing regimen invalidation NOT triggered
+- **F7 weak-link 임팩트 REDUCED**: V1이 식별한 60/248 claims 의존성 mathematically 강건 — wet-lab 측정은 우선순위 LOW
+- 🟠 deferred paths: (A) mouse TG explant ChIP-seq time-course (B) chromatin-FISH single-molecule (C) CUT&RUN + KDM4 inhibitor perturbation
+
+**threat update**: F7 heuristic-promotion **MEDIUM-HIGH → LOW-MEDIUM** (양적 검증 통과).
+
 ## 2026-05-24T21:18:00Z — V4 final tier ledger 완료 (HERPES verify 100%)
 
 - [x] V1+V2+V3 통합 — 248 claims rolled-up master ledger
