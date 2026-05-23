@@ -2,6 +2,32 @@
 
 Append-only history sister of `ISR.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T23:00:00Z — M4 후보 분자 short-list 완료
+
+- [x] §1 short-list overview 표 (12 분자 — ROCK 3 + PCSK9 3 + GLP-1R 2 + anti-inflammatory 2 + SGLT2i 2 + biolimus DCB 1)
+- [x] §2 top 5 deep-dive (fasudil · evolocumab · semaglutide · colchicine · biolimus A9-DCB)
+- [x] §3 delivery route matrix (DES coating · DCB · systemic) + dual-track ASCII
+- [x] §4 drug-repurposing logic (fasudil · netarsudil · sema · colchicine · evolocumab · inclisiran · empa)
+- [x] §5 M5 DCB combo hooks (biolimus mono · biolimus+fasudil dual · paclitaxel+sirolimus dual)
+- [x] §6 한계 + M7/M8 입력 (safety 미검증 10 · 한국인 evidence 6 axis)
+- [x] 산출물 `ISR/M4_candidates.md` (~280 lines)
+
+🔑 핵심: short-list 12 · top 3 picks **fasudil-DCB · evolocumab · semaglutide** · dual-track 전략. 차세대 우승 후보 = **biolimus + fasudil dual-DCB** (M3 d2 wall NA + EC 보존 직접 hit · 한국 발 IIT 후보).
+
+## 2026-05-24T23:00:00Z — M6 차세대 BRS 평가 완료
+
+- [x] §1 BRS 개요 + 이론 장점
+- [x] §2 Absorb 실패 4원인 (strut 157µm · PLLA recoil · GW2 lesion · sizing)
+- [x] §3 2세대 폴리머 BRS 시도 표 (DESolve · MeRes100 · NeoVas · Firesorb · MAGNITUDE)
+- [x] §4 Mg 합금 — Magmaris (1G) · Freesolve (2G strut 99-117µm · BIOSOLVE-IV ST 0.5%)
+- [x] §5 Zn 합금 emerging (Mg-Fe 부식속도 중간)
+- [x] §6 ISR 관점 잔여 wall (early NH 열등 · late NA 잠재 우위)
+- [x] §7 비-mTOR 표적 × BRS coating 가능성 (fasudil-Mg-BRS · sirolimus-Zn-BRS)
+- [x] §8 한계 + M7/M8 입력
+- [x] 산출물 `ISR/M6_brs.md` (302 lines)
+
+🔑 핵심: PLLA 사망 · **Freesolve (Mg 2G)** 현 시점 leader · M3 표적 × Mg/Zn combo 가 진짜 hook.
+
 ## 2026-05-24T23:00:00Z — M7 off-target / 안전성 통합 완료
 
 - [x] §1 5대 안전성 도메인 (late ST · delayed healing · NA · 출혈 · systemic off-target)
