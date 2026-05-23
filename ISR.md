@@ -18,3 +18,10 @@
 - [ ] R1 arxiv/PubMed deep research sweep — 2023-2026 ISR/Mg-BRS/dual-DCB/ROCK coronary/NA OCT → `ISR/research/arxiv_deep_research.md`
 - [x] R2 web/regulatory research — FDA letter · ESC 2024 · ACC/AHA 2024 · ClinicalTrials.gov pipeline → `ISR/research/regulatory_pipeline.md`
 - [ ] R3 external libraries inventory — stent/balloon suppliers · drug DBs · biomechanics · patent landscape → `ISR/research/external_libraries.md`
+
+## verify (🔵 SUPPORTED-FORMAL push · per @D g5)
+
+- [ ] V1 ISR claim inventory + tier triage (🔵/🟢/🟡/🟠) → `ISR/verify/V1_claim_inventory.md`
+- [ ] V2 🔵 push — bio-physical closed-form identities → `hexa verify --expr` + atlas register → `ISR/verify/V2_formal_identities.md`
+- [ ] V3 🟢 push — DFT/MD/CFD/FEA numerical recompute (drug release · Mg corrosion · stent biomech) → `ISR/verify/V3_numerical_recompute.md`
+- [ ] V4 final tier ledger — 🔵 + 🟢 + 🟡 verbatim verdict 통합 + 🟠 honest deferred → `ISR/verify/V4_tier_ledger.md`
