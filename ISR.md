@@ -4,7 +4,7 @@
 
 ## milestones
 
-- [ ] ISR 4-axis 기전 매핑 (neointimal hyperplasia · neoatherosclerosis · stent fracture · uncovered strut) → `ISR/M1_mechanism.md`
+- [x] ISR 4-axis 기전 매핑 (neointimal hyperplasia · neoatherosclerosis · stent fracture · uncovered strut) → `ISR/M1_mechanism.md`
 - [ ] 현행 DES 약물 한계 — sirolimus · everolimus · zotarolimus · biolimus → `ISR/M2_current.md`
 - [ ] 비-mTOR 신규 표적 inventory — YAP/TAZ · HIF · ROCK · BET · Wnt → `ISR/M3_targets.md`
 - [ ] 후보 분자 short-list — drug-repurposing + 신규 → `ISR/M4_candidates.md`
