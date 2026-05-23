@@ -2,6 +2,20 @@
 
 Append-only history sister of `NOREFLOW.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T00:30:00Z — M10/V1 honest fence + claim inventory 완료 (cycle5)
+
+- [x] V1 NOREFLOW claim 색인 — 72 claims (M1:12 · M2:14 · M3:12 · M4:11 · M5:7 · M6:11 · M7:9 · M8:7 · M9:16)
+- [x] ⚪ fence 분류 — 9 핵심 + 6 metaphor = 15
+- [x] 🔵 도달 후보 11 (M11/V2 입력)
+- [x] 🟢 도달 후보 13 (M12/V3 입력)
+- [x] 🔴 falsified 4 (SGLT2i acute · colchicine acute · 한·중 nicorandil 6mo)
+- [x] 산출 `NOREFLOW/verify/V1_claim_inventory.md` (437 lines) + `NOREFLOW/M10_fence.md` (240 lines)
+
+🔑 핵심 통찰:
+- **M5 endpoint · M4 delivery가 🔵 도달 비율 최고** (각 71% · 55%) — IMR=Pd×Tmn · cTFC×1.7 · Cmax ratio 등 산식 보유
+- **M7 ranking · M9 deep research에서 ⚪ fence 집중** — subjective 5-axis 가중치 · 3-path 신호 강도 · 신규 d2 path 가설 등 본질적 산식화 불가
+- fence는 **metaphor 6 + hypothetical 4 + subjective 2 + prognostic 1 + future infra 2** 5-카테고리 — Trial-B/C effect-size 산식 강제 방지로 절차적 정직성 확보
+
 ## 2026-05-25T00:05:00Z — scaffold 확장: M12 simulation pass 추가
 
 - [x] M12 milestone 신설 — demiurge 자산 (d1 non-wet-lab completed-form) simulation 트랙
