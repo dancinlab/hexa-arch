@@ -2,6 +2,20 @@
 
 Append-only history sister of `ISR.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T23:00:00Z — M7 off-target / 안전성 통합 완료
+
+- [x] §1 5대 안전성 도메인 (late ST · delayed healing · NA · 출혈 · systemic off-target)
+- [x] §2 late ST 매핑 + ARC-2
+- [x] §3 delayed healing & uncovered strut (1G vs 2G vs biopolymer)
+- [x] §4 Katsanos 2018 paclitaxel 신호 + 후속 약화
+- [x] §5 M3 family safety 통합 표
+- [x] §6 M6 BRS 안전성
+- [x] §7 후보별 안전성 grading (M8 입력)
+- [x] §8 한국인 hooks
+- [x] 산출물 `ISR/M7_safety.md` (~293 lines)
+
+🔑 핵심: M3 picks 안전성 grade · Katsanos 신호 약화 trajectory · M6 BRS late ST 학습.
+
 ## 2026-05-24T22:00:00Z — M5 DCB 비교 완료
 
 - [x] §1 DCB 원리 + ASCII
