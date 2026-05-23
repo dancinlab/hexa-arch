@@ -1,5 +1,15 @@
 # TTR — log
 
+## 2026-05-24T05:32Z — M2 MoA short-list landed
+
+- [x] M2 — 8 표적 × 5 MoA family feasibility 매트릭스 (`TTR/research/moa_shortlist.md`, 563 lines)
+  - 5 family default: F1 Fenton · F2 Ascorbate+DFO · F3 DFO · F4 UV-A+TiO₂ · F5 AzoR
+  - 62 unique candidate handles (CAS + Sigma reachable + thermodynamic 수치) → M3 입력
+  - 시장 60-70% (azo + Fe oxide + QA) = F2+F3+F5 단일 family 직접 cleavage
+  - 🧱 d2 wall (Cu-Pc + Cr₂O₃) breakthrough 4 paths: Photo-Fenton hybrid · staged 3-pass · macrophage re-engage · DyP engineered
+  - Cr₂O₃ band gap 3.4 eV ≡ UV-A 365 nm photon (3.40 eV) thermodynamic 정합
+  - ⚠ unknowns: Cr⁶⁺ 형성 risk · 방향족 아민 carcinogenic (M6 1순위 표적)
+
 ## 2026-05-24T05:18Z — M4 진피 전달 메커니즘 설계 landed
 
 - [x] M4 — transdermal 4-mechanism 비교 (`TTR/research/transdermal_delivery.md`, 269 lines)
