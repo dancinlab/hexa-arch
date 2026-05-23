@@ -4,7 +4,7 @@
 
 ## milestones
 
-- [ ] no-reflow 4-cause 매핑 (distal embolization · vasospasm · edema · ROS/IRI) → `NOREFLOW/M1_causes.md`
+- [x] no-reflow 4-cause 매핑 (distal embolization · vasospasm · edema · ROS/IRI) → `NOREFLOW/M1_causes.md`
 - [ ] mPTP 차단 후보 inventory — cyclosporin-A · sanglifehrin · TRO40303 · 후속 → `NOREFLOW/M2_mptp.md`
 - [ ] 미세혈관 보호 약물 short-list — adenosine · nicorandil · nitroprusside · verapamil → `NOREFLOW/M3_microvasc.md`
 - [ ] 국소 전달 vs systemic — IC bolus · distal protection · thrombectomy → `NOREFLOW/M4_delivery.md`
