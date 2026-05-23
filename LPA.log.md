@@ -21,6 +21,24 @@ Append-only history sister of `LPA.md`. Each entry starts with `## <ISO timestam
 - siRNA 3분자 RISC catalytic 공통 → outcome 입증 시 **class effect** 확장
 - Lp(a) ↓ → MACE ↓ 인과 첫 RCT 증거 = **OCEAN(a)-Outcomes 2027** (Amgen olpasiran)
 
+## 2026-05-24T22:00:00Z — M3 ASO/pelacarsen 완료
+
+- [x] §1 ASO/RNase H1 기전 + GalNAc-ASGR1 hepatocyte 표적 ASCII
+- [x] §2 pelacarsen 약동 (IONIS-APO(a)Rx → -LRx → TQJ230) — Ph2 -80% (Tsimikas NEJM 2020)
+- [x] §3 HORIZON Ph3 (NCT04023552) — n=8,323 · ≥70 mg/dL · MACE · 4.25년 · **readout 2026 H1**
+- [x] §4 후속 ASO 부재 — siRNA로 파이프라인 이동 (pelacarsen 단독)
+- [x] §5 한국 site 포함 (KBR 2021) — n 미공개
+- [x] §6 우려 — flu-like · platelet (inotersen REMS 참고) · hepatotox · Q4W 부담
+- [x] §7 의사결정 분기 — 양성(2027 first-in-class) / 음성(Lp(a) hypothesis 흔들)
+- [x] 산출물 `LPA/M3_aso.md` (~197 lines)
+- [ ] 🟠 HORIZON outcome (2026 H1 대기) — 결과 후 M7 정량 재평가
+- [ ] M4 siRNA (olpasiran OCEAN(a)) 대조
+
+🔑 핵심 통찰:
+- pelacarsen = **first-in-class Lp(a) 표적 + 유일 ASO** — HORIZON outcome이 Lp(a) hypothesis 자체 검증
+- **2026 H1 readout · 2026 H2 규제 제출** → 2027 출시 가능 분기점
+- siRNA(-95% · Q12-24W)가 효능/편의 양쪽에서 ASO(-80% · Q4W) 압박 — 시장 선점만 ASO 우위
+
 ## 2026-05-24T21:30:00Z — M1 구조 + apo(a) isoform 완료
 
 - [x] §1 Lp(a) = LDL + apo(a) disulfide ASCII (Berg 1963)
