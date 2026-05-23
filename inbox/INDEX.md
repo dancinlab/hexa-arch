@@ -3,6 +3,10 @@
 > Updated 2026-05-23 (h3o 191K novel headline + d7 wall breakthrough paths + RTSC §9.x light-X sweep batch).
 > Status SSOT for every `inbox/notes/*.md` entry. Each entry keeps
 > its own body intact; this file is the at-a-glance index.
+>
+> **Numerical canonical SSOT**: H₃X DFT 의 λ · ω_log · Tc 등 numerical value 는
+> `exports/material_discovery/rtsc_h3<X>_dft_6x6x6q_*.json` 이 authority. 본 inbox/notes/ 는
+> analysis snapshot — 값 불일치 시 JSON 이 우선.
 
 ## Legend
 

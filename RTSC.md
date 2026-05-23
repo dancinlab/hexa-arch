@@ -1021,6 +1021,11 @@ record: `exports/material_verdict/lah10_cah6_yh6_dft_elph_extension/20260522.jso
 
 §9.12 + §9.12.A 의 H₃S 교과서급 실증 위에서 진행 중인 DFT el-ph campaign 의 *current snapshot* (chronicle 은 RTSC.log.md). 모든 cell `absorbed=false` · `gate_type=simulation-only-prediction` · domain=material (R4 보호).
 
+> **Canonical record (numerical SSOT)**: 모든 H₃X DFT numerical value (λ · ω_log · Tc · celldm · ALIGNN_per_cand + §9.15 verdict) 의 single source-of-truth 는
+> `exports/material_discovery/rtsc_h3<X>_dft_6x6x6q_*.json` (machine-readable · provenance 포함 · Tier 2 schema · README 는 동 디렉토리).
+> 본 §9 표 + `RTSC.log.md` §9.15 + `inbox/notes/` 는 모두 *human-readable snapshot* — 값 불일치 시 **JSON 이 authority**.
+> derive chain: `result.txt` (raw QE, `~/etc/rtsc-results/<cand>/`) → JSON (curated SSOT) → §9 표 (snapshot).
+
 #### Group-16 H₃X baseline
 
 | candidate | structure | atoms | measured / pred Tc | status | record |
