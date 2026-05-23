@@ -146,3 +146,64 @@ cockpit이 V3 sim 결과를 표시할 때:
 - M7 handoff와 연결 — verify verdict가 handoff packet의 mandatory 필드
 - M5 synthesize와 연결 — sim 라우팅 결과의 verify gate
 - cockpit 구현 (별도 milestone) — 본 spec은 surface 정의만
+
+## 13. verbatim 보장 메커니즘 (byte-passthrough + sha256 이중검증)
+
+verdict 바이트는 **raw byte-passthrough pipe** 로 cockpit/CLI 표시 레이어에 도달한다. (a) `hexa verify` 자식 process stdout 을 LLM 컨텍스트에 절대 통과시키지 않는다 — 단일 경로 child stdout → ring buffer → renderer. (b) markdown 재래핑·trim·정규화 모두 비활성. (c) `hexa verify --json` 의 `evidence_hash` (sha256) 를 **buffer-in 시점과 paint 시점 두 곳** 에서 검증 — 1바이트라도 어긋나면 `⚠ verdict-tamper-detected` 배지로 강제 강등. (d) cockpit 의 verdict 영역은 **read-only widget** (사용자 편집·LLM 후가공 모두 차단).
+
+```
+ hexa verify (child proc)
+        │  stdout bytes
+        ▼
+   [ ring buffer ]  ──► sha256 = H_in
+        │  raw bytes (no LLM, no markdown)
+        ▼
+   [ renderer / TUI widget ]  ──► sha256 = H_out
+        │
+        ▼
+  H_in == H_out  ?  ──► YES: display verbatim
+                       NO : ⚠ verdict-tamper-detected → 🔴 forced
+```
+
+LLM 우회 경로는 architectural firewall — verdict 바이트는 모델 컨텍스트 윈도우를 한 번도 거치지 않는다 (g5 enforcement 의 물리적 보장).
+
+## 14. 표시 규칙 보강 (byte-level)
+
+§3 rubric / §4-5 사례 / §7 cockpit↔CLI 매핑 위에 추가 강제 — 모든 verdict 표시 surface (CLI · cockpit · clipboard) 공통:
+
+| 규칙 | 강제 | 위반 시 |
+|---|---|---|
+| glyph emoji 는 raw unicode byte 그대로 | 🔵 🟢 🟡 🟠 🔴 ⚪ 보존 (재인코딩 금지) | sha256 mismatch → 🔴 |
+| `hexa verify` stdout 바이트 무가공 mono-font | trim / wrap / 정규화 금지 | render-tamper 배지 |
+| 다건 verdict 은 `\n` 구분 그대로 | 재정렬 · 재포맷 금지 | order-tamper 배지 |
+| reason / evidence paragraph 는 원본 줄바꿈 보존 | markdown 재래핑 비활성 | (자동) 무가공 fallback |
+| cockpit verdict 영역 = read-only widget | 사용자 편집 · LLM 후가공 차단 | input 무시 |
+
+## 15. M7 handoff packet shape
+
+verify verdict 는 M7 handoff 의 mandatory 입력. `hexa verify --json` 단일 blob 직렬화로 다음 8개 필드를 동봉:
+
+```json
+{
+  "claim":            "<NL claim or atom id or --expr argv>",
+  "glyph":            "🔵 | 🟢 | 🟡 | 🟠 | 🔴 | ⚪",
+  "tier":             "SUPPORTED-FORMAL | SUPPORTED-NUMERICAL | SUPPORTED-BY-CITATION | INSUFFICIENT | DEFERRED | FALSIFIED | SPECULATION-FENCED",
+  "reason":           "<one-line rationale from hexa stdout>",
+  "evidence_hash":    "sha256:<64-hex>",
+  "recomputed_value": "<numeric scalar | null (citation/fence/insufficient)>",
+  "hexa_verify_argv": ["hexa", "verify", "...", "..."],
+  "stdout_raw":       "<bit-exact hexa verify stdout bytes>"
+}
+```
+
+| 필드 | 출처 | 검증 |
+|---|---|---|
+| `claim` | CLI argv 또는 cockpit input | echo back (no transform) |
+| `glyph` / `tier` | hexa verify 1줄 verdict header | rubric 6-tier 화이트리스트 |
+| `reason` | hexa verify stdout 의 `reason:` 라인 | byte slice |
+| `evidence_hash` | hexa verify --json 필드 | §13 이중검증 (buffer-in / paint-time) |
+| `recomputed_value` | `--expr` / atom recompute 결과 | tolerance check (M5 sim 동봉 시) |
+| `hexa_verify_argv` | 호출 argv 보존 | reproducibility — M7 가 재실행 가능 |
+| `stdout_raw` | child process stdout 전체 | sha256 == `evidence_hash` 동치성 |
+
+M7 는 이 packet 을 그대로 handoff bundle 에 삽입 (재포맷 금지) — verbatim chain 이 verify → handoff → 외부 surface 까지 지속.
