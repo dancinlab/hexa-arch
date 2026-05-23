@@ -2,6 +2,15 @@
 
 Append-only history sister of `NOREFLOW.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T00:05:00Z — scaffold 확장: M12 simulation pass 추가
+
+- [x] M12 milestone 신설 — demiurge 자산 (d1 non-wet-lab completed-form) simulation 트랙
+- [x] sub-tracks 4개 design: M12.1 PK 시뮬 · M12.2 IRI ODE · M12.3 M7 Monte Carlo · M12.4 Trial-A power calc
+- [ ] cycle 5 M10 + M11(blocked) + M12 fan-out 예정
+
+🎯 d1 governance: non-wet-lab verification → completed-form (pre wet-lab)
+🛠 compute: pool ubu-1/2 (small) · 큰 시뮬 RunPod/Vast (d7) — ad-hoc python local 금지
+
 ## 2026-05-24T23:45:00Z — M9 web/arxiv deep research 완료 (cycle4)
 
 - [x] §1 search 방법 (PubMed · CT.gov · arxiv · 2021-2026 · 9 키워드)
