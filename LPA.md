@@ -4,7 +4,7 @@
 
 ## milestones
 
-- [ ] Lp(a) 구조 + apo(a) KIV-2 isoform 다양성 → `LPA/M1_structure.md`
+- [x] Lp(a) 구조 + apo(a) KIV-2 isoform 다양성 → `LPA/M1_structure.md`
 - [ ] 한국인 Lp(a) 분포 매핑 (KoGES · KARE 등) → `LPA/M2_korea.md`
 - [ ] ASO 후보 — pelacarsen (HORIZON) · 후속 분자 → `LPA/M3_aso.md`
 - [ ] siRNA 후보 — olpasiran (OCEAN(a)) · lepodisiran · zerlasiran → `LPA/M4_sirna.md`
