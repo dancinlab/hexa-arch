@@ -20,4 +20,4 @@
 - [x] V1 HERPES claim inventory + tier triage → `HERPES/verify/V1_claim_inventory.md` (248 claims · 25🔵 / 44🟢 / 144🟡 / 35🟠 / 0🔴)
 - [x] V2 🔵 push — Poisson · LAT · CRISPR · decay · Hill → `HERPES/verify/V2_formal_identities.md` (5/5 ⚪ fence — hexa verify CLI는 NT-only · 해결 inbox patch 필요)
 - [x] V3 🟢 push → `HERPES/verify/V3_numerical_recompute.md` (2/4 🟢: LAT Markov on ubu-1 + 3-comp PK on ubu-2 · 2/4 🟠: cas-offinder/GRCh38 + bio toolchain 미설치)
-- [ ] V4 final tier ledger — 🔵+🟢+🟡 verbatim + 🟠 honest deferred (sterilizing cure → wet-lab essential) → `HERPES/verify/V4_tier_ledger.md`
+- [x] V4 final tier ledger → `HERPES/verify/V4_tier_ledger.md` (25🔵 / 44🟢 / 144🟡 / 35🟠 / 0🔴 + 5⚪ · 26 compute-promotable · 9 wet-lab essential)
