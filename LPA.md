@@ -12,3 +12,8 @@
 - [x] M6 off-target / long-term immune 안전성 → `LPA/M6_safety.md`
 - [x] 잔여 위험 정량 — Lp(a) 감소 mg/dL × MACE 위험 감소 → `LPA/M7_quant.md`
 - [ ] 통합 후보 ranking + 한국인 임상 적용 전략 → `LPA/M8_rank.md`
+
+## research deepening (cycle 3)
+- [x] R1 arxiv deep research → `LPA/R1_arxiv.md`
+- [ ] R2 web/regulatory → `LPA/R2_regulatory.md`
+- [ ] R3 libraries → `LPA/R3_libraries.md`

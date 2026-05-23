@@ -2,6 +2,28 @@
 
 Append-only history sister of `LPA.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-24T23:30:00Z — R1 arxiv deep research 완료
+
+- [x] §1 arxiv/medRxiv/bioRxiv 25건 (MR 5 · KIV-2 5 · siRNA/ASO 5 · GWAS 5 · meta+신규 5)
+- [x] §2.1 Burgess 2018 MR ln(HR) identity recompute — β=-0.342490 · SE=0.028774 · Z=-11.90 (🟢)
+- [x] §2.2 OCEAN(a)-DOSE power calc closed-form — n/arm 43 vs protocol ≥48 (🟢)
+- [x] §2.3 HORIZON Schoenfeld events — D=844 (HR 0.80) vs anticipated 920 → adequate (🟢)
+- [x] §2.4 KIV-2 log10-linear inverse — β=-0.06/copy · 0.871 ratio (🟢)
+- [x] §3 신규 분자 — muvalaplin Ph2 KRAKEN -85.8% 경구 · VERVE-301 LPA base editor dev candidate Q1 2025
+- [x] §4 한국 새 데이터 — Dyslipidemia Fact Sheet 2024 · KoGES NAFLD spillover · primary lit 부재 지속
+- [x] §5 VERVE-301 LPA gene editing M4 시지대 → 실제 pipeline 진입 확정
+- [x] §6 hexa verify --expr 트라이얼 — sigma(6)=12 🔵 sanity · MR fence ⚪ · biostat 미지원 → 🟢 ceiling
+- [x] §7 verify rubric — 🟢 4건 신규 (Burgess MR · OCEAN(a)-DOSE · HORIZON Schoenfeld · KIV-2 log)
+- [x] 산출물 `LPA/R1_arxiv.md` (219 lines)
+- [ ] 🔵 도달 — `hexa verify --expr` biostat extension (hexa-lang inbox 등록 권고)
+- [ ] R2 web/regulatory · R3 libraries 후속
+
+🔑 핵심 통찰 (R1):
+- **🟢 4건 신규** = Burgess MR identity · OCEAN(a)-DOSE n · HORIZON Schoenfeld · KIV-2 log10 — M7/M3/M4/M1 verification tier 상승
+- **muvalaplin Ph2 -86% 경구** = M3/M4 oral track 신축 트리거 (KRAKEN, NEJM 2025)
+- **VERVE-301** LPA gene 영구 침묵 base editor = M4 시지대 실제 pipeline · 2030년대 single-dose lifetime 후보
+- **🔵 도달 0건** = hexa verify --expr biostat 미지원 (calc fn extension gap)
+
 ## 2026-05-24T22:40:00Z — M7 잔여 위험 정량 완료
 
 - [x] §1 정량 프레임워크 (MACE = CV death + MI + stroke + revasc) + dose-response 변수
