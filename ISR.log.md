@@ -234,3 +234,16 @@ Append-only history sister of `ISR.md`. Each entry starts with `## <ISO timestam
 - [x] @goal 확립 — ISR 비-mTOR 후보 short-list
 - [x] M1-M8 milestone 설계
 - [x] M1 4-axis 기전 매핑
+
+## 2026-05-25T06:00:00Z — V2 partial escalation 🟠→🟢 (PR #707)
+
+hexa-lang PR #707 (bio kernel phase 1) merged. 3 identities now produce 🟢 SUPPORTED-NUMERICAL verdicts:
+- exp_release (drug release / 1차 decay) — §4 / V1-FORM-13 (M2 §3 sirolimus burst)
+- ldl_pct (LDL Δ%) — §5 / V1-FORM-18 (M4 §2.2 FOURIER evolocumab)
+- beer_lambert (signal attenuation) — §3 / V1-FORM-09 (M1 §3 OCT/IVUS 760nm)
+
+V2 ledger updated with verbatim verdicts (libm-class `--expr` recompute · float-arg ABI enabled · TECS-L Tier 2 ~10min suite). §4.4 sanity check 추가 (exp_release 잘못된 값 → 🔴 FALSIFIED 닫힌 negative — TECS-L result-agnostic 정합).
+
+Remaining 🟠 (hill · cheng_prusoff · higuchi · fick · etc.) await phase 2 PR.
+
+V2 verdict 분포 (7 identity): 🟢 3 (43%) · 🟠 4 (57%) — pre-PR #707 baseline 0/100% 대비 +3 escalation.

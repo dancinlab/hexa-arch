@@ -202,14 +202,14 @@ exit code: 0.
 
 **claim source** — V1-FORM-09 (M1 §3 OCT/IVUS finding · 760nm tissue μ ≈ 5 mm⁻¹).
 
-### §3.1 시도 1 — `--expr`
+### §3.1 시도 1 — `--expr` (legacy · 2026-05-24)
 
 명령:
 ```
 hexa verify --expr beer_lambert 3 0
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --expr beer_lambert(3)=0
   tier   = 🟠 INSUFFICIENT
@@ -219,14 +219,14 @@ verify --expr beer_lambert(3)=0
 
 exit code: 0.
 
-### §3.2 시도 2 — `--fence`
+### §3.2 시도 2 — `--fence` (legacy)
 
 명령:
 ```
 hexa verify --fence "Beer-Lambert I = I_0 * exp(-mu * x) for OCT 760nm (mu_tissue ~ 5/mm, x=1mm)"
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --fence
   claim  = Beer-Lambert I = I_0 * exp(-mu * x) for OCT 760nm (mu_tissue ~ 5/mm, x=1mm)
@@ -238,7 +238,29 @@ verify --fence
 
 exit code: 0.
 
-**§3 종합 tier**: 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence).
+### §3.3 escalation — bio kernel phase 1 (PR #707 merged · 2026-05-25)
+
+hexa-lang PR #707 (`feat(verify): bio kernel phase 1`) merged. `beer_lambert(I_0, mu, x) = I_0 * exp(-mu*x)` is now a libm-class `--expr` recompute target.
+
+명령 (verbatim · `SIDECAR_NO_POOL_ROUTE=1`):
+```
+hexa verify --expr beer_lambert 1.0 5.0 1.0 0.006737946999085467
+```
+
+verdict verbatim:
+```
+verify --expr beer_lambert(1.0,5.0,1.0)=0.00673795
+  calc   = 0.00673795  ≈ expected 0.00673795  (|Δ|=0.0 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+```
+
+exit code: 0.
+
+OCT 760 nm tissue example (μ ≈ 5 /mm, x = 1 mm) → expected I/I₀ = exp(-5·1) ≈ 0.006738 (4-decimal libm-class match · |Δ|=0 ≤ ε=1e-9).
+
+**§3 종합 tier (post-PR #707)**: **🟢 SUPPORTED-NUMERICAL** (--expr libm recompute) · legacy 🟠/⚪ verdicts retained verbatim above for honest provenance.
+
+[^pr707]: hexa-lang PR #707 (`feat(verify): bio kernel phase 1`) merged 2026-05-24 → adds `exp_release` · `ldl_pct` · `beer_lambert` to `tool/verify_cli.hexa::_recompute` (libm-class · float-arg parsing enabled).
 
 ---
 
@@ -246,14 +268,14 @@ exit code: 0.
 
 **claim source** — V1-FORM-13 (M2 §3 sirolimus burst · M5 §1 30-day elution).
 
-### §4.1 시도 1 — `--expr`
+### §4.1 시도 1 — `--expr` (legacy · 2026-05-24)
 
 명령:
 ```
 hexa verify --expr exp_release 2 0
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --expr exp_release(2)=0
   tier   = 🟠 INSUFFICIENT
@@ -263,14 +285,14 @@ verify --expr exp_release(2)=0
 
 exit code: 0.
 
-### §4.2 시도 2 — `--fence`
+### §4.2 시도 2 — `--fence` (legacy)
 
 명령:
 ```
 hexa verify --fence "first-order exp release M_t = M_0 * (1 - exp(-k*t)) for sirolimus 30-day elution"
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --fence
   claim  = first-order exp release M_t = M_0 * (1 - exp(-k*t)) for sirolimus 30-day elution
@@ -282,7 +304,45 @@ verify --fence
 
 exit code: 0.
 
-**§4 종합 tier**: 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence).
+### §4.3 escalation — bio kernel phase 1 (PR #707[^pr707] merged · 2026-05-25)
+
+`exp_release(M_0, k, t) = M_0 * (1 - exp(-k*t))` 가 libm-class `--expr` 재계산 대상에 추가됨 (3-operand form, float-arg 파싱 동시 enable).
+
+명령 (verbatim · `SIDECAR_NO_POOL_ROUTE=1`):
+```
+hexa verify --expr exp_release 1.0 0.1 10 0.6321205588285577
+```
+
+verdict verbatim:
+```
+verify --expr exp_release(1.0,0.1,10.0)=0.632121
+  calc   = 0.632121  ≈ expected 0.632121  (|Δ|=1.11022e-16 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+```
+
+exit code: 0.
+
+sirolimus 30-day elution analogue — M_0=1.0, k=0.1/day, t=10 day → M_t/M_0 = 1−e⁻¹ ≈ 0.6321 (M2 §3 burst-then-plateau 정합).
+
+### §4.4 falsification sanity check (TECS-L result-agnostic)
+
+`hexa verify` 가 deterministic disagreement 도 닫힌 verdict 로 표시하는지 확인:
+
+명령:
+```
+hexa verify --expr exp_release 1.0 0.1 10 0.999
+```
+
+verdict verbatim:
+```
+verify --expr exp_release(1.0,0.1,10.0)=0.999
+  calc   = 0.632121  ≠ expected 0.999  (|Δ|=0.366879 > ε=1e-9)
+  tier   = 🔴 FALSIFIED  (calc deterministically disagrees beyond ε — TECS-L result-agnostic closed negative)
+```
+
+→ 정직 reciprocal — 잘못된 claim 은 🔴 FALSIFIED 로 닫힌 negative. PASS·FAIL 둘 다 verified-closed (TECS-L result-agnostic).
+
+**§4 종합 tier (post-PR #707)**: **🟢 SUPPORTED-NUMERICAL** (--expr libm recompute · correct value) · 🔴 FALSIFIED (incorrect value, sanity check) · legacy 🟠/⚪ verdicts retained verbatim above for honest provenance.
 
 ---
 
@@ -290,28 +350,28 @@ exit code: 0.
 
 **claim source** — V1-FORM-18 (M4 §2.2 FOURIER evolocumab LDL ↓ 60% baseline).
 
-### §5.1 시도 1 — `--expr` (float)
+### §5.1 시도 1 — `--expr` (float, legacy · 2026-05-24)
 
 명령:
 ```
 hexa verify --expr ldl_pct 2 60.0
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 error: to_int: trailing garbage in "60.0"
 ```
 
-exit code: 1 — float arg 거부.
+exit code: 1 — float arg 거부 (PR #707 머지 전 int-only ABI).
 
-### §5.2 시도 2 — `--expr` (int)
+### §5.2 시도 2 — `--expr` (int, legacy)
 
 명령:
 ```
 hexa verify --expr ldl_pct 2 60
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --expr ldl_pct(2)=60
   tier   = 🟠 INSUFFICIENT
@@ -321,14 +381,14 @@ verify --expr ldl_pct(2)=60
 
 exit code: 0.
 
-### §5.3 시도 3 — `--fence`
+### §5.3 시도 3 — `--fence` (legacy)
 
 명령:
 ```
 hexa verify --fence "LDL Δ% identity (LDL_0 - LDL_t)/LDL_0 * 100 for FOURIER evolocumab 60% baseline"
 ```
 
-verdict verbatim:
+verdict verbatim (legacy):
 ```
 verify --fence
   claim  = LDL Δ% identity (LDL_0 - LDL_t)/LDL_0 * 100 for FOURIER evolocumab 60% baseline
@@ -340,7 +400,27 @@ verify --fence
 
 exit code: 0.
 
-**§5 종합 tier**: 🟠 INSUFFICIENT (--expr) · ⚪ SPECULATION-FENCED (--fence).
+### §5.4 escalation — bio kernel phase 1 (PR #707[^pr707] merged · 2026-05-25)
+
+`ldl_pct(LDL_0, LDL_t) = (LDL_t − LDL_0) / LDL_0 · 100` 가 libm-class `--expr` 재계산 대상에 추가 (signed convention: 감소 = 음수).
+
+명령 (verbatim · `SIDECAR_NO_POOL_ROUTE=1`):
+```
+hexa verify --expr ldl_pct 100 70 -30
+```
+
+verdict verbatim:
+```
+verify --expr ldl_pct(100.0,70.0)=-30.0
+  calc   = -30.0  ≈ expected -30.0  (|Δ|=0.0 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+```
+
+exit code: 0.
+
+FOURIER evolocumab analogue — LDL_0=100, LDL_t=70 → Δ% = (70−100)/100·100 = −30% (M4 §2.2 60% reduction 의 절반 magnitude로 sanity-check; full 60% reduction = ldl_pct(100, 40, −60) 도 동일 libm path).
+
+**§5 종합 tier (post-PR #707)**: **🟢 SUPPORTED-NUMERICAL** (--expr libm recompute) · legacy 🟠/⚪ verdicts retained verbatim above for honest provenance.
 
 ---
 
@@ -434,28 +514,32 @@ exit code: 0.
 
 ## §Σ V2 first batch 결과 요약
 
+> **2026-05-25 update** — hexa-lang PR #707 (`feat(verify): bio kernel phase 1`) merged.
+> §3 beer_lambert · §4 exp_release · §5 ldl_pct 의 `--expr` 경로가 🟠 INSUFFICIENT → **🟢 SUPPORTED-NUMERICAL** 로 escalate.
+> 나머지 4건 (§1 hill · §2 cheng_prusoff · §6 higuchi · §7 fick1) 은 phase 2 PR 대기.
+
 | § | identity | source | `--expr` verdict | `--fence` verdict | atlas PR |
 |---|---|---|---|---|---|
 | §1 | Hill 방정식 | V1-FORM-03 / M3 §1 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 (🟠 HONEST DEGRADE) |
 | §2 | Cheng-Prusoff | V1-FORM-04 / M3 §1 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
-| §3 | Beer-Lambert | V1-FORM-09 / M1 §3 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
-| §4 | first-order exp release | V1-FORM-13 / M2 §3 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
-| §5 | LDL Δ% identity | V1-FORM-18 / M4 §2.2 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
+| §3 | Beer-Lambert | V1-FORM-09 / M1 §3 | **🟢 SUPPORTED-NUMERICAL** (post-PR #707) | ⚪ SPECULATION-FENCED (legacy) | n/a (libm-class) |
+| §4 | first-order exp release | V1-FORM-13 / M2 §3 | **🟢 SUPPORTED-NUMERICAL** (post-PR #707) + 🔴 sanity | ⚪ SPECULATION-FENCED (legacy) | n/a (libm-class) |
+| §5 | LDL Δ% identity | V1-FORM-18 / M4 §2.2 | **🟢 SUPPORTED-NUMERICAL** (post-PR #707) | ⚪ SPECULATION-FENCED (legacy) | n/a (libm-class) |
 | §6 | Higuchi release | V1-FORM-01 / M5 §1 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
 | §7 | Fick 1차 | V1-FORM-02 / M5 §1 | 🟠 INSUFFICIENT | ⚪ SPECULATION-FENCED | 미생성 |
 
-### §Σ.1 verdict 분포 (7 identity)
+### §Σ.1 verdict 분포 (7 identity · post-PR #707)
 
-| tier | N | % |
-|---|---|---|
-| 🔵 SUPPORTED-FORMAL | 0 | 0% |
-| 🟢 SUPPORTED-NUMERICAL | 0 | 0% |
-| 🟡 SUPPORTED-BY-CITATION | 0 | 0% |
-| 🟠 INSUFFICIENT (--expr) | 7 | 100% |
-| 🔴 FALSIFIED | 0 | 0% |
-| ⚪ SPECULATION-FENCED (--fence) | 7 | 100% |
+| tier | N | % | Δ (pre-#707) |
+|---|---|---|---|
+| 🔵 SUPPORTED-FORMAL | 0 | 0% | — |
+| 🟢 SUPPORTED-NUMERICAL | **3** | **43%** | **+3** (§3 · §4 · §5) |
+| 🟡 SUPPORTED-BY-CITATION | 0 | 0% | — |
+| 🟠 INSUFFICIENT (--expr) | **4** | **57%** | **−3** (phase 2 대기) |
+| 🔴 FALSIFIED | 0 (sanity-only) | 0% | — (§4.4 sanity) |
+| ⚪ SPECULATION-FENCED (--fence) | 7 (legacy retained) | 100% | — |
 
-atlas register PR: **0건** (calc kernel 부재 · HONEST DEGRADE per `--from-verify` g_atlas_binary_builtin).
+atlas register PR: **0건** (libm-class numerical · `--from-verify` 는 🔵 closed-form 만 fold; 🟢 numerical 은 V3 ledger 흡수).
 
 ### §Σ.2 sanity-check (실제로 🔵 가능한 fn 검증)
 
