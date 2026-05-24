@@ -59,7 +59,7 @@ demiurge <op>  /  cockpit 패널  ──▶  OperationDispatch.run(op_id, args) 
 | spec-capture | 🛒 | specify | swift | ✅ GUI | CLI+GUI | M15 |
 | structure-view | 🛒 | structure | swift | ✅ GUI | CLI+GUI | M15 |
 | design-pick | 🛒 | design | swift | ✅ GUI | CLI+GUI | M15 |
-| analyze-loop | 🛒 | analyze | swift | 🔶 부분 | CLI+GUI | M15 |
+| analyze-loop | 🛒 | analyze | swift | ✅ `action <verb> <domain> --converge` ⟲ fixpoint (M15 ✅) | CLI+GUI | M15 |
 | synthesize-run | 🛒 | synthesize | swift→hexa | ✅ `action <verb> <domain> --compose` 구성 stack 합성 실행 (M15 ✅) | CLI+GUI | M15·M17 |
 | **verify** | 🛒 | verify | **hexa** | ✅ `verify --expr/--fence/rubric`→hexa VERBATIM (M16 ✅) | CLI+GUI | **M16** |
 | record-view | 🛒 | verify | swift | ✅ CLI+GUI | CLI+GUI | M15 |
@@ -72,7 +72,7 @@ demiurge <op>  /  cockpit 패널  ──▶  OperationDispatch.run(op_id, args) 
 | governance | 🔒 | (all) | swift | 스킬/훅 | owner-mode | M20 |
 | owner-domain | 🔒 | specify | swift | /domain 스킬 | owner-mode | M20 |
 
-현재 audit (`demiurge operate audit`): product **11✅ · 1🔶 · 0❌** (of 12) · owner 5🔒. (M14·M16·M17 + M15 resolver·verb-nav·synthesize-run·project-create 완료. 남은 🔶 1개 = analyze-loop = ⟲ 수렴 루프(fixpoint 반복 판정) — 단일-pass 합성은 `action --compose`로 됨, 반복 수렴만 잔여.)
+현재 audit (`demiurge operate audit`): product **12✅ · 0🔶 · 0❌** (of 12) · owner 5🔒 → verdict **"external operability COMPLETE — @goal met"** (M21 acceptance gate PASS). 단일 운영 op 12종 전부 외부 2-surface reachable, owner-infra 의존 0. 잔여 = 비-op 인프라(M18 배포 · M19 plain격리 정밀화 · M20 owner-mode env-gate 명문화).
 > ✓ CLI project-create gap 닫힘 — `demiurge project new <name> <target> [domain]` (도메인 추론 + walk 자동 계산). CLI 프로젝트 생명주기 완성: new·list·show·advance/retreat.
 
 ## 4. 배포 모델 (외부 사용자)

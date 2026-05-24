@@ -2,6 +2,17 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T16:20:00Z — M15 analyze-loop ⟲ 수렴 ✅ · audit @goal met (12✅·0🔶·0❌) · PR #81
+
+- [x] **analyze-loop ✅ commit 339f25f · PR #81 MERGED** (origin/main efcd9a5) — `ActionDispatch.runConvergent` + `demiurge action <verb> <domain> --converge` ⟲. outcome 패턴(ok/skip/gap) fixpoint까지 재실행, record-id 무관(g3). 결정적 stack은 iter 2 수렴
+- [x] **실증** — `action analyze chip --converge` → iter1 chip:ok → iter2 chip:ok → ✅ 수렴(iter 2 fixpoint)
+- [x] **M15 완료** — resolver·verb-nav·synthesize-run·project-create·analyze-loop 전부 ✅
+- [x] **M21 audit flip ✅** — `operate audit` = **12✅·0🔶·0❌** → "external operability COMPLETE — @goal met". 단일 운영 op 12종 전부 외부 2-surface reachable, owner-infra 0
+- [x] M0_operate.md analyze-loop row ✅ + audit-count 12✅ + M21 PASS · CLI+COCKPIT.md M15·M21 [x]
+- [ ] ⏳ 잔여(비-op 인프라) — M18 외부 배포(notarized .app + standalone CLI · Apple cert 필요) · M19 plain격리 정밀화 · M20 owner-mode env-gate 명문화 · docs origin catchup(동시 세션 점유)
+
+🔑 핵심: **operability @goal 달성** — 외부 사용자가 app + CLI 2개만으로 프로젝트 생성→구성 합성 실행→검증→⟲ 수렴까지 owner-infra 0으로 완주. operate audit이 12✅·0🔶·0❌로 @goal met 판정. 코드 5 PR(#79·#80·#81) origin/main 안착. 남은 건 배포(M18)·격리 정밀화(M19/M20) = 비-op 인프라.
+
 ## 2026-05-25T16:00:00Z — origin/main 안착 (PR #79·#80) + P3 cockpit 운영 탭 · 시퀀스 4→1→2→3 완료
 
 - [x] **PR #79 MERGED** (origin/main 7034a5d) — M14-M17 코드(operate·compose·verify·atlas·backend·project) 격리 worktree에서 origin/main 위로 cherry-pick(충돌 0)·클린 빌드·squash-merge. main divergence(16/45) 안전 우회

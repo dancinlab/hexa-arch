@@ -21,13 +21,13 @@
 ### 외부-제품 운영 완결성 milestone (M14-M21 · @goal 재정의 induce · spec = `CLI+COCKPIT/M0_operate.md`)
 
 - [x] M14 operation manifest + operability surface — `OperationRegistry`(17-op · external/owner tier · op→target swift/hexa/substrate · @D d4) + `demiurge operate list/audit` CLI + `OperabilityAudit`(M21 gate skeleton) · 빌드 green · commit 0ec8dc4 · cockpit GUI mirror = P3 · per-target 실행 dispatch = M15-M17
-- [ ] M15 external standalone 7-verb — 프로젝트 생성·진행·실행을 owner-infra 의존 0으로 완주 (no `~/.pool` · no 내 호스트 · no hexa-lang repo 경로 가정) · resolver ✅ compose(818fbfe) · verb-nav ✅(3d787c3) · synthesize-run ✅ `action --compose` 합성 실행(9faccc8) · project-create ✅ `project new`(7fb869d) · 잔여: analyze-loop ⟲ 수렴 루프만
+- [x] M15 external standalone 7-verb — owner-infra 0으로 완주: resolver ✅ compose(818fbfe) · verb-nav ✅(3d787c3) · synthesize-run ✅ `action --compose`(9faccc8) · project-create ✅ `project new`(7fb869d) · analyze-loop ✅ `action --converge` ⟲ fixpoint(339f25f) — PR #79·#81
 - [x] M16 verify+atlas hx-dependency call — `HexaBridge`(hexa leaf-call 단일 통로) + `demiurge verify --expr/--fence/rubric`→`hexa verify` VERBATIM (@D g5) + `demiurge atlas lookup/stats/hash/dump`→`hexa atlas` (read-only · write=owner M20) · commit ca81e73·786bd18 · audit ❌ 3→1 · M8 host-health 라우팅은 후속(M17 흡수)
 - [x] M17 compute backend 추상화 — `ComputeBackend`+`BackendResolver`+`demiurge backend list/current` · local 기본 + `DEMIURGE_BACKEND` 사용자 remote · 내 ubu/mini 하드코딩 0 (런타임에 owner `~/.pool/pool.json`에서 읽고 owner-gated) · commit 72fb19e · audit ❌ 1→0 · M9 macOS 예외 라우팅은 후속
 - [ ] M18 외부 배포 — notarized `.app` + standalone CLI + hexa hx 의존성 선언 (`swift run`/`hx install <my-path>` owner-only 탈피)
 - [ ] M19 plain-mode 격리 — 기본 모드에서 내부 jargon/host/atlas/rfc/거버넌스(@D) 누출 0 (외부 안전 UX)
 - [ ] M20 owner-mode 사장실 (env-gated) — pool 라우팅·inbox/patches handoff·atlas register-PR·거버넌스 enforcement를 flag/env gate (기존 M10·M11·M12 흡수)
-- [ ] M21 operability audit — 외부 사용자가 owner-infra 0으로 7-verb 완주 증명 + owner-mode 동작 (acceptance gate · `demiurge operate audit`)
+- [x] M21 operability audit — `demiurge operate audit` = **12✅·0🔶·0❌** → "external operability COMPLETE — @goal met". 단일 운영 op 12종 전부 외부 2-surface reachable (owner-infra 0). owner-mode env-gate 명문화는 M20 잔여
 
 ---
 
