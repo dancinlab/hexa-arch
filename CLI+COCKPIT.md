@@ -21,7 +21,7 @@
 ### 외부-제품 운영 완결성 milestone (M14-M21 · @goal 재정의 induce · spec = `CLI+COCKPIT/M0_operate.md`)
 
 - [x] M14 operation manifest + operability surface — `OperationRegistry`(17-op · external/owner tier · op→target swift/hexa/substrate · @D d4) + `demiurge operate list/audit` CLI + `OperabilityAudit`(M21 gate skeleton) · 빌드 green · commit 0ec8dc4 · cockpit GUI mirror = P3 · per-target 실행 dispatch = M15-M17
-- [ ] M15 external standalone 7-verb — 프로젝트 생성·진행·실행을 owner-infra 의존 0으로 완주 (no `~/.pool` · no 내 호스트 · no hexa-lang repo 경로 가정) · resolver ✅ `DomainComposer`+`demiurge compose`(commit 818fbfe · 선행=구성도메인 · atomic/composite/meta·결합) · 7-verb 합성 실행 wiring 잔여(M16/M17 dep)
+- [ ] M15 external standalone 7-verb — 프로젝트 생성·진행·실행을 owner-infra 의존 0으로 완주 (no `~/.pool` · no 내 호스트 · no hexa-lang repo 경로 가정) · resolver ✅ `DomainComposer`+`demiurge compose`(818fbfe) · verb-nav ✅ `project advance/retreat`(3d787c3) · 잔여: 구성 stack을 backend cluster-aware 실행(analyze-loop·synthesize-run) + CLI project-create
 - [x] M16 verify+atlas hx-dependency call — `HexaBridge`(hexa leaf-call 단일 통로) + `demiurge verify --expr/--fence/rubric`→`hexa verify` VERBATIM (@D g5) + `demiurge atlas lookup/stats/hash/dump`→`hexa atlas` (read-only · write=owner M20) · commit ca81e73·786bd18 · audit ❌ 3→1 · M8 host-health 라우팅은 후속(M17 흡수)
 - [x] M17 compute backend 추상화 — `ComputeBackend`+`BackendResolver`+`demiurge backend list/current` · local 기본 + `DEMIURGE_BACKEND` 사용자 remote · 내 ubu/mini 하드코딩 0 (런타임에 owner `~/.pool/pool.json`에서 읽고 owner-gated) · commit 72fb19e · audit ❌ 1→0 · M9 macOS 예외 라우팅은 후속
 - [ ] M18 외부 배포 — notarized `.app` + standalone CLI + hexa hx 의존성 선언 (`swift run`/`hx install <my-path>` owner-only 탈피)

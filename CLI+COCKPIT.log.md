@@ -2,6 +2,17 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T15:15:00Z — M15 verb-nav CLI (`project advance/retreat`) · audit 10✅·2🔶·0❌
+
+- [x] **verb-nav ✅ commit 3d787c3** — `demiurge project advance|retreat <name>` (Project.advance/retreat + ProjectStore.save · cockpit stepper와 D50 동일 manifest) · reach 🔶→✅
+- [x] **audit 10✅·2🔶·0❌** — 남은 🔶 2개 = analyze-loop·synthesize-run (구성 stack을 backend에서 cluster-aware 실제 실행)
+- [x] error path 검증 (no project named) · ⚠ live round-trip 미검증 (프로젝트 0개 — CLI project-create 부재)
+- [x] M0 verb-nav row + audit-count 갱신 · M15 line verb-nav 노트
+- [ ] ⏳ **후속 gap 발견** — CLI project-create 부재 (생성=GUI 전용). CLI-only 외부 운영 완결엔 `demiurge project new <name> <target> <domain>` 필요 (M15 잔여)
+- [ ] ⏳ analyze-loop·synthesize-run = 7-verb 합성 실행 (compose stack × backend × verify 결합 · 핵심 "맞춤 작동") · P3 cockpit GUI mirror
+
+🔑 핵심: single op 전부 2-surface reachable (10✅·0❌). 남은 건 (1) 구성 stack 실제 합성 실행(analyze/synthesize 2🔶 · 도메인 맞춤 작동의 핵심) (2) CLI project-create. M14·M16·M17 완료 + M15 resolver·verb-nav.
+
 ## 2026-05-25T15:00:00Z — M17 compute-backend ✅ (호스트 하드코딩 0) · audit 0❌ 달성
 
 - [x] **M17 ✅ commit 72fb19e** — `ComputeBackend`+`BackendResolver`+`demiurge backend list/current` · local 기본 + `DEMIURGE_BACKEND` 사용자 remote
