@@ -27,7 +27,7 @@
 - [ ] G4 — 제형 variant — 🚨 **G2 wall 후 재설계 필요** · OTC 후보 A=lid 4% 단독 (LMX-5 class) / B=lid 4+tet 2 한도내 / C=OTC switch NDA · Rx hexa-LAC v1 + Rx hexa-LAC v2 (+ N6-C capric ternary) 듀얼 · indication 매핑
 - [ ] G5 — 포장/안정성 — 단회용 ampoule (procedure 직전) · multi-dose tube (홈케어) · patch (DESCRIBE 형식) · 광안정성 (LA·rhein·capric 가족) · shelf-life 24mo+ 목표
 - [ ] G6 — 인접 토픽 양립성 — sunscreen · antiseptic (chlorhexidine·povidone) · moisturizer · 화장품 · 동일부위 시간차 도포 가이드
-- [ ] G7 — 3-step 사용자 가이드 (indication 별) — 도포→대기→procedure 시점 (소비자 친화 워크플로 + 시각 가이드 + onset 타이머) · OTC vs Rx 라벨 자동 분기
+- [x] G7 → `NUMB/research/G7_user_guide.md` (+ sim `g7_label_dispatcher.hexa`) · 🟢 · **3-step workflow (6 indication × 3 SKU)** + **dispatcher decision tree** (입력 5 → SKU/농도/apply_min/max_area/warning) + **FDA Drug Facts (OTC-A)** + **Rx-V1 USPI** 1-page skeleton + **ASCII visual** (결정트리·onset timer·면적 손바닥 anchor) · dispatcher hexa-native 11/11 case PASS (coverage 6 indication × 3 SKU + 2 REFUSE veto · LAST margin 68-1364× ≥ G1 spec 10×) · **honest framing**: OTC-A onset = **45-60 min** (LMX-5 class · 과대 약속 회피 @D d5/d6) · Rx-V1 onset ~3 min target · Rx-V2 (capric ternary) onset ~3 min + duration ×3 (N6-C 흡수, onset 무관) · 신생아 <28d + <12mo+methb veto (G3 정합)
 
 ### N — NOVEL probes (round-1 · round-2)
 - [x] N1 phase-change peel-film → `NUMB/research/N1_phase_change_peelfilm.md` (+ sim) · 🟠 plausibly-novel · **Pliaglis와 mechanism 축 다름** (water-evap vs body-T 32-35°C PCM carrier melt · capric+palmitic 32.17°C 후보) · 🚨 **정직 재포지셔닝**: activity a 는 Fick lag-time 무관 → **onset 가속 ✗** · 진짜 가치 = a 2→5 (2.5×) **flux multiplier @ steady-state** → **depth 보전+duration↑** → G3 소아·G4 OTC 저농도 SKU 에 기여 (C_surf 낮춰도 같은 depth) · wall = latent-heat 28min full-melt → 100μm sub-layer 아키텍처 fix

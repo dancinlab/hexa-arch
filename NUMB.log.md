@@ -1,5 +1,15 @@
 # NUMB — log
 
+## 2026-05-25T17:50Z — G7 closed: 3-step user guide + OTC/Rx label auto-dispatcher (hexa-native 11/11 🟢)
+
+- [x] G7 (`NUMB/research/G7_user_guide.md` + sim `g7_label_dispatcher.hexa`) — 6 indication (hair · vascular · tattoo · injection · biopsy · pediatric) × 3 SKU (**OTC-A** lid 4% · **Rx-V1** hexa-LAC v1 · **Rx-V2** N6-C capric ternary) 3-step workflow + dispatcher decision tree (입력 5: indication·weight·age·area·concomitant → SKU/농도/apply_min/max_area/warning) + **FDA Drug Facts (OTC-A) 1-page skeleton** (21 CFR 201.66 + 348 mapping) + **Rx-V1 USPI 1-page skeleton** (PLR 21 CFR 201.56-57 + Pliaglis 505(b)(2) RLD anchor) + **ASCII visual guides** (결정트리·onset timer 5/15/30/60min·면적 손바닥=100cm² anchor) + **hexa-native dispatcher** (11 sanity case PASS · 6 indication × 3 SKU + 2 REFUSE veto · LAST Cmax margin 68-1364× ≥ G1 spec 10×).
+- **honest framing (@D d5/d6)**: OTC-A onset = **45-60 min** (LMX-5 class, lid 4% 단독 · no tet · no epi · 과대 약속 회피); Rx-V1 onset ~3 min (eutectic + CPE ER 3× target); Rx-V2 onset ~3 min + duration ×3 (N6-C capric a≈5 flux multiplier · onset 무관, N1 학습 정합).
+- **safety vetoes (G3 정합)**: 신생아 <28d → REFUSE (clinical-defer · PK 미성숙); <12mo + methb_inducer → REFUSE; >400 cm² → split 권고; +epi → 손가락/코/귀/생식기 금지; class I 항부정맥 병용 → caution.
+- **dispatcher verify (per @D g5)**: `hexa run NUMB/sim/g7_label_dispatcher.hexa` → 11/11 case 정합 · Cmax 정량 (C1 400cm² 73.3 ng/mL margin 68× · C10 100cm² 18.3 ng/mL margin 273× · C5 split 5+5% per-session 52.3 ng/mL margin 95×) · 🟢 numerical.
+- **codegen note**: hexa let-literal collision (cN_area cross-case forward-decl missing) → 인라인 area 값 (400.0·150.0·300.0·20.0·100.0)으로 우회 — `reference_hexa_let_literal_collision.md` 정합.
+- **deep research** (d18): web FDA 21 CFR 201.66 (Drug Facts format, 1999 final rule) + 21 CFR 348 (lid 0.5-4% monograph) 재활용 + 확장 · arxiv 1509.00379 (Barth 2015 boundary-label readability) ASCII visual readability anchor + 2309.06961 derm benchmark peripheral.
+- **다음 milestone**: G4 (Rx-V2 capric ternary 정식 spec + OTC switch path) · G5 (5g sachet · 30g tube · 24mo shelf) · G6 (sunscreen/chlorhexidine 양립성).
+
 ## 2026-05-25T17:30Z — /cycle round-2 완결 (d18 정합): G2 regulatory + G3 pediatric + N6 ion-pair eutectic — 3개 milestone CLOSED
 
 round-2 fan-out 결과 통합 entry. 3 agent 모두 d18 정합 (NOVEL + arxiv + web deep research 내장).
