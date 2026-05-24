@@ -1,0 +1,74 @@
+{
+  "schema_version": "conductor-handoff/0.1.0",
+  "domain": "conductor",
+  "verb": "ingest",
+  "kind": "n6_claim_only_rtsc_predicted_hydride",
+  "stamp": "20260524T214329Z",
+  "candidate_id": "n6_y_ca_h6_predicted",
+  "producer": "demiurge RTSC M471 — hexa-rtsc n=6 RT-SC family slot predicted-hydride import. Carries the Mk.I path-3 PREDICTED-NOT-MEASURED hydride: (Y,Ca)H₆ at 185 GPa, Tc=210 K (claim). This sits *between* the 4 measured Mk.I hydrides (H₃S/LaH₁₀/CaH₆/ThH₁₀ — measured, NOT in this slot) and the Mk.II ambient claim (n6_mk2_lcyscH24). Included in claim-only n=6 import because it is the ONE Mk.I path that has been PREDICTED (algebraically on the n=6 lattice) but never measured — therefore empirically-unproven, even though it would not satisfy ambient-pressure RT-SC if measured.",
+  "stub": true,
+  "stub_note": "Schema record for an ALGEBRAICALLY PREDICTED hydride that has never been synthesized or measured. The (Y,Ca)H₆ stoichiometry is a Mk.I 6-P-T-path prediction (hexa-rtsc paper line 569), distinct from the measured CaH₆ (Ma 2022, Tc=215 K @ 172 GPa) — adding Y to the cation lattice is the hexa-rtsc claim-only modification. Tc=210 K is a *predicted target*, not a measurement.",
+  "vendor": null,
+  "source": "hexa-rtsc-derived (Mk.I P-T path 3 prediction on n=6 lattice)",
+  "source_note": "`hexa-rtsc-derived` here describes lineage (n=6 lattice Mk.I path 3). gate_type=empirically-unproven is the SCHEMA gate — predicted-not-measured. Distinct from the measured CaH₆ (Tc=215 K @ 172 GPa, Ma 2022 — a real measurement, NOT claim-only) and distinct from the PR #90 hexa-rtsc-DERIVED REBCO baseline (sim-derived numbers for a measured family).",
+  "spec": {
+    "family": "rtsc_hypothetical",
+    "family_enum_note": "ConductorMaterial = cu | nbti | nb3sn | rebco | bi2212 | rtsc_hypothetical. (Y,Ca)H₆ predicted = rtsc_hypothetical (claim-only). Note: the *measured* CaH₆ would be `hydride` family in a different schema row; this record is the hexa-rtsc Y-substituted claim-only variant.",
+    "compound": "(Y,Ca)H6",
+    "compound_pretty": "(Y,Ca)H₆",
+    "compound_components": ["Y", "Ca", "H"],
+    "compound_stoichiometry_note": "Y-substituted CaH₆ clathrate-like hydride. H stoichiometry 6 = n. Cation substitution (Y for Ca) is the hexa-rtsc claim-only modification on the measured Ma 2022 CaH₆ host lattice.",
+    "tc_k": 210.0,
+    "tc_k_units": "kelvin",
+    "tc_k_note": "CLAIM ONLY — Mk.I predicted Tc=210 K (hexa-rtsc paper line 569: `(Y,Ca)H₆ (185 GPa, Tc=210 K) — predicted`). Not measured. The PREDICTED label in the source paper is explicit — this is exactly what gate_type=empirically-unproven captures.",
+    "hc2_t_at_4k": null,
+    "hc2_t_at_4k_units": "tesla",
+    "hc2_t_at_4k_note": "Not specified in the Mk.I path-3 prediction — only Tc and pressure are stated.",
+    "hc2_t_at_77k": null,
+    "anisotropy_gamma": null,
+    "pressure_gpa": 185.0,
+    "pressure_gpa_note": "CLAIM ONLY — predicted at 185 GPa (HIGH pressure, NOT ambient). Even if measured at 210 K @ 185 GPa, it would NOT satisfy RTSC.md §8.9 (a) ambient-pressure criterion of `진짜 RTSC`. Included in M471 import because it is empirically-UNPROVEN (predicted-not-measured), which is precisely the gate_type=empirically-unproven semantic — distinct from RT-SC-at-ambient which is the §8.9 absorbed=true bar.",
+    "jc_b_t_theta": {
+      "stub": true,
+      "description": "No Jc(B,T,θ) for an un-synthesized predicted hydride.",
+      "value": { "jc": null, "jc_units": "A/m^2" },
+      "jc_data_table_ref_record_id": null
+    },
+    "dft_corpus_status": {
+      "mp_cache": "unknown (Y,Ca-H clathrate not standard MP entry; may need OPTIMADE query)",
+      "oqmd": "unknown",
+      "jarvis_optimade": "unknown",
+      "note": "Unlike (La,Ce,Y,Sc)H₂₄ which is honestly absent from all DFT corpora, (Y,Ca)H₆ as a Y-substituted variant of measured CaH₆ MIGHT have partial DFT coverage via the parent CaH₆ structure. Status left `unknown` honestly; not probed for this import."
+    }
+  },
+  "provenance": {
+    "source_substrate": "hexa-rtsc",
+    "source_record_url": null,
+    "source_citation": "hexa-rtsc/papers/n6-ultimate-superconductor-integrated-paper.md §6 Mk.I roadmap (line 569 path 3: `(Y,Ca)H₆ (185 GPa, Tc=210 K) — predicted`). Distinct from the measured Mk.I paths: H₃S (Drozdov 2015, Tc=203 K @ 200 GPa), LaH₁₀ (Somayazulu 2019, Tc=250 K @ 170 GPa), CaH₆ (Ma 2022, Tc=215 K @ 172 GPa), ThH₁₀ (Semenok 2021, Tc=161 K @ 100 GPa) — those 4 are measured and do NOT belong in this claim-only slot.",
+    "derive_chain": "hexa-rtsc n=6 lattice Mk.I 6-P-T-path roadmap -> path 3 (Y for Ca cation substitution on measured CaH₆ host) -> predicted Tc=210 K @ 185 GPa -> this conductor claim-only record. No DFT, no synthesis, no measurement of the Y-substituted variant."
+  },
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "absorbed_invariant_note": "absorbed=false PERMANENT until a synthesis route + measurement triad lands. Even a successful 210 K @ 185 GPa measurement would only flip the *hydride family* row (not this claim-only RT-SC slot) — RT-SC absorbed=true per §8.9 (a) requires ambient pressure.",
+  "gate_type": "empirically-unproven",
+  "gate_type_enum_note": "gate_type=empirically-unproven (NOT hexa-rtsc-derived). The compound is PREDICTED on the n=6 lattice but has never been synthesized or measured. Distinct from PR #90's gate_type=hexa-rtsc-derived (which is for SIMULATION-derived REBCO numbers grounded in BCS lineage for a measured family) — here the family itself is unmeasured.",
+  "provisional": true,
+  "scope_caveats": [
+    "claim-only — algebraic / lattice-derived (n=6); predicted but never synthesized, never measured; never `absorbed=true` until measured (RTSC.md §8.8 invariant + §8.9 5-gate matrix).",
+    "Compound (Y,Ca)H₆ is the Y-substituted variant of measured CaH₆ (Ma 2022). The substitution itself is the hexa-rtsc claim-only modification — the parent CaH₆ is measured, the Y-substituted variant is not.",
+    "Tc=210 K is a PREDICTION (hexa-rtsc paper line 569 explicitly labels it `predicted`); 185 GPa is HIGH pressure, NOT ambient. Even successful measurement at these conditions would not satisfy §8.9 (a) `진짜 RTSC` ambient-pressure criterion.",
+    "Included in M471 import to be HONEST about what `hexa-rtsc n=6 candidate` covers — not just the ambient RT-SC claim (n6_mk2_lcyscH24) but also the high-pressure predicted-but-unmeasured candidates in the 6-P-T roadmap. Both are empirically-unproven, just with different gate-distance to absorbed=true.",
+    "demiurge MUST NOT use this record as conductor input to a real device producer.",
+    "If a future synthesis + measurement at 185 GPa lands ≥3 independent labs, a NEW record (gate_type=measurement-replicated, family transitions toward `hydride` row in §8.2) supersedes this slot — but RT-SC absorbed=true still requires the ambient-pressure variant."
+  ],
+  "r4_invariant": "absorbed=false · provisional=true · gate_type=empirically-unproven · domain=conductor · family=rtsc_hypothetical. R4 preserved — predicted hydride is not a measurement and not a device input.",
+  "citations": [
+    "RTSC.md §8.2 / §8.5 / §8.6 (family matrix · handoff schema · ConductorMaterial enum · gate_type semantics)",
+    "RTSC.md §8.7 (4-tier — claim-only Tier 1-3 max)",
+    "RTSC.md §8.8 (g3 honest stance — never absorbed=true for RT-SC hypotheses)",
+    "RTSC.md §8.9 (5-gate matrix — (a) ambient pressure required, predicted-not-measured fails (b))",
+    "hexa-rtsc/papers/n6-ultimate-superconductor-integrated-paper.md §6 Mk.I 6 P-T paths (line 569 path 3: (Y,Ca)H₆ 185 GPa, Tc=210 K, PREDICTED)",
+    "Sibling claim-only records: exports/conductor/n6_claim_only/n6_master_sigma_tau/ (master algebraic), exports/conductor/n6_claim_only/n6_mk2_lcyscH24/ (Mk.II ambient named compound)",
+    "Sibling derived-record: exports/conductor/hts_rebco/20260525T000000Z/conductor_rebco_hts_baseline.json (PR #90, gate_type=hexa-rtsc-derived for sim-derived REBCO; this record's gate_type=empirically-unproven for the n=6 predicted-not-measured slot)"
+  ]
+}
