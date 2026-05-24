@@ -2,6 +2,21 @@
 
 Append-only history sister of `CARDIO+.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T07:30:00Z — /cycle-full 라운드: X11·X12·X13 (브레인스토밍 고갈 32→top3 fan-out)
+
+- [x] **X11 통합 layered-care 프로토콜** → `CARDIO+/X11_layered_care.md` (304줄 · commit `456ea43`)
+  - 4축을 채혈 1회 3-axis 패널서 분기하는 단일 침상 결정흐름 · 1 패널 → 6 wall 동시 stratify · grade X8 verbatim
+- [x] **X12 4-trial MCDA** → `CARDIO+/X12_trial_mcda.md` (222줄 · commit `71b2e6a`)
+  - B DAPT-PGx-K 1위 (4.60 · 5/5 민감도 robust) ▸ A(4.05) ▸ D(3.40) ▸ C(2.45) · X5 정성판단 독립 재현 · 가중치 ⚪ proposal(d6)
+- [x] **X13 red-team falsification** → `CARDIO+/X13_redteam.md` (256줄 · commit `fa9c608`)
+  - 8 claim 적대검정: survives 2 · weakened 4 · 🔴-flip 후보 1 (R5 IC-delivery 인과)
+  - 🔑 정직성 발견: thesis "mPTP=mis-delivered"는 **over-claim** → "일 수 있음" hedge 권고 · numerical(🟢)→causal over-read가 최대 취약점 · IC-sync RCT가 유일 ground-truth gate
+  - gradedown 0건 (산술층 무손상 · 취약성은 해석층만 · g5/d5 정합)
+- [x] phase 0 브레인스토밍 32개 고갈(R7) → top3 fan-out (agent cap 3) · 격리 commit (d9)
+- [ ] ⏳ deferred (다음 /cycle): #1 ICER v8(prasugrel·orchestrator sim) · #2 불확실성 MC · #9 self-case ops · #19 safety · #26 known-unknowns · #6 5번째 sub-domain 등
+
+🔑 라운드 성과: CARDIO+ X11-X13 추가 (cross-cutting 13개) · X13이 thesis over-claim을 정직하게 잡아냄 (hedge 권고는 DOCTOR H1/X7 후속 반영 후보).
+
 ## 2026-05-25T06:50:00Z — 후속 심화: sidecar INBOX 핸드오프 + ICER v7 sign 반전 실측
 
 - [x] **sidecar INBOX 핸드오프** (g36/g59) — `/domain` folder-nested domain 미지원 gap → sidecar PR #120 MERGED
