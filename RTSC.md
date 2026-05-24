@@ -298,8 +298,8 @@ last postop  = res/dummy.txt — t=0.025s · 6-PostOp 값 (energy / current / et
 
 ### Axis A — device
 - [x] **솔레노이드** geo template 작성
-- [ ] 솔레노이드 .pro template 작성
-- [ ] **팬케이크** geo stub 추가 (`pancake_axisym.geo`) — 동일 .pro 재사용 가능
+- [x] 솔레노이드 .pro template 작성 — PR #92 (`RTSC/magnet/getdp/solenoid_axisym.pro`)
+- [x] **팬케이크** geo stub 추가 (`pancake_axisym.geo`) — 동일 .pro 재사용 가능 — PR #92
 - [ ] device enum 추가 (`RtscDevice = solenoid | pancake | toroid`), default=solenoid
 - [ ] (deferred) 토로이드 — 3-D 별 cohort
 
@@ -459,7 +459,7 @@ scope_caveats:
 
 #### 본 세션에서 즉시 가능 (record-level)
 - [x] §8 작성 — RTSC.md 의 material-side 반쪽 문서화 (본 작업)
-- [ ] `exports/conductor/` 디렉토리 + handoff schema stub JSON 1개 (HTS REBCO baseline, vendor=null, source=hexa-rtsc-derived)
+- [x] `exports/conductor/` 디렉토리 + handoff schema stub JSON 1개 (HTS REBCO baseline, vendor=null, source=hexa-rtsc-derived) — PR #90 (`exports/conductor/hts_rebco/.../conductor_rebco_hts_baseline.json`)
 
 #### deferred (별 PR)
 - [ ] hexa-rtsc 의 `numerics_*_solver.hexa` 35개 verifier 결과를 `exports/conductor/hexa-rtsc-baseline/` 로 ingest 하는 thin adapter
