@@ -2,6 +2,21 @@
 
 Append-only history sister of `CARDIO+.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T02:40:00Z — 5 sub-domain CARDIO+/ 통합 이동 + X1 완료
+
+- [x] git mv 5 sub (NOREFLOW · DAPTPGX · ISR · LPA · DOCTOR) 폴더 + sister .md/.log.md → `CARDIO+/` (history 보존)
+- [x] CARDIO+.md source 경로 갱신 (`CARDIO+/<sub>.md`)
+- [x] X1 unified claims 완료 — `CARDIO+/X1_unified_claims.md` (380 lines)
+- [ ] ⚠ 다른 세션 path broken 위험 (사용자 결정 수용) — ISR/LPA/DAPTPGX 진행 중 세션은 새 경로 인지 필요
+- [ ] domain skill `/domain set <NAME>` root snapshot 경로 — CARDIO+/ 이동 후 재확인 필요
+
+🔑 X1 핵심 (unified inventory):
+- **unified claim ~335+** (NOREFLOW 72 + DAPTPGX 30 + ISR ~65 inline + LPA 45 − cross-domain dedup 12)
+- **cross-domain dedup 12** (CX01-CX12: KAMIR · TICAKOREA · HOST-EXAM · COLCOT/CLEAR · FOURIER · Mehran · ARC-2 · nicorandil 한국 · hexa-lang inbox 등)
+- **tier 합산 현재**: 🔵 1 · 🟢 14 · 🟡 ~133 · 🟠 ~44 · 🔴 1 · ⚪ 3 (+ ISR V4 미할당 ~140)
+- **target (V2/V3 push 후)**: 🔵 ~48 · 🟢 ~54 → 🔵+🟢 **15 → ~102 (5-fold escalation)**
+- 시너지: **ALDH2*2 × CYP2C19 LoF × Lp(a) high = 한국인 PCI layered care 3-axis** (X9 입력)
+
 ## 2026-05-25T02:15:00Z — CARDIO+ 메타도메인 scaffold
 
 - [x] @goal 확립 — 4 cardio sub-domain 동시 심화·골화 컨테이너 + DOCTOR handoff trajectory

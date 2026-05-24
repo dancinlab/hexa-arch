@@ -4,17 +4,19 @@
 
 ## 메타-도메인 구성 (per domain skill `+`)
 
+> 2026-05-25: 5 sub-domain 폴더 + sister .md/.log.md를 `CARDIO+/` 아래로 통합 이동 (git mv, history 보존).
+
 | sub | scope | 현재 진행 | source |
 |---|---|---|---|
-| **NOREFLOW** | PCI 직후 no-reflow / MVO 보호 | 14/16 (87%) | `NOREFLOW.md` |
-| **DAPTPGX** | 한국인 CYP2C19 DAPT 약물유전체 | (other session) | `DAPTPGX.md` |
-| **ISR** | in-stent restenosis 비-mTOR | (other session) | `ISR.md` |
-| **LPA** | Lp(a) 잔여 위험 침묵화 | (other session) | `LPA.md` |
-| **DOCTOR** | 교수님 handoff 패키지 | 0/10 (scaffold) | `DOCTOR.md` |
+| **NOREFLOW** | PCI 직후 no-reflow / MVO 보호 | 14/16 (87%) | `CARDIO+/NOREFLOW.md` |
+| **DAPTPGX** | 한국인 CYP2C19 DAPT 약물유전체 | (other session) | `CARDIO+/DAPTPGX.md` |
+| **ISR** | in-stent restenosis 비-mTOR | (other session) | `CARDIO+/ISR.md` |
+| **LPA** | Lp(a) 잔여 위험 침묵화 | (other session) | `CARDIO+/LPA.md` |
+| **DOCTOR** | 교수님 handoff 패키지 | 0/10 (scaffold) | `CARDIO+/DOCTOR.md` |
 
 ## milestones (cross-cutting · 4-domain 동시 진행)
 
-- [ ] X1 cross-domain V1 통합 — 4 sub-domain claim inventory 합산 + 중복 제거 + 통합 tier triage → `CARDIO+/X1_unified_claims.md`
+- [x] X1 cross-domain V1 통합 — 4 sub-domain claim inventory 합산 + 중복 제거 + 통합 tier triage → `CARDIO+/X1_unified_claims.md`
 - [ ] X2 cross-domain V2 🔵 push 동시 — 4 sub-domain × 🔵 후보 (NOREFLOW 11 + DAPTPGX ? + ISR ? + LPA ?) hexa-lang atlas 확장 의존 → `CARDIO+/X2_blue_push.md`
 - [ ] X3 cross-domain V3 🟢 push 동시 — pool ubu-1/2 4-domain 병렬 simulation (PK · IRI · M7 MC · siRNA ODE · ICER · IVW MR 등) → `CARDIO+/X3_green_push.md`
 - [ ] X4 cross-domain ⚪ fence 통합 — 4 sub-domain × subjective/prognostic claim 합산 honest fence → `CARDIO+/X4_unified_fence.md`
