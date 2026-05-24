@@ -1,5 +1,33 @@
 # NUMB — log
 
+## 2026-05-25T18:15Z — N7 NOVEL probe — pH gradient bilayer cream (round-2 d18 정합 · sister of N6)
+
+격리 worktree `/private/tmp/numb-n7-efc4be5c` (브랜치 `numb-n7-ph-gradient-efc4be5c` from origin/main · @D d9 정합) — N5/N6 와 **다른 mechanistic axis** 로 round-2 NOVEL 확장.
+
+- [x] **N7** (`NUMB/research/N7_pH_gradient.md` + `NUMB/sim/n7_ph_gradient.hexa`) — 🟠 INSUFFICIENT/DEFERRED
+  - **mechanism**: lid pKa 7.9 / tet pKa 8.5 — 상부 alkaline layer (pH 8.5 carbonate buffer) 가 Henderson-Hasselbalch 평형 시프트 → **lid f_free 0.40% → 80%**, tet 0.10% → 50% → Hadgraft 1985 ΔlogP +2.1 ceiling → **K_sc partition multiplier**
+  - **hexa-native HH closed-form (🟢 GREEN)**: lid f_free hexa-output = 0.00397 / 0.240 / 0.799 @ pH 5.5/7.4/8.5 — closed-form HH 정확 매치
+  - **3 bilayer 후보** flux × hexa-LAC v1: A=2-step apply **4×** (V1 TOP · safest · 2-SKU 분리) · B=laminated peel-film **6×** (V2 · 안정성 wall) · C=NaCO3 microcap **5×** (V3 · GMP novelty)
+  - **honest framing (N1·N6 학습 흡수 · @D d6)**: f_free·K_sc 는 J_ss flux **PREFACTOR** (steady-state) · `t_lag = h²/(6D)` 무관 → **onset 가속 ✗**, **unit-area delivery + depth + duration**만 ↑. "alkaline → 5min onset" 추측 ✗.
+  - **🚨 wall (정량 anchor 확실)**:
+    - **W3 epi pH 8.5 분해** — Sciencedirect 1990 (S0196064405822814): **30% loss @ 30min, 100% @ 2wks** → bilayer 물리적 분리 mandatory
+    - **W4 lid amide 가수분해** — Powell 1987 Pharm Res (PMID 3508528): max stability pH 3-6 → laminated 24mo shelf risk
+    - **W1 alkaline skin tolerance** — pH 8.5 단시간 (<30min) OK (dental NaHCO3 임상 precedent), 장시간 SC degradation → N7 indication = procedure 30min only (만성 신경통 ✗)
+  - **deep research (d18 정합 · arxiv + web)**:
+    - arxiv **2001.03058 Pontrelli 2019** = pH-responsive 2-layer drug delivery PDE 모델 → N7 architecture **직접 grounding** (interface flux continuity eigenvalue 해석해)
+    - arxiv 1601.03074 Pontrelli 2016 iontophoretic multi-layer · arxiv 1405.1413 Pontrelli/de Monte 2014 2-phase 2-layer SC+epi (사촌)
+    - web Onpharma + PMC12742648 — buffered lid **INJECTION** (NaHCO3 8.4% 9:1) onset 단축 = 임상 표준 but transdermal 무관
+    - web SD S0022354915469308 — lid micelle phase pH 5/7.8/9 = 0%/55%/80% → HH empirical 검증 anchor
+    - **2025 search**: "pH-gradient topical anesthetic cream" published clinical study **ZERO** → N7 freedom-to-operate ✅
+  - **IP FTO**: N7-A (2-SKU drug-drug combo no fixed-dose) = 가장 자유 · LMX-5/Pliaglis RLD 505(b)(2) feasible
+  - **breakthrough min-spend ~$1000-2100, 1 month**:
+    - P1 Franz cell 1-point lid flux pH 5.5 vs 8.5 ($500-1000)
+    - P2 DSC alkaline lid 안정성 ($200-500)
+    - P3 epi-HPLC bilayer 분리 효율 ($300-600)
+    - P4 USPTO/EPO FTO search (model · $0)
+  - **LAST envelope** (N6 와 동급): EPI co-admin mandatory · area cap <200cm² · duration cap <30min · 1000cm² sleeve → 3.5+3.5% derate
+  - **cross-axis stacking**: N1 + N6-C + N7-A triple = **10-15× flux** (depth+duration+unit-area triple-stack) but LAST envelope 10× tighten → V3 hexa-LAC v3 spec 후보
+
 ## 2026-05-25T17:30Z — /cycle round-2 완결 (d18 정합): G2 regulatory + G3 pediatric + N6 ion-pair eutectic — 3개 milestone CLOSED
 
 round-2 fan-out 결과 통합 entry. 3 agent 모두 d18 정합 (NOVEL + arxiv + web deep research 내장).

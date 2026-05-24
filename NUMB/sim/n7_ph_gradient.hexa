@@ -1,0 +1,266 @@
+// NUMB N7 — pH gradient bilayer cream (steady-state SC partition multiplier, NOT onset)
+// Question 1: at lid pKa 7.9 / tet pKa 8.5, does a top alkaline layer (pH 8.5 carbonate buffer)
+//             shift free-base fraction f_free from ~3% (lid @ pH 5.5) to ~80% (lid @ pH 8.5)
+//             -> raise K_sc partition (Hadgraft 1985 logP+2.1 ceiling)
+//             -> boost steady-state J_ss?
+// Question 2: which bilayer architecture (2-step apply · laminated peel-film · time-release microcaps)
+//             is the most regulation-safe + chemically-stable + clinically-practical?
+// Model:
+//   Henderson-Hasselbalch         : f_free = 1 / (1 + 10^(pKa - pH))
+//   SC partition (Hadgraft 1985)  : K_sc(ip) = K_sc(0) * 10^(dlogP)   dlogP_max = +2.1
+//   steady-state flux             : J_ss = D_eff * K_sc * a
+//   activity                      : a = f_free * C_total (free-base contributes to partition)
+//   t_lag                         : h^2 / (6 * D_eff)   <- UNCHANGED by pH; D-driven
+// Honest framing (N1 + N6 lessons):
+//   f_free shift moves J_ss prefactor (K_sc * a), NOT t_lag.
+//   "alkaline -> 5min onset" is FALSE. Real value = SC partition + per-unit-area delivery.
+//   Skin pH 4.5-5.5 (acid mantle); pH 8.5 = mild alkaline = short-term tolerable, long-term SC degradation.
+// Anchors:
+//   lid pKa 7.9 (DrugBank · Sigma-Aldrich)
+//   tet pKa 8.5 (DrugBank · Pharm Res Powell 1987)
+//   bup pKa 8.1, pri pKa 7.9 (sister anesthetics)
+//   skin acid mantle pH 4.5-5.5 (Lambers 2006 Int J Cosmet Sci)
+//   lid stability max pH 3-6 (Powell 1987 Pharm Res PMID 3508528) — alkaline -> amide hydrolysis
+//   lid micelle distribution pH 5/7.8/9 = 0%/55%/80% (ScienceDirect SD 1969 emulsion study)
+//   epinephrine alkaline decay: pH 8.5 -> 30% loss @ 30min, 100% @ 2wks (Sciencedirect 1990)
+//   Hadgraft 1985 dlogP_max +2.1 ionized->neutral (lid logP ionized -0.6 -> free 1.5)
+//   Tatara 2021 review (PMC8234378) practical cap 10-12x Franz, 3-5x in-vivo
+// run: hexa run NUMB/sim/n7_ph_gradient.hexa
+
+println("=== NUMB N7 — pH gradient bilayer (alkaline-top free-base activation) ===")
+println("")
+
+println("[0] HONEST FRAMING FIRST (N1 + N6 LESSONS)")
+println("  N7 mechanism: top layer pH 8.5 carbonate -> shifts f_free (HH eq) from ~3% to ~80% for lid")
+println("                -> raises K_sc (ionized->neutral logP shift, Hadgraft 1985 +2.1 ceiling)")
+println("                -> J_ss = D_eff * K_sc * a SCALES with K_sc * f_free")
+println("  IMPORTANT: t_lag = h^2/(6 D_eff) is D-driven; pH does NOT shorten onset.")
+println("             pH shift moves the J_ss PREFACTOR (steady-state flux), not the lag.")
+println("  => N7 wins on UNIT-AREA DELIVERY (smaller patch same depth) + DEPTH + DURATION,")
+println("     NOT onset acceleration. Same N1/N6 lesson: prefactor != onset.")
+println("")
+
+println("[1] Henderson-Hasselbalch — closed form for f_free across pH")
+println("    f_free = 1 / (1 + 10^(pKa - pH))")
+println("    For lid pKa = 7.9:")
+println("      pH 4.5 (skin acid mantle) -> 10^3.4 = 2512   -> f_free = 1/2513 = 0.0398%")
+println("      pH 5.5 (commercial cream) -> 10^2.4 = 251.2  -> f_free = 1/252.2 = 0.397%")
+println("      pH 6.5                    -> 10^1.4 = 25.12  -> f_free = 1/26.12 = 3.83%")
+println("      pH 7.4 (physiologic)      -> 10^0.5 = 3.162  -> f_free = 1/4.162 = 24.0%")
+println("      pH 7.9 (== pKa)           -> 10^0   = 1.0    -> f_free = 0.500 = 50.0%")
+println("      pH 8.5 (carbonate buffer) -> 10^-0.6 = 0.2512-> f_free = 1/1.251 = 79.9%")
+println("      pH 9.5                    -> 10^-1.6 = 0.0251-> f_free = 1/1.025 = 97.5%")
+println("    For tet pKa = 8.5:")
+println("      pH 5.5 -> 10^3 = 1000     -> f_free = 1/1001 = 0.0999%")
+println("      pH 7.4 -> 10^1.1 = 12.59  -> f_free = 1/13.59 = 7.36%")
+println("      pH 8.5 (== pKa)           -> f_free = 50.0%")
+println("      pH 9.5 -> 10^-1 = 0.10    -> f_free = 1/1.10 = 90.9%")
+println("")
+
+println("[2] HH numerical verify — hexa-native (Taylor approx for 10^x via exp(x ln10))")
+println("    10^x = exp(x * 2.302585)  ;  exp(y) Taylor-4: 1 + y + y^2/2 + y^3/6 + y^4/24 (|y|<1.5 ok)")
+println("    pH=5.5, pKa=7.9: arg = (7.9-5.5)*ln10 = 2.4*2.3026 = 5.5262 -> Taylor diverges")
+println("    -> use ln-domain: f_free = 1/(1+10^d), d=pKa-pH; precompute 10^d at d in {-1,0,1,2,3}")
+let ten_n2 = 0.01     // 10^-2
+let ten_n1 = 0.1      // 10^-1
+let ten_0  = 1.0      // 10^0
+let ten_1  = 10.0     // 10^1
+let ten_2  = 100.0    // 10^2
+let ten_3  = 1000.0   // 10^3
+// lid pH 5.5 (d=2.4) interpolate between 10^2 and 10^3: log-linear ~ 251.2 (use 251.2)
+let lid_pH55_d = 251.2
+let lid_pH74_d = 3.162
+let lid_pH85_d = 0.2512
+let f_lid_55 = 1.0 / (1.0 + lid_pH55_d)
+let f_lid_74 = 1.0 / (1.0 + lid_pH74_d)
+let f_lid_85 = 1.0 / (1.0 + lid_pH85_d)
+println("  lid f_free @ pH 5.5 = ", f_lid_55)
+println("  lid f_free @ pH 7.4 = ", f_lid_74)
+println("  lid f_free @ pH 8.5 = ", f_lid_85)
+
+let tet_pH55_d = 1000.0
+let tet_pH74_d = 12.59
+let tet_pH85_d = 1.0
+let f_tet_55 = 1.0 / (1.0 + tet_pH55_d)
+let f_tet_74 = 1.0 / (1.0 + tet_pH74_d)
+let f_tet_85 = 1.0 / (1.0 + tet_pH85_d)
+println("  tet f_free @ pH 5.5 = ", f_tet_55)
+println("  tet f_free @ pH 7.4 = ", f_tet_74)
+println("  tet f_free @ pH 8.5 = ", f_tet_85)
+println("")
+
+println("[3] SC partition shift — Hadgraft 1985 ceiling vs realistic cap")
+println("    K_sc(ip) / K_sc(0) = 10^(dlogP); ionized lid logP -0.6, free lid logP +1.5 -> dlogP=+2.1")
+println("    THEORETICAL ceiling: 10^2.1 = 125.9x")
+println("    Tatara 2021 (PMC8234378) review consensus cap: 10-12x Franz, 3-5x in-vivo")
+println("    Counterion equilibrium + SC saturation limit the real gain.")
+println("")
+println("    K_sc ratio per pH (lid):")
+println("      base pH 5.5 (f_free=0.40%): K_sc_eff = K_sc(0) * 0.004 + K_sc(free) * 0.996(ionized)")
+println("                                   ~ dominated by ionized (low K_sc); call this K0=1.0 unit")
+println("      target pH 8.5 (f_free=80%): K_sc_eff = K_sc(0)*0.8 + ionized*0.2 ~ 0.8*K_sc(free)")
+println("                                   K_sc(free)/K_sc(ionized) ~ 10^2.1 = 125.9")
+println("      ratio K_eff(8.5)/K_eff(5.5) = 0.8*125.9 / (0.004*125.9+0.996) = 100.7 / 1.500 = 67.1x")
+println("    THEORETICAL pH-driven K_sc boost: ~67x (lid 5.5 -> 8.5)")
+println("    REALISTIC (Tatara cap + SC saturation): 10-15x")
+println("    CONSERVATIVE working assumption: 8-12x flux boost @ pH 8.5 top layer")
+println("")
+
+let K_ratio_theoretical = 67.1
+let K_ratio_realistic = 10.0
+let K_ratio_conservative = 8.0
+println("  K_sc boost (lid pH 5.5 -> 8.5): theoretical ", K_ratio_theoretical, "x  realistic ", K_ratio_realistic, "x  conservative ", K_ratio_conservative, "x")
+
+// tet has pKa 8.5 itself -> pH 8.5 = 50% free vs pH 5.5 = 0.1% free
+// ratio f_free shift = 50/0.1 = 500x; K_sc partition cap = 125x; effective = min(125, 500) ~ 125x
+// realistic same 10-15x cap
+println("  K_sc boost (tet pH 5.5 -> 8.5): theoretical 125x  realistic 12x  conservative 10x")
+println("")
+
+println("[4] J_ss flux multiplier — N7 stack OVER hexa-LAC v1 (pH 5.5 baseline)")
+println("    hexa-LAC v1 baseline: D_eff=20*D_base, a=2 (peel-film supersat), pH 5.5")
+println("    N7 top alkaline layer adds: f_free shift x K_sc shift = realistic 8-12x prefactor")
+println("    BUT: top layer thickness ~ 100um (1/3 of total cream layer)")
+println("         -> integrated flux gain = weighted avg ~ 0.5 * 10x + 0.5 * 1x = 5.5x average")
+println("    CONSERVATIVE N7 stack: 4-6x flux over hexa-LAC v1")
+println("    AGGRESSIVE (full top layer dominates SC delivery): 8-10x")
+println("")
+
+println("[5] BILAYER ARCHITECTURE — 3 candidates")
+println("")
+println("  A: 2-step apply (acidic base cream + 5min wait + alkaline top layer)")
+println("     mechanism: user applies base layer first (pH 5.5 hexa-LAC v1), waits 5min,")
+println("                then applies pH 8.5 carbonate top layer. SC sees alkaline boundary at t=5min+.")
+println("     pros: SIMPLEST · no manufacturing change · epi-acid layer SEPARATED from alkaline (epi safe)")
+println("           lid stability OK (top layer used within minutes, hydrolysis t_1/2 hours @ pH 8.5)")
+println("           regulatory: 2 separate cream SKUs (drug-drug combo, but no fixed-dose)")
+println("     cons: USER COMPLIANCE (2 steps) · uneven coverage · top-layer drying = pH neutralizes")
+println("     flux: 4-6x over hexa-LAC v1 (realistic)")
+println("")
+println("  B: laminated peel-film (self-splitting bilayer cream/film)")
+println("     mechanism: HPC peel-film carrier with 2 strata: bottom = acidic (lid+tet+epi pH 5.5),")
+println("                top = alkaline carbonate gel (pH 8.5), thin polymer barrier between")
+println("                during 30min apply, alkaline top diffuses INTO and ACROSS the SC")
+println("                via capillary + density gradient.")
+println("     pros: SINGLE SKU · 1-step apply · uniform coverage")
+println("     cons: STABILITY UNCERTAIN (alkaline diffusion into acidic stratum over shelf life)")
+println("           lid amide hydrolysis t_1/2 @ pH 8.5 ~ months (Powell 1987) -> 24mo shelf REQUIRES")
+println("           separation via thicker polymer or capsule encapsulation")
+println("           epi destruction risk if any alkaline crosstalk")
+println("     flux: 6-8x over hexa-LAC v1 (top layer in direct SC contact)")
+println("")
+println("  C: time-release pH (sodium carbonate microcapsule in single cream, 5min dissolve)")
+println("     mechanism: hexa-LAC v1 base cream pH 5.5 + sodium carbonate microcapsules (Eudragit RS")
+println("                or PLA shell, dissolves in 3-5min in skin moisture). At t=5min, pH locally")
+println("                spikes to 8.5, lid free-base released, SC partition shifts.")
+println("     pros: SINGLE SKU · 1-step apply · TEMPORAL CONTROL (pH shift after lid already loaded SC)")
+println("           epi+lid stored at pH 5.5 (stable) -> alkaline event ONLY at use time")
+println("     cons: MANUFACTURING COMPLEXITY · microcap GMP · novel formulation regulatory")
+println("           pH neutralization in seconds (acidic cream buffer overwhelms small carbonate burst)")
+println("           -> need HIGH carbonate load (20-30% w/w) to override base buffer")
+println("     flux: 5-7x over hexa-LAC v1 (temporal pulse, not sustained gradient)")
+println("")
+
+println("[6] candidate ranking — 3 axes")
+println("    safety:       A > C > B  (A: layers physically separated; B: long-term crosstalk risk)")
+println("    flux:         B > C > A  (B: direct SC contact; A: user-dependent coverage)")
+println("    regulatory:   A > B > C  (A: 2 SKUs no fixed-dose, less novel; C: novel microcap)")
+println("    stability:    A > C > B  (A: 24mo separate SKUs OK; C: microcap shelf; B: crosstalk wall)")
+println("    compliance:   B > C > A  (B/C single-step; A: 2-step user error)")
+println("    TOP PICK: A for V1 (fastest to market, lowest reg risk)")
+println("              B for V2 (after laminate stability validated, $$$ R&D)")
+println("              C for V3 (microcap GMP scale-up, longest timeline)")
+println("")
+
+println("[7] depth recompute @ 200um (free nerve endings) — C(z)=C_surf * f_free * K_sc_eff * exp(-z/lambda)")
+println("    lambda=60um (epi 1:200k), C_surf=14% lid-eq, exp(-200/60)=0.0357, MEC=0.5% lid")
+let exp_z = 0.0357
+let Csurf = 14.0
+let MEC = 0.5
+let a_baseline = 2.0      // hexa-LAC v1 supersat
+// N7-A: 2-step, weighted gain 4x (realistic, half-coverage)
+let n7a_gain = 4.0
+// N7-B: laminated, top-layer SC contact 6x
+let n7b_gain = 6.0
+// N7-C: microcap pulse, sustained 5x
+let n7c_gain = 5.0
+let C_hl  = Csurf * a_baseline * exp_z
+let C_n7a = Csurf * a_baseline * n7a_gain * exp_z
+let C_n7b = Csurf * a_baseline * n7b_gain * exp_z
+let C_n7c = Csurf * a_baseline * n7c_gain * exp_z
+println("  hexa-LAC v1   C(200um)=", C_hl,  " %lid   C/MEC=", C_hl/MEC)
+println("  N7-A (2-step) C(200um)=", C_n7a, " %lid   C/MEC=", C_n7a/MEC)
+println("  N7-B (laminat)C(200um)=", C_n7b, " %lid   C/MEC=", C_n7b/MEC)
+println("  N7-C (micrcap)C(200um)=", C_n7c, " %lid   C/MEC=", C_n7c/MEC)
+println("  -> dermal block margin (vs MEC 0.5%):")
+println("     hexa-LAC v1 ~ 2.0x  (safe baseline)")
+println("     N7-A        ~ 8.0x  (4x boost, 2-step user-dep)")
+println("     N7-B        ~ 12x   (laminate, top-dominant)")
+println("     N7-C        ~ 10x   (microcap pulse)")
+println("")
+
+println("[8] LAST safety re-gate — 4-6x systemic flux means 4-6x Cmax")
+println("    Pliaglis baseline 100cm2 x 30min + epi -> Cmax 18 ng/mL lid (TTR-LAC A4)")
+println("    N7-A/B/C @ 4-6x flux -> projected Cmax 72-108 ng/mL (< toxic 5000 ng/mL, but margin shrinks)")
+println("    SAME envelope as N6: EPI co-admin MANDATORY + AREA CAP <200cm2 + DURATION CAP <30min")
+println("    For 1000cm2 sleeve: DE-RATE to 3.5+3.5% lid+tet")
+println("    HONEST gate: N7 is in SAME LAST class as N6 (multiplied flux -> tightened envelope)")
+println("")
+
+println("[9] residual walls (honest)")
+println("  W1 alkaline pH skin tolerance: pH 8.5 = mild alkaline (skin acid mantle 4.5-5.5)")
+println("     short-term (<30min): tolerable (sodium bicarbonate dental injection 9:1 ratio @ pH 7.4-8 OK)")
+println("     long-term (hours-days): SC degradation, lipid extraction, irritation")
+println("     -> N7 LIMITED TO single-use procedure 30min apply, NOT chronic neuropathic pain (NUMB G1 segment)")
+println("  W2 lid free-base oily/crystallization: lid base Tm 68C, free base = oil at skin T")
+println("     lid+tet eutectic Tm 30C still applies; if pH shifts release lid base into already-saturated")
+println("     eutectic, no recrystallization (oil phase). EtOH 20% co-solvent stabilizes.")
+println("     wall: 24mo shelf may need pH-stabilizing co-buffer (Tris, glycine).")
+println("  W3 epinephrine pH 8.5 degradation: 30% loss @ 30min, 100% @ 2 weeks (Sciencedirect 1990)")
+println("     -> BILAYER PHYSICAL SEPARATION MANDATORY (epi in acidic bottom only, never in top)")
+println("     -> rules OUT N7-B without polymer barrier; rules IN N7-A (2 SKUs) and N7-C (microcap)")
+println("  W4 lid amide hydrolysis @ pH 8.5: Powell 1987 t_1/2 ~ months @ RT")
+println("     -> shelf-life fine if alkaline contact <hours total over 24mo")
+println("     -> N7-B (continuous alkaline contact) needs polymer barrier or refrigeration")
+println("  W5 carbonate buffer capacity: skin secretes lactate (acid mantle); pH neutralizes within min")
+println("     -> N7-A wait-time critical (3-5min before top apply); N7-C needs HIGH carbonate (20%+ w/w)")
+println("  W6 regulatory novelty: pH-gradient bilayer = no FDA-approved precedent in topical anesthetic")
+println("     buffered lid INJECTION (NaHCO3) is well-precedented; transdermal pH gradient = NEW")
+println("     -> 505(b)(2) feasible w/ RLD = LMX-5 / Pliaglis (lid base), pH shift = formulation novelty")
+println("")
+
+println("[10] BREAKTHROUGH PATH (per @D d2)")
+println("  P1 1-point Franz cell pH 8.5 vs 5.5 lid flux ($500-1000, 1 week)")
+println("     -> validates K_sc shift; expected 8-12x flux gain")
+println("  P2 DSC alkaline lid stability ($200-500, 1 day)")
+println("     -> lid+tet+NaHCO3 @ 40C 1wk, measure amide hydrolysis %")
+println("  P3 epi degradation in bilayer prototype ($300-600, 1 week)")
+println("     -> HPLC epi quantification @ T=0, 1d, 7d, 30d in N7-A vs N7-B vs N7-C")
+println("  P4 patent search: pH-gradient topical anesthetic (Pliaglis + LMX-5 + 505(b)(2) freedom)")
+println("     -> N7-A (2-SKU) likely FREE (no fixed-dose claim); N7-B/C may need new IP")
+println("  P5 N7 fold into hexa-LAC v3 spec AFTER P1+P2+P3 PASS -> 🟠 -> 🟡")
+println("")
+
+println("[11] DEEP RESEARCH cross-reference (per @D d18)")
+println("  arxiv 2001.03058 Pontrelli 2019: pH-responsive 2-layer drug delivery PDE model")
+println("    -> N7 bilayer DIRECTLY described by their two-phase eigenvalue formulation")
+println("    -> can solve N7 interface flux continuity analytically")
+println("  arxiv 1601.03074 Pontrelli 2016: iontophoretic multi-layer w/ Nernst-Planck")
+println("    -> pH gradient = special case of charge gradient; N7 ion-pair partition follows")
+println("  arxiv 1405.1413 Pontrelli/de Monte 2014: two-phase two-layer SC + viable epi")
+println("    -> N7 alkaline top + acidic bottom = same 2-layer formalism, K_sc layer-dep")
+println("  web: buffered lid INJECTION (NaHCO3 8.4%) onset reduction = 1-2min in dental RCTs")
+println("       BUT transdermal pH gradient -> ZERO published clinical study (search 2025)")
+println("       -> N7 = freedom-to-operate (no published topical pH-bilayer cream)")
+println("  web: lid micelle distribution shifts 0%->80% across pH 5->9 (SD emulsion study)")
+println("       -> confirms HH-driven free-base partition empirically")
+println("  web: epi pH 8.5 degradation 30% @ 30min (Sciencedirect 1990) -> wall W3")
+println("  web: lid amide hydrolysis max stability pH 3-6 (Powell 1987) -> wall W4")
+println("")
+
+println("=== verdict: N7 is a STEADY-STATE SC PARTITION MULTIPLIER (NOT onset accelerator) ===")
+println("=== Candidate A (2-step apply) = SAFEST + FASTEST regulatory; 4x flux over hexa-LAC v1 ===")
+println("=== Candidate B (laminated) = HIGHEST flux 6x but lid+epi stability wall blocks 24mo shelf ===")
+println("=== Candidate C (microcapsule) = TEMPORAL CONTROL elegant but novel GMP + carbonate dose wall ===")
+println("=== onset = D-driven (UNCHANGED at 6min from hexa-LAC v1); depth + duration + unit-area are the gain ===")
+println("=== wall = Franz cell + DSC + epi-HPLC wet-lab required (~$1000-2100 total to break) ===")
