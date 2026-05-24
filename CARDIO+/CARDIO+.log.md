@@ -2,6 +2,31 @@
 
 Append-only history sister of `CARDIO+.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T04:10:00Z — /cycle 라운드 1: X4 · X5 · X9 동시 완료 (의존 없는 READY 3종)
+
+- [x] **X4 ⚪ honest fence 통합** → `CARDIO+/X4_unified_fence.md` (245줄 · commit `d4ad8cc`)
+  - 4 sub V4 ledger + NOREFLOW M10_fence 의 `hexa verify --fence` verdict VERBATIM 흡수 (g5)
+  - raw 31 · cross-domain dedup ~25 (NOREFLOW 15 · ISR 13 · DAPTPGX 3 · LPA 0)
+  - 정직성: 일시 fence 55% (recompute 경로 존재) · 영구 45% (가치판단/metaphor/enum)
+  - ⚠ X1 추정(~12) ↔ X4 정량(31) 차이 정직 기록 — ISR V4 13 + NOREFLOW metaphor 6 가 X1 작성 후 확정
+- [x] **X5 한국 4-trial portfolio** → `CARDIO+/X5_korea_trials.md` (286줄 · commit `b52888b`)
+  - A NICORADENO-MVO · B DAPT-PGx-K · C ISR-non-mTOR(ROCK-DCB) · D LPA-siRNA-K
+  - 공유 인프라 시너지 2축 (카테터 국소전달 A·C / 비-IND 분자전달 B·D) + 3-axis stratification
+  - 즉시 시작 = **B DAPT-PGx-K** (CYP2C19 PCR C5946 선별급여 + 기존 약제 → 신규 IND 불요)
+  - g5: power(A 0.798)·genotype(B PM 0.1521)·MR β(D -0.3413) verify verdict verbatim · 추정 n/효과크기 ⚪ proposal
+- [x] **X9 d2 wall map + 시너지** → `CARDIO+/X9_wall_map.md` (270줄 · commit `9932505`)
+  - 18 wall (NOREFLOW 5 · DAPTPGX 5 · ISR 4 · LPA 4) · wall마다 돌파 path 2-3개 (d2 · 불가능 0회)
+  - 최고 leverage: bio-verify-kernel phase2 PR 1건 → N2+D3+I2 proof wall 동시 (50-90 🔵 escalation)
+  - 임상 leverage: 채혈 1회 3-axis 패널 → 6 wall 동시 · NHIS 급여 안 배포 가능
+  - 🔴 FALSIFIED 5종(PON1·darapladib·GalNAc free·SGLT2i/colchicine acute·한중 nicorandil)은 wall 아닌 closed negative 분리
+- [x] commit 격리 (d9): 3 파일 각각 `git add <single> && git commit -o <single>` · staged-leak 0 확인
+- [ ] ⏳ 라운드 2 후보: X8 grade ledger (READY) → X6 self-case (READY) → X7 DOCTOR feed (X4-X9 입력 모임 → 마지막)
+- [ ] ⚠ X2 🔵push / X3 🟢push 는 hexa-lang blocker (verify --expr ubu-2 segfault · PR #750 handoff) 대기로 보류 유지
+
+🔑 라운드 1 성과: CARDIO+ **5/10 완료** (X1·X4·X5·X9·X10). 의존 없는 cross-cutting 3종을 3-agent 병렬(cap 준수)로 동시 골화 — 모두 g5 verbatim · d2 path 준수 · sim 0건 순수 synthesis.
+🔑 X7 DOCTOR feed 재료 확보: X9 의 2대 leverage(kernel PR · 3-axis 패널) + X5 의 즉시 시작 trial(B) = 교수님 1-page executive 핵심 메시지.
+🩺 인프라: domain skill `/domain set CARDIO+` 가 root 빈 스캐폴드 재생성 → 제거 (folder-nested SSOT 와 skill root 가정 불일치, 알려진 ⚠).
+
 ## 2026-05-25T03:20:00Z — X10 PAPER 완성 (all fix · g51 ✅)
 
 - [x] **차단 3건 모두 우회 fix**:
