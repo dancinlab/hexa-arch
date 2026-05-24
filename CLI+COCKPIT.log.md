@@ -2,6 +2,19 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T15:40:00Z — M15 synthesize-run 합성 실행 + CLI project-create · audit 11✅·1🔶·0❌
+
+- [x] **synthesize-run ✅ commit 9faccc8** — `ActionDispatch.runComposite` + `demiurge action <verb> <domain> --compose` — 구성 stack을 topo(foundation→apex) 실행, runEngineTool 재사용, verdict 안 뭉갬(g3)
+- [x] **실증** — `action analyze bio --compose` → matter(python3 record)→chem(honest-skip deps)→bio(hexa record), 2 records 합성. 도메인 "맞춤 작동" 실제 동작
+- [x] **CLI project-create ✅ commit 7fb869d** — `demiurge project new <name> <target> [domain]` (도메인 추론 + DomainComposer walk 자동) — GUI-only gap 닫힘. CLI 생명주기 완성(new·list·show·advance/retreat)
+- [x] **실증** — "저전력 RISC-V 칩"→chip(atomic) · aura→composite 구성 8 walk(chip→…→bio→brain→aura). 테스트 프로젝트 2개 생성 후 정리(rm)
+- [x] **audit 11✅·1🔶·0❌** — synthesize-run 🔶→✅. 남은 🔶 1개 = analyze-loop(⟲ 수렴 루프 · fixpoint 반복)
+- [x] M0 §3 synthesize-run row ✅ + audit-count + project-create gap 닫힘 표기
+- [ ] ⏳ #4 push 보류 — 로컬 main이 origin/main과 16 behind·45 ahead DIVERGED + upstream 오설정(origin/ttr-folder-reorg). 안전 경로(새 브랜치+PR 추천) 사용자 결정 대기
+- [ ] ⏳ #3 P3 cockpit GUI mirror (OperationRegistry·DomainComposer·BackendResolver·compose) · analyze-loop ⟲ · M18 배포 · M19 plain격리 · M20 owner-mode · M21 audit flip
+
+🔑 핵심: M15 거의 완료(resolver·verb-nav·synthesize-run·project-create ✅) — 외부 사용자가 CLI만으로 프로젝트 생성→7-verb→구성 합성 실행까지 완주 가능. audit 11/12 ✅. 남은 단일 미완은 analyze-loop ⟲ 수렴뿐. ⚠ push는 main divergence로 보류(사용자 결정 대기).
+
 ## 2026-05-25T15:15:00Z — M15 verb-nav CLI (`project advance/retreat`) · audit 10✅·2🔶·0❌
 
 - [x] **verb-nav ✅ commit 3d787c3** — `demiurge project advance|retreat <name>` (Project.advance/retreat + ProjectStore.save · cockpit stepper와 D50 동일 manifest) · reach 🔶→✅
