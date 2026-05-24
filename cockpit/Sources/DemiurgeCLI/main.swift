@@ -53,6 +53,9 @@ func usage() {
       demiurge show <path>             Show one F1F2 record + provenance
       demiurge list-projects           List workbench projects
       demiurge show-project <name>     Show one project + 7-verb progress
+      demiurge project new <name> <target> [domain]
+                                       Create a project (M15 · domain
+                                       inferred from target if omitted)
       demiurge project advance|retreat <name>
                                        Move a project's 7-verb pointer
                                        (M15 verb-nav · CLI side)
@@ -443,6 +446,28 @@ func projectStep(_ direction: String, _ name: String) -> Int32 {
     return 0
 }
 
+/// `project new <name> <target> [domain]` — create a project from the
+/// CLI (CLI+COCKPIT M15 · closes the CLI project-create gap; previously
+/// GUI-only). Domain is inferred from `target` when omitted (D44), and
+/// the constituent `walk` is computed via DomainComposer (선행=구성도메인,
+/// topo foundation→apex). Writes the SAME ProjectStore manifest the
+/// cockpit reads (D50). Starts at verb 1/7 명세 (g3 — no ✅ yet).
+func projectNew(_ name: String, _ target: String, _ domainArg: String?) -> Int32 {
+    let domain = domainArg ?? DomainCatalog.infer(from: target)
+    let comp = DomainComposer.resolve(domain)
+    let project = Project(name: name, target: target, domain: domain, walk: comp.ids)
+    do { try ProjectStore.save(project) } catch {
+        FileHandle.standardError.write(Data("project new: save failed — \(error)\n".utf8))
+        return 1
+    }
+    let inferTag = domainArg == nil ? " (target에서 추론)" : ""
+    print("project '\(name)' 생성 — domain=\(domain)\(inferTag) · "
+          + "\(comp.kind.rawValue) · 구성 \(comp.stack.count)")
+    print("  walk (topo): " + (comp.ids.isEmpty ? domain : comp.ids.joined(separator: " → ")))
+    print("  현재 단계: 1/7 \(Verb.specify.koreanLabel)(\(Verb.specify.plain))")
+    return 0
+}
+
 /// `backend [list|current]` — the compute-backend surface (CLI+COCKPIT
 /// M17). Local default + `DEMIURGE_BACKEND` user remote; owner pool
 /// hosts (from ~/.pool/pool.json, NOT hardcoded) only in owner mode.
@@ -721,12 +746,28 @@ case "operate":
 case "backend":
     exitCode = backend(Array(args.dropFirst(2)))
 case "project":
-    guard args.count >= 4 else {
-        FileHandle.standardError.write(Data("project: usage — project <advance|retreat> <name>\n".utf8))
+    guard args.count >= 3 else {
+        FileHandle.standardError.write(Data("project: usage — project new <name> <target> [domain] | project <advance|retreat> <name>\n".utf8))
         usage()
         exit(2)
     }
-    exitCode = projectStep(args[2], args[3])
+    switch args[2] {
+    case "new":
+        guard args.count >= 5 else {
+            FileHandle.standardError.write(Data("project new: usage — project new <name> <target> [domain]\n".utf8))
+            exit(2)
+        }
+        exitCode = projectNew(args[3], args[4], args.count >= 6 ? args[5] : nil)
+    case "advance", "retreat":
+        guard args.count >= 4 else {
+            FileHandle.standardError.write(Data("project: usage — project <advance|retreat> <name>\n".utf8))
+            exit(2)
+        }
+        exitCode = projectStep(args[2], args[3])
+    default:
+        FileHandle.standardError.write(Data("project: unknown subcommand '\(args[2])' — use new | advance | retreat\n".utf8))
+        exit(2)
+    }
 case "compose":
     guard args.count >= 3 else {
         FileHandle.standardError.write(Data("compose: missing <domain> argument\n".utf8))
