@@ -1,5 +1,19 @@
 # NUMB — log
 
+## 2026-05-25T08:10Z — G6 closed: 인접 토픽 양립성 매트릭스 (co-application · hexa-native 🟢)
+
+round G6 milestone CLOSED. 격리 worktree `/tmp/numb-g6b-a68ebcad` (branch `numb-g6-compat-a68ebcad`, base origin/main · 첫 worktree `/tmp/numb-g6-3b5a6936` 가 concurrent prune 으로 displaced → fresh worktree 재생성 후 deliverable 복사). N6(corneal wall) · N7(epi pH 8.5 분해 · HH f_free) 자산 통합.
+
+- [x] **G6** (`NUMB/research/G6_compatibility.md` + sim `g6_compatibility.hexa`) — 🟡 SUPPORTED-BY-CITATION (closed-form pH/LAST 산술 🟢 hexa-native)
+  - **양립성 매트릭스 (인접제 × {동시·시간차·금기} × 이유)**: sunscreen=under-NUMB 금기(빔차단+유기필터 co-penetrant+occlusion)/시술후 권고 · chlorhexidine=시간차-MANDATORY (cation-anion 침전 5min, wet-mix 금기) · povidone-iodine=시간차-ORDERED (PVP-I 먼저, NUMB-first=소독실패) · moisturizer=AVOID under (occlusion→SC hydration→LAST↑ 25.2ng/mL) · retinoid/AHA=시간차-DAYS 3-5d (SC barrier 파괴→TEWL↑→LAST↑ 28.8ng/mL, broken barrier=금기).
+  - **화학 양립성**: CHG di-cation + NUMB 음이온종(lactate/carboxylate) 침전 · PVP-I free I₂ + epi(catechol) minor 산화 · 유기 UV필터 SC partition 경쟁(UV 노출 시 1.4-5.7× 침투) · occlusion+barrier-disruption = LAST stack(worst 40.3ng/mL, 여전히 << toxic 5000).
+  - **시간차 순서**: 세척→antiseptic(PVP-I/CHG)→DRY 2-3min→(wipe)→NUMB→wipe→procedure→post-care SPF. NEVER: moisturizer/SPF/retinoid under NUMB · CHG wet-mix · NUMB on mucosa/orbital.
+  - **안와/점막 wall (N6 통합)**: 안와(미용 botox/filler 근처)=tet SKU(Rx-V1/V2) CONTRA (corneal damage JCAD 2016) · OTC-A small-area+eye shield · 점막(구강·비강·결막)=전 SKU CONTRA (각질 barrier 부재 → 급속 systemic 흡수 ≈5× intact skin).
+  - **hexa-native sim**: `g6_compatibility.hexa` GREEN (host=darwin local hexa_real, RC=0) — HH f_free 0.00397/0.799 @ pH 5.5/8.5 (N7 anchor 재현) · LAST stacking 25.2/28.8/40.3 ng/mL · outcome classifier 7 행.
+  - **honest framing (@D d5/d6)**: 인접제는 J_ss prefactor(occlusion/pH/K_sc) + LAST Cmax 만 변화 — **onset 무관** (t_lag = h²/(6 D_eff) D-driven, N1·N6·N7 학습). co-application 임상데이터 희박 → default 시간차 ("동시 안전 가정" 금지).
+  - **deep research (@D d18)**: arxiv Pontrelli 2019 (2001.03058) pH-responsive 2-layer PDE = multi-layer co-application grounding (live API rate-limited → N7 검증 anchor 재인용) · web: CHG-lid 침전(Tran/Huynh review · PMC3148842) · PVP-I 순서(IOVS 2011 PMID 21366185) · 유기 UV필터 SC침투(ScienceDirect S0160412019320008) · occlusion 흡수↑(Zhai 2001) · retinoid/AHA barrier(PMC11344648 · Smith 1996) · 점막 흡수(lidocaine viscous USPI · PMC8246680).
+  - **breakthrough (@D d2)**: W1 Franz co-app($500-1000) · W2 turbidimetry CHG-NUMB 침전($100-200, cheapest first) · W3 epi-HPLC after PVP-I($200-400) · W4 TEWL-graded Franz($800-1500). total ~$1600-3100.
+
 ## 2026-05-25T20:30Z — G7 closed: 3-step user guide + OTC/Rx label auto-dispatcher (hexa-native 11/11 🟢)
 
 round-3 G7 milestone CLOSED. 격리 worktree `/tmp/numb-g7-retry-7f0570d3` (branch `numb-g7-retry2-de1e2f`, base origin/main). G4 (DUAL OTC-A + Rx-V1) 와 의도적 정합 — G7 dispatcher 는 G4 의 OTC-A · Rx-V1 SKU 정의를 그대로 사용 + Rx-V2 (capric ternary) 는 deferred-trigger 게이트 후의 미래 SKU 로 슬롯 예약 (3-SKU dispatcher universe).
