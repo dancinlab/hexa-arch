@@ -71,6 +71,14 @@ public enum LLMBridge {
         let proc = Process()
         proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
         proc.arguments = [exe] + args
+        // macOS GUI .app processes inherit a minimal PATH (no shell rc) —
+        // augment with common CLI install locations so homebrew / hexa /
+        // pipx-installed providers (claude · codex · gemini) are found.
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let cliPaths = "/opt/homebrew/bin:/usr/local/bin:\(home)/.hx/bin:\(home)/.local/bin"
+        var env = ProcessInfo.processInfo.environment
+        env["PATH"] = "\(cliPaths):\(env["PATH"] ?? "/usr/bin:/bin")"
+        proc.environment = env
         let pipe = Pipe()
         proc.standardOutput = pipe
         proc.standardError = pipe
