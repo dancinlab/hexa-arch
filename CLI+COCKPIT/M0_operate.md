@@ -61,7 +61,7 @@ demiurge <op>  /  cockpit 패널  ──▶  OperationDispatch.run(op_id, args) 
 | design-pick | 🛒 | design | swift | ✅ GUI | CLI+GUI | M15 |
 | analyze-loop | 🛒 | analyze | swift | 🔶 부분 | CLI+GUI | M15 |
 | synthesize-run | 🛒 | synthesize | swift→hexa | 🔶 일부 도메인 | CLI+GUI | M15·M17 |
-| **verify** | 🛒 | verify | **hexa** | ❌ (CLI verify=record 정합성만) | CLI+GUI | **M16** |
+| **verify** | 🛒 | verify | **hexa** | ✅ `verify --expr/--fence/rubric`→hexa VERBATIM (M16 ✅) | CLI+GUI | **M16** |
 | record-view | 🛒 | verify | swift | ✅ CLI+GUI | CLI+GUI | M15 |
 | export | 🛒 | handoff | swift | ✅ CLI | CLI+GUI | M15 |
 | atlas-lookup | 🛒 | verify | hexa | ❌ | CLI+GUI | M16 |
@@ -72,7 +72,7 @@ demiurge <op>  /  cockpit 패널  ──▶  OperationDispatch.run(op_id, args) 
 | governance | 🔒 | (all) | swift | 스킬/훅 | owner-mode | M20 |
 | owner-domain | 🔒 | specify | swift | /domain 스킬 | owner-mode | M20 |
 
-현재 audit (M14 `demiurge operate audit`): product **6✅ · 3🔶 · 3❌** (of 12) · owner 5🔒.
+현재 audit (`demiurge operate audit`): product **7✅ · 3🔶 · 2❌** (of 12) · owner 5🔒. (M16 verify ✅ → ❌ 3→2; 잔여 atlas-lookup M16 · compute-backend M17)
 
 ## 4. 배포 모델 (외부 사용자)
 

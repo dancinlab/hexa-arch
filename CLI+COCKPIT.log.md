@@ -2,6 +2,17 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T14:20:00Z — M16 verify를 hexa stdlib 커널로 (hx 의존성 호출 · verdict VERBATIM)
+
+- [x] **M16 verify ✅ commit ca81e73** — `HexaBridge.swift`(hexa leaf-call 단일 spawn 지점) + `demiurge verify --expr/--fence/rubric`→`hexa verify` VERBATIM (@D g5) · 빌드 green
+- [x] **실증** — `verify --expr sigma 6 12` → 🔵 SUPPORTED-FORMAL · `verify --expr ivw 3 1` → 🟠 INSUFFICIENT (둘 다 hexa 원문 그대로 · demiurge re-judge 안 함)
+- [x] 경계 준수 — demiurge는 dispatch만 소유, verdict 계산은 hexa stdlib SSOT(hx 의존성). hexa 부재 시 honest ran=false (g3, 조작 verdict 금지)
+- [x] OperationRegistry verify reach ❌→✅ → **audit 7✅·3🔶·2❌** (verify 통과 · 잔여 atlas-lookup·compute-backend)
+- [x] M0_operate.md §3 verify row + audit-count 갱신
+- [ ] ⏳ atlas-lookup (M16 · HexaBridge 재사용 `hexa atlas lookup`) · compute-backend (M17) · M15 7-verb 합성 실행 (M16 ✅로 verify 단계 unblock)
+
+🔑 핵심: 첫 stdlib 커널 호출(M16). demiurge=dispatch 소유 / hexa=verdict SSOT 가리킴 경계가 코드로 실증. `HexaBridge`가 이후 모든 hexa leaf-call(atlas 등)의 단일 통로. audit ❌ 3→2.
+
 ## 2026-05-25T14:00:00Z — 도메인 전수조사 + M15 composition resolver (선행=구성도메인) + compose CLI
 
 - [x] **demiurge 도메인 전수조사** — 21 등록 (INDEX.demi 20 + clinical) · canvasMode 4종(chip·component·matter + cohort 17) · clusters 멀티태그 9종 · prerequisites DAG
