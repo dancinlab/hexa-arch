@@ -12,7 +12,7 @@
 - [ ] h3o anharmonic SSCHA 안정화 — imaginary mode (−682 cm⁻¹) renormalization
 - [ ] ambient-stable hydride 탐색 (§9.10 N5 funnel · 압력 < 50 GPa 후보)
 - [ ] 압력 < 50 GPa AND stable AND Tc > 200K 후보 발견
-- [ ] wet-lab handoff (Tier 2 recipe-as-record · §8 4-tier 경유)
+- [ ] wet-lab handoff (Tier 2 recipe-as-record · §8 4-tier 경유) — 초안 LANDED `exports/material_discovery/rtsc_h3cl_tier2_wetlab_handoff_20260524.json` · EOS 합성압력 1건 pending = wet-lab 실행 blocker
 - [ ] measured-oracle PASS → RTSC absorbed=true (최종 d5 invariant 충족)
 
 ## verify (🔵 SUPPORTED-FORMAL push · per @D g5 · demiurge 자산 필수)
@@ -21,8 +21,8 @@
 
 - [x] V1 RTSC claim inventory + tier triage (🔵/🟢/🟡/🟠) — §3 state matrix + §5 per-axis ledger 흡수 → `RTSC/verify/V1_claim_inventory.md` (PR #25 MERGED)
 - [x] V2 🔵 push — Eliashberg λ closed-form · McMillan Tc identity · BCS gap ratio 2Δ/kT_c · BEE-NET grid invariant · DFT 충격 boundary → `hexa verify --expr` + atlas register → `RTSC/verify/V2_formal_identities.md` (PR #33 MERGED · supercon fns atlas PR #745 · V2.1 retry 가능)
-- [ ] V3 🟢 push — §9 5-gate sim stack 흡수: QE 7.5 el-ph (pool ubu-1 per `reference_qe_dft_pool_setup`) · BEE-NET fine-tune (Vast.ai GPU) · SSCHA anharmonic (RunPod GPU) · per @D d7 compute matrix → `RTSC/verify/V3_numerical_recompute.md`
-- [ ] V4 final tier ledger — §10 d7 roadmap 결과 + §3.2 verify candidate 통합 → 🔵+🟢+🟡 verbatim + 🟠 wet-lab deferred (M9 handoff) → `RTSC/verify/V4_tier_ledger.md`
+- [x] V3 🟢 push — Allen-Dynes Tc 10/10 🟢 SUPPORTED-NUMERICAL (h3cl·h3o·h3f·h3si·h3se·h3te·h3po·H₃S·CaH₆ · hexa verify libm, |Δ|≤1e-9) → `RTSC/verify/V3_numerical_recompute.md`
+- [x] V4 final tier ledger — V1+V2+V3 통합 (🔵14·🟢30·🟡12·🟠6·🔴3·⚪4) + V2→V3 escalation(PR #745 gap 닫힘) + 🟠 wet-lab→M9 + absorbed=false 정직 명시 → `RTSC/verify/V4_tier_ledger.md`
 
 
 > Root-level domain expansion. SSOT for "the rtsc work" until each axis
