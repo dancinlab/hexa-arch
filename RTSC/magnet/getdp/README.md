@@ -114,15 +114,25 @@ README 상단 절차로 별도 실행). FEM 기준값은 §4.2.1 기록의 `0.06
 파일 내 상수로 고정해두며, getdp 가 PATH 에 없어도 Wheeler 폐형식 단독으로
 유효하다 — 폐형식이 **독립** 병렬 검증기이고 FEM 은 선택적 교차참조다.
 
-**구현 위치 결정 (@D d3)**: `hexa-lang/stdlib/rtsc/` 에 Wheeler 원자(atom)는
-선재(先在)하지 않으며, 본 식은 magnet getdp 템플릿의 **국소 폐형식
-교차검증기** 성격이므로 토픽 폴더 (`RTSC/magnet/getdp/`) 에 둔다. 후속으로
-일반화된 Wheeler stdlib 가 생기면 이 파일은 얇은 wrapper 로 축소된다.
+**구현 위치 결정 (@D d3 + @D g61)**: Wheeler 폐형식 **원자(primitive)** 는
+hexa-lang PR #892 로 stdlib SSOT (`stdlib/material/magnet/wheeler.hexa`) 에
+이전 완료. 본 파일(`wheeler_axis_b.hexa`)은 이제 **얇은 wrapper** 로 축소되어,
+stdlib 의 `wheeler_bz` / `wheeler_envelope` 를 `use` 한 뒤 RTSC.md §4.2.1
+의 FEM 기준값 `FEM_BZ_Z0 = 0.06842 T` 와의 **도메인 특수 교차검증 driver** 만
+남긴다. 일반 폐형식의 해석적 한계 sanity (long-solenoid · far-field ·
+symmetry · envelope ordering · linearity) 는 모두 stdlib 측 self-test 가
+담당한다 — 본 wrapper 의 falsifier 두 개는 RTSC §4.2.1 record 특정의
+3 % 합치 + envelope-bracket 만 검증.
 
 ---
 
 ## 구현 코드 SSOT (@D d3)
 
-실제 일반 producer/solver 코드는 hexa-lang stdlib (`stdlib/rtsc/getdp_hts.py`)
-에 산다. 이 폴더는 형상/문제정의 **템플릿**(문서격) + 위 Wheeler 폐형식
-국소 검증기만 보관한다.
+실제 일반 producer/solver 코드는 hexa-lang stdlib 에 산다:
+
+- 일반 GetDP HTS producer: `stdlib/rtsc/getdp_hts.py`
+- Wheeler 폐형식 primitive: `stdlib/material/magnet/wheeler.hexa`
+  (`wheeler_bz`, `wheeler_envelope` — hexa-lang PR #892)
+
+이 폴더는 형상/문제정의 **템플릿**(문서격) + 위 Wheeler stdlib 를 wrapping
+하는 RTSC §4.2.1 **도메인 특수 교차검증기** 만 보관한다.
