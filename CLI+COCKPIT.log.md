@@ -2,6 +2,17 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T17:50:00Z — swift test 8 fail → 78 tests 0 failures (GREEN) · hexa-lang PR #821
+
+- [x] CLI+COCKPIT M14-M21 + 운영 surface(operate/compose/verify/atlas/backend/owner/project)+cockpit 운영탭+release.hexa = origin/main 머지 (demiurge PR #79·#80·#81·#82·#83 · audit @goal met)
+- [x] `swift test` 초기 8 assertion fail(5 case) 전부 `MaterialFalsifierDispatchTests` → 진단: hexa 컴파일러 버그(동명 `let` 리터럴 로컬 함수간 codegen 충돌 → 모든 result에 첫 falsifier id leak)
+- [x] **hexa-lang PR #821 MERGED** — `falsifier_dispatch.hexa::dispatch_falsifiers`에서 canonical id/name index re-stamp 워크어라운드 (`--selftest 5/5`)
+- [x] probe 경로 반영 + synthetic 샘플 stale json 정리 → **swift test 78 tests · 1 skip · 0 failures GREEN**
+- [x] memory: `reference-hexa-let-literal-collision` (미래 함정) · `demiurge owns 작동부` carve-out
+- [ ] ⏳ hexa codegen 근본 fix (PR #821=워크어라운드, 버그 LIVE) · docs origin catchup (동시 세션 로그 wipe 반복)
+
+🔑 핵심: 세션 목표(외부 app+CLI 완전운영) 코드 전부 origin 머지 + audit @goal met. 테스트 8 fail은 hexa-lang 컴파일러버그발(내 작업 무관) → PR #821로 78/0 GREEN. ⚠ 이 로그는 동시 세션이 반복 wipe — durable 기록은 PR #79-83·#821 + memory.
+
 ## 2026-05-25T07:50:00Z — CARDIO+ 메타도메인 세션 교훈 → CLI/cockpit 개선 milestone M8-M13 등재
 
 - [x] **M8-M13 개선 milestone 등재** (milestone-level only · 구현 후속) — CARDIO+ 메타도메인(X1-X13 + DOCTOR H1-H10 + 인프라 핸드오프 3건) 세션서 induce
