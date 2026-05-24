@@ -2,6 +2,26 @@
 
 Append-only history sister of `LPA.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T05:30:00Z — PR #736 MERGED + V4 tier-rubric 정정 (🟢 ceiling 명시)
+
+- [x] hexa-lang **PR #732/736 MERGED** — atlas_cli biostat register (L2 wall) 해소
+  - inbox patch status: resolved · resolved_by: feat/atlas-cli-biostat-register-2026-05-25
+  - 20 fns 등록 (nnt · arr · ln_hr_to_hr + bio Phase 1/2/3 + RTSC V2 supercon)
+  - verify_cli ↔ atlas_cli verdict parity (byte-identical 🟢/🔴/🟠)
+- [x] **중요 tier-rubric 정정** — float-numerical fns ceiling = 🟢 (not 🔵)
+  - V1 "🔵 target 8" was a misframing — by design 🟢 ceiling
+  - 🔵 SUPPORTED-FORMAL requires integer closed-form (RFC 046) OR formal-proof tie-in
+  - PR #730 (supercon) + PR #736 (biostat) 모두 🟢 land 일치 (parity)
+- [x] V4 ledger 갱신 — "🔵 도달 경로" → "🟢 ceiling 정정" + L1/L2/L3 wall 모두 해소 표
+- [x] LPA 도메인 유일 🔵 잠재 후보 = KIV-2 정수 copy 분포 · HORIZON Schoenfeld 정수 events
+- [ ] M13 muvalaplin rate limit 회복 후 재시도
+
+🔑 핵심 통찰 (PR #736 + V4 정정):
+- **🟢 28건 = 이론 천장 ~90% 달성** (V1 baseline 14 → V4 28 · biostat impl 양층 land 후)
+- **🔵 1건 sigma sanity 유지** — LPA 도메인 거의 unreachable by design
+- **3-layer wall 모두 해소** — L1 verify_cli (PR #709) · L2 atlas_cli (PR #736) · L3 pool (PR #700)
+- **cross-domain leverage 실현** — 5도메인 동시 unblock 가능 (LPA + ISR + DAPTPGX + HERPES + NOREFLOW)
+
 ## 2026-05-25T05:00:00Z — M12 + M14 cycle 6 land · M13 rate-limited (재시도 대기)
 
 - [x] **M12 binary rebuild + V2 retry 성공** — `bin/hexa-verify` 신규 빌드 (630KB · 2026-05-24 16:23)
