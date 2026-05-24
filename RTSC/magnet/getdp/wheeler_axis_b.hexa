@@ -1,23 +1,19 @@
 #!hexa strict
 // ============================================================================
-// wheeler_axis_b.hexa — finite-solenoid on-axis B closed-form verifier
+// wheeler_axis_b.hexa — RTSC §4.2.1 FEM cross-check (thin wrapper)
 //
 // RTSC magnet sub-track · M318 cross-check (RTSC.md §5 Axis C).
 // Companion to `solenoid_axisym.{pro,geo}` (PR #92 — GetDP magstat_a_linear,
 // μ_r=1, J_φ=N·I/A). This is the closed-form (Wheeler-style finite-solenoid)
 // parallel verifier for the §4.2.1 FEM cross-check record (z=0 |B|≈0.06842 T).
 //
-// Wheeler / finite-solenoid on-axis formula (thin-shell idealization,
-// μ_r=1, axial only):
-//
-//     B_z(z) = (μ₀·N·I / (2·L)) · [
-//                  (z + L/2) / √((z + L/2)² + R²)
-//                − (z − L/2) / √((z − L/2)² + R²)
-//              ]
-//
-// where L = axial length, R = (effective) winding radius, N = turns,
-// I = per-turn current, μ₀ = 4π·10⁻⁷ H/m.  At z = ±∞ the bracket → 0;
-// at L/R → ∞ inside the bore it → (μ₀·N·I/L) (long-solenoid limit).
+// As of hexa-lang PR #892 the Wheeler closed-form primitive lives in
+// `stdlib/material/magnet/wheeler.hexa` (per @D d3 + @D g61 — implementation
+// code in canonical stdlib home, topical folders hold docs / manifests +
+// domain-specific verifiers only). This file is now a THIN WRAPPER: it
+// imports the primitive and runs the RTSC-domain-specific §4.2.1 FEM
+// cross-check (compare Wheeler(R_eff) against the recorded FEM_BZ_Z0 =
+// 0.06842 T, plus envelope-bracket the FEM thick-winding result).
 //
 // Honest scope (commons g3):
 //   · Closed-form parallel to the GetDP FEM run — NOT an HTS critical-state
@@ -30,15 +26,12 @@
 //     vs FEM 0.0684 T — the FEM (which integrates over the full winding
 //     cross-section) sits inside the envelope and within ~1.5 % of R_eff.
 //
-// Implementation note (per @D d3): no Wheeler atom exists in hexa-lang
-// stdlib (`stdlib/rtsc/`) — this file is the topical closed-form verifier
-// for the RTSC magnet getdp templates. If a generic Wheeler stdlib lands
-// later, this verifier becomes a thin wrapper. The `.hexa-only` constraint
-// (memory `reference_demiurge_sim_hexa_only.md`) means the M318 "scipy"
-// shorthand is satisfied by this closed-form HEXA recompute.
+// The `.hexa-only` constraint (memory `reference_demiurge_sim_hexa_only.md`)
+// means the M318 "scipy" shorthand is satisfied by this closed-form HEXA
+// recompute via the stdlib Wheeler primitive.
 //
-// Cross-check against the §4.2.1 reference geometry (from solenoid_axisym
-// .geo defaults · matches solenoid_axisym.pro DefineConstant defaults):
+// §4.2.1 reference geometry (from solenoid_axisym.geo defaults · matches
+// solenoid_axisym.pro DefineConstant defaults):
 //   N=120 turns, I=100 A, L=H_COIL=0.200 m,
 //   R_IN=0.030 m, R_OUTC=0.055 m  → R_eff = 0.0425 m
 //   FEM reference @ z=0  → |B| ≈ 0.06842 T
@@ -48,9 +41,9 @@
 //
 // @no-lock-needed
 
-use "self/runtime/math_pure"
+use "stdlib/material/magnet/wheeler"
 
-let VERSION = "1.0.0"
+let VERSION = "2.0.0"
 
 // ─── check harness ──────────────────────────────────────────────────────
 
@@ -67,92 +60,7 @@ fn _check(ok: bool, label: str, detail: str) {
 
 fn abs_f(x: float) -> float { if x < 0.0 { return -x } return x }
 
-fn rel_err(a: float, b: float) -> float {
-    let d = abs_f(a - b)
-    let abs_b = abs_f(b)
-    if abs_b < 1.0e-30 { return d }
-    return d / abs_b
-}
-
-// ─── Wheeler finite-solenoid on-axis B_z ────────────────────────────────
-
-let MU0: float = 1.25663706143591729539e-6   // 4π·10⁻⁷ H/m
-
-// Single-radius (thin-shell) closed form.
-// (N, I_A, R_m, L_m, z_m) → B_z_T
-fn wheeler_bz(n_turns: float, i_amp: float,
-              r_m: float, l_m: float, z_m: float) -> float {
-    let zp = z_m + 0.5 * l_m
-    let zn = z_m - 0.5 * l_m
-    let dp = sqrt_pure(zp * zp + r_m * r_m)
-    let dn = sqrt_pure(zn * zn + r_m * r_m)
-    if dp < 1.0e-30 || dn < 1.0e-30 { return 0.0 }
-    let pref = MU0 * n_turns * i_amp / (2.0 * l_m)
-    return pref * (zp / dp - zn / dn)
-}
-
-// Thick-winding envelope: returns [B(R_in), B(R_eff), B(R_outc)] at z.
-fn wheeler_envelope(n_turns: float, i_amp: float,
-                    r_in: float, r_outc: float,
-                    l_m: float, z_m: float) -> [float] {
-    let r_eff = 0.5 * (r_in + r_outc)
-    return [
-        wheeler_bz(n_turns, i_amp, r_in,   l_m, z_m),
-        wheeler_bz(n_turns, i_amp, r_eff,  l_m, z_m),
-        wheeler_bz(n_turns, i_amp, r_outc, l_m, z_m),
-    ]
-}
-
-// ─── analytical limit sanity checks ─────────────────────────────────────
-
-fn check_long_solenoid_limit() {
-    // Long-solenoid limit  (L/R → ∞):  B_z(0) → μ₀ · n · I  where n = N/L.
-    // We pick L = 50 · R_eff to deeply approach that asymptote.
-    let n_turns: float = 1000.0
-    let i_amp:   float = 10.0
-    let r_m:     float = 0.01
-    let l_m:     float = 50.0 * r_m          // 0.5 m
-    let bz0 = wheeler_bz(n_turns, i_amp, r_m, l_m, 0.0)
-    let asymp = MU0 * (n_turns / l_m) * i_amp
-    _check(rel_err(bz0, asymp) < 5.0e-3,
-        "L/R = 50 long-solenoid asymptote (B_z(0) → μ₀·n·I within 0.5 %)",
-        "B_z(0)=" + str(bz0) + "  μ₀·n·I=" + str(asymp) +
-        "  rel_err=" + str(rel_err(bz0, asymp)))
-}
-
-fn check_far_field_decay() {
-    // Far from the coil (|z| ≫ L, R), B_z must decay (→ 0+).
-    // Pick z = 50 · L so that both end terms nearly cancel.
-    let n_turns: float = 120.0
-    let i_amp:   float = 100.0
-    let r_m:     float = 0.0425
-    let l_m:     float = 0.200
-    let bz_far = wheeler_bz(n_turns, i_amp, r_m, l_m, 50.0 * l_m)
-    _check(abs_f(bz_far) < 1.0e-6,
-        "far-field |z| = 50·L decays to ≲ 1 µT",
-        "B_z(z=50L)=" + str(bz_far))
-}
-
-fn check_symmetry() {
-    // The two end terms make B_z(z) an even function of z around the
-    // coil centre. B_z(z) = B_z(-z) exactly for the centred solenoid.
-    let n_turns: float = 120.0
-    let i_amp:   float = 100.0
-    let r_m:     float = 0.0425
-    let l_m:     float = 0.200
-    let z:       float = 0.05
-    let bz_p = wheeler_bz(n_turns, i_amp, r_m, l_m,  z)
-    let bz_n = wheeler_bz(n_turns, i_amp, r_m, l_m, -z)
-    _check(rel_err(bz_p, bz_n) < 1.0e-12,
-        "axial symmetry B_z(+z) = B_z(-z) (centred solenoid)",
-        "B_z(+z)=" + str(bz_p) + "  B_z(-z)=" + str(bz_n))
-}
-
 // ─── §4.2.1 cross-check (PR #92 solenoid_axisym defaults) ───────────────
-//
-// Geometry mirrors solenoid_axisym.geo + solenoid_axisym.pro defaults:
-//   N=120, I=100 A, L=0.200 m, R_IN=0.030 m, R_OUTC=0.055 m
-//   FEM @ z=0 (bmag_axis.txt z=0 sample) ≈ 0.06842 T
 
 let N_TURNS_421:  float = 120.0
 let I_AMP_421:    float = 100.0
@@ -169,10 +77,10 @@ fn cross_check_421() {
     println("         · FEM (getdp) bmag_axis @ z=0 = " + str(FEM_BZ_Z0) + " T")
     println("")
 
-    // z-sweep at {0, L/4, L/2} on R_eff
+    // z-sweep at {0, L/4, L/2} on R_eff via stdlib primitive
     let zs: [float] = [0.0, 0.25 * L_COIL_421, 0.5 * L_COIL_421]
     let labels: [str] = ["z=0     ", "z=L/4   ", "z=L/2   "]
-    println("  Wheeler z-sweep on R_eff:")
+    println("  Wheeler z-sweep on R_eff (stdlib/material/magnet/wheeler):")
     let mut i = 0
     while i < zs.len() {
         let bz = wheeler_bz(N_TURNS_421, I_AMP_421, r_eff, L_COIL_421, zs[i])
@@ -181,7 +89,7 @@ fn cross_check_421() {
     }
     println("")
 
-    // Envelope at z=0
+    // Envelope at z=0 via stdlib primitive
     let env = wheeler_envelope(N_TURNS_421, I_AMP_421,
                                R_IN_421, R_OUTC_421, L_COIL_421, 0.0)
     println("  Thick-winding envelope at z=0:")
@@ -231,31 +139,21 @@ fn note_fem_degrade_status() {
     println("            see RTSC/magnet/getdp/README.md for the live pipeline)")
 }
 
-// ─── falsifiers ─────────────────────────────────────────────────────────
+// ─── falsifiers (domain-specific §4.2.1 cross-check) ────────────────────
 
 let FALSIFIERS = [
     "M318 closed-form break — Wheeler R_eff value disagrees > 3 % with FEM bmag_axis z=0 → DEMOTE M318 cross-check",
     "envelope break — FEM z=0 falls outside thin-shell {R_outc,R_in} envelope → DEMOTE thick-winding consistency",
-    "long-solenoid limit break — B_z(0; L/R=50) deviates > 0.5 % from μ₀·n·I → DEMOTE Wheeler asymptote",
-    "far-field break — |B_z(50·L)| ≥ 1 µT → DEMOTE finite-extent decay",
-    "symmetry break — B_z(+z) ≠ B_z(-z) for centred solenoid → DEMOTE axial-symmetry encoding",
 ]
 
 // ─── main ───────────────────────────────────────────────────────────────
 
 fn main() {
     println("========================================================================")
-    println("  RTSC magnet — Wheeler finite-solenoid on-axis B_z closed-form verifier")
+    println("  RTSC §4.2.1 — Wheeler vs FEM cross-check (thin wrapper)")
     println("  (M318 parallel cross-check against PR #92 solenoid_axisym getdp FEM)")
+    println("  primitive: stdlib/material/magnet/wheeler (hexa-lang PR #892)")
     println("========================================================================")
-    println("  B_z(z) = (μ₀·N·I / 2L) · [ (z+L/2)/√((z+L/2)²+R²)")
-    println("                           − (z−L/2)/√((z−L/2)²+R²) ]")
-    println("")
-
-    println("  Analytical limit sanity checks:")
-    check_long_solenoid_limit()
-    check_far_field_decay()
-    check_symmetry()
     println("")
 
     cross_check_421()
