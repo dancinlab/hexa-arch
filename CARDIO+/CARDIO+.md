@@ -17,8 +17,8 @@
 ## milestones (cross-cutting · 4-domain 동시 진행)
 
 - [x] X1 cross-domain V1 통합 — 4 sub-domain claim inventory 합산 + 중복 제거 + 통합 tier triage → `CARDIO+/X1_unified_claims.md`
-- [ ] X2 cross-domain V2 🔵 push 동시 — 4 sub-domain × 🔵 후보 (NOREFLOW 11 + DAPTPGX ? + ISR ? + LPA ?) hexa-lang atlas 확장 의존 → `CARDIO+/X2_blue_push.md`
-- [ ] X3 cross-domain V3 🟢 push 동시 — pool ubu-1/2 4-domain 병렬 simulation (PK · IRI · M7 MC · siRNA ODE · ICER · IVW MR 등) → `CARDIO+/X3_green_push.md`
+- [x] X2 cross-domain V2 🔵 push 동시 — honest formal-tier 평가: 🔵 천장=number-theory 전용, bio claim=🟢 (d6) · ubu-2 segfault **mini 우회 입증** · 🔵 escalation=atlas 등록 PR 환원 → `CARDIO+/X2_blue_push.md`
+- [x] X3 cross-domain V3 🟢 push 동시 — 4-domain recompute mini 재실측 통합 (🟢 43, X8 정합) · DAPTPGX v3/v5/v6.hexa 재실행 · PM×HBR 🟢 reconcile · ICER sign V6까지 🟠 (정직) → `CARDIO+/X3_green_push.md`
 - [x] X4 cross-domain ⚪ fence 통합 — 4 sub-domain × subjective/prognostic claim 합산 honest fence → `CARDIO+/X4_unified_fence.md` (raw 31 · dedup ~25 · 일시 55%/영구 45%)
 - [x] X5 한국 first-in-class 4-trial portfolio 통합 — Trial-A NICORADENO-MVO + DAPT-PGx-K + ISR-non-mTOR + LPA-siRNA-K → `CARDIO+/X5_korea_trials.md` (즉시 시작=B DAPT-PGx-K · 신규 IND 불요)
 - [x] X6 환자 본인 사례 retroactive — PCI 후속 4-axis 적용 (mPTP retroactive · CYP2C19 검사 · ISR risk · Lp(a) 검사) → `CARDIO+/X6_self_case.md` (즉시=CYP2C19 PCR C5946 + Lp(a) 단일 채혈 · disclaimer)

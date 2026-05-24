@@ -2,6 +2,26 @@
 
 Append-only history sister of `CARDIO+.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T05:50:00Z — 심화 골화: X3 🟢 + X2 🔵 push 실측 완료 → CARDIO+ 10/10
+
+- [x] **X3 cross-domain 🟢 push** → `CARDIO+/X3_green_push.md` (123줄 · commit `c7edd23`)
+  - DAPTPGX `v3/v5/v6_recompute.hexa` mini 재실행 (verbatim stdout 수집)
+  - 🟢 43 집계 (X8 정합): NOREFLOW 12 · DAPTPGX HW/Markov/PM×HBR · LPA 28 · ISR 0
+  - 신규 실측: PM×HBR cell V3 3.80 → V5/V6 **6.84 🟢 reconcile** (M4 cited 7-8 일치)
+  - 신규 실측: ICER sign V3 -3221 → V5 -503 → V6 **-1205 (미반전) → 🟠 DEFERRED 유지** (ΔQALY 음수 = S4 출혈회피 QALY 과소반영 · d6 정직, 🔴 아님) · v7 path는 DAPTPGX 세션 lane
+- [x] **X2 cross-domain 🔵 push** → `CARDIO+/X2_blue_push.md` (107줄 · commit `ebdeda1`)
+  - mini 실측 천장: `sigma_k(6)=12` 🔵 (number-theory) · `ivw(3)` 🟠 (no path) · `hill` 🟢 (libm)
+  - 결론(d6): bio claim auto-🔵 불가 → 천장 🟢 · 현재 🔵=1 (LPA C30) 억지 inflation 0
+  - **X2 blocker 돌파(d2)**: `hexa verify --expr` ubu-2 segfault → **mini(local) 우회 입증** (🔵까지 도달)
+  - 🔵 escalation = 이제 "호스트 문제" 아닌 "atlas F-namespace 등록 PR" 문제로 환원 (PR #658/#665/#711 merge 후 🔵 1→~8-15, mini --expr 등록 가능)
+- [x] commit 격리 (d9): X3 `c7edd23` · X2 `ebdeda1` 각 단일 add+commit -o · staged-leak 0
+- [x] **인프라 사실 확정**: hexa verify 호스트 = mini ✅ 단일 working · ubu-1 `hexa.real` 누락 · ubu-2 segfault (둘 다 hexa-lang inbox handoff 후보 d8)
+- [ ] ⏳ 진행 중: DOCTOR H1-H10 채우기 (background agent) — 완료 시 격리 commit + DOCTOR.md flip
+
+🔑 심화 성과: CARDIO+ **10/10 완주** (X1-X10 전부 ✅). blocker였던 X2/X3 를 mini 실측으로 골화 — sub-domain V-파일 미수정(다른 세션 lane 존중) · 모든 verdict mini stdout/sub-V verbatim · 억지 등급 0 (d6).
+🔑 X2 핵심: segfault blocker 가 호스트 우회로 해소되어, 🔵 천장 문제가 atlas 등록 PR(hexa-lang lane)로 깔끔히 환원됨.
+🔑 X3 핵심 신규 발견: DAPTPGX ICER 의 ΔQALY 음수 = 단순 모델의 출혈회피 QALY 과소반영 (Trial-B 임상 적용성은 불변, economic case만 pending).
+
 ## 2026-05-25T05:10:00Z — /cycle 라운드 3: X7 DOCTOR feed 완료 + 인프라 돌파 발견
 
 - [x] **X7 교수님 handoff 1-page** → `CARDIO+/X7_doctor_feed.md` (148줄 · commit `b412cfd`)
