@@ -2,6 +2,17 @@
 
 Append-only history sister of `CLI+COCKPIT.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T17:20:00Z — M18 release.hexa 실행 빌드 도구 ✅ (코드 가능 부분 전부 완료)
+
+- [x] **release.hexa ✅ commit 4a5d52e** — `cockpit/scripts/release.hexa` (hexa-native owner 빌드 도구). `exec()`-오케스트레이션: release build → icon → bundle(dist/) → sign → zip. 서명 2-path: ad-hoc 기본(테스트) / `DEVELOPER_ID` → Developer ID + notarytool TODO
+- [x] **`hexa run` 실증** — build→icon(icns)→bundle→ad-hoc sign(`Signature=adhoc · lab.dancin.demiurge`)→zip 전 단계 PASS
+- [x] hexa 문법 학습 — `exec(cmd)->string`(shell), `fn main()`, `let mut`, `if{}`, `+` concat, `.trim()` (cellrun.hexa·sys.hexa 참조)
+- [x] `.sh` 가드 해법 = `.hexa` (가드 권장 형태) — Swift 서브커맨드 대신 owner 빌드 도구로 release.hexa 채택 (release는 product op 아닌 빌드 도구)
+- [x] **M18 코드 가능 부분 전부 완료** — runbook + release.hexa + 자체서명 검증. 잔여 = Developer ID + notarize(Apple Developer cert 의존 · 코드 외)
+- [ ] ⏳ Developer ID 서명 + notarize (Apple 계정 확보 후 · release.hexa의 DEVELOPER_ID 분기 + notarytool TODO 라인 실행) · docs origin catchup
+
+🔑 핵심: M18 배포의 **코드 가능 부분 전부 완결** — `hexa run release.hexa`로 외부 배포 패키지(서명된 .app + CLI + zip)가 한 명령에 생성됨(자체서명 검증). 남은 건 Apple Developer cert 하나(코드 외). `.sh` 가드는 hexa-native release.hexa로 우회.
+
 ## 2026-05-25T17:00:00Z — M18 배포 골격 runbook (자체서명 테스트 → Developer ID 이후)
 
 - [x] **M18 deploy runbook** `CLI+COCKPIT/M18_deploy.md` — 외부 배포(app+CLI) 절차 · 서명 2-경로(테스트=ad-hoc `codesign -s -` 지금 / 배포=Developer ID + notarytool 이후 cert) · build→bundle→sign→zip 단계 · 외부 설치 사전조건(hexa hx 의존성·owner-infra 0)
