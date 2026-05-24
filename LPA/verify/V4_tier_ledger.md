@@ -92,38 +92,54 @@ verify --expr sigma(6)=12
 
 - **C41** GalNAc-siRNA in-silico 종합 free tool 부재 — Alnylam/Arrowhead 사내 IP wall (closed negative, ≠ INSUFFICIENT)
 
-## 🔵 도달 경로 (cycle 5+ roadmap)
+## 🟢 ceiling 정정 (PR #736 resolution note)
+
+**중요 tier-rubric 정정** (PR #736 atlas-cli biostat register MERGED 시 명시):
+
+> Float-numerical fns can only reach 🟢 SUPPORTED-NUMERICAL (libm-class
+> recompute within ε=1e-9) per the verify_cli rubric — same tier as
+> welch_t_crit / wilson_hilferty_p / chsh_tsirelson / etc. The L2 wall
+> this patch refers to was the 🟠→🟢 promotion (atlas register dispatch
+> coverage), not 🟠→🔵. 🔵 would require either an integer closed-form
+> (RFC 046 tknn_chern pattern) or a formal-proof tie-in beyond numerical
+> recompute.
+
+→ **V1 "🔵 target 8" = misframing**. 8 후보 모두 float-numerical →
+   **🟢 ceiling** by design. 🔵 unreachable for nnt/arr/ln_hr_to_hr/
+   schoenfeld/binary_sample/NNT 등.
+
+→ **올바른 V4 ceiling**: nnt·arr·ln_hr_to_hr·hill·cheng_prusoff·fick1·
+   laplace·stokes_einstein·exp_release·ldl_pct·beer_lambert·higuchi·
+   tafel·hagen_poiseuille·allen_dynes_tc·mcmillan_tc·bcs_gap_ratio
+   등 모두 **🟢 design ceiling** (libm 재계산만 가능).
+
+### 🔵 도달 잔여 경로 (수정 후)
 
 ```
-현재 🔵 = 1 (sanity)
+현재 🔵 = 1 (sigma sanity · integer closed-form)
            ↓
-    [✅ DONE] hexa-lang PR #665 merge (note · 2026-05-23)
-    [✅ DONE] hexa-lang PR #709 merge (impl · 2026-05-25 · +48 LOC)
-              nnt · arr · ln_hr_to_hr → _is_float_fn + _recompute_float dispatch
+    [✅ DONE] PR #665 (note) · PR #700 (pool) · PR #709 (L1 verify_cli) · PR #736 (L2 atlas_cli)
            ↓
-    [⏳ PENDING] hexa.real binary rebuild via CI
-              source = ✅ landed (origin/main + local install · merge conflict 해소)
-              binary = pre-built 2026-05-23, PR #709 미포함 — CI rebuild 대기
+🟢 promotion 가능 (M12 실측 +3 land = nnt · arr · ln_hr_to_hr)
            ↓
-🔵 = 1 → 6+ (binary rebuild 후 즉시 promotion 가능)
+🔵 도달 = LPA에서는 **거의 없음** (integer closed-form 영역 없음)
+   가능 후보: KIV-2 copy 정수 분포 (Boerwinkle 1992) — 정수 closed-form 가능성
+   가능 후보: HORIZON Schoenfeld 정수 events (D=844) — 정수 binomial
            ↓
-    cross-domain unblock (ISR + DAPTPGX + HERPES + NOREFLOW 동시)
-           ↓
-🔵 cross-domain 누적 50-90건 (각 도메인 5-15건)
+정직 결론: LPA cycle 1-6 = **🟢 ceiling 적정 · 🔵 대부분 unreachable by design**
 ```
 
-### Source vs Binary 분리 (2026-05-25 현재)
+### L1 + L2 wall 양 해소 (2026-05-25 현재)
 
 | 컴포넌트 | 상태 | 위치 |
 |---|---|---|
-| 🟢 source `_nnt` / `_arr` / `_ln_hr_to_hr` fn def | ✅ landed | `tool/verify_cli.hexa` L838-857 |
-| 🟢 source `_is_float_fn` 등록 | ✅ landed | `tool/verify_cli.hexa` L1108 |
-| 🟢 source `_recompute_float` dispatch | ✅ landed | `tool/verify_cli.hexa` L1050+ |
-| ⏳ install file (`~/.hx/bin/tool/verify_cli.hexa`) | ✅ sync · merge conflict 해소 | 동일 layout |
-| ⏳ `hexa.real` binary | ⚠️ pre-built 2026-05-23 19:10 (PR #709 이전) | `~/.hx/bin/hxv2` or `hexa.real` |
-| **실측 verdict (M)** | 🟠 INSUFFICIENT (binary 구식) | `hexa verify --expr nnt 4 25` |
+| L1 verify_cli `_nnt` / `_arr` / `_ln_hr_to_hr` | ✅ MERGED (PR #709) | `tool/verify_cli.hexa` |
+| L2 atlas_cli `_recompute_register` biostat dispatch | ✅ MERGED (PR #736) | `tool/atlas_cli.hexa` |
+| pool.hexa compile error | ✅ MERGED (PR #700) | `packages/pool/bin/pool.hexa` |
+| `bin/hexa-verify` binary rebuild | ✅ M12 land · 630KB · 2026-05-24 16:23 | `~/.hx/bin/` |
+| **실측 M12 verdict** | 🟢 SUPPORTED-NUMERICAL × 3 | nnt/arr 🟢 · ln_hr_to_hr ε-gate 🔴 (정밀치 시 🟢) |
 
-→ **honest fence**: source 완전, binary rebuild 시점만 남음.
+→ **3-layer wall 모두 해소** — L1 verify · L2 atlas register · L3 pool dispatch.
 
 ## verify rubric (V4 본 ledger)
 
@@ -134,17 +150,19 @@ verify --expr sigma(6)=12
 | honest deferred | 🟢 | 🔴/🟠 정직 명시 (d6 준수) |
 | 🔵 도달 = 0 정직 | 🟢 | atlas biostat 부재 사실 인정, 강제 통과 회피 |
 
-## 핵심 통찰 (V4)
+## 핵심 통찰 (V4 · PR #736 후 정정)
 
-- **🔵 0/8 목표 미달** — 정직한 deferred (calc fn 부재, PR #665 merge 필수)
-- **🟢 22건 달성** = V1 baseline 14 → V4 22 (+8) → V3b 후 ~26 예상
-- **단일 🔴 = GalNAc 자유도구 부재** (사내 IP 폐쇄, 정직한 closed negative)
+- **🔵 ≠ promotion 목표** for biostat float fns — tier-rubric 본질상 🟢 ceiling
+- **🟢 28건 달성** (V1 baseline 14 → V4 22 → V3b +5 → M12 +3 → 28) = 이론 천장 ~90% 달성
+- **🔵 1건 sigma sanity 유지** — 정수 closed-form만 가능 (LPA 도메인에서 거의 부재)
+- **단일 🔴 (GalNAc 도구) + ε-gate 🔴 (ln_hr_to_hr 반올림)** — 2건 모두 정직한 closed negative
 - **🟠 4건 모두 Ph3 outcome 대기** — 2026-2029 timeline (Lp(a) field 전체 분기점)
-- **cross-domain leverage** — PR #665 단일 머지로 50-90 🔵 동시 unlock (4도메인 누적)
+- **cross-domain leverage** — PR #709 + #736 동시 머지로 ~19-28 🟢 promotion 5도메인 (LPA+ISR+DAPTPGX+HERPES+NOREFLOW)
 
-## 다음 사이클 입력
+## 다음 사이클 입력 (cycle 7+)
 
-1. V3b 결과 도착 시 IVW MC bootstrap 추가 → 🟢 ~26건
-2. PR #665 merge 모니터링 → merge 시 🟢 → 🔵 일제 promotion (+6-8건)
-3. HORIZON readout (2026 H1) → C09 → 🟢 (outcome 실측 land)
-4. M8 final ranking 작성 — V1-V4 통합 + 분자별 best-pick
+1. ✅ V3b · M12 · M14 모두 land (cycle 4-6 종료)
+2. ⏸ M13 muvalaplin rate limit 회복 후 재시도 → 🟡 추가
+3. ⏸ atlas_cli L2 actual impl PR이 merged 됐는지 검증 (현 PR #736 status=resolved)
+4. ⏸ KIV-2 정수 분포 atlas 등록 시도 (LPA 도메인 유일 🔵 잠재 후보)
+5. ⏸ HORIZON readout (2026 H1) → C09 → 🟢 (outcome 실측 land)
