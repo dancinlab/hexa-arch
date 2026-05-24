@@ -72,6 +72,10 @@ func usage() {
                                        hexa stdlib verify kernel (5-tier,
                                        M16) — verdict printed VERBATIM
                                        (@D g5; hexa = hx dependency)
+      demiurge atlas <lookup|stats|hash|dump> [args]
+                                       read the hexa atlas SSOT (M16,
+                                       read-only). Write verbs = owner
+                                       op (사장실 · M20).
       demiurge gate-summary            gate + absorbed totals
       demiurge operate [list|audit]    operation manifest (M14) — list
                                        all ops + reachability, or audit
@@ -412,6 +416,27 @@ func verifyHexa(_ passthrough: [String]) -> Int32 {
     return r.ran ? r.exitCode : 127
 }
 
+/// `atlas <verb> [args]` — read the hexa atlas SSOT (CLI+COCKPIT M16,
+/// atlas-lookup op). READ verbs (lookup/stats/hash/dump) forward to
+/// `hexa atlas` VERBATIM via HexaBridge. WRITE verbs (register/
+/// append-witness/pr) are the OWNER atlas-register op (사장실 · M20) —
+/// refused here so external users get read-only atlas (M0_operate.md §1).
+func atlasCmd(_ args: [String]) -> Int32 {
+    let readVerbs: Set<String> = ["lookup", "stats", "hash", "dump"]
+    let verb = args.first ?? "stats"
+    guard readVerbs.contains(verb) else {
+        FileHandle.standardError.write(Data(
+            ("atlas: '\(verb)' is not a read verb. External read = "
+             + "lookup / stats / hash / dump (M16). Write "
+             + "(register/append-witness/pr) = owner op 사장실 · M20 "
+             + "(아직 미노출).\n").utf8))
+        return 2
+    }
+    let r = HexaBridge.run(["atlas"] + args)
+    print(r.text, terminator: r.text.hasSuffix("\n") ? "" : "\n")
+    return r.ran ? r.exitCode : 127
+}
+
 /// `verify <path|id>` — provenance completeness + claim/gate
 /// consistency (rfc_002 §4 + rfc_011 §4.2). exit 0 = consistent.
 func verifyRecord(_ arg: String) -> Int32 {
@@ -590,6 +615,8 @@ case "verify":
     default:
         exitCode = verifyRecord(args[2])
     }
+case "atlas":
+    exitCode = atlasCmd(Array(args.dropFirst(2)))
 case "emit-component":
     exitCode = emitComponent()
 case "export-component":
