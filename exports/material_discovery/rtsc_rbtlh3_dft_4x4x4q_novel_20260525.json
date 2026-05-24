@@ -1,0 +1,62 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "rbtlh3_dft_electron_phonon_4x4x4q_n5funnel_candidate",
+  "stamp": "20260525T010000Z",
+  "producer": "demiurge RTSC N5 funnel — RbTlH3 DFT el-ph (QE 7.5 conda) on pool:ubu-1 (parallel to vast SrAuH3, g55). parse_elph_gen.py BZ-weighted.",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "provisional": false,
+  "novelty": "N5 funnel ambient-candidate #2 (RbTlH3 perovskite) — measured-Tc-zero",
+  "purpose": "N5 funnel (§9.10) ambient-stable hydride 탐색 후보. M8 게이트(<50GPa AND stable AND Tc>200K) 평가 대상.",
+  "system": "RbTlH3 cubic Pm-3m perovskite (1 Rb + 1 Tl + 3 H = 5 atoms), ibrav=1, celldm=8.504 bohr. Rb(0.5,0.5,0.5) / Tl(0,0,0) / H at 3d sites. PBE rrkjus PAW.",
+  "method": {
+    "code": "Quantum ESPRESSO 7.5 (conda, miniforge) pw.x + ph.x electron_phonon='simple'",
+    "pseudopotentials": "Rb.pbe-spn-rrkjus_psl.1.0.0.UPF, Tl.pbe-dn-rrkjus_psl.1.0.0.UPF, H.pbe-rrkjus_psl.1.0.0.UPF",
+    "scf": "ecutwfc=80 Ry, ecutrho=640 Ry, 12x12x12 k-grid, MP smearing",
+    "phonon": "ph.x DFPT 4x4x4 q (10 irreducible, weights [5,10,10,15,15,11,10,15,11,6]=108), electron_phonon='simple'",
+    "host": "pool:ubu-1 (parallel offload from ubu-2 chain, g55 wall-time)",
+    "qblocks_parsed": "10/10"
+  },
+  "results_by_broadening": [
+    { "broad_Ry": 0.015, "lambda_BZ": 2.818, "omega_log_K": 210.6, "Tc_AD_mu010_K": 36.8, "Tc_AD_mu013_K": 35.0 },
+    { "broad_Ry": 0.020, "lambda_BZ": 2.498, "omega_log_K": 207.3, "Tc_AD_mu010_K": 34.1, "Tc_AD_mu013_K": 32.2 },
+    { "broad_Ry": 0.025, "lambda_BZ": 2.404, "omega_log_K": 203.9, "Tc_AD_mu010_K": 32.9, "Tc_AD_mu013_K": 31.0 },
+    { "broad_Ry": 0.030, "lambda_BZ": 2.392, "omega_log_K": 201.1, "Tc_AD_mu010_K": 32.3, "Tc_AD_mu013_K": 30.5 }
+  ],
+  "stability": {
+    "verdict": "DYNAMICALLY UNSTABLE",
+    "min_phonon_freq_cm1": -644.77,
+    "n_imaginary_modes": 10,
+    "note": "10 imaginary modes (worst -644.8 cm-1) across the 4x4x4 q-grid → structure dynamically unstable at this geometry. Tc values are unstable-mode-drop upper-bounds (convention), structural reliability low — same caveat class as h3o/h3si (RTSC.md §10.1)."
+  },
+  "Tc_verify": {
+    "fn": "allen_dynes_tc(2.818, 210.6, 0.10)",
+    "value_K": 36.8325521127,
+    "tier": "🟢 SUPPORTED-NUMERICAL",
+    "verbatim": "verify --expr allen_dynes_tc(2.818,210.6,0.1)=36.8326 · calc=36.8326 ≈ expected (|Δ|=1.39977e-11 ≤ ε=1e-9) · 🟢 SUPPORTED-NUMERICAL (hexa-native libm-class, TECS-L n6-rep Tier2)"
+  },
+  "m8_verdict": {
+    "gate": "<50 GPa AND stable AND Tc>200K",
+    "result": "FAIL (2 axes)",
+    "Tc_axis": "FAIL — Tc(mu0.10)=32-37K ≪ 200K target. Strong coupling (lambda=2.39-2.82) but heavy Tl → soft phonons (omega_log~205K) caps Tc (Tc∝omega_log).",
+    "stability_axis": "FAIL — dynamically unstable (10 imaginary modes, min -645 cm-1).",
+    "pressure_axis": "not computed (EOS not run) — moot given Tc+stability fails.",
+    "framing": "RbTlH3 = N5 funnel negative result (per @D d2: scientific finding, not impossibility). Heavy-cation perovskite hydride: high lambda undercut by low omega_log + instability. Narrows ambient-superhydride search away from heavy-cation perovskites."
+  },
+  "r4_invariant": "absorbed=false · gate_type=simulation-only-prediction · domain=material. R4 Pattern 1+2 preserved. M8 FAIL framed as funnel finding (d2), not impossibility.",
+  "provenance": {
+    "dft_run_host": "pool:ubu-1 (conda QE 7.5 miniforge)",
+    "raw": "ubu-1:~/n5funnel/rbtlh3/ (ph.out, scf.out) + /home/aiden/rtsc_rbtlh3/ (*.dyn*, *.elph.*)",
+    "parser": "parse_elph_gen.py (generic N-q BZ-weighted, argv[1]=ph.out)",
+    "capture_date": "2026-05-25",
+    "n5_parallel": "launched on freed ubu-1 after RbTlH3... (self), parallel to SrAuH3(vast)+chain — g55"
+  },
+  "citations": [
+    "Allen & Dynes 1975 PRB 12 905",
+    "Quantum ESPRESSO 7.5",
+    "RTSC.md §9.10 (N5 funnel) · §10.1 (imaginary-mode caveat)",
+    "RTSC/verify/V3_numerical_recompute.md (Allen-Dynes Tc hexa verify pattern)"
+  ]
+}
