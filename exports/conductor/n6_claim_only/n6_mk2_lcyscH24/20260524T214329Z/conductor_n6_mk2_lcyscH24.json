@@ -1,0 +1,77 @@
+{
+  "schema_version": "conductor-handoff/0.1.0",
+  "domain": "conductor",
+  "verb": "ingest",
+  "kind": "n6_claim_only_rtsc_named_compound",
+  "stamp": "20260524T214329Z",
+  "candidate_id": "n6_mk2_lcyscH24",
+  "producer": "demiurge RTSC M471 — hexa-rtsc n=6 RT-SC family slot named-compound import. Carries the Mk.II Pareto-rank-1 claim: (La,Ce,Y,Sc)H₂₄ at ambient pressure, Tc=300 K (algebraic / lattice-derived; not measured). The Mk.II compound is the only named DSE Pareto rank-1 candidate in the hexa-rtsc n=6 14-paper integration (the 5 other Pareto cells are abstract theory/physics axes, not compounds; the 5 Mk.I high-pressure hydrides H₃S/LaH₁₀/(Y,Ca)H₆/CaH₆/ThH₁₀ are NOT this slot — they are measured high-pressure SCs, not claim-only RT-SC at ambient).",
+  "stub": true,
+  "stub_note": "Schema record for an ALGEBRAIC NAMED-COMPOUND claim — Mk.II (La,Ce,Y,Sc)H₂₄ four-component hydride at ambient pressure with Tc=300 K. The composition is fixed by hexa-rtsc DSE Pareto rank 1 on the σ·τ=48 lattice; no synthesis route, no DFT enthalpy, no DFT phonon λ, no measurement, no replication. Pure design proposal — fits the §8.7 Tier-1 envelope (simulation-prediction territory) but the prediction itself is ALGEBRAIC, not Eliashberg/DFT.",
+  "vendor": null,
+  "source": "hexa-rtsc-derived (DSE Pareto rank 1 on n=6 lattice)",
+  "source_note": "`hexa-rtsc-derived` here describes the *lineage* (DSE on n=6 lattice). gate_type=empirically-unproven is the SCHEMA gate: no measurement, no synthesis, no DFT corpus entry exists. This is the gate distinction vs PR #90's gate_type=hexa-rtsc-derived (which is for SIMULATION-derived REBCO numbers grounded in BCS/closed-form lineage).",
+  "spec": {
+    "family": "rtsc_hypothetical",
+    "family_enum_note": "ConductorMaterial = cu | nbti | nb3sn | rebco | bi2212 | rtsc_hypothetical. This Mk.II named compound = rtsc_hypothetical.",
+    "compound": "(La,Ce,Y,Sc)H24",
+    "compound_pretty": "(La,Ce,Y,Sc)H₂₄",
+    "compound_components": ["La", "Ce", "Y", "Sc", "H"],
+    "compound_stoichiometry_note": "4-component cation + H. Total species sopfr(6)=5 (La+Ce+Y+Sc = 4 cations + H = 5 species), aligned with the n=6 sopfr identity. H stoichiometry 24 = J₂(6) = 2·σ(6).",
+    "tc_k": 300.0,
+    "tc_k_units": "kelvin",
+    "tc_k_note": "CLAIM ONLY — algebraic target (n=6 master formula Tc = σ·J₂ + 6·(sopfr+n)·10 type identity ≈ 300 K). NOT a DFT prediction. NOT a measurement. The Mk.II compound has never been synthesized; this Tc is a DESIGN GOAL, not a result.",
+    "hc2_t_at_4k": 48.0,
+    "hc2_t_at_4k_units": "tesla",
+    "hc2_t_at_4k_note": "CLAIM ONLY — inherits the master Hc2 = σ·τ = 48 T algebraic target. The Mk.II compound is asserted (without measurement) to realise this Hc2.",
+    "hc2_t_at_77k": null,
+    "anisotropy_gamma": null,
+    "pressure_gpa": 0.0,
+    "pressure_gpa_note": "CLAIM ONLY — ambient pressure (0 GPa). Mk.II's claim-only differentiator vs Mk.I hydrides (H₃S, LaH₁₀, CaH₆, ThH₁₀ which all require 100-200 GPa). The ambient-pressure RT-SC claim is the centre of the §8.9 5-gate matrix and the §8.8 invariant.",
+    "jc_b_t_theta": {
+      "stub": true,
+      "description": "No Jc(B,T,θ) for an un-synthesized claim-only compound. There is no sample.",
+      "value": { "jc": null, "jc_units": "A/m^2" },
+      "jc_data_table_ref_record_id": null
+    },
+    "dft_corpus_status": {
+      "mp_cache": "absent",
+      "oqmd": "absent",
+      "jarvis_optimade": "absent",
+      "note": "Per RTSC.md line 797 JARVIS adapter rerun: claim-only-RT-SC entries are honestly `insufficient-sources` (n=0; hypothetical compositions absent from all DFT corpora). The Mk.II (La,Ce,Y,Sc)H₂₄ composition would also fall in this n=0 bucket if probed — it is a designed composition, not a published DFT structure."
+    }
+  },
+  "provenance": {
+    "source_substrate": "hexa-rtsc",
+    "source_record_url": null,
+    "source_citation": "hexa-rtsc/papers/n6-ultimate-superconductor-integrated-paper.md §4 (DSE Pareto rank 1 — `Mk.II (La,Ce,Y,Sc)H₂₄ | σ·τ relax | 100% | optimal`, table line 397) + §6 (Mk.II 2030-2035 stage, lines 552-555: 4-component hydride sopfr=5 wins DSE Pareto rank 1, Tc=300 K at ambient pressure CLAIM) + line 571 `(La,Ce,Y,Sc)H₂₄ (Pareto rank 1, Mk.II seed) — room-temperature/ambient pressure pathway candidate` + line 1637 honesty section `Mk.II (La,Ce,Y,Sc)H₂₄ is at the DSE Pareto rank 1 candidate stage, theoretical projection until demonstration`.",
+    "derive_chain": "hexa-rtsc n=6 lattice -> 14-paper DSE 2000 combinations -> compat filter 480 (=J₂×20) -> Pareto top-K on σ·τ=48 axis -> Pareto rank 1 = (La,Ce,Y,Sc)H₂₄ -> this conductor claim-only record. Chain is ALGEBRAIC selection, NOT a DFT enthalpy/phonon calculation."
+  },
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "absorbed_invariant_note": "absorbed=false PERMANENT per RTSC.md §8.8 + §8.9. §8.9 row for hexa-rtsc n=6 candidates = `(a) ✗ no recipe — never`. Mk.II (La,Ce,Y,Sc)H₂₄ has zero recipe entries, zero replication, zero measurement triad (Tc / R=0 / Meissner). Flipping absorbed=true would require: (1) synthesis route with replicated_by_independent_labs ≥ 3, (2) Tc measurement at ambient pressure, (3) R=0 verification, (4) Meissner effect verification, (5) ≥3 independent lab replication, (6) long-term stability. None exist.",
+  "gate_type": "empirically-unproven",
+  "gate_type_enum_note": "gate_type=empirically-unproven (NOT hexa-rtsc-derived). The gate distinction is the WHOLE POINT of M471 vs PR #90: this slot is ALGEBRAIC CLAIM (named compound at ambient + Tc=300 K with no measurement and no DFT), not simulation-derived numerics. Even though the lineage is hexa-rtsc, the gate semantics differ — sim-derived REBCO numbers (PR #90) are bounded by BCS/closed-form physics and reproducible from inputs; the Mk.II claim is bounded by an ALGEBRAIC TARGET on the n=6 lattice with no physical reproduction path.",
+  "provisional": true,
+  "scope_caveats": [
+    "claim-only — algebraic / lattice-derived (n=6); no experimental measurement; never `absorbed=true` until measured (RTSC.md §8.8 invariant + §8.9 5-gate matrix).",
+    "Named compound (La,Ce,Y,Sc)H₂₄ is a DSE Pareto rank 1 selection on the n=6 σ·τ=48 lattice, NOT a synthesized material. Per hexa-rtsc paper line 1637, `theoretical projection until demonstration`.",
+    "Tc=300 K AND ambient pressure (0 GPa) — these two are the *defining* RT-SC criteria of RTSC.md §8.9 (a). The compound has neither realised. The claim sits at the very top of the §8.9 5-gate FAIL tree.",
+    "Distinct from Mk.I high-pressure hydrides (H₃S Tc=203 K @ 200 GPa, LaH₁₀ Tc=250 K @ 170 GPa, CaH₆ Tc=215 K @ 172 GPa, ThH₁₀ Tc=161 K @ 100 GPa) — those are MEASURED high-pressure SCs and do NOT belong in the claim-only RT-SC slot (RTSC.md §8.2 family matrix puts them in `Hydride` row separately).",
+    "DFT corpus status: ABSENT from mp_cache + oqmd + jarvis-optimade (would be honestly tagged `insufficient-sources` n=0 by RTSC.md §9.10 N5 candidate funnel; the *prediction* itself is algebraic, not DFT).",
+    "demiurge MUST NOT use this record as conductor input to a real device producer. RTSC.md §8.2 last line explicitly bans claim-only RT-SC and hexa-rtsc n=6 candidates from device producer ingest.",
+    "If a future synthesis lands AND ≥3 independent lab Tc=300 K @ ambient pressure measurements arrive, a NEW record (different candidate_id) with gate_type=measurement-replicated supersedes this slot — this slot itself remains the algebraic anchor."
+  ],
+  "r4_invariant": "absorbed=false · provisional=true · gate_type=empirically-unproven · domain=conductor · family=rtsc_hypothetical. R4 preserved — Mk.II is a DESIGN PROPOSAL on the n=6 lattice, not a measurement, not a DFT prediction, not a device input.",
+  "citations": [
+    "RTSC.md §8.2 (8-family matrix — `hexa-rtsc n=6 candidate` row, claim-only-RT-SC sibling)",
+    "RTSC.md §8.5 / §8.6 (handoff schema + ConductorMaterial enum + gate_type=empirically-unproven semantics)",
+    "RTSC.md §8.7 (4-tier expansion — claim-only families reach Tier 1-3 max)",
+    "RTSC.md §8.8 (g3 honest stance — RTSC 가설은 never absorbed=true)",
+    "RTSC.md §8.9 (5-gate matrix — hexa-rtsc n=6 row `(a) ✗ no recipe — never`)",
+    "RTSC.md line 797 (JARVIS rerun — claim-only-RT-SC honestly `insufficient-sources` n=0)",
+    "hexa-rtsc/papers/n6-ultimate-superconductor-integrated-paper.md §4 (DSE Pareto rank 1 = Mk.II (La,Ce,Y,Sc)H₂₄), §6 (Mk.II 2030-2035 stage), line 571 (Pareto rank 1 named compound), line 1637 (honesty: `theoretical projection until demonstration`)",
+    "Sibling claim-only records: exports/conductor/n6_claim_only/n6_master_sigma_tau/ (master algebraic spec, no compound), exports/conductor/n6_claim_only/n6_y_ca_h6_predicted/ (predicted but never measured (Y,Ca)H₆)",
+    "Sibling derived-record: exports/conductor/hts_rebco/20260525T000000Z/conductor_rebco_hts_baseline.json (PR #90, gate_type=hexa-rtsc-DERIVED — sim-derived REBCO sibling; this record's gate_type=empirically-unproven for the CLAIM-ONLY ambient RT-SC line)"
+  ]
+}
