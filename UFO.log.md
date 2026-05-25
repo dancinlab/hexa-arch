@@ -35,6 +35,32 @@ deferred:
 - [ ] CERN↔ANTIMATTER candidate edge (c1) 검증 — 상대론 운동학 + 감속 사다리 공유 primitive 실 reuse 확인 → 검증 시 NEXUS.tape `@X c1` → `@X e<n>` 승격
 - [ ] triple-SSOT 48T 일치 lattice 검증 실행 — `UFO/verify/lattice_check.hexa` σ·τ=48 정수 항등식 🟢 (Phase D LATTICE_POLICY 흡수와 연동)
 - [ ] NEXUS.tape 신규 reuse edge 등록 — FUSION→UFO Stage-2 · ANTIMATTER→UFO Stage-3 edge 를 정식 `@X e<n>` 로 (현재 본 manifest view 에만 존재 · NEXUS SSOT 미반영)
+## 2026-05-26T02:00:00Z — Phase C verb-6 verify — 디지털트윈 통합 verify ledger LANDED
+
+Phase C demiurge 7-verb pipeline 여섯 번째 슬롯 (verb-6 verify). UFO 통합 비행체의 **디지털트윈 통합 검증 ledger** — Stage-1~3 의 verify 🟢 (이미 LANDED) + verb-4 analyze 의 4-layer sim plan + 안정성 falsifier 를 통합해 "비행체가 비-wet-lab 으로 검증된 정도"를 정직 집계. 무거운 CFD/EM/FEA 본해는 pool/cloud 위임 (@D d7 · verb-4 deferred) — verb-6 은 기존 🟢 verdict 통합 (verbatim 재인용 @D g5) + 디지털트윈 통합 수렴 기준 + 안정성 falsifier 통과 여부를 ledger 로. 본해 미수렴 layer 는 🟠 정직 표기 (허위 🟢 금지 @D d6). 문서 한국어 · 코드 영문 · @D d1/d3/d4/d5/d9/d10 준수.
+
+- [x] `UFO/verify/integrated-vehicle-verify.md` 신규 — §0 TL;DR (4-layer×tier 매트릭스 ASCII + 통합 항목 표) · §1 Stage-1~3 numerical 9건 🟢 verbatim 재인용 (ioffe_loop_bz×3·triple_product×3·pair_threshold_total×1·rel_kinetic_from_p×2 · atlas `663698a0…ce7fb`) · §2 4-layer 디지털트윈 수렴 (CFD·EM 3D·응력·열·⟲ fixed-point 충족 여부) · §3 안정성 falsifier (Penning invariance·Earnshaw active·stage 전환·6-DOF PID) · §4 통합 verdict + absorbed 미충족 게이트 · §5 handoff 인계 + cross-link + deferred · §6 governance
+- [x] `UFO/verify/integrated-vehicle-verify.tape` — `@V`1.0 · `@I id001/id002 ufo/verify` (🛸 · alias `verify`) · `@C` tier 분포 + Stage-1~3 + 4-layer + 안정성 + verdict + cross-link 9건 (id010~018) · `@D v1~v4` governance (do/dont) · 17-type 알파벳만 (@V/@I/@C/@D)
+- [x] §1 Stage-1~3 numerical 9건 🟢 통합 — Stage-1 hover EM B-field 3건 (`ioffe_loop_bz` |Δ|≤5.67e-10) · Stage-2 cruise MHD thrust 3건 (`triple_product` |Δ|=0.0 · 30배 마진) · Stage-3 orbital 상대론 회계 3건 (`pair_threshold_total`·`rel_kinetic_from_p` |Δ|=0.0) — 전부 `hexa verify --expr` verbatim 재인용 (@D g5 LLM self-judge 없음) + `@F verified-*-num` atlas fold
+- [x] §2 4-layer 디지털트윈 수렴 — ① CFD C_d·L/D · ② EM 6-coil 3D B-map (단일코일 🟢 anchor + 상호작용 FEM) · ③ 응력 von Mises LC-1~5 · ④ 열 cryo balance · ⟲ 4-layer fixed-point (max Δ_rel<1e-3) — **무거운 본해는 pool/cloud micro-exp 위임 (@D d7 · verb-4 §6 deferred) → 🟠 INSUFFICIENT/DEFERRED 정직 표기** (허위 🟢 금지)
+- [x] §3 안정성 falsifier — Penning 3-freq invariance |Δ|=0.0 (Stage-3 trap anchor) 🟢 PASS · Earnshaw active feedback 🟡 citation · stage 전환 (1→2→3) transition graph 🟡 · 6-DOF PID gain/phase margin 🟠 (⟲ 수렴 design point 위임) — **자세제어/PID 마진은 ⟲ 본해 수렴 후 판정 (현 🟠 deferred · honest 미충족)**
+- [x] §4 통합 verdict tier 분포 = 🔵0·🟢10·🟡4·🟠5·🔴0·⚪13 — 검증된 코어 = 🟢 10 (Stage-1~3 9건 + Penning invariance anchor) · 본해 deferred = 🟠 5 (CFD·EM 3D·응력·열·⟲ PID) · Stage-4~7 = ⚪ 13 UNPROVEN (결코 🟢/🔵 금지)
+- [x] absorbed 미충족 게이트 명시 (@D d5) — 본해 5 게이트 (CFD·EM 3D·응력·열·⟲ PID) + γ-rocket I_sp target 1e9 s closure (F-ANTI-3 · 광자 천장 3.057e7 s 2-자릿수 불일치 정직 표기 @D d6) → **Phase E absorbed=true 미충족** (projection flip 금지)
+- [x] `UFO.md` line 52 verb-6 verify `[ ]` → `[x] ... LANDED PR pending` flip
+- [x] @D d6 준수 — 본해 미수렴 layer 전부 🟠 정직 표기 (허위 🟢 0건) · γ-rocket I_sp target 강제 안 함 · 안정성 PID 마진 미충족 honest
+- [x] @D d2 준수 — CFD high-Mach · 응력 LC-5 · 냉각 · 안정성 PID 미수렴은 본해 pool 위임 + breakthrough path 명시 (AMR · CFRP T1100 · dewar 통합 · monolithic 승격) — 불가능 framing 0건
+
+deferred:
+- [ ] ① CFD C_d·L/D 본해 (hover 2D ~3M cell pool · cruise 3D DES ~15-30M cell GPU pod) → 수렴 후 `@F verified-*-num` fold → 🟠→🟢
+- [ ] ② EM 6-coil 60° array 3D B-map FEM (‖ΔB‖<1e-4 T · getdp pool→cloud) → 단일코일 🟢 anchor 위 상호작용 수렴
+- [ ] ③ 응력 LC-1~5 von Mises FEA (650kg·SF=2.5 · pool linear → cloud explicit dynamic) → min SF≥2.5 수렴
+- [ ] ④ 열 cryo transient + radiator 25 m² Q̇=εσT⁴ balance (pool steady → transient)
+- [ ] ⟲ full coupling LC-2 cruise fixed-point (staggered → monolithic 승격 · GPU pod) + 6-DOF PID gain/phase margin → 안정성 🟠→🟢
+- [ ] MHD effective thrust closure (F-FUSION-3 · duct 효율 + plasma 손실 vs 이상화 1.92e5 N 상한) — ① CFD ⟷ ② EM coupled
+- [ ] γ-rocket I_sp target 1e9 s mass-flow 정의 closure (F-ANTI-3 · 목표 수 강제 금지 @D d6)
+- [ ] stdlib atom 등록 (`meissner_lev_force`·`mhd_thrust`·`gamma_rocket_isp`) → 🟡 합성식 🟢 escalate (hexa-lang 별 repo · @D d3/d9)
+- [ ] V3 🟢 push (UFO.md line 72) — Stage-1~3 + 디지털트윈 통합 sim numerical 통합 (본 verb-6 본해 수렴 후)
+- [ ] Phase E absorbed=true 판정 — §4.2 미충족 게이트 5+1 전부 PASS 후 (@D d5 · projection flip 금지)
 
 ## 2026-05-26T01:30:00Z — Phase A Stage-4~7 falsifier preregister LANDED (13 F-* · UNPROVEN)
 
