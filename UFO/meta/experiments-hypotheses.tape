@@ -115,7 +115,7 @@
 
 # ─── §D governance — monotone + honest UNPROVEN stance ───
 @D g_monotone := "falsifier status set {OPEN,CONFIRMED,DEMOTED} monotone" :: governance [required active]
-  do = "flip status OPEN->CONFIRMED or OPEN->DEMOTED only (.own own 2 contract · SSOT = stage4-7 preregister)"
+  do = "flip status OPEN->CONFIRMED or OPEN->DEMOTED only (.own own 2 · SSOT = stage4-7 preregister)"
   dont = "silently retract a falsifier · let CHANGELOG T1/T2/T3 cross-check stand in for wet-lab CONFIRMED"
 
 @D g_all_open := "all 13 falsifiers OPEN — Stage-4~7 academically UNPROVEN" :: governance [required active]

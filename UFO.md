@@ -56,8 +56,8 @@ UFO 도메인은 **선행 demiurge 자산 4개 (RTSC · FUSION · ANTIMATTER · 
 
 - [ ] LATTICE_POLICY 흡수 — lattice arithmetic + token consistency · 13-falsifier 닫기
 - [ ] LIMIT_BREAKTHROUGH 흡수 — n=6 σ·τ=48 unique → alien_index 체인 🛸6→🛸ABSOLUTE 등록
-- [ ] CROSS-DOMAIN-MEGA 흡수 — RTSC↔FUSION↔ANTIMATTER↔CERN cross-link tab
-- [ ] EXPERIMENTS + HYPOTHESES 카탈로그 흡수 — 13-falsifier 상태 set {OPEN,CONFIRMED,DEMOTED} monotone
+- [x] CROSS-DOMAIN-MEGA 흡수 — RTSC↔FUSION↔ANTIMATTER↔CERN cross-link tab **LANDED PR pending** (`UFO/meta/cross-domain-mega.md` + `.tape` · §0 TL;DR 4-도메인 cross-link ASCII · §1 흡수 source (`UFO/CROSS-DOMAIN-MEGA.md` blob `0f7137a…` · 665 LOC) · §2 cross-link tab — Stage-1 hover→RTSC (`ioffe_loop_bz`·`current_loop_offaxis`) · Stage-2 cruise→FUSION (`triple_product`) · Stage-3 orbital→ANTIMATTER (`pair_threshold_total`·`rel_kinetic_from_p`) · CERN 자장/입자 infra candidate edge + triple-SSOT B*=σ·τ=48T 일치 (산술 reuse 관찰 · 통합 물리 UNPROVEN) · §3 NEXUS.tape reuse lattice 참조 (@D d19) · §4 cross-link · 흡수=manifest only 신규 atom 0)
+- [x] EXPERIMENTS + HYPOTHESES 카탈로그 흡수 — 13-falsifier 상태 set {OPEN,CONFIRMED,DEMOTED} monotone **LANDED PR pending** (`UFO/meta/experiments-hypotheses.md` + `.tape` · §0 TL;DR 2-계층 (hardware bench vs falsifier) · §1 흡수 source (`EXPERIMENTS.md` 681 + `HYPOTHESES.md` 2818 LOC) · §2 13-falsifier 표 F-WARP/WORM/DIM/USE — **전부 OPEN** · CONFIRMED 0 · DEMOTED 0 · monotone 계약 · §3 experiments 카탈로그 (3-STACK×12 → 계층① substrate · F-USE-3/4 sim) · §4 P-H1~6 hypotheses · §5 cross-link → stage4-7-falsifier-preregister.md · 13/13 OPEN UNPROVEN 정직 유지)
 
 ### Phase E — absorbed 닫기 (@D d5 invariant)
 
