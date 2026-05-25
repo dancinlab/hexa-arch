@@ -1,0 +1,15 @@
+# verbatim excerpt from:
+# exports/material_attestation/nb_bcs_v1/lts_attestation_nb_bcs_20260521T162859Z.json
+# measured_oracle parity block (d_claim_verify mirror)
+
+model_predicted_value        = 3.52775397772409
+measured_value_consensus     = 3.51688311688312
+measured_value_combined_sigma= 0.0227921152919276
+threshold                    = 0.05
+mean_rel_err                 = 0.00309104979599341  (0.309%)
+max_rel_err                  = 0.0079297079211689  (0.793%)
+sample_count                 = 5
+oracle_source                = Multi-lab NIS tunneling + surface-impedance + textbook consensus value for Nb at T<<Tc
+
+# verdict: mean_rel_err 0.309% <= threshold 5.0% -> GATE_CLOSED_MEASURED, absorbed=true
+# tier: SUPPORTED-NUMERICAL (parameter-free prediction matches 5-lab consensus within tolerance)

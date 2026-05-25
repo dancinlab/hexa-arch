@@ -9,6 +9,79 @@
 
 ---
 
+## 논문 자동생성 거버넌스 플로우 (`d_claim_*` + `d_paper_*`)
+
+> hexa-codex `cx_paper_*` → anima `a_paper_*` 계보를 demiurge 로 이식.
+> 거버넌스 SSOT = `project.tape` 의 `d_claim_*` + `d_paper_*` directive.
+> demiurge 는 새 oracle 을 만들지 않는다 — 기존 typed record 가 verdict 다.
+
+### 한 줄 요약
+
+검증이 끝난 (record 로 닫힌) 연구 결과만 논문으로 자동 승격한다. 미검증·보류는 입구컷.
+
+### 흐름
+
+```
+연구결과              검증 (typed record)          감사 surface          게이트              논문
+RTSC / MP /     exports/material_attestation/   → .verdicts/         d_paper_gate    →  PAPERS/<slug>/
+SYNTH / DFT ──→  exports/material_verdict/         <slug>/<id>.txt     (terminal +        main.tex
+   │             (measurement_gate ·                   │              significance)     (≥10p + fig)
+   │              aggregate_verdict)                   │                                    │
+   └─ CLAIMS.tape ──────────────────────────────────  └─ §섹션 링크 ──┘  실패 → PAPERS/<slug>/ 즉시 회수
+      (claim 색인 · 루트)
+```
+
+### 게이트 기준 (`d_paper_gate`)
+
+`/paper new <slug>` 는 **모든 섹션 claim 이 terminal** 이고 **유의성**을 만족할 때만 통과한다.
+
+| terminal verdict | record 신호 | 게재 가능? |
+|------------------|-------------|-----------|
+| 🔵 SUPPORTED-FORMAL | closed-form atom 재계산 일치 | ✅ |
+| 🟢 SUPPORTED-NUMERICAL | `measurement_gate = GATE_CLOSED_MEASURED` (absorbed=true) | ✅ |
+| 🔴 CLOSED-negative | `aggregate_verdict = FALSIFIED` (deterministic disagree) | ✅ (`d_paper_negative_ok`) |
+| 🟠 INCONCLUSIVE / MISSING-INPUT / DEFERRED | `aggregate_verdict = INCONCLUSIVE-*` | ❌ |
+| 🟡 SUPPORTED-BY-CITATION | record 없이 인용만 | ❌ |
+| ⚪ 미검증 / fenced speculation | record 부재 | ❌ |
+
+**유의성** (`d_paper_significance`): 사전 등록 falsifier + 실측 (record / sim / FEM / DFT / verify)
++ 정량 finding (Δ vs baseline **또는** axis 를 배제하는 closed-negative). 단순 bookkeeping closure ·
+기지 identity 는 제외. `d_paper_negative_ok` — 한 axis 를 결정적으로 배제하는 🔴 결과도 정식 논문이다.
+
+### 섹션 양식 (`d_paper_format`)
+
+`§hypothesis` (falsifier 사전등록) · `§method` · `§measurement` (실측 record) ·
+`§finding` (Δ 또는 ruled-out axis). commons `g51` — 컴파일 ≥10페이지 + fal.ai figure ≥1개.
+모든 섹션 주장은 `.verdicts/<slug>/<id>.txt` record-미러에 링크 (`d_paper_sections`).
+`RTSC absorbed=true` literal 주장은 `_tools/check_rtsc_claim.sh` 5-gate ALL_PASS 게이트도 통과.
+
+### 도메인 그룹 (`d_paper_one_per_group`) — 그룹당 정식 논문 1개
+
+| 그룹 | 범위 | 현 canonical slug |
+|------|------|-------------------|
+| **ABSORPTION** | absorbed=true 물질/소자 attestation (① 흡수 · d5 게이트) | `sample-nb-bcs-absorbed` (🟢 numerical, LANDED) |
+| **SYNTHESIS** | FEM / DFT 툴체인 + synthesis-recipe 검증 (synthesize verb) | `cube-fullcycle-617s` (Tier 1 toolchain, 후보) |
+| **ARCH** | 7-verb 메타-컨덕터 프레임워크 (cs.SE) | (open) |
+
+더 강한 결과가 나오면 **제자리 교체**한다 (백로그 누적·동일그룹 분기 금지). 게이트 실패 논문은
+즉시 `PAPERS/<slug>/` 삭제 (`d_paper_violation`). claim 색인 = 루트 `CLAIMS.tape`, verdict 미러 =
+루트 `.verdicts/` (둘 다 `d_claim_manifest` / `d_claim_verify` 가 강제).
+
+### 작업 절차
+
+```bash
+# 1. claim 을 루트 CLAIMS.tape 에 등재 (id · text · method · slug · group · raw)
+# 2. typed record 로 닫고 verbatim 미러 보존
+#    (record 는 producer 가 이미 생성 — exports/material_attestation|verdict/)
+jq .measured_oracle exports/material_attestation/nb_bcs_v1/lts_attestation_*.json \
+   > .verdicts/nb-bcs-absorbed/nb_bcs_oracle_parity.txt
+# 3. 모든 섹션 claim terminal + 유의성 확인 후 스캐폴드
+/paper new sample-nb-bcs-absorbed
+# 4. figure → 5. compile (아래 §Compile pipeline 참고)
+```
+
+---
+
 ## Directory layout
 
 ```
@@ -294,3 +367,5 @@ done
 ## Log
 
 - **2026-05-21 KST** — opened. PAPERS/ 루트 + 첫 샘플 (Nb BCS absorbed=true attestation).
+- **2026-05-25 KST** — `d_claim_*` + `d_paper_*` 거버넌스 플로우 이식 (cx_paper_* → a_paper_* 계보).
+  루트 `CLAIMS.tape` 색인 + `.verdicts/` record-미러 신설. 그룹 = ABSORPTION · SYNTHESIS · ARCH.
