@@ -4,6 +4,18 @@ Append-only history sister of `HEXA-PORT.md`. Each entry starts with `## <ISO ti
 
 ## Log
 
+## 2026-05-26T04:30:00Z — UFO 외부 lib 일괄 등록 (P5 ccx · P6 SU2/OpenFOAM · P7 gmsh)
+
+UFO absorbed 캠페인이 외부 solver 로 게이트를 닫으면서(별도 목표 — 사용자 지시 "PORT 는 별도목표") 그 wrap-as-is 출력이 HEXA-PORT 의 parity 오라클이 됨. FUSION (FreeGS/getdp/OpenMC) 과 동일 공급 패턴.
+
+- [x] P5 등록 — CalculiX ccx FEM 구조해석 (Tier B · UFO 응력 LC-1~5 오라클 PR#225 ccx 2.23 13886-node von Mises 공급)
+- [x] P6 등록 — SU2/OpenFOAM CFD FVM (Tier B · UFO CFD 디스크 항공역학 오라클 공급 · in-flight)
+- [x] P7 등록 — gmsh mesh generator (Tier B utility · P2/P5/P6 공유 전처리 · UFO 6-coil/disc/frame mesh)
+- [x] §6 citation + UFO 오라클-공급원 cross-ref 추가
+- [ ] P5/P6/P7 Path A native 재구현 — wrap→오라클→Path A→parity 파이프라인 (§3 · multi-week, 후순위)
+
+> 등록만 (registration) — 실제 hexa-native 포팅은 §3 방법론 따라 후속. UFO 는 외부 solver 로 이미 닫음.
+
 - **2026-05-25 KST** — **P2 (getdp) parity 오라클 FULL 확보** (FUSION (e) F5 promote · hexa-lang PR #1095). FEM↔closed-form anchor parity: getdp axisym A-φ FEM B_z(0)=1.4817 T vs `solenoid_axis_bz(2e6,0.5,0.7,1.2)=1.48265 T` → **Δ=-0.064%** (mesh-converged, "few %" 천장 한참 아래). 진단 반전: 단위 가설 X · 실제 원인 = **far-field truncation 부족** (R_OUT/H_OUT 5× → 10× coil). 이로써 P2 의 두 축 — **closed-form anchor (PR #1084)** + **FEM-vs-anchor parity (PR #1095)** — 모두 코드에 박힘. P2 native FD getdp port 의 검증 기준선 완비.
 - **2026-05-25 KST** — **P0.5 git-LFS infra LANDED** (hexa-lang PR #1090 MERGED; gh exit≠0=main-worktree false-fail, state=MERGED). 2파일 +33줄: 신규 `.gitattributes` (18줄 · 14 패턴 = `data/**/*.{hdf5,h5,dat,bin,endf,ace,xml.gz,tar.gz}` + `stdlib/corpora/**/*.{hdf5,h5,dat,bin,endf,ace}` 각 `filter=lfs diff=lfs merge=lfs -text` · 헤더에 HEXA-PORT §4.0/no-migration 의도 명시) + `README.md` "Data corpora (git-LFS)" 섹션. `git check-attr` 검증: `data/nuclear/endf_b8_0/test.hdf5`/`stdlib/corpora/endf_b8_0/H1.endf`/`data/nuclear/raw.tar.gz` → `filter: lfs` ✓ · `stdlib/fusion/reactivity.hexa`/`n6/atlas.n6`/`compiler/atlas/embedded.gen.hexa`/`stdlib/xeno/state/spike_trace.txt` → `filter: unspecified` ✓ · `git lfs ls-files` empty ✓. 7개 기존 ≥1MB tracked 파일(atlas.n6·embedded.gen.hexa·hexa_v2 빌드아티팩트·hexa_cc.c·sky130 LEF·spike_trace.txt) 미터치/미마이그레이션 = `git diff --cached --stat` 정확히 2 파일. `git lfs install --local` worktree 에서 실행 (각 cloner 가 로컬에서 1회 실행 → tracked 안 됨이 옳음). 이로써 **P4b ENDF/B-VIII 데이터 시드 준비 완료** — P4 본격 착수 시 `data/nuclear/endf_b8_0/` 에 ubu-2 의 475MB 서브셋 ingest 가능.
 - **2026-05-25 KST** — **big-data 저장 정책 = hexa-lang git-LFS** (사용자 결정). HEXA-PORT.md §4.0 신설 · 신규 마일스톤 P0.5 (LFS infra 셋업). 데이터-바운드 포트(P4b ENDF/B-VIII · 미래 corpus)의 binary/HDF5/대용량은 hexa-lang `.gitattributes` LFS 패턴 (`data/<domain>/<corpus>/…`)으로 워크플로 그대로 보관 → 별도 데이터 저장소 분리 안 함. 기존 stdlib 코드(.hexa/.py/.md)·atlas SSOT 텍스트(`n6/atlas.n6` 3.5MB·`embedded.gen.hexa` 10MB) 마이그레이션 없음. 로컬 git-lfs 3.7.1 확인 · hexa-lang LFS 0 file/no .gitattributes = 깨끗히 시작. LFS infra land 후 P4b ENDF/B-VIII 475MB 서브셋(FUSION (f) 가 ubu-2 에 받아둠 · 재사용)이 첫 시드.
