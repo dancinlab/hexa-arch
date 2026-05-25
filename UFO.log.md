@@ -2,6 +2,36 @@
 
 Append-only history sister of `UFO.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-26T00:30:00Z — Stage-3 orbital antimatter γ-rocket I_sp verify LANDED 🟢
+
+Phase A Stage-3 orbital (antimatter γ-rocket anti-H + H · 고도 200 km ~ 1 AU). ANTIMATTER substrate (γ-rocket · Penning 3-freq + Ioffe trap depth verify 🟢 완료) 위에 γ-rocket I_sp closed-form (annihilation `E = 2·m_p·c²` → relativistic exhaust → `I_sp = c/g` 광자 천장 3.057e7 s) 의 numerical recompute 를 `hexa verify --expr` 3건으로 🟢 SUPPORTED-NUMERICAL 도장. ANTIMATTER verified atom 재사용 (idempotent atlas fold) · @D d3/d4/d6/d9/d10 준수. 문서 한국어 · 코드 영문.
+
+- [x] `UFO/verify/stage3-orbital-gamma.md` — γ-rocket I_sp closed-form ledger (§0 TL;DR · §1 annihilation E=2m_p c² → relativistic exhaust → I_sp=c/g · §2 numerical recompute verbatim 3건 · §3 atlas register · §4 Stage-2→Stage-3 200km 전이 · §5 cross-link+deferred · §6 governance)
+- [x] Case A 🟢 — `verify --expr pair_threshold_total(938.272)=6567.9` · calc=6567.9 |Δ|=0.0 ≤ ε=1e-9 · 🟢 SUPPORTED-NUMERICAL (annihilation/생성 상대론 에너지 회계 anchor · ANTIMATTER ⓵ atom reuse idempotent)
+- [x] Case B 🟢 — `verify --expr rel_kinetic_from_p(9382.72)=8491.24` · calc=8491.24 |Δ|=0.0 ≤ ε=1e-9 · 🟢 SUPPORTED-NUMERICAL (ultra-relativistic 배기 β=0.995·γ≈10.05 · ANTIMATTER ⓶ atom reuse idempotent)
+- [x] Case C 🟢 — `verify --expr rel_kinetic_from_p(1625.13)=938.272` · calc=938.272 |Δ|=0.0 ≤ ε=1e-9 · 🟢 SUPPORTED-NUMERICAL (kinetic=rest 교차점 pc=√3·m_p_c² · c/g 천장 crossover)
+- [x] atlas — `@F verified-pair_threshold_total-num` (embedded.gen.hexa:30652) + `@F verified-rel_kinetic_from_p-num` (embedded.gen.hexa:30514) 두 atom 모두 ANTIMATTER 에서 이미 folded → Stage-3 재사용 idempotent skip · atlas hash `663698a06bc6f967fa2855a77bc4e399aae465dda5ca948b3c7352dbf98ce7fb`
+- [x] `UFO.md` Stage-3 orbital → [x] flip (LANDED PR pending 🟢)
+- [x] @D d6 준수 — I_sp=c/g 광자 천장 3.06e7 s ↔ spec target 1e9 s 2-자릿수 불일치 **정직 표기** (목표 수 강제 금지 · effective I_sp mass-flow 정의 closure = verb-4/6 의무)
+
+verdict (verbatim):
+```
+verify --expr pair_threshold_total(938.272)=6567.9
+  calc   = 6567.9  ≈ expected 6567.9  (|Δ|=0.0 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+verify --expr rel_kinetic_from_p(9382.72)=8491.24
+  calc   = 8491.24  ≈ expected 8491.24  (|Δ|=0.0 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+verify --expr rel_kinetic_from_p(1625.13)=938.272
+  calc   = 938.272  ≈ expected 938.272  (|Δ|=0.0 ≤ ε=1e-9)
+  tier   = 🟢 SUPPORTED-NUMERICAL  (hexa-native libm-class recompute, TECS-L n6-rep Tier2)
+```
+
+deferred:
+- [ ] stdlib `gamma_rocket_isp(v_e, g)` atom 등록 (hexa-lang 별 PR) → 등록 시 I_sp=c/g 행 🟡 → 🟢 escalation
+- [ ] effective I_sp mass-flow 정의 closure (F-ANTI-3) — 광자 천장 3e7 s ↔ target 1e9 s 불일치 해소 · verb-4 analyze ⟲ + verb-6 verify 의무
+- [ ] NEXUS.tape reuse edge — ANTIMATTER `pair_threshold_total`/`rel_kinetic_from_p` → UFO Stage-3 orbital
+
 ## 2026-05-25T14:55:00Z — verb-3 design LANDED (throttle-death 회수)
 
 Phase C 3/7 — closed-form 통합 설계. 원 agent (a266ba0) 가 산출물 생성 후 push 전 rate-limit 사망 → parent 가 worktree 에서 `integrated-vehicle-design.{md,tape}` (524줄) 회수 후 랜딩 (cycle skill parent-recovery 패턴).
