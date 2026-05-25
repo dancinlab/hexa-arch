@@ -41,7 +41,10 @@
 % TikZ. Engine-agnostic, always visible, preserves the exact tier semantics.
 % \tierWhite is the SPECULATION-FENCED (⚪) tier: an open, unproven claim.
 \newcommand{\tierdisc}[1]{\textcolor{#1}{\rule[0.05ex]{1.0ex}{1.0ex}}}
-\newcommand{\tierdiscopen}{\tikz[baseline=-0.4ex]{\draw[gray!70!black,line width=0.35pt] (0,0) circle (0.45ex);}}
+% open-circle (⚪ SPECULATION-FENCED) — non-TikZ glyph so it is safe inside
+% table captions (an inline \tikz collides with TikZ's active-`:` handling
+% when it appears in a caption argument).
+\newcommand{\tierdiscopen}{\textcolor{gray!60!black}{\scalebox{0.6}{$\bigcirc$}}}
 \newcommand{\tierBlue}{\tierdisc{blue!70!black}}
 \newcommand{\tierGreen}{\tierdisc{green!60!black}}
 \newcommand{\tierYellow}{\tierdisc{yellow!85!black}}
@@ -313,6 +316,24 @@ $(\sigma\!-\!\varphi)^2\!=\!100$) is verifiable integer identity; the
 \emph{physics} those integers point to is not.}
 \label{tab:pipeline}
 \end{table}
+
+A tier-color-coded view of the same seven rungs --- the three solid
+green rungs below the wall and the four dashed grey (open) rungs above
+it --- is in Fig.~\ref{fig:ladder}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.86\linewidth]{figures/fig02_ladder.pdf}
+\caption{The 7-stage propulsion ladder with the proven/UNPROVEN wall.
+The three lower rungs (hover/cruise/orbital, solid green) are
+closed-form verified and sibling-inherited; the four upper rungs
+(warp/wormhole/dim-jump/dim-use, dashed grey) are a 13-falsifier
+preregister, all open ($\circ$) and academically UNPROVEN. The
+double-bar is the honest wall: a grey rung never becomes green by
+sharing the ladder. The diagram is independently readable --- the tier
+word and proven/open mark are inside each rung.}
+\label{fig:ladder}
+\end{figure}
 
 The 13 Stage-4--7 falsifiers (F-WARP$\times3$, F-WORM$\times3$,
 F-DIM$\times3$, F-USE$\times4$) are preregistered in
