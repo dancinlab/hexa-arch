@@ -1,22 +1,224 @@
-% TODO (batch 5): fold operational findings — rate-limit recovery, concurrency cap,
-%   codegen pitfalls (4π · far-field · UTF-8 · cross-repo merge), worktree discipline.
-% Source: companion/session-journal.md (the day's narrative).
 \section{Operational Findings}
 \label{app:operational}
 
 This appendix is the full data record for the session's operational
-lessons, drawn from \texttt{companion/\allowbreak session-journal.md}.
-It will
-carry the concrete, reproducible findings that shaped how the work was
-run: rate-limit recovery behavior under sustained parallel agents, the
-2--3 concurrent-agent cap (4+ triggers a rate-limit kill within minutes),
-and the worktree-discipline contract (sequential commit on the shared
-index, explicit-path staging only).
+lessons, drawn from \texttt{companion/\allowbreak session-journal.md} ---
+the time-ordered narrative of what was changed, what was verified, and
+what was left open. Where Appendices~\ref{app:verify-ledger}
+and~\ref{app:adapters} record the \emph{physics} witnesses, this
+appendix records the \emph{meta-process}: the failure modes of running
+many verification agents in parallel against a shared code home, the
+codegen-precision pitfalls that masqueraded as physics bugs, and the
+worktree-concurrency contract (@D~d9) that kept the shared index clean.
+Each finding is stated as a symptom, the diagnosis, and the standing
+rule it became.
 
-It will also catalog the codegen pitfalls surfaced in-session: the
-$4\pi$/half-factor reduction, the far-field-truncation diagnosis, the
-UTF-8 / emoji engine constraint (xelatex over pdflatex), and the
-cross-repo merge discipline between hexa-lang (stdlib SSOT) and
-demiurge (paper home). Each finding will be stated as a symptom, the
-diagnosis, and the standing rule it became. Data source:
+\subsection{Sustained-parallelism failure: rate-limit agent death and the salvage pattern}
+\label{app:operational:ratelimit}
+
+\paragraph{Symptom.}
+At one point in the session, a round fanned out $4{+}$ concurrent
+verification agents instead of holding the $2$--$3$ cap. Within minutes,
+one agent was killed by a provider rate limit mid-task. The killed
+agent's in-flight work vanished --- there was no \texttt{git stash}, no
+saved buffer, nothing to recover from the agent's own context.
+
+\paragraph{Diagnosis.}
+This is a known trap (carried in the project memory note ``Parallel
+agent cap 2--3''): four or more simultaneous agents trip a rate-limit
+kill within $\sim3.5$ minutes of sustained fan-out. The kill is
+non-graceful --- it does not flush partial work.
+
+\paragraph{Salvage pattern (the standing rule).}
+The session survived the kill with \emph{zero loss of landed work}
+because of the atomic-commit discipline: any work an agent had already
+committed to \texttt{main} was absorbed and intact; only the killed
+agent's \emph{uncommitted} in-flight edits were lost, and those were
+re-derivable. The standing rules are two:
+\begin{enumerate}
+  \item \textbf{Cap concurrent agents at $2$--$3$.} Subsequent rounds
+        held cap $2$ strictly and saw no further kills.
+  \item \textbf{Commit early, commit atomically.} Each agent stages and
+        commits its own explicit files as soon as a unit of work is
+        verified, so that a mid-task kill costs at most one
+        un-committed unit, never a landed one. Salvage is then a matter
+        of re-running the killed unit, not reconstructing lost state.
+\end{enumerate}
+
+\subsection{The concurrency cap and single-writer discipline on hot files}
+\label{app:operational:concurrency}
+
+The $2$--$3$ cap is not only a rate-limit accommodation; it is also a
+contention bound on \emph{hot files} --- the small set of
+frequently-touched coordination files (domain snapshot, log,
+roster). When two agents edit the same hot file concurrently, the second
+write can silently wipe the first (a stale-context overwrite). The
+operating rule that emerged: hot files have a \emph{single writer per
+round}. Parallel agents partition by file --- each agent owns the files
+it stages --- and the coordination files are updated by exactly one
+agent, sequentially, after the parallel work lands. This is the
+file-partition corollary of the @D~d9 worktree contract
+(\S\ref{app:operational:d9}).
+
+\subsection{Codegen and diagnosis pitfalls}
+\label{app:operational:codegen}
+
+Several findings in the session were \emph{not} physics errors but
+artifacts of the compile / numeric / tooling layer that initially
+\emph{looked} like physics errors. They are catalogued here because each
+cost real investigation time and each became a standing diagnostic
+heuristic.
+
+\paragraph{(1) The $4\pi$ / division-vs-multiplication precision trap.}
+The first Bosch--Hale port placed $\theta$ in a \emph{multiplicative}
+position where the published Eq.~\eqref{eq:boschhale} form has it as a
+\emph{denominator}. The result: reactivity came out $\approx4\times$ too
+low at \emph{every} temperature. The clean $4\times$ ratio was
+seductive --- it looked like a missing $4\pi$ somewhere in a
+solid-angle normalization, and an hour was spent hunting the phantom
+$4\pi$. The truth was a literal transcription typo: the published form
+is a division, not a multiplication. Heuristic: \emph{a suspiciously
+clean integer ratio (exactly $4\times$, exactly $2\times$) across all
+inputs is far more often a transcription typo than a missing physical
+constant.} This trap was \emph{not} logged to the adapter defect catalog
+--- it was an authoring typo, not a stdlib defect, and the honesty line
+between ``my mistake'' and ``a defect in the code home'' was held.
+
+\paragraph{(2) The constant-fold precision wart and the $\pi$-free rewrite.}
+The Wesson cylindrical safety factor written literally as
+$q^{*} = 2\pi a^2 B / (\mu_0 R I_p)$ suffered a middle-magnitude
+constant-folding precision loss of $|\Delta|\approx5.8\times10^{-6}$:
+the engine's constant folder cannot reduce the transcendental $\pi$ to a
+finite exact value, so the $2\pi/(4\pi\times10^{-7})$ cancellation is
+done in floating point and the two $\pi$'s do not cancel to the last
+bit. Encoding the exact identity $2\pi/(\mu_0\!\cdot\!10^{6})=5$ as the
+BLUE-MAX atom \verb|q_star_constant| licenses the $\pi$-free form
+$q^{*} = 5 a^2 B / (R I_p^{\text{MA}})$, in which no transcendental
+survives folding and the recompute is $|\Delta|=0$ on every input. Full
+derivation in Appendix~\ref{app:bluemax}. Heuristic: \emph{prefer the
+algebraically-reduced ($\pi$-free, integer-coefficient) form of a
+closed-form kernel; it is what the constant folder can reproduce
+exactly.}
+
+\paragraph{(3) The far-field-truncation diagnosis reversal.}
+The GetDP FEM on-axis $B_z$ disagreed with the closed-form anchor by
+$\sim1.4\%$. The hypothesis --- pursued for five to six hours --- was a
+$2\pi$/\texttt{VolAxiSqu} Jacobian / units bug in the \verb|.pro| deck,
+because a $2\pi$-flavored error is exactly what one expects from an
+axisymmetric $A_\phi$ formulation. \emph{The diagnosis was wrong.} The
+real cause was geometric: the air-region outer boundary was only
+$\sim5\times$ the coil radius, leaking return flux. Enlarging
+$R_{\text{out}}/H_{\text{out}}$ to $\sim10\times$ collapsed the residual
+to $<0.1\%$ with no change to the deck's algebra. The full chase and the
+deliberately-recorded false diagnosis live in
+Appendix~\ref{app:adapters} (FUSION-DEFECT-003) and
+Appendix~\ref{app:magnet}, \S\ref{app:magnet:farfield}. Heuristic:
+\emph{a small few-percent residual in a finite-domain FEM is a
+far-field-truncation suspect before it is a units suspect; check the
+domain size before auditing the Jacobian.}
+
+\paragraph{(4) UTF-8 / emoji: xelatex over pdflatex.}
+The tier badges $\tierBlue\tierGreen\tierYellow\tierOrange\tierRed$ are
+rendered, in the source, from literal emoji. \texttt{pdflatex} emits a
+fatal error on any literal emoji in the source; \texttt{xelatex}
+(and \texttt{lualatex}) render them natively as a Unicode glyph. The
+standing rule, encoded in the \texttt{Makefile} header: the document
+engine is \texttt{xelatex}; \texttt{make LATEX=pdflatex} is permitted
+\emph{only} after every literal emoji has been stripped and replaced by a
+\verb|\providecommand| tier macro redefined to a non-emoji marker. This
+paper takes the macro route (\verb|\tierBlue| \emph{et al.}\ are colored
+discs) precisely so the source is engine-portable.
+
+\paragraph{(5) Cross-repo \texttt{gh}-merge PR-number bug.}
+When the FreeGS fix (PR~\#1075) was landed, the PR was created from a
+demiurge worktree but targeted the hexa-lang repository.
+\texttt{gh} resolved the \emph{default} repo as demiurge and locked
+another worktree's \texttt{main}. The PR itself landed (merged), but the
+worktree-cleanup tail false-failed. The recovery, per the project memory
+note ``demiurge worktree PR landing'': do not trust the
+\texttt{gh pr create} exit code; verify the merge state with
+\texttt{gh pr view}, then perform the worktree / branch cleanup
+manually. Standing rule: cross-repo PRs are created with an explicit
+\verb|--head| (and an explicit repo where the worktree's default is
+ambiguous), and merge state is always confirmed out-of-band.
+
+\paragraph{(6) The \texttt{\textasciitilde{}} shell-expansion pool mis-route.}
+A finding from the wider compute-dispatch layer that bit this session:
+an unescaped \texttt{\textasciitilde{}} (home-directory tilde) in a
+command argument is expanded by the local shell to the \emph{local}
+home, then shipped verbatim to a remote pool host where that path does
+not exist --- silently mis-routing the job. Standing rule: pool / cloud
+command paths are absolute or are quoted to defer expansion to the
+remote shell; never let the local shell expand \texttt{\textasciitilde{}}
+in an argument destined for a remote host.
+
+\paragraph{(7) The \texttt{ubu-1} hexa segfault.}
+The \texttt{hexa verify} host matrix is not uniform: one pool host
+(\texttt{ubu-1}) segfaults on the hexa binary and another (\texttt{ubu-2})
+is unreliable for it. The standing route for \texttt{hexa verify} is
+therefore the \texttt{mini} host (or \texttt{POOL\_DISABLE=1} to force
+local execution). This is a host-capability constraint, not a code
+defect, and it shapes \emph{where} verification runs even though it does
+not change \emph{what} is verified.
+
+\subsection{@D~d9 shared-worktree discipline}
+\label{app:operational:d9}
+
+The single most important standing contract for running parallel agents
+against a shared code home is the worktree-concurrency rule, @D~d9:
+
+\begin{quote}
+\emph{Sequential commit on \texttt{main}; stage and commit one agent at a
+time; \texttt{git add <explicit-files>} only --- never} \verb|git add -A|
+\emph{or} \verb|git add .|.
+\end{quote}
+
+The failure this prevents is an \emph{index leak}: when two concurrent
+agents both have un-staged changes and one runs a broad
+\verb|git add|, it absorbs the \emph{other} agent's files into its own
+commit. The result is a commit that mixes two agents' work, a wiped
+expectation for the second agent, and a polluted history. The rule has
+three clauses, each load-bearing:
+\begin{enumerate}
+  \item \textbf{Sequential commit.} Only one agent commits to the shared
+        \texttt{main} index at a time; the others wait. This serializes
+        the one resource (the index) that cannot be safely shared.
+  \item \textbf{One agent at a time.} Staging is not interleaved ---
+        agent $A$ fully stages and commits before agent $B$ begins to
+        stage --- so the index never holds two agents' changes
+        simultaneously.
+  \item \textbf{Explicit-path staging only.}
+        \verb|git add <explicit-files>| names exactly the files the agent
+        owns; the broad forms are forbidden because they cannot
+        distinguish ``my work'' from ``the other agent's un-committed
+        work.''
+\end{enumerate}
+In this session, this discipline is what made the rate-limit salvage
+(\S\ref{app:operational:ratelimit}) clean: because each agent committed
+only its own explicit files, the killed agent could not have leaked
+into, or been leaked into by, a survivor. The two contracts compose ---
+the $2$--$3$ concurrency cap bounds the contention, and @D~d9 makes the
+contention that does occur safe.
+
+\subsection{What was left open}
+\label{app:operational:deferred}
+
+For honesty and reproducibility, the session journal also records what
+was \emph{not} closed, carried here so the boundary is explicit:
+\begin{itemize}
+  \item the $\sim475$\,MB ENDF/B-VIII corpus git-LFS ingest (the
+        infrastructure landed in PR~\#1090; the data ingest itself is a
+        follow-up, HEXA-PORT P4b);
+  \item gate (g), the JET D--T measured oracle, is \emph{permanent}
+        wet-lab --- it is never closed by a closed-form simulation, by
+        construction (the honesty boundary of \S\ref{sec:context});
+  \item the p--$^{11}$B reactivity \emph{absolute} value in cm$^3$/s
+        (registered only as a reactivity \emph{shape} pending resolution
+        of the keV/MeV S-factor unit ambiguity, \S\ref{sec:keystone});
+  \item HEXA-PORT P4a (a native Monte Carlo engine), which is a sibling
+        domain's follow-up and out of scope for this paper.
+\end{itemize}
+These are not gaps in the work presented; they are the deliberately
+un-closed edges, recorded so that the difference between ``done'' and
+``deferred'' is never ambiguous. Source for this entire appendix:
 \texttt{companion/session-journal.md}.

@@ -1,24 +1,263 @@
-% TODO (batch 4): fold the 3 wrap-and-fix adapter defects verbatim — symptom,
-%   root cause, diff, diagnostic narrative — here.
-% Source: companion/adapter-defect-catalog.json (id / file / origin_commit /
-%   symptom / root_cause / fix_pr / fix_summary / tier_after / honesty_note).
 \section{Wrap-and-Fix Adapter Defect Catalog}
 \label{app:adapters}
 
 This appendix is the full data record for the three wrap-and-fix
-defects summarized in Table~\ref{tab:defects}. For each defect ---
-the OpenMC transport-less gate-classifier stub, the FreeGS hardcoded
-coil-set divergence with \texttt{stdout}-corrupted JSON, and the
-GetDP \texttt{shutil.which}-only checker with the mis-diagnosed
-$\sim$1.4\% residual --- it will carry the verbatim
-\texttt{companion/\allowbreak adapter-defect-catalog.json} record: the
-origin
-commit, the symptom, the root cause, the fix PR, the fix summary, and
-the honesty note.
+defects summarized in Table~\ref{tab:defects}
+(\S\ref{sec:defects}). It transcribes, verbatim, the
+\texttt{companion/\allowbreak adapter-defect-catalog.json} record for each
+defect --- the OpenMC transport-less gate-classifier stub
+(FUSION-DEFECT-001), the FreeGS hardcoded coil-set divergence with
+\texttt{stdout}-corrupted JSON (FUSION-DEFECT-002), and the GetDP
+\texttt{shutil.which}-only checker with the mis-diagnosed $\sim$1.4\%
+residual (FUSION-DEFECT-003) --- carrying the origin commit, the
+symptom, the root cause, the fix PR, the fix summary, the tier after
+fix, and the honesty note.
 
-The load-bearing narrative is the GetDP false diagnosis: the residual
-that looked like a $2\pi$/VolAxiSqu units bug was a far-field
-truncation artifact, and the appendix records the \emph{wrong}
-diagnosis on purpose, with the before/after deck diffs and the
-diagnostic chase. Data source:
-\texttt{companion/adapter-defect-catalog.json}.
+\subsection{The wrap-and-fix-as-integration-test thesis}
+\label{app:adapters:thesis}
+
+The architecture admits a backend in two stages. First, an adapter
+\emph{wraps} the external solver behind a uniform contract: it declares
+the backend's presence, builds the problem, invokes the solve, and emits
+a single machine-readable verdict line. Second, when the backend is
+actually installed and the adapter is run end-to-end, any gap between
+the wrap and the real solve surfaces as a runtime failure. The thesis of
+this appendix is the empirical observation that drove the whole
+promotion round:
+
+\begin{quote}
+\emph{Every one of the three wrap-and-fix runs surfaced a latent defect
+in the landed adapter. The simple act of installing the backend and
+running the adapter end-to-end turned the wrap layer into an integration
+test.}
+\end{quote}
+
+This is not incidental. An install-gated ``honest-skip'' adapter ---
+one that reports PASS merely because the backend \emph{could} be
+imported --- is a classifier of the \emph{environment}, not of the
+\emph{physics}. It can be green for years without ever solving a
+problem. The forcing function is to run it for real: the moment a true
+solve is demanded, a transport-less stub cannot produce a tally, a
+divergent coil set cannot find a magnetic axis, and a binary-presence
+check cannot return a field value. The defect is exposed not by code
+review but by execution. All three fixes preserve
+\texttt{absorbed=false}: a computed witness (a TBR number, a converged
+equilibrium, an on-axis $B_z$) is a simulation PASS, not a built machine.
+
+\subsection{FUSION-DEFECT-001 --- OpenMC transport-less stub}
+\label{app:adapters:openmc}
+
+\begin{description}
+  \item[\texttt{file}] \texttt{stdlib/fusion/openmc\_tbr.py}
+  \item[\texttt{origin\_commit}] \texttt{a7a185b} (origin/main)
+  \item[\texttt{fix\_pr}] \#1078
+  \item[\texttt{tier\_after}] \tierGreen\ \textsc{Supported-Numerical}
+\end{description}
+
+\paragraph{Symptom.}
+The landed adapter imported OpenMC and checked the ENDF data
+environment variable, but \emph{never built a geometry and never invoked}
+\verb|openmc.run|. It reported a fake install-gated PASS: green if the
+package was importable, regardless of whether any transport had been
+solved.
+
+\paragraph{Root cause.}
+PR~\#1032-era scaffolding committed the wrap as a \verb|.py|
+syntax-check without a transport block. Nobody flagged it because
+``check OpenMC importable'' was the gate's first-pass exit criterion ---
+the adapter satisfied its own (too-weak) contract. The gate was
+classifying the \emph{environment}, not the \emph{physics}.
+
+\paragraph{Fix.}
+A new \verb|.hexa| adapter (\verb|stdlib/fusion/openmc_tbr.hexa|) builds
+the spherical Pb-15.7Li breeder geometry (W armor / EUROFER first wall /
+SS316 shield), runs a $5\times10^{6}$-history Monte Carlo transport via
+\verb|openmc.run|, and parses the TBR tally directly. The validated
+result is $\text{TBR} = 1.3222 \pm 0.0004$ (the $\pm0.0004$ is the
+$1\sigma$ MC statistical uncertainty). The \verb|.py| stub is retained
+as a historical artifact but is no longer on the call path. Full
+derivation in Appendix~\ref{app:tbr}.
+
+\paragraph{Honesty note.}
+\texttt{absorbed=false} preserved --- the TBR is a simulation PASS only;
+the ENDF/B-VIII.0 corpus is the data-bound dependency, and a measured
+TBR remains downstream wet-lab confirmation.
+
+\subsection{FUSION-DEFECT-002 --- FreeGS coil divergence + stdout JSON corruption}
+\label{app:adapters:freegs}
+
+\begin{description}
+  \item[\texttt{file}] \texttt{stdlib/fusion/f3\_grad\_shafranov\_adapter.hexa}
+  \item[\texttt{origin\_commit}] PR~\#1032
+  \item[\texttt{fix\_pr}] \#1075
+  \item[\texttt{tier\_after}] \tierGreen\ \textsc{Supported-Numerical}
+\end{description}
+
+\paragraph{Symptom.}
+The Picard solve diverged with ``\texttt{No O points found}'' on a
+custom hardcoded coil set: FreeGS\,0.8.2 could not locate a magnetic
+axis. Worse, the warning was emitted on \emph{stdout}, which corrupted
+the adapter's JSON line --- so even when the solve technically completed,
+there was no machine-readable output for the gate to consume.
+
+\paragraph{Root cause --- two stacked defects.}
+\begin{enumerate}
+  \item \textbf{Geometric inconsistency.} The hardcoded custom coil
+        currents had no admissible equilibrium for that coil-current
+        pair --- there was no magnetic configuration the Grad--Shafranov
+        operator could converge to.
+  \item \textbf{Stream confusion.} FreeGS's early-Picard diagnostic was
+        sent to \texttt{stdout}, not \texttt{stderr}, and the adapter
+        scraped \texttt{stdout} for the JSON tail. Even a converging run
+        would have its output polluted by the warning text.
+\end{enumerate}
+The two defects masked each other: the divergence hid the stream bug,
+and the corrupted output made the divergence hard to diagnose from the
+gate's perspective.
+
+\paragraph{Fix.}
+Switched to the canonical \verb|freegs.machine.TestTokamak()| preset,
+used the \verb|freeBoundaryHagenow| boundary-integral method, and raised
+the X-point isoflux constraint to converge cleanly. The solve block was
+wrapped in a \texttt{stderr}-redirect context so that the (now spurious)
+``No O points'' warning does not pollute \texttt{stdout}. Result:
+$I_p = 200$\,kA, $q_0 = 1.355$, $q_{95}\approx 10.08$,
+$\kappa = 1.358$, magnetic axis at $(R, Z) = (1.280,\,0.038)$\,m. Full
+convergence and $q$-profile detail in Appendix~\ref{app:confinement}.
+
+\paragraph{Honesty note.}
+\texttt{absorbed=false} --- the converged equilibrium is the design
+witness, not a built machine.
+
+\paragraph{Operational coda.}
+This was the first wrap-and-fix run in which an external solver was
+actually executed on free pool hardware, and it is the run that
+established the integration-test thesis. The cross-repo PR-landing
+mechanics of this fix (a demiurge worktree creating a hexa-lang PR,
+\texttt{gh} mis-resolving the default repo) are documented as a war
+story in Appendix~\ref{app:operational}.
+
+\subsection{FUSION-DEFECT-003 --- GetDP no-solve stub + the false $2\pi$ diagnosis}
+\label{app:adapters:getdp}
+
+\begin{description}
+  \item[\texttt{file}] \texttt{stdlib/rtsc/getdp\_hts.py}
+  \item[\texttt{origin\_commit}] pre-PR~\#1042
+  \item[\texttt{fix\_pr}] \#1095
+  \item[\texttt{tier\_after}] \tierGreen\ \textsc{Supported-Numerical}
+        (FEM bridge) $+$ \tierBlue\ \textsc{Supported-Formal} (closed-form
+        anchor)
+\end{description}
+
+\paragraph{Symptom.}
+A \verb|shutil.which("getdp")| checker only: the adapter returned
+``install-gated'' if the GetDP binary was present, but never invoked it
+to solve a problem. The \texttt{magnet\_gate} fell back to the
+closed-form $1/R$ baseline indefinitely, never exercising the FEM path.
+When the FEM path was finally exercised, the on-axis $B_z$ disagreed
+with the textbook value by $\sim1.4\%$ --- and that residual was
+\emph{initially mis-diagnosed} as a $2\pi$/VolAxiSqu units bug in the
+\verb|.pro| deck Jacobian.
+
+\paragraph{Root cause --- two layered issues.}
+\begin{enumerate}
+  \item \textbf{No-solve stub.} The \verb|.py| wrap-and-fix layer never
+        reached the solve invocation; the binary-presence check was the
+        \emph{entire} adapter.
+  \item \textbf{Far-field truncation (the real fix).} When the actual
+        GetDP solve was eventually run by hand, the on-axis $B_z$
+        disagreed with the textbook by $\sim1.4\%$. Six hours of
+        investigation chased a hypothesized $2\pi$ Jacobian /
+        \texttt{VolAxiSqu} units bug in the \verb|.pro| deck. The
+        diagnosis was \emph{wrong}. The real cause was far-field
+        truncation: the air-region outer radius/height was only
+        $\sim5\times$ the coil radius, leaking flux. Pushing
+        $R_{\text{out}}/H_{\text{out}}$ to $\sim10\times$ collapsed the
+        residual to $<0.1\%$ \emph{with no deck change} --- same
+        Jacobian, same \texttt{VolAxiSqu}, same exact deck. The
+        truncation-vs-residual sweep is tabulated in
+        Appendix~\ref{app:magnet}, \S\ref{app:magnet:farfield}.
+\end{enumerate}
+
+\paragraph{Fix.}
+Wrote \verb|stdlib/rtsc/getdp_solenoid_solve.hexa| as a hexa-native
+driver: it builds the validated \verb|.pro| deck with $10\times$
+far-field truncation, runs GetDP (3.5.0 on the Linux pool, 4.0.0 on
+Apple silicon as a cross-platform check), parses the on-axis $B_z$ token,
+and emits a single \verb|B_peak -> <value>| line on \texttt{stdout}. The
+\verb|magnet_gate.hexa| now greps that token and flips
+\verb|field_path = "getdp"|. Parity with the closed-form anchor
+(\verb|solenoid_axis_bz|, Appendix~\ref{app:verify-ledger}) is
+$\Delta = -0.064\%$ at a $\sim33\,$k-node mesh --- well inside the
+engineering ``few-percent'' band.
+
+\paragraph{Honesty note --- the recorded false diagnosis.}
+The $2\pi$/VolAxiSqu diagnosis was a controlled-falsification artifact.
+We record it \emph{explicitly} in the defect catalog --- the wrong
+hypothesis, not just the right answer --- to spare the next implementer
+the same six-hour chase. The discipline here is the same one that keeps
+\tierRed\ negative controls in the verify ledger: a falsified hypothesis
+is evidence, and deleting it would erase the most expensive lesson of the
+session. \texttt{absorbed=false}: a $1.48$\,T on-axis $B_z$ is a computed
+witness, not a built TF coil.
+
+\subsection{Why the false diagnosis is the load-bearing entry}
+\label{app:adapters:loadbearing}
+
+Of the three defects, FUSION-DEFECT-003 is the one this catalog exists to
+preserve. The first two are stub-replacement stories with clean
+before/after states: a transport-less classifier becomes a real
+transport run; a divergent coil set becomes a canonical converging
+preset. Their lessons are real but local.
+
+The GetDP residual is different because the \emph{obvious} explanation
+was wrong in an instructive way. A $1.4\%$ error in an axisymmetric
+$A_\phi$ FEM, in the presence of a $2\pi$ azimuthal-integration factor
+and a \texttt{VolAxiSqu} Jacobian, \emph{looks exactly like} a units bug
+--- $2\pi \approx 6.28$, and a single missing or doubled azimuthal
+factor would produce an $\mathcal{O}(1)$ error, but a subtle Jacobian
+mis-scaling can equally produce a small few-percent residual. The
+hypothesis was plausible enough to consume six hours. The actual cause
+--- a finite air region truncating the far field and leaking return flux
+--- is invisible in the deck's algebra and visible only in the
+\emph{geometry}: it is fixed by enlarging $R_{\text{out}}/H_{\text{out}}$
+from $\sim5\times$ to $\sim10\times$ the coil radius, touching no
+equation. The diagnostic reversal --- from ``the math is wrong'' to
+``the domain is too small'' --- is the single most transferable finding
+of the promotion round, which is why the wrong diagnosis is written down
+on purpose. The operational framing of this reversal as a codegen /
+diagnosis pitfall is carried in Appendix~\ref{app:operational}.
+
+\subsection{Catalog summary and provenance}
+\label{app:adapters:summary}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+id & file & PR & tier after \\
+\midrule
+FUSION-DEFECT-001 & \texttt{fusion/openmc\_tbr.py} & \#1078 & \tierGreen \\
+FUSION-DEFECT-002 & \texttt{fusion/f3\_grad\_shafranov\_adapter.hexa} & \#1075 & \tierGreen \\
+FUSION-DEFECT-003 & \texttt{rtsc/getdp\_hts.py} & \#1095 & \tierGreen\,\tierBlue \\
+\bottomrule
+\end{tabular}
+\caption{The three wrap-and-fix defects, all surfaced by the act of
+running the backend end-to-end, all fixed with
+\texttt{absorbed=false} preserved. Source:
+\texttt{companion/adapter-defect-catalog.json}.}
+\label{tab:app:adapters}
+\end{table}
+
+All three defects share the same shape: a wrap layer that satisfied a
+too-weak contract (importable / present / syntactically valid) until a
+real solve was demanded, at which point the gap became a runtime
+failure. The fix in each case was to replace the stub with a hexa-native
+adapter that performs the actual solve and emits a machine-readable
+witness. The catalog --- \texttt{companion/adapter-defect-catalog.json},
+of which this appendix is the verbatim rendering --- is kept so that a
+downstream reader does not re-walk the same chases, and so that the one
+deliberately-recorded \emph{wrong} diagnosis (FUSION-DEFECT-003) stays on
+the record.
