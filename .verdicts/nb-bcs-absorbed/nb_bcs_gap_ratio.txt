@@ -1,0 +1,16 @@
+# verbatim excerpt from:
+# exports/material_attestation/nb_bcs_v1/lts_attestation_nb_bcs_20260521T162859Z.json
+# (d_claim_verify — typed-record mirror, no paraphrase)
+
+domain               = lts
+verb                 = verify
+gate_type            = bcs-universal-ratio-attestation
+measurement_gate     = GATE_CLOSED_MEASURED
+absorbed             = true
+stamp                = 20260521T162859Z
+
+# measured_oracle.model_side:
+BCS universal weak-coupling ratio 2Δ(0)/(k_B·T_c) = π·exp(-γ_E) — parameter-FREE first-principles prediction. No measured input.
+
+model_predicted_value      = 3.52775397772409
+unit                       = dimensionless (ratio)

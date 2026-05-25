@@ -1,0 +1,16 @@
+# ⚠ STRUCTURAL STUB — verdict NOT yet persisted.
+#
+# d_claim_verify requires the verbatim GetDP run-log / record excerpt here
+# before this section can link into PAPERS/cube-fullcycle-617s/.
+#
+# Source headline metrics (RTSC.md §4.2.1.d, 2026-05-21 macOS arm64 native):
+#   wall_time      = 617.636 s (10.3 min)
+#   cpu_time       = 558.961 s
+#   memory peak    = 177.703 MB
+#   final TimeStep = 248-249 (t = 0.025 s, one AC cycle)
+#   KSP residual   = ~5-8e-16 / step
+#   mesh           = 1937 nodes · 5589 elements · 3601 DOFs
+#
+# To promote to terminal: persist the GetDP solve stdout / the companion
+# record verbatim, replacing this stub. Until then this claim is gated OUT
+# of /paper (d_paper_gate) — 🟠 PENDING, not terminal.
