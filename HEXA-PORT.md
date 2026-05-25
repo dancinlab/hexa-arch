@@ -98,6 +98,7 @@ honest: P4b/P4c 는 multi-month research-grade. 그러나 ROI 가 낮다고 *제
 - **FUSION.md §4.0** — (c)(e)(f) wrap-run 오라클 공급원 (PR #1032/1042 + (f) OpenMC promote 진행 중).
 - **RTSC.md §9.12 / §4.2.1** — H-formulation FEM (Stenvall/Sirois) = P2 getdp 와 공유 substrate · "multi-week" 난이도 사전경고.
 - FreeGS github.com/freegs-plasma/freegs · GetDP getdp.info · OpenMC openmc.org · ENDF/B-VIII (NNDC).
+- CalculiX calculix.de (ccx FEM) · SU2 su2code.github.io · OpenFOAM openfoam.com · gmsh gmsh.info — **UFO 도메인이 wrap-as-is 오라클 공급** (응력 ccx 2.23 PR#225 · EM getdp PR#223 · CFD SU2/OpenFOAM · mesh gmsh). UFO 는 외부 solver 로 absorbed 게이트를 닫고(별도 목표), 그 wrap-run 출력이 P5/P6/P7 의 parity 오라클이 된다 (FUSION 과 동일 패턴).
 
 ---
 
@@ -111,3 +112,6 @@ Historical log entries are in [`./HEXA-PORT.log.md`](./HEXA-PORT.log.md).
 - [ ] P4a — OpenMC native MC transport 엔진 (Tier C · random-walk·충돌샘플링·tally · 데이터 소비자)
 - [ ] P4b — 단면적 데이터 corpus 포트 (ENDF/B-VIII → hexa atlas n6-style SSOT)
 - [ ] P4c — first-principles 단면적 생성기 (R-matrix/optical · @D d6 데이터-벽 돌파 · NUCLEAR 인접)
+- [ ] P5 — CalculiX (ccx) FEM 구조해석 native (Tier B · 3D 탄성 von Mises · UFO 응력 LC-1~5 오라클 PR#225 ccx 2.23 13886-node 공급 · gmsh mesh 공유)
+- [ ] P6 — SU2/OpenFOAM CFD FVM native (Tier B · 비압축/압축 RANS · C_d·L/D · UFO CFD 디스크 항공역학 오라클 공급 · multi-week)
+- [ ] P7 — gmsh mesh generator native (Tier B utility · OCC + BooleanFragments + Delaunay/frontal · P2 getdp·P5 ccx·P6 CFD 공유 전처리 · UFO 6-coil/disc/frame mesh 오라클)
