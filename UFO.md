@@ -74,10 +74,15 @@ UFO 도메인은 **선행 demiurge 자산 4개 (RTSC · FUSION · ANTIMATTER · 
 
 ## 참고 (cross-reference)
 
-- `~/core/hexa-ufo/` — HEXA-Disc 1890-LOC 아틀라스 SSOT (Stage-1~7 + 5 부수축 + 13 falsifier preregister)
-- `~/core/hexa-ufo/HEXA-UFO.md` — main spec (96KB · alien_index chain · meta-closure-nav)
-- `~/core/hexa-ufo/{HOVER,HEXA-HOVER,HEXA-GRAV,HEXA-CLOAK,HEXA-TELEPORT,HEXA-SIM}.md` — 5 부수축 spec
-- `~/core/hexa-ufo/{warp,wormhole,dimjump,dimuse}/hexa-*.md` — Stage-4~7 in-tree spec + falsifier preregister
+> **2026-05-25 migration**: hexa-ufo 1890-LOC 아틀라스 전체 `UFO/` 하위로 in-tree 흡수 완료. 원본 repo (`dancinlab/hexa-ufo`) 는 `dancinlab/archive-hexa-ufo` 로 rename + private 으로 아카이브.
+
+- `UFO/HEXA-UFO.md` — main spec (96KB · alien_index chain · meta-closure-nav · 7-stage propulsion ladder)
+- `UFO/{HOVER,HEXA-HOVER,HEXA-GRAV,HEXA-CLOAK,HEXA-TELEPORT,HEXA-SIM}.md` — 5 부수축 spec (in-tree)
+- `UFO/{warp,wormhole,dimjump,dimuse}/hexa-*.md` — Stage-4~7 in-tree spec + 13 falsifier preregister
+- `UFO/{hover,grav,cloak,sim,teleport}/` — 5 부수축 코드/매니페스트 + absorb 매니페스트 (hover · sim 봉합)
+- `UFO/spec/integrated-vehicle-spec.md` — verb-1 통합 비행체 사양 명세 (1인승 LSS 12h · stage matrix 7행)
+- `UFO/{LATTICE_POLICY,LIMIT_BREAKTHROUGH,CROSS-DOMAIN-MEGA,EXPERIMENTS,HYPOTHESES,SF}.md` — Phase D 메타 docs
+- `UFO/verify/` — 13 falsifier preregister + V1-V4 ledger 흡수
 - `~/core/demiurge/RTSC.md` — Stage-1 hover 자석 substrate (Meissner 48T 추적)
 - `~/core/demiurge/FUSION.md` — Stage-2 cruise MHD/fusion substrate
 - `~/core/demiurge/ANTIMATTER.md` — Stage-3 orbital γ-rocket substrate

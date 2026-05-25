@@ -1,0 +1,124 @@
+#!hexa strict
+// hexa-ufo/verify/stages_falsifier.hexa — Stage-4~7 falsifier preregister audit.
+//
+// Verifies the 13 falsifier IDs (F-WARP-{1,2,3} + F-WORM-{1,2,3} +
+// F-DIM-{1,2,3} + F-USE-{1,2,3,4}) appear in:
+//   1. .roadmap.hexa_ufo §B (canonical SSOT — all 13 in one table set)
+//   3. The owning per-stage spec doc:
+//        F-WARP-* → warp/hexa-warp.md
+//        F-WORM-* → wormhole/hexa-wormhole.md
+//        F-DIM-*  → dimjump/hexa-dimjump.md
+//        F-USE-*  → dimuse/hexa-dimuse.md
+//
+// Per honest-C3 contract: status set is exactly {OPEN, CONFIRMED, DEMOTED}
+// — no other tokens (no "PENDING", "TBD", "WIP" sneaking in).
+//
+// Run:
+//     hexa run verify/stages_falsifier.hexa     # exit 0 = monotone
+
+let mut FAIL_COUNT = 0
+let mut PASS_COUNT = 0
+
+fn check(label: str, ok: bool, detail: str) {
+    if ok {
+        PASS_COUNT = PASS_COUNT + 1
+        println("  [PASS] " + label)
+        if detail.len() > 0 { println("         · " + detail) }
+    } else {
+        FAIL_COUNT = FAIL_COUNT + 1
+        println("  [FAIL] " + label)
+        if detail.len() > 0 { println("         · " + detail) }
+    }
+}
+
+fn read_file(path: str) -> str {
+    return exec("cat " + path + " 2>/dev/null")
+}
+
+let ROADMAP = ".roadmap.hexa_ufo"
+let CLI     = "cli/hexa-ufo.hexa"
+
+let WARP_IDS: [str]     = ["F-WARP-1", "F-WARP-2", "F-WARP-3"]
+let WORM_IDS: [str]     = ["F-WORM-1", "F-WORM-2", "F-WORM-3"]
+let DIM_IDS:  [str]     = ["F-DIM-1",  "F-DIM-2",  "F-DIM-3"]
+let USE_IDS:  [str]     = ["F-USE-1",  "F-USE-2",  "F-USE-3",  "F-USE-4"]
+
+let ALLOWED_STATUSES: [str] = ["OPEN", "CONFIRMED", "DEMOTED"]
+let DISALLOWED_STATUSES: [str] = ["PENDING", "TBD", "WIP"]
+
+fn check_ids_in_file(label_prefix: str, path: str, ids: [str]) {
+    let text = read_file(path)
+    if text.len() == 0 {
+        for id in ids {
+            check(label_prefix + " (" + id + ")", false, "file empty or missing: " + path)
+        }
+        return
+    }
+    for id in ids {
+        let ok = text.contains(id)
+        check(label_prefix + " (" + id + ")", ok, "in " + path)
+    }
+}
+
+fn check_status_tokens(label: str, path: str) {
+    let text = read_file(path)
+    let mut bad: [str] = []
+    for s in DISALLOWED_STATUSES {
+        if text.contains(s) { bad = bad + [s] }
+    }
+    let ok = bad.len() == 0
+    let mut detail = "no disallowed tokens"
+    if bad.len() > 0 {
+        let mut joined = ""
+        for b in bad { joined = joined + b + " " }
+        detail = "disallowed tokens found: " + joined.trim()
+    }
+    check(label, ok, detail)
+}
+
+fn main() {
+    println("hexa-ufo verify/stages_falsifier — 13 falsifier IDs × 3 surfaces audit")
+    println("")
+
+    println("§1 ROADMAP (.roadmap.hexa_ufo §B)")
+    check_ids_in_file("roadmap warp", ROADMAP, WARP_IDS)
+    check_ids_in_file("roadmap worm", ROADMAP, WORM_IDS)
+    check_ids_in_file("roadmap dim",  ROADMAP, DIM_IDS)
+    check_ids_in_file("roadmap use",  ROADMAP, USE_IDS)
+
+    println("")
+    println("§2 CLI (cli/hexa-ufo.hexa status output)")
+    check_ids_in_file("cli warp", CLI, WARP_IDS)
+    check_ids_in_file("cli worm", CLI, WORM_IDS)
+    check_ids_in_file("cli dim",  CLI, DIM_IDS)
+    check_ids_in_file("cli use",  CLI, USE_IDS)
+
+    println("")
+    println("§3 SPEC docs (per-stage)")
+    check_ids_in_file("warp spec",     "warp/hexa-warp.md",         WARP_IDS)
+    check_ids_in_file("wormhole spec", "wormhole/hexa-wormhole.md", WORM_IDS)
+    check_ids_in_file("dimjump spec",  "dimjump/hexa-dimjump.md",   DIM_IDS)
+    check_ids_in_file("dimuse spec",   "dimuse/hexa-dimuse.md",     USE_IDS)
+
+    println("")
+    println("§4 status-token monotone (no PENDING/TBD/WIP in 6 surfaces)")
+    check_status_tokens("roadmap status tokens", ROADMAP)
+    check_status_tokens("cli status tokens",     CLI)
+    check_status_tokens("warp spec tokens",      "warp/hexa-warp.md")
+    check_status_tokens("wormhole spec tokens",  "wormhole/hexa-wormhole.md")
+    check_status_tokens("dimjump spec tokens",   "dimjump/hexa-dimjump.md")
+    check_status_tokens("dimuse spec tokens",    "dimuse/hexa-dimuse.md")
+
+    println("")
+    println("========================================================================")
+    let total = PASS_COUNT + FAIL_COUNT
+    println("  " + str(PASS_COUNT) + "/" + str(total) + " checks passed")
+    if FAIL_COUNT == 0 {
+        println("  All 13 falsifiers (F-WARP-{1..3} + F-WORM-{1..3} + F-DIM-{1..3} + F-USE-{1..4}) preregistered.")
+        println("  HONEST C3: in-tree spec sentinel ≠ empirical PASS.")
+        println("  → verify/stages_falsifier.hexa PASS")
+    } else {
+        println("  → verify/stages_falsifier.hexa FAIL — " + str(FAIL_COUNT) + " checks failed")
+        exit(1)
+    }
+}

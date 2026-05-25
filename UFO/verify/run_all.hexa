@@ -1,0 +1,73 @@
+#!hexa strict
+// hexa-ufo/verify/run_all.hexa — orchestrator (.hexa primary).
+//
+// Single CLI entry that runs all verify/*.hexa scripts and aggregates
+// pass/fail. Sister of hexa-rtsc/verify/run_all.hexa.
+//
+// Run:
+//     hexa run verify/run_all.hexa     # exit 0 = all subscripts PASS
+
+let SCRIPTS: [str] = [
+    "verify/lattice_check.hexa",
+    "verify/stages_cross_doc.hexa",
+    "verify/stages_falsifier.hexa",
+    "verify/calc_warp.hexa",
+    "verify/calc_wormhole.hexa",
+    "verify/calc_dimjump.hexa",
+    "verify/calc_dimuse.hexa",
+    "verify/numerics_warp.hexa",
+    "verify/numerics_wormhole.hexa",
+    "verify/numerics_dimjump.hexa",
+    "verify/numerics_dimuse.hexa",
+    "verify/numerics_warp_parity.hexa",
+    "verify/numerics_wormhole_parity.hexa",
+    "verify/numerics_dimjump_parity.hexa",
+    "verify/numerics_dimuse_parity.hexa",
+    "verify/cross_link_upstream.hexa",
+    "verify/lint_numerics.hexa",
+    "verify/saturation_check.hexa",
+    "verify/numerics_lattice_arithmetic.hexa",
+    "verify/numerics_cross_pillar.hexa",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/run_all — aggregate sweep (Stage-1~7 propulsion)")
+    println("========================================================================")
+    let mut passed = 0
+    let mut failed = 0
+    for s in SCRIPTS {
+        println("")
+        println("---- " + s + " ----")
+        let rc_str = exec("hexa run " + s + " >/tmp/_hexa_ufo_v.out 2>&1; echo $?").trim()
+        let rc = int(rc_str)
+        let out = exec("cat /tmp/_hexa_ufo_v.out 2>/dev/null")
+        // print last 6 lines for compactness
+        let lines = out.split("\n")
+        let n = lines.len()
+        let mut start = 0
+        if n > 6 { start = n - 6 }
+        let mut k = start
+        while k < n {
+            println(lines[k])
+            k = k + 1
+        }
+        if rc == 0 {
+            passed = passed + 1
+            println("  → " + s + " PASS")
+        } else {
+            failed = failed + 1
+            println("  → " + s + " FAIL (rc=" + str(rc) + ")")
+        }
+    }
+    println("")
+    println("========================================================================")
+    println("  " + str(passed) + "/" + str(passed + failed) + " scripts passed")
+    if failed == 0 {
+        println("  PASS — all hexa-ufo invariants hold (Stage-4~7 substrate-grounded).")
+        println("  HONEST C3: in-tree spec sentinel ≠ empirical PASS.")
+    } else {
+        println("  FAIL — " + str(failed) + " scripts failed.")
+        exit(1)
+    }
+}

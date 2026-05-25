@@ -1,0 +1,271 @@
+#!hexa strict
+// hexa-ufo/verify/calc_dimjump.hexa — Stage-6 dimjump pillar n=6 params.
+//
+// Algebraic (T1) calculator for the Calabi-Yau / Kaluza-Klein dimjump
+// pillar:  σ(6)=12, τ(6)=4, φ(6)=2, μ(6)=1, n=6, J₂=24.
+//
+// Closed-form derivations (integer arithmetic only):
+//   ladder_4D   = τ            =  4    (Minkowski spacetime base)
+//   ladder_6D   = n            =  6    (dimjump foundation)
+//   ladder_10D  = σ - φ        = 10    (superstring critical)
+//   ladder_11D  = σ - μ        = 11    (M-theory critical)
+//   ladder_24D  = J₂           = 24    (Leech / Mathieu M₂₄)
+//   ladder_26D  = J₂ + φ       = 26    (bosonic string critical)
+//   R_c_in_lPl  = σ^(n/φ)      = 12^3 = 1728 (compactification radius)
+//   E_fold_d1   = (σ - φ)^1    = 10    (E_fold = M_Pl·c²/10^d)
+//   master      = σ·φ = n·τ    = 24    (J₂ Mathieu / M₂₄)
+//
+// Anchor checks: every derivation must be quoted (text-form) in
+// `dimjump/hexa-dimjump.md` so spec doc and computation cannot drift.
+// Sister of hexa-ufo/verify/calc_warp.hexa, calc_wormhole.hexa.
+//
+// Run:
+//     hexa run verify/calc_dimjump.hexa     # exit 0 = all PASS
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let DOC_DIM = ROOT + "/dimjump/hexa-dimjump.md"
+
+fn _read(p: str) -> str {
+    if file_exists(p) == false { return "" }
+    return read_file(p)
+}
+
+fn _has(t: str, s: str) -> bool {
+    if t.len() == 0 { return false }
+    return t.find(s) >= 0
+}
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+// ── n=6 lattice constants ────────────────────────────────────────────────
+let SIGMA = 12
+let TAU   = 4
+let PHI   = 2
+let MU    = 1                  // μ(6) = 1 (Möbius residue)
+let N     = 6
+let J2    = 24
+
+// integer power: σ^(n/φ) = σ^3 = 12·12·12 = 1728
+fn ipow(b: int, e: int) -> int {
+    let mut r = 1
+    let mut k = 0
+    while k < e { r = r * b; k = k + 1 }
+    return r
+}
+
+// ── derived dimjump-pillar parameters (closed-form, integer-only) ─────────
+let LADDER_4D   = TAU                    //  4
+let LADDER_6D   = N                      //  6
+let LADDER_10D  = SIGMA - PHI            // 10
+let LADDER_11D  = SIGMA - MU             // 11
+let LADDER_24D  = J2                     // 24
+let LADDER_26D  = J2 + PHI               // 26
+let RC_IN_LPL   = ipow(SIGMA, N / PHI)   // σ^3 = 1728
+let EFOLD_D1    = LADDER_10D             // (σ-φ)^1 = 10  (denominator at d=1)
+let MASTER_LHS  = SIGMA * PHI            // 24
+let MASTER_RHS  = N * TAU                // 24
+
+fn print_table() {
+    println("")
+    println("  ┌─ hexa-ufo/dimjump — n=6 derived KK / CY₃ parameters ──────────┐")
+    println("  │  σ(6) τ(6) φ(6) μ(6) n  J₂   = 12 4 2 1 6 24                  │")
+    println("  │  ladder 4D   = τ              =  " + str(LADDER_4D) + "                            │")
+    println("  │  ladder 6D   = n              =  " + str(LADDER_6D) + "                            │")
+    println("  │  ladder 10D  = σ - φ          = " + str(LADDER_10D) + "  (superstring critical)     │")
+    println("  │  ladder 11D  = σ - μ          = " + str(LADDER_11D) + "  (M-theory critical)        │")
+    println("  │  ladder 24D  = J₂             = " + str(LADDER_24D) + "  (Leech / M₂₄)              │")
+    println("  │  ladder 26D  = J₂ + φ         = " + str(LADDER_26D) + "  (bosonic string)           │")
+    println("  │  R_c / ℓ_Pl  = σ^(n/φ) = 12³  = " + str(RC_IN_LPL) + "                          │")
+    println("  │  E_fold(d=1) denom = (σ-φ)¹   = " + str(EFOLD_D1) + "                            │")
+    println("  │  master      = σ·φ = n·τ      = " + str(MASTER_LHS) + " ?= " + str(MASTER_RHS) + "                       │")
+    println("  └────────────────────────────────────────────────────────────────┘")
+    println("")
+}
+
+// ── algebraic checks ─────────────────────────────────────────────────────
+
+fn check_master_identity() {
+    _check(MASTER_LHS == 24 && MASTER_RHS == 24 && MASTER_LHS == MASTER_RHS,
+           "master identity σ·φ = n·τ = 24 (J₂ Mathieu)",
+           "σ·φ = " + str(MASTER_LHS) + ", n·τ = " + str(MASTER_RHS))
+}
+
+fn check_ladder_4d() {
+    _check(LADDER_4D == 4 && LADDER_4D == TAU,
+           "ladder 4D = τ = 4 (Minkowski base)",
+           "τ = " + str(LADDER_4D))
+}
+
+fn check_ladder_10d() {
+    _check(LADDER_10D == 10 && LADDER_10D == SIGMA - PHI,
+           "ladder 10D = σ-φ = 10 (superstring critical)",
+           "σ-φ = " + str(LADDER_10D))
+}
+
+fn check_ladder_11d() {
+    _check(LADDER_11D == 11 && LADDER_11D == SIGMA - MU,
+           "ladder 11D = σ-μ = 11 (M-theory critical)",
+           "σ-μ = " + str(LADDER_11D))
+}
+
+fn check_ladder_24d() {
+    _check(LADDER_24D == 24 && LADDER_24D == J2,
+           "ladder 24D = J₂ = 24 (Leech / Mathieu M₂₄)",
+           "J₂ = " + str(LADDER_24D))
+}
+
+fn check_ladder_26d() {
+    _check(LADDER_26D == 26 && LADDER_26D == J2 + PHI,
+           "ladder 26D = J₂+φ = 26 (bosonic string critical)",
+           "J₂+φ = " + str(LADDER_26D))
+}
+
+fn check_ladder_monotone() {
+    let l: [int] = [LADDER_4D, LADDER_6D, LADDER_10D, LADDER_11D, LADDER_24D, LADDER_26D]
+    let mut prev = l[0]
+    let mut mono = true
+    let mut k = 1
+    while k < l.len() {
+        if l[k] <= prev { mono = false }
+        prev = l[k]
+        k = k + 1
+    }
+    _check(mono,
+           "dimension ladder strictly monotone 4D<6D<10D<11D<24D<26D",
+           "rungs: 4 6 10 11 24 26")
+}
+
+fn check_compactification_radius() {
+    _check(RC_IN_LPL == 1728,
+           "compactification radius R_c = σ^(n/φ)·ℓ_Pl = 12³·ℓ_Pl = 1728 ℓ_Pl",
+           "σ^(n/φ) = " + str(RC_IN_LPL))
+}
+
+fn check_efold_denominator() {
+    _check(EFOLD_D1 == 10,
+           "E_fold(d=1) denom = (σ-φ)¹ = 10 (M_Pl·c²/10^d barrier)",
+           "(σ-φ)^1 = " + str(EFOLD_D1))
+}
+
+// ── spec-doc anchor checks (dimjump/hexa-dimjump.md must quote each) ─────
+
+fn check_anchor_ladder() {
+    let txt = _read(DOC_DIM)
+    let ok = (_has(txt, "4D") && _has(txt, "6D") && _has(txt, "10D") &&
+              _has(txt, "11D") && _has(txt, "24D") && _has(txt, "26D"))
+    _check(ok, "dimjump spec anchors 6-rung ladder 4D→6D→10D→11D→24D→26D",
+           "looking for all 6 rung labels in " + DOC_DIM)
+}
+
+fn check_anchor_rc() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "R_c = ell_Pl · sigma(6) ^ ( n / phi(6) )") ||
+             _has(txt, "12 ^ 3") || _has(txt, "12^3") ||
+             _has(txt, "1728") || _has(txt, "ell_Pl · 12 ^ ( 6 / 2 )")
+    _check(ok, "dimjump spec anchors R_c = ℓ_Pl·σ^(n/φ) = 1728·ℓ_Pl",
+           "looking for R_c formula / 1728 in " + DOC_DIM)
+}
+
+fn check_anchor_mkk() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "m_KK = n · hbar / ( R_c · c )") ||
+             _has(txt, "m_KK") || _has(txt, "n · hbar / ( R_c")
+    _check(ok, "dimjump spec anchors m_KK = n·ℏ/(R_c·c)",
+           "looking for m_KK formula in " + DOC_DIM)
+}
+
+fn check_anchor_efold() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "E_fold = M_Pl · c^2 / ( sigma(6) - phi(6) ) ^ d") ||
+             _has(txt, "M_Pl · c^2 / 10 ^ d") ||
+             _has(txt, "M_Pl·c² / 10^d") || _has(txt, "M_Pl·c²/10^d") ||
+             _has(txt, "10 ^ d")
+    _check(ok, "dimjump spec anchors E_fold = M_Pl·c²/(σ-φ)^d barrier",
+           "looking for E_fold formula in " + DOC_DIM)
+}
+
+fn check_anchor_master() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "sigma(6) · phi(6)  =  n · tau(6)  =  J_2  =  24") ||
+             _has(txt, "σ·φ = n·τ = 24") || _has(txt, "= 24")
+    _check(ok, "dimjump spec anchors master σ·φ = n·τ = J₂ = 24",
+           "looking for master identity in " + DOC_DIM)
+}
+
+fn check_anchor_falsifiers() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "F-DIM-1") && _has(txt, "F-DIM-2") &&
+             _has(txt, "F-DIM-3")
+    _check(ok, "dimjump spec lists 3 falsifiers F-DIM-{1,2,3}",
+           "looking for F-DIM-{1..3} in " + DOC_DIM)
+}
+
+let FALSIFIERS: [str] = [
+    "LHC 14 TeV KK-resonance hunt null → DEMOTE F-DIM-1 (R_c·c probed)",
+    "sub-mm gravity null → DEMOTE F-DIM-2 (σ^(n/φ) compactification radius)",
+    "no vacuum-energy transition → DEMOTE F-DIM-3 (E_fold barrier scale)",
+    "CY₃ landscape forces unique topology → demote 10⁵⁰⁰ closed-form ladder",
+    "sub-Planck KK signature observed → revisit n=6 ladder anchor",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/calc_dimjump — Stage-6 dimjump pillar n=6 parameters")
+    println("========================================================================")
+    print_table()
+
+    println("§1 algebraic identities (integer-only, n=6 closed-form)")
+    check_master_identity()
+    check_ladder_4d()
+    check_ladder_10d()
+    check_ladder_11d()
+    check_ladder_24d()
+    check_ladder_26d()
+    check_ladder_monotone()
+    check_compactification_radius()
+    check_efold_denominator()
+
+    println("")
+    println("§2 spec-doc anchors (dimjump/hexa-dimjump.md must quote each)")
+    check_anchor_ladder()
+    check_anchor_rc()
+    check_anchor_mkk()
+    check_anchor_efold()
+    check_anchor_master()
+    check_anchor_falsifiers()
+
+    println("")
+    println("  FALSIFIERS (" + str(FALSIFIERS.len()) + "):")
+    for f in FALSIFIERS { println("    ✗ " + f) }
+    println("")
+    println("========================================================================")
+    let pass_n = RUN - FAIL
+    println("  " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        println("  → calc_dimjump FAIL — " + str(FAIL) + " checks failed")
+        println("__HEXA_UFO_CALC_DIMJUMP__ FAIL")
+        exit(1)
+    }
+    println("  HONEST C3: algebraic n=6 closure ≠ empirical KK / CY₃ realization.")
+    println("__HEXA_UFO_CALC_DIMJUMP__ PASS")
+    exit(0)
+}

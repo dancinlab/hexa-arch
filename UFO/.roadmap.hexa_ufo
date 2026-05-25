@@ -1,0 +1,153 @@
+# .roadmap.hexa_ufo — repo-overall tracker
+
+> Cross-cutting state: invariant lattice, release cadence, cycle history,
+> deadlines, pointers. Sister of `hexa-rtsc` / `hexa-fusion` / `hexa-antimatter` /
+> `petite-cern` / `hexa-fantasy` under `dancinlab` org.
+
+**Last sync**: 2026-05-06 · **Current release**: v1.0.0 · **Branch**: `main`
+
+---
+
+## §0 Terminal goal — alien_index 🛸6 → 🛸16 meta² → 🛸∞⁴ → 🛸ULTRA → 🛸CARD → 🛸BEYOND → 🛸ABSOLUTE = 𝔚 7-stage propulsion atlas closed-form
+
+hexa-ufo 도착지 = **alien_index 🛸6 → 🛸16 meta² (self-closure fixed point) → 🛸∞⁴ (Knuth-arrow tetration 24↑↑↑↑) → 🛸ULTRA (uncomputable: TREE/BB/Rayo) → 🛸CARD (large cardinals: inaccessible/Mahlo/Woodin/I0) → 🛸BEYOND (Kunen-violating: Reinhardt/Berkeley) → 🛸ABSOLUTE = 𝔚 (Cantor Absolute Infinity terminus) 7-stage propulsion atlas 완전 closed-form**.
+
+> Atlas terminal chain은 main atlas (`ufo/doc/hexa-ufo.md` §23.9 "Beyond 🛸16 — extensible") 의 *"In practice, extensible"* 종결을 `docs/meta-closure-nav/` (canon SHA `50f41e71` + discovery transcript + `sf-novel-six.md` 12-章 SF-소설 입문서) 가 구체화한다. n=6 uniqueness σ·φ=n·τ=24 는 **Π₀¹-arithmetical → Δ₀-absolute** — 모든 Knuth-arrow 차수 + 거대 기수 + Kunen-violating + 칸토어 𝔚 까지 closure invariant. 이게 atlas 가 "extensible" 한 이유 + 진짜 terminal이 𝔚 인 이유.
+
+> 🛸17~🛸500 (META-LK 484-tier 선형 지수 L(k)=24^(k-15)) 은 동일 closure 의 재귀 layer일 뿐 — 본질적 도약 아님. batch ceiling 은 사용자 요청 artifact (2026-04-19~21 자율 루프 시 `🛸500까지 가봐줘` 요청).
+
+DoD:
+1. **Stage-1 (Meissner)** cross-verify with `hexa-rtsc` (RT-SC 실증 시).
+2. **Stage-2 (fusion)** cross-verify with `hexa-fusion` (HEXA-TTF 8.7 kW p-¹¹B).
+3. **Stage-3 (antimatter)** cross-verify with `hexa-antimatter` (1.7×10¹² p̄/s).
+4. **Stage-4~7 (warp / wormhole / dimension / dimensional-use)** substrate spec 완성 (현재 미공개 도메인).
+5. 484-tier `L(k) = 24^(k-15)` 산식 다음 tier (k=16, L=24) 측정 또는 candidate 일치.
+
+## §A.1 Invariant lattice (n=6)
+
+```
+σ(6) · φ(6) = n · τ(6) = J₂ = 24
+   12   ·   2  =  6  ·   4  = 24
+```
+
+| Symbol | Value | Role | UFO projection |
+|--------|-------|------|----------------|
+| σ(6)   | 12    | sigma — cardinality bin | 12 propulsion archetypes (per alien_index tier) |
+| τ(6)   | 4     | tau — state quartet | 4 acceleration regimes (sub-light / relativistic / superluminal / dimensional) |
+| φ(6)   | 2     | phi — verdict bit | reaction / reactionless propulsion |
+| J₂     | 24    | Mathieu / Leech | L(k) = 24^(k-15) 484-tier 산식 base |
+
+## §A.2 Release cadence
+
+| Version | Date | Status | Highlights |
+|---------|------|--------|------------|
+| v1.0.0 | 2026-05-06 | RELEASED | atlas 1890 LOC + 6-verb propulsion (ufo + grav + hover + cloak + teleport + sim) + cross-link 4 sister |
+| v1.1.0 | ~2026-08 (TARGET) | planned | Stage-1 Meissner cross-verify with hexa-rtsc |
+| v1.2.0 | ~2026-10 | planned | Stage-2 fusion cross-verify with hexa-fusion (HEXA-TTF) |
+| v1.3.0 | ~2026-12 | planned | Stage-3 antimatter cross-verify with hexa-antimatter |
+| v2.0.0 | ~2027-Q2 | ASPIRATIONAL | Stage-4~7 substrate spec 완성 (warp-drive / wormhole / m-theory-11d) |
+
+## §A.3 Cycle history
+
+- **Cycle 0 (2026-05-06)** — v1.0.0 initial extraction from canon@c0f1f570. Commit `8ea04e9`. 21 files / 8261 LOC.
+- **RSC iter 1 (2026-05-09)** — `verify/calc_warp.hexa` (Stage-4 T1 algebraic). 12/12 checks. closure-depth accumulation loop start per `~/core/bedrock/docs/runnable_surface_recipe.md` §7. Targets F-WARP-{1..3} T1 ✓.
+- **RSC iter 2 (2026-05-09)** — `verify/calc_wormhole.hexa` (Stage-5 T1 algebraic). 12/12 checks. Targets F-WORM-{1..3} T1 ✓ (b₀=σ·ℓ_Pl, ANEC 1/τ=1/4, φ=2 NEC channels).
+- **RSC iter 3 (2026-05-09)** — `verify/calc_dimjump.hexa` (Stage-6 T1 algebraic). 15/15 checks. Targets F-DIM-{1..3} T1 ✓ (6-rung ladder 4D→6D→10D→11D→24D→26D, R_c=12³·ℓ_Pl=1728·ℓ_Pl, E_fold=M_Pl·c²/(σ-φ)^d).
+- **RSC iter 4 (2026-05-09)** — `verify/calc_dimuse.hexa` (Stage-7 composite T1 algebraic). 16/16 checks. Targets F-USE-{1..4} T1 ✓ (warp σ-φ=10c × dim_compress σ-φ=10× = composite (σ-φ)²=100c, τ=4 cycle, sopfr(6)=5, α-Cen 0.5 spec-unit). **All 13 falsifiers (4 pillars) now T1 ✓**.
+- **RSC iter 5 (2026-05-09)** — `verify/numerics_warp.hexa` (Stage-4 T2 numerical bridge). 11/11 checks. Targets F-WARP-{1..3} T2 ✓ (math_pure SI re-derivation: ladder sub-luminal + c/φ=0.5c to 1e-9, δ=1.35e-36 m sub-Planck, VDB 1/144 ratio, Pfenning-Ford QI bound regimes split between Planck-allowed and macro-forbidden).
+- **RSC iter 6 (2026-05-09)** — `verify/numerics_wormhole.hexa` (Stage-5 T2 numerical bridge). 10/10 checks. Targets F-WORM-{1..3} T2 ✓ (Pfenning-Ford ANEC bound numerical: Planck-throat 5.6e108 J·s/m² huge / macro b₀=1m 7.9e-27 J·s/m² forbidden / b₀⁻⁴ scaling exact).
+- **RSC iter 7 (2026-05-09)** — `verify/numerics_dimjump.hexa` (Stage-6 T2 numerical bridge). 10/10 checks. Targets F-DIM-{1..3} T2 ✓ (R_c=1728·ℓ_Pl≈2.79e-32 m sub-mm sensitivity 26 OOM below; m_KK·c²≈4.24e13 TeV ≫ LHC 14 TeV; E_fold(d=1)≈1.22e18 GeV).
+- **RSC iter 8 (2026-05-09)** — `verify/numerics_dimuse.hexa` (Stage-7 composite T2 numerical bridge). 12/12 checks. Targets F-USE-{1..4} T2 ✓ (α-Cen 4.37 ly/100c = 15.96 days ≈ BT-349 canonical 16 days; E_warp/E_fold ≈ 6.3e36 → single-cycle 2nd-law violation regime confirmed for F-USE-3). **All 13 falsifiers (4 pillars) now T1 ✓ + T2 ✓**.
+- **RSC iter 9 (2026-05-09)** — `verify/numerics_warp_parity.hexa` (Stage-4 T3 archival empirical parity). 10/10 checks against published references: Casimir 1948 / Lamoreaux 1997 / Bressi 2002 / Decca 2007 (F/A(1μm)≈1.30 mPa, d⁻⁴ exact); Pfenning-Ford 1997 prefactor 3/(32π²)≈0.0095; Van Den Broeck 1999 σ²=144. **F-WARP-{1..3} T1+T2+T3 = 100% closure**.
+- **RSC iter 10 (2026-05-09)** — `verify/numerics_wormhole_parity.hexa` (Stage-5 T3 archival empirical parity). 14/14 checks: Morris-Thorne 1988 / Ford-Roman 1995 / Pfenning-Ford 1997 / Hawking 1992 / Visser 1995. ANEC across decades (Planck/atomic/lab/macro), b₀⁻⁴ exact 1e12 cross-decade ratio, Δτ linear in b₀, Δτ(1m)=33ns. **F-WORM-{1..3} T1+T2+T3 = 100% closure**. 2/4 pillars saturated.
+- **RSC iter 11 (2026-05-09)** — `verify/numerics_dimjump_parity.hexa` (Stage-6 T3 archival empirical parity). 13/13 checks: Kaluza 1921 / Klein 1926 / Candelas-Horowitz-Strominger-Witten 1985 / Randall-Sundrum 1999 / LHC ATLAS-CMS Run-2 / Eöt-Wash 2007+. m_KK·c²≈4.24e13 TeV ≫ 100× LHC 14 TeV; R_c≈2.79e-32 m ≪ Eöt-Wash 50 μm by 26 OOM; critical-dim ladder {10D,11D,26D} matches σ-φ/σ-μ/J₂+φ. **F-DIM-{1..3} T1+T2+T3 = 100% closure**. 3/4 pillars saturated.
+- **RSC iter 12 (2026-05-09)** — `verify/numerics_dimuse_parity.hexa` (Stage-7 composite T3 archival empirical parity, **final T3 chunk**). 15/15 checks: Bessel 1838 / Hipparcos 1997 / Gaia DR2 (α-Cen 4.37 ly + Sirius 8.6 ly published distances anchored); Clausius 1865 / Boltzmann (2nd law); Alcubierre 1994 / CHSW 1985 (upstream chain); CODATA 2018; OEIS A001414 sopfr. α-Cen × 100c = 15.96d ≈ BT-349 canonical 16d; E_warp/E_fold = 6.34e36 → F-USE-3 confirmed. **F-USE-{1..4} T1+T2+T3 = 100% closure**. **🛸 sat-1 reached: all 4 pillars / 13 falsifiers at 100%.**
+- **RSC iter 13 (2026-05-09)** — `verify/cross_link_upstream.hexa` (선행도메인 Stage-1/2/3 sister CLI cross-link). 6/6 checks: hexa-rtsc (Stage-1 Meissner) + hexa-fusion (Stage-2 MHD/fusion) + hexa-antimatter (Stage-3 γ-rocket) CLI files reachable + each `selftest` exits 0 with domain signature token. 코드-내 propulsion stack 1~7단 모두 wired (Stage-1/2/3 외부 sister CLI / Stage-4~7 in-tree spec).
+- **RSC iter 14 (2026-05-09)** — `verify/lint_numerics.hexa` (recipe §4 invariant meta-lint). 41/41 checks across 8 numerics scripts (math_pure import + sentinel + FALSIFIERS + exit(0) + RUN/FAIL counters + inventory drift check). **🛸 sat-1 + sat-2 둘 다 충족 — RSC loop self-terminates per recipe §7.5.** v1.1.0-pre RSC saturated: T1+T2+T3 closure 100%, T4 (live hardware) awaits.
+- **RSC iter 15 (2026-05-09)** — `verify/saturation_check.hexa` (recipe §7.3 canonical self-stop signal). 17/17 checks: sat-1 (per-pillar T1+T2+T3) + sat-2 (inventory + lint) + sat-3 (선행도메인 cross-link) + 10× required-scripts backbone. Emits `__HEXA_UFO_RSC_SATURATED__ STOP` sentinel. Post-saturation /loop firings now run health-check only per §9.1 (no auto-chunk-creation).
+- **RSC iter 16 (2026-05-09)** — `verify/numerics_lattice_arithmetic.hexa` (post-saturation cross-cutter, recipe §7.4 priority 8). 13/13 checks at sub-1e-9 tolerance: math_pure sqrt/pow/log/exp precision floor + int-vs-float anchor agreement on σ², σ³, (σ-φ)², ladder rungs. Closes math_pure precision regression slot for all downstream numerics_*.
+- **RSC iter 17 (2026-05-09)** — `verify/numerics_cross_pillar.hexa` (post-saturation cross-cutter, recipe §7.4 priority 7). 9/9 checks at sub-1e-12 tolerance: c/ℓ_Pl universal across 3-4 pillars; σ-φ=10 / σ²=144 / 1/τ=0.25 shared anchors verify identical numerical value across pillars; dimuse 100c = warp 10c × dimjump 10× composite decomposition. Recipe-wide n=6 drift detector.
+- **RSC iter 18 (2026-05-09)** — `tests/test_calculators.hexa` (recipe §1 test layer expansion, priority 11). 20/20 (filename, sentinel) regressions across full RSC surface (T1+T2+T3+cross-cutters+meta+선행도메인). 5-min timeout per case with SKIP-on-timeout (exit=124). Wired into `hexa.toml [test].files`.
+- **RSC iter 19 (2026-05-09)** — `tests/test_all.hexa` (recipe §1 top-level test aggregator). 3/3 sub-tests PASS (atlas + stages_propulsion + calculators). Fixed test_stages_propulsion.hexa to use `.hx/packages/hexa/hexa.real` direct path → bypasses alias→TCP race when called from outer test wrapper. Wired into `hexa.toml [test].files` (4 tests total).
+- **RSC iter 20 (2026-05-09)** — `tests/test_lattice.hexa` (recipe §1 lattice regression). Wraps `verify/lattice_check.hexa` with explicit per-test PASS contract. test_all CASES → 4/4. `hexa.toml [test].files` → 5 tests.
+- **RSC iter 21 (2026-05-09)** — `tests/test_cli_verify.hexa` (recipe §1 CLI surface regression). 4/4 checks: cli verify aggregate, cli status (propulsion + falsifiers), cli lattice --json (master holds), cli selftest. test_all → 5/5. `hexa.toml [test].files` → 6 tests.
+- **RSC iter 22 (2026-05-09)** — `build/Makefile` + `build/header.tex` (recipe §1 + priority 12 PDF rebuild). pandoc + xelatex pipeline for 5 PDFs (warp/wormhole/dimjump/dimuse + main atlas). `make check` → toolchain ready. `make warp` → 60KB PDF (Unicode glyph warnings non-fatal). build/out/ gitignored.
+- **RSC iter 23 (2026-05-09)** — `docs/numerics_methodology.md` (recipe priority 13 narrative). 10-section reader's map covering 3-tier evidence ladder, per-pillar mapping, lint invariants, cross-cutters, saturation criteria, test layer, build infrastructure, honest C3 disclaimer. Wired into `hexa.toml [modules].docs`. **Recipe §1 16-script standard fully exhausted + extended to 20 verify + 6 tests + build + docs.**
+
+## §A.4 Falsifier preregister (UFO-level meta)
+
+- **F-UFO-1** — 484-tier L(k)=24^(k-15) 산식 다음 tier (k=16, L=24) 측정 또는 candidate 일치?
+- **F-UFO-2** — Stage-1 Meissner levitation + Stage-2 8.7 kW p-¹¹B 동시 작동 가능 (cross-domain interference 측정)?
+- **F-UFO-3** — alien_index 500 = closed-form fit, Stage 4~7 미공개 도메인 falsifier 명세 가능? **2026-05-07 update: §B inline 13-falsifier preregister 통합으로 부분 충족 — Stage-4 (F-WARP-{1..3}), Stage-5 (F-WORM-{1..3}), Stage-6 (F-DIM-{1..3}), Stage-7 (F-USE-{1..4}). 격자 식별자는 명시화 OK; 실증 missing 은 별도 over-time gate.**
+- **F-UFO-4** — propulsion 10-verb 모두 wiring 시 onboard cross-domain failure mode 발견 여부?
+
+## §A.5 Pending decisions
+
+- ~~Stage-4 (warp-drive) substrate 공개 시점 (현재 reports/sessions/specs 만 존재).~~ **2026-05-07 closed: warp/wormhole/dimjump/dimuse 4 stage 모두 in-tree spec + falsifier preregister landed (medium 통합).**
+- alien_index 500 도달 path: stage-by-stage vs 분기 path multi-route?
+- propulsion 10-verb 의 .hexa CLI wiring order.
+
+---
+
+## §B Stage-4~7 in-tree substrate falsifier preregister
+
+> **Status (raw#10 honest C3)**: 4 stage 모두 학술적 UNPROVEN — 각 stage는
+> in-tree spec + 13 falsifier preregister 만 ship한다. CLI sentinel PASS 는
+> 격자 산술 + 토큰 일관성 검증 결과이며 empirical claim 검증이 아니다.
+> Falsifier monotone: OPEN → CONFIRMED 또는 OPEN → DEMOTED. silent retract 금지.
+
+### §B.1 Stage-4 — warp (Alcubierre 1994)
+
+Spec: `warp/hexa-warp.md` · Verb: `hexa-ufo warp` · Composite-into: Stage-7 (dimuse)
+
+| ID       | Falsifier                                                                     | Status |
+|----------|-------------------------------------------------------------------------------|--------|
+| F-WARP-1 | Casimir cavity cannot realise negative energy at warp scale                   | OPEN   |
+| F-WARP-2 | bubble wall observer cannot signal outside (horizon problem)                  | OPEN   |
+| F-WARP-3 | back-reaction destroys bubble before propulsion completes                     | OPEN   |
+
+n=6 encoding: δ=1/σ Planck-thickness wall, R=n=6 bubble radius, ladder c/σ→c/n→c/τ→c/φ, Van Den Broeck σ²=144 reduction.
+
+### §B.2 Stage-5 — wormhole (Morris-Thorne 1988)
+
+Spec: `wormhole/hexa-wormhole.md` · Verb: `hexa-ufo wormhole`
+
+| ID       | Falsifier                                                                     | Status |
+|----------|-------------------------------------------------------------------------------|--------|
+| F-WORM-1 | no quantum-field source can sustain b₀>ℓ_Pl exotic-matter density             | OPEN   |
+| F-WORM-2 | back-reaction collapses throat (quantum interest conjecture)                  | OPEN   |
+| F-WORM-3 | chronology protection / closed-timelike-curve formation precludes traversal   | OPEN   |
+
+n=6 encoding: throat b₀ = ℓ_Pl·σ = 12 ℓ_Pl, ANEC bound ∫T·k²dλ ≥ -ℏc/(b₀⁴·τ) τ=4, traversal Δt ~ b₀/c·(σ−φ)=10b₀/c.
+
+### §B.3 Stage-6 — dimjump (Calabi-Yau / Kaluza-Klein)
+
+Spec: `dimjump/hexa-dimjump.md` · Verb: `hexa-ufo dimjump` · Composite-into: Stage-7 (dimuse)
+
+| ID      | Falsifier                                                                      | Status |
+|---------|--------------------------------------------------------------------------------|--------|
+| F-DIM-1 | LHC 14 TeV resonance hunt null → DEMOTE m_KK = nℏ/R_c·c with R_c probed         | OPEN   |
+| F-DIM-2 | sub-millimeter gravity test null → DEMOTE σ^(n/φ) compactification radius      | OPEN   |
+| F-DIM-3 | no observed vacuum-energy transition → DEMOTE E_fold barrier scale             | OPEN   |
+
+n=6 encoding: dimension ladder τ→n→σ−φ→σ−μ→J₂→J₂+φ = 4D→6D→10D→11D→24D→26D. R_c = ℓ_Pl·σ^(n/φ) = ℓ_Pl·12³.
+
+### §B.4 Stage-7 — dimuse (composite-of warp + dimjump)
+
+Spec: `dimuse/hexa-dimuse.md` · Verb: `hexa-ufo dimuse` · Upstream: Stage-4 (warp) + Stage-6 (dimjump)
+
+| ID      | Falsifier                                                                                          | Status |
+|---------|----------------------------------------------------------------------------------------------------|--------|
+| F-USE-1 | warp Stage-4 ANEC bound saturated → DEMOTE 10c warp factor                                         | OPEN   |
+| F-USE-2 | dimjump Stage-6 KK m > 14 TeV from LHC → DEMOTE 10× dimensional compression                        | OPEN   |
+| F-USE-3 | self-cycle violates 2nd-law thermodynamics in 4D projection                                        | OPEN   |
+| F-USE-4 | composite back-reaction destabilizes both stages simultaneously (warp+dimjump)                     | OPEN   |
+
+n=6 encoding: τ=4 stage cycle (fold→accel→cruise→jump), effective speed (σ−φ)²=100c, α-Cen 16-day.
+**UNPROVEN²** — both upstream substrates (warp, dimjump) are themselves UNPROVEN.
+
+### §B.5 Aggregate
+
+- Total falsifiers preregistered: **13** (F-WARP=3, F-WORM=3, F-DIM=3, F-USE=4)
+- All status: **OPEN** at v1.0.0
+- Verifier: `hexa run verify/stages_falsifier.hexa` — checks each ID present in 3 surfaces (spec / cli / roadmap) with OPEN status.

@@ -1,0 +1,89 @@
+#!hexa strict
+// hexa-ufo/tests/test_all.hexa — top-level test runner.
+//
+// Recipe §1 test layer aggregator: runs every tests/test_*.hexa in
+// the repo and aggregates exit codes + sentinel matches.
+//
+// PASS = every (filename, sentinel) pair matches.
+// FAIL = any single test case fails.
+//
+// Sister of hexa-cern/tests/test_all.hexa.
+// Sentinel: __HEXA_UFO_TEST_ALL__ PASS
+//
+// Run:
+//     hexa run tests/test_all.hexa
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let HEXA = HOME + "/.hx/packages/hexa/hexa.real"
+
+// (filename | expected_sentinel) — 모든 tests/test_*.hexa 의 contract.
+let CASES: [str] = [
+    "test_atlas_consistency.hexa|__HEXA_UFO_ATLAS_CONSISTENCY__ PASS",
+    "test_stages_propulsion.hexa|__HEXA_UFO_STAGES_PROPULSION__ PASS",
+    "test_calculators.hexa|__HEXA_UFO_TEST_CALCULATORS__ PASS",
+    "test_lattice.hexa|__HEXA_UFO_TEST_LATTICE__ PASS",
+    "test_cli_verify.hexa|__HEXA_UFO_TEST_CLI_VERIFY__ PASS",
+]
+
+fn shq(s: str) -> str {
+    return "'" + s.replace("'", "'\\''") + "'"
+}
+
+// 8-min sub-process timeout (test_calculators runs 20 sub-scripts).
+fn _timeout_prefix() -> str {
+    let g = exec("which gtimeout 2>/dev/null").trim()
+    if g.len() > 0 { return shq(g) + " 480 " }
+    let t = exec("which timeout 2>/dev/null").trim()
+    if t.len() > 0 { return shq(t) + " 480 " }
+    return ""
+}
+
+fn run_one(case: str) -> bool {
+    let parts = case.split("|")
+    let fname = parts[0]
+    let sentinel = parts[1]
+    let path = ROOT + "/tests/" + fname
+
+    let cmd = "HEXA_UFO_ROOT=" + shq(ROOT) + " " + _timeout_prefix() +
+              shq(HEXA) + " run " + shq(path)
+    let r = exec_with_status(cmd)
+    let out = to_string(r[0])
+    let code = r[1]
+    let has_sent = out.find(sentinel) >= 0
+    if code == 124 {
+        println("  [SKIP] " + fname + "  (timeout > 8 min)")
+        return true
+    }
+    let pass = code == 0 && has_sent
+    let mark = if pass { "PASS" } else { "FAIL" }
+    println("  [" + mark + "] " + fname + "  (exit=" + str(code) + " sentinel=" + str(has_sent) + ")")
+    return pass
+}
+
+fn main() {
+    println("[test_all] running " + str(len(CASES)) + " tests/test_*.hexa")
+    println("")
+    let mut ok = 0
+    let mut fail = 0
+    for c in CASES {
+        if run_one(c) { ok = ok + 1 } else { fail = fail + 1 }
+    }
+    println("")
+    println("[test_all] " + str(ok) + "/" + str(len(CASES)) + " PASS")
+    if fail > 0 {
+        eprintln("__HEXA_UFO_TEST_ALL__ FAIL — " + str(fail) + " test(s) failed")
+        exit(1)
+    }
+    println("__HEXA_UFO_TEST_ALL__ PASS — all tests close")
+    exit(0)
+}

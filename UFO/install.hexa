@@ -1,0 +1,66 @@
+// install.hexa — hx build hook for hexa-ufo.
+//
+// Invoked by `hx install hexa-ufo` (hexa-lang package manager) right after
+// the GitHub checkout (or symlink from /Users/ghost/core/hexa-ufo) lands in
+// $HX_PKG_DIR. hx passes:
+//   HX_PKG_DIR     — absolute path to the package root
+//   HX_BIN_DIR     — ~/.hx/bin
+//   HX_PKG_NAME    — "hexa-ufo"
+//   HX_HOOK_PHASE  — "pre" | "post" | "both" (default: "both")
+//
+// Mirrors hexa-bio/install.hexa pattern (sister extraction 2026-05-04).
+//
+// Responsibilities (each idempotent, hexa-only — no .py creation, no pip):
+//   1. Pre-install: nothing required (pure-text atlas + stub modules).
+//   2. Post-install: run `hexa-ufo selftest` via the freshly-staged
+//      cli/hexa-ufo.hexa. Selftest output captured; non-PASS = warn-only
+//      (not a blocker — atlas is a read-only browser).
+//
+// Honest C3: see hexa-ufo/README.md "Status" section. Stages 4~7 of the
+// propulsion stack are TBD — no public substrate exists yet.
+
+fn run_quick_selftest(root: str) -> bool {
+    let cli = root + "/cli/hexa-ufo.hexa"
+    let exists = exec("[ -f \"" + cli + "\" ] && echo y || echo n").trim()
+    if exists != "y" {
+        eprintln("[hexa-ufo/install] WARN: cli/hexa-ufo.hexa missing — skip selftest")
+        return false
+    }
+    println("[hexa-ufo/install] [post] running quick selftest (atlas + 6-verb sentinel)")
+    let cmd = "HEXA_UFO_ROOT=\"" + root + "\" hexa run \"" + cli + "\" selftest 2>&1"
+    let raw = exec(cmd)
+    if raw.contains("__HEXA_UFO_SELFTEST__ PASS") {
+        println("[hexa-ufo/install]   selftest PASS — atlas + 6 verbs present")
+        return true
+    }
+    eprintln("[hexa-ufo/install] WARN: selftest non-PASS (warn-only, not a blocker)")
+    eprintln("  hint: missing module file or sentinel mismatch — see README Status section")
+    return false
+}
+
+fn main() -> void {
+    let mut root = env("HX_PKG_DIR")
+    if root == "" { root = exec("pwd").trim() }
+    let phase = env("HX_HOOK_PHASE")
+    let mut p = phase
+    if p == "" { p = "both" }
+    println("[hexa-ufo/install] HX_PKG_DIR=" + root + " phase=" + p)
+
+    let entry = root + "/cli/hexa-ufo.hexa"
+    let entry_ok = exec("[ -f \"" + entry + "\" ] && echo y || echo n").trim()
+    if entry_ok != "y" {
+        eprintln("[hexa-ufo/install] ERROR: canonical entry missing: " + entry)
+        exit(1)
+    }
+    println("[hexa-ufo/install] canonical entry OK: cli/hexa-ufo.hexa")
+
+    if p == "pre" || p == "both" {
+        println("[hexa-ufo/install] [pre] no python deps required (pure-hexa atlas browser)")
+    }
+
+    if p == "post" || p == "both" {
+        let _ = run_quick_selftest(root)  // warn-only
+    }
+
+    println("[hexa-ufo/install] done — hx will generate " + env("HX_BIN_DIR") + "/hexa-ufo shim")
+}

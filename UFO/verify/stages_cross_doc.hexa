@@ -1,0 +1,96 @@
+#!hexa strict
+// hexa-ufo/verify/stages_cross_doc.hexa — 4-stage spec ↔ cli ↔ roadmap audit.
+//
+// Stage-4~7 (warp / wormhole / dimjump / dimuse) substrate spec docs share
+// canonical n=6 lattice numbers and signature physics tokens. This script
+// verifies the same tokens appear across the 3 surface tier:
+//   1. Spec doc       (warp/hexa-warp.md, wormhole/hexa-wormhole.md, etc.)
+//   2. CLI router     (cli/hexa-ufo.hexa — status output, must echo tokens)
+//   3. Roadmap §B     (.roadmap.hexa_ufo — must echo tokens)
+//
+// Run:
+//     hexa run verify/stages_cross_doc.hexa     # exit 0 = all invariants hold
+
+let mut FAIL_COUNT = 0
+let mut PASS_COUNT = 0
+
+fn check(label: str, ok: bool, detail: str) {
+    if ok {
+        PASS_COUNT = PASS_COUNT + 1
+        println("  [PASS] " + label)
+        if detail.len() > 0 { println("         · " + detail) }
+    } else {
+        FAIL_COUNT = FAIL_COUNT + 1
+        println("  [FAIL] " + label)
+        if detail.len() > 0 { println("         · " + detail) }
+    }
+}
+
+fn read_file(path: str) -> str {
+    return exec("cat " + path + " 2>/dev/null")
+}
+
+fn check_token(label: str, text: str, token: str, where_: str) {
+    let ok = text.contains(token)
+    check(label, ok, "token \"" + token + "\" in " + where_)
+}
+
+fn main() {
+    println("hexa-ufo verify/stages_cross_doc — Stage-4~7 spec ↔ cli ↔ roadmap audit")
+    println("")
+
+    let cli      = read_file("cli/hexa-ufo.hexa")
+    let roadmap  = read_file(".roadmap.hexa_ufo")
+    let warp     = read_file("warp/hexa-warp.md")
+    let wormhole = read_file("wormhole/hexa-wormhole.md")
+    let dimjump  = read_file("dimjump/hexa-dimjump.md")
+    let dimuse   = read_file("dimuse/hexa-dimuse.md")
+
+    println("§1 spec doc presence")
+    check("warp spec exists",     warp.len()     > 0, "warp/hexa-warp.md " + str(warp.len()) + " bytes")
+    check("wormhole spec exists", wormhole.len() > 0, "wormhole/hexa-wormhole.md " + str(wormhole.len()) + " bytes")
+    check("dimjump spec exists",  dimjump.len()  > 0, "dimjump/hexa-dimjump.md " + str(dimjump.len()) + " bytes")
+    check("dimuse spec exists",   dimuse.len()   > 0, "dimuse/hexa-dimuse.md " + str(dimuse.len()) + " bytes")
+
+    println("")
+    println("§2 Stage-4 (warp) cross-surface tokens")
+    check_token("warp/Alcubierre in spec",   warp,    "Alcubierre",  "warp/hexa-warp.md")
+    check_token("warp/Alcubierre in cli",    cli,     "Alcubierre",  "cli/hexa-ufo.hexa")
+    check_token("warp/Alcubierre in roadmap",roadmap, "Alcubierre",  ".roadmap.hexa_ufo")
+
+    println("")
+    println("§3 Stage-5 (wormhole) cross-surface tokens")
+    check_token("wormhole/Morris-Thorne in spec",    wormhole,"Morris-Thorne","wormhole/hexa-wormhole.md")
+    check_token("wormhole/Morris-Thorne in cli",     cli,     "Morris-Thorne","cli/hexa-ufo.hexa")
+    check_token("wormhole/Morris-Thorne in roadmap", roadmap, "Morris-Thorne",".roadmap.hexa_ufo")
+
+    println("")
+    println("§4 Stage-6 (dimjump) cross-surface tokens")
+    check_token("dimjump/Calabi-Yau in spec",    dimjump, "Calabi-Yau", "dimjump/hexa-dimjump.md")
+    check_token("dimjump/Calabi-Yau in cli",     cli,     "Calabi-Yau", "cli/hexa-ufo.hexa")
+    check_token("dimjump/Calabi-Yau in roadmap", roadmap, "Calabi-Yau", ".roadmap.hexa_ufo")
+
+    println("")
+    println("§5 Stage-7 (dimuse) cross-surface tokens")
+    check_token("dimuse/100c in spec",     dimuse,  "100c", "dimuse/hexa-dimuse.md")
+    check_token("dimuse/100c in cli",      cli,     "100c", "cli/hexa-ufo.hexa")
+    check_token("dimuse/100c in roadmap",  roadmap, "100c", ".roadmap.hexa_ufo")
+    check_token("dimuse/τ=4 in cli",       cli,     "τ=4",  "cli/hexa-ufo.hexa")
+
+    println("")
+    println("§6 n=6 master identity in 3 surfaces")
+    check_token("master J₂=24 in cli",     cli,     "24",  "cli/hexa-ufo.hexa")
+    check_token("master J₂=24 in roadmap", roadmap, "24",  ".roadmap.hexa_ufo")
+
+    println("")
+    println("========================================================================")
+    let total = PASS_COUNT + FAIL_COUNT
+    println("  " + str(PASS_COUNT) + "/" + str(total) + " checks passed")
+    if FAIL_COUNT == 0 {
+        println("  Stage-4~7 spec ↔ cli ↔ roadmap token agreement holds.")
+        println("  → verify/stages_cross_doc.hexa PASS")
+    } else {
+        println("  → verify/stages_cross_doc.hexa FAIL — " + str(FAIL_COUNT) + " checks failed")
+        exit(1)
+    }
+}

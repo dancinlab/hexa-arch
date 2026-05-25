@@ -1,0 +1,154 @@
+#!hexa strict
+// hexa-ufo/verify/cross_link_upstream.hexa — Stage-1/2/3 선행도메인 CLI cross-link.
+//
+// 선행도메인 (precedent / upstream substrates) for hexa-ufo's 7-stage
+// propulsion stack are SHIPPED AS SISTER REPOS:
+//
+//   Stage-1 hover     Meissner diamagnetism (RT-SC 48T)   → dancinlab/hexa-rtsc
+//   Stage-2 cruise    MHD + tabletop fusion (D-T / p-11B) → dancinlab/hexa-fusion
+//   Stage-3 orbital   antimatter gamma-rocket (1.7e12 p̄)  → dancinlab/hexa-antimatter
+//
+// (Stage-4~7 warp / wormhole / dimjump / dimuse ship as IN-TREE spec —
+// covered by calc_*.hexa + numerics_*.hexa + numerics_*_parity.hexa
+// chunks in this same directory.)
+//
+// This verify chunk asserts each upstream sister CLI is **reachable +
+// functional** from hexa-ufo's perspective:
+//   1. CLI entry file exists at the expected path.
+//   2. CLI `selftest` / `status` / `--version` exits 0 (substrate-grounded).
+//   3. CLI output contains the expected upstream-domain signature
+//      (e.g. "hexa-rtsc" string, RT-SC 48 T sentinel, etc.)
+//
+// PASS = all 3 upstream sister CLIs reachable + functional.
+// FAIL = any upstream missing or non-functional.
+//
+// HONEST C3: this verifies CLI **connection**, NOT empirical realisation.
+// Running `hexa-rtsc verify` exit-0 means the closed-form algebra +
+// numerics hold, NOT that 48 T RT-SC has been demonstrated in lab.
+//
+// Run:
+//     hexa run verify/cross_link_upstream.hexa     # exit 0 = all 3 linked
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let CORE = HOME + "/core"
+
+let CLI_RTSC       = CORE + "/hexa-rtsc/cli/hexa-rtsc.hexa"
+let CLI_FUSION     = CORE + "/hexa-fusion/cli/hexa-fusion.hexa"
+let CLI_ANTIMATTER = CORE + "/hexa-antimatter/cli/hexa-antimatter.hexa"
+
+let HEXA_REAL = HOME + "/.hx/packages/hexa/hexa.real"
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+// ── helpers ──────────────────────────────────────────────────────────────
+
+fn _exists(p: str) -> bool {
+    return file_exists(p)
+}
+
+fn _exec_rc(cmd: str) -> int {
+    // Run shell command; echo $? on its own line; parse exit code.
+    let out = exec(cmd + " >/dev/null 2>&1; echo __RC=$?").trim()
+    let lines = out.split("\n")
+    let last = lines[lines.len() - 1]
+    if last.starts_with("__RC=") {
+        return int(last.slice(5, last.len()))
+    }
+    return -1
+}
+
+fn _exec_capture(cmd: str) -> str {
+    return exec(cmd + " 2>&1")
+}
+
+fn _has(t: str, s: str) -> bool {
+    if t.len() == 0 { return false }
+    return t.find(s) >= 0
+}
+
+// ── per-domain probe ─────────────────────────────────────────────────────
+
+fn check_cli_file_exists(label: str, path: str) {
+    _check(_exists(path),
+           label + " CLI file present",
+           path)
+}
+
+fn check_cli_selftest(label: str, cli_path: str, want_token: str, sub: str) {
+    let cli_dir = exec("dirname " + cli_path).trim()
+    let proj_dir = exec("dirname " + cli_dir).trim()
+    let cmd = "cd " + proj_dir + " && " + HEXA_REAL + " run " + cli_path + " " + sub
+    let rc = _exec_rc(cmd)
+    let out = _exec_capture(cmd)
+    let ok_rc = (rc == 0)
+    let ok_token = _has(out, want_token)
+    _check(ok_rc && ok_token,
+           label + " " + sub + " exits 0 + emits '" + want_token + "'",
+           "rc = " + str(rc) + ", token-found = " + (if ok_token { "yes" } else { "no" }))
+}
+
+let FALSIFIERS: [str] = [
+    "any upstream sister CLI file missing → propulsion stack broken (Stage-1/2/3 unreachable)",
+    "hexa-rtsc selftest FAIL → Stage-1 Meissner closed-form retracted (F-UFO-2 stage-1 dep)",
+    "hexa-fusion selftest FAIL → Stage-2 fusion closed-form retracted (F-UFO-2 stage-2 dep)",
+    "hexa-antimatter selftest FAIL → Stage-3 antimatter closed-form retracted",
+    "any upstream CLI output missing its domain signature → repo identity drift",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/cross_link_upstream — Stage-1/2/3 선행도메인 CLI cross-link")
+    println("========================================================================")
+    println("")
+    println("  Stage-1 (hover/Meissner)    → " + CLI_RTSC)
+    println("  Stage-2 (cruise/fusion)     → " + CLI_FUSION)
+    println("  Stage-3 (orbital/antimatter)→ " + CLI_ANTIMATTER)
+    println("")
+
+    println("§1 sister CLI files reachable")
+    check_cli_file_exists("Stage-1 hexa-rtsc",     CLI_RTSC)
+    check_cli_file_exists("Stage-2 hexa-fusion",   CLI_FUSION)
+    check_cli_file_exists("Stage-3 hexa-antimatter", CLI_ANTIMATTER)
+
+    println("")
+    println("§2 sister CLI selftest invocation (functional cross-link)")
+    check_cli_selftest("Stage-1 hexa-rtsc",       CLI_RTSC,       "hexa-rtsc",       "selftest")
+    check_cli_selftest("Stage-2 hexa-fusion",     CLI_FUSION,     "hexa-fusion",     "selftest")
+    check_cli_selftest("Stage-3 hexa-antimatter", CLI_ANTIMATTER, "hexa-antimatter", "selftest")
+
+    println("")
+    println("  FALSIFIERS (" + str(FALSIFIERS.len()) + "):")
+    for f in FALSIFIERS { println("    ✗ " + f) }
+    println("")
+    println("========================================================================")
+    let pass_n = RUN - FAIL
+    println("  " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        println("  → cross_link_upstream FAIL — " + str(FAIL) + " checks failed")
+        println("__HEXA_UFO_CROSS_LINK_UPSTREAM__ FAIL")
+        exit(1)
+    }
+    println("  HONEST C3: CLI cross-link ≠ empirical Stage-1/2/3 realisation;")
+    println("             closed-form sister substrates wired, no apparatus.")
+    println("__HEXA_UFO_CROSS_LINK_UPSTREAM__ PASS")
+    exit(0)
+}

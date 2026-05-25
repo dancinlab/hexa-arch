@@ -1,0 +1,64 @@
+#!hexa strict
+// hexa-ufo/tests/test_stages_propulsion.hexa
+//
+// Stage-4~7 propulsion substrate test:
+//   1. verify/run_all.hexa exits 0 (3 sub-scripts: lattice + cross_doc + falsifier)
+//   2. cli `hexa-ufo selftest` exits 0 (10 verbs PASS)
+//   3. cli `hexa-ufo lattice --json` emits "holds":true (n=6 master identity)
+//
+// PASS criterion: __HEXA_UFO_STAGES_PROPULSION__ PASS
+
+let HOME = env("HOME")
+let HEXA_UFO_ROOT_ENV = env("HEXA_UFO_ROOT")
+
+fn hexa_ufo_root() -> str {
+    if HEXA_UFO_ROOT_ENV.len() > 0 { return HEXA_UFO_ROOT_ENV }
+    let inferred = exec("dirname \"$(dirname \"$0\")\" 2>/dev/null || true").trim()
+    if inferred.len() > 0 { return inferred }
+    return HOME + "/.hexa-ufo"
+}
+
+let HU = hexa_ufo_root()
+let CLI = HU + "/cli/hexa-ufo.hexa"
+
+fn run_rc(cmd: str) -> int {
+    let rc = exec(cmd + " >/dev/null 2>&1; echo $?").trim()
+    return int(rc)
+}
+
+fn run_capture(cmd: str) -> str {
+    return exec(cmd + " 2>&1")
+}
+
+fn main() {
+    println("hexa-ufo Stage-4~7 propulsion substrate test")
+    println("")
+
+    println("[1] verify/run_all.hexa")
+    let rc1 = run_rc(HOME + "/.hx/packages/hexa/hexa.real run " + HU + "/verify/run_all.hexa")
+    let v1 = (rc1 == 0)
+    println("    rc=" + str(rc1) + " — " + (if v1 { "PASS" } else { "FAIL" }))
+
+    println("")
+    println("[2] cli/hexa-ufo selftest")
+    let rc2 = run_rc(HOME + "/.hx/packages/hexa/hexa.real run " + CLI + " selftest")
+    let v2 = (rc2 == 0)
+    println("    rc=" + str(rc2) + " — " + (if v2 { "PASS" } else { "FAIL" }))
+
+    println("")
+    println("[3] cli/hexa-ufo lattice --json (master identity holds)")
+    let out3 = run_capture(HOME + "/.hx/packages/hexa/hexa.real run " + CLI + " lattice --json")
+    let v3 = out3.contains("\"holds\":true")
+    println("    " + (if v3 { "PASS — n=6 master identity holds" } else { "FAIL — out=" + out3 }))
+
+    println("")
+    let pass = v1 && v2 && v3
+    if pass {
+        println("__HEXA_UFO_STAGES_PROPULSION__ PASS")
+        println("(sentinel only — does NOT validate empirical Stage-4~7 claims;")
+        println(" 13 falsifiers F-WARP/F-WORM/F-DIM/F-USE remain OPEN at v1.0.0)")
+    } else {
+        println("__HEXA_UFO_STAGES_PROPULSION__ FAIL")
+        exit(1)
+    }
+}

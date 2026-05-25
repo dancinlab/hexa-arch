@@ -1,0 +1,112 @@
+#!hexa strict
+// hexa-ufo/tests/test_atlas_consistency.hexa
+//
+// Atlas consistency self-test:
+//   1. 484-tier L(k)=24^(k-15) lattice arithmetic sanity
+//      (L(15)=1, L(16)=24, L(17)=576, L(18)=13824)
+//   2. 10-verb count check (ufo / grav / hover / cloak / teleport / sim
+//      + warp / wormhole / dimjump / dimuse — 4 in-tree Stage-4~7 specs)
+//
+// PASS criterion:
+//   __HEXA_UFO_ATLAS_CONSISTENCY__ PASS
+//
+// Cost: $0 (pure arithmetic + filesystem stat).
+
+let HOME = env("HOME")
+let HEXA_UFO_ROOT_ENV = env("HEXA_UFO_ROOT")
+
+fn hexa_ufo_root() -> str {
+    if HEXA_UFO_ROOT_ENV.len() > 0 { return HEXA_UFO_ROOT_ENV }
+    let inferred = exec("dirname \"$(dirname \"$0\")\" 2>/dev/null || true").trim()
+    if inferred.len() > 0 { return inferred }
+    return HOME + "/.hexa-ufo"
+}
+
+let HU = hexa_ufo_root()
+
+fn _file_exists(p: str) -> bool {
+    let r = exec("[ -f '" + p + "' ] && echo yes || echo no").trim()
+    return r == "yes"
+}
+
+// ─── 1. lattice arithmetic ───
+//
+// L(k) = 24^(k-15) for k in {15, 16, 17, 18, ...}
+// Implemented as integer power (small exponents) — avoids float drift.
+
+fn lk(k: int) -> int {
+    let e = k - 15
+    if e < 0 { return 0 }
+    let mut v = 1
+    let mut i = 0
+    while i < e {
+        v = v * 24
+        i = i + 1
+    }
+    return v
+}
+
+fn test_lattice() -> bool {
+    let l15 = lk(15)
+    let l16 = lk(16)
+    let l17 = lk(17)
+    let l18 = lk(18)
+    println("  L(15) = " + str(l15) + "    (expect 1)")
+    println("  L(16) = " + str(l16) + "   (expect 24)")
+    println("  L(17) = " + str(l17) + "  (expect 576)")
+    println("  L(18) = " + str(l18) + " (expect 13824)")
+    return (l15 == 1) && (l16 == 24) && (l17 == 576) && (l18 == 13824)
+}
+
+// ─── 2. verb count ───
+
+fn test_verbs() -> int {
+    let verbs = [
+        HU + "/ufo/doc/hexa-ufo.md",
+        HU + "/grav/hexa-grav.md",
+        HU + "/hover/hexa-hover.md",
+        HU + "/cloak/hexa-cloak.md",
+        HU + "/teleport/hexa-teleport.md",
+        HU + "/sim/hexa-sim.md",
+        HU + "/warp/hexa-warp.md",
+        HU + "/wormhole/hexa-wormhole.md",
+        HU + "/dimjump/hexa-dimjump.md",
+        HU + "/dimuse/hexa-dimuse.md",
+    ]
+    let names = ["ufo", "grav", "hover", "cloak", "teleport", "sim", "warp", "wormhole", "dimjump", "dimuse"]
+    let mut n = 0
+    let mut i = 0
+    while i < verbs.len() {
+        let p = verbs[i]
+        let nm = names[i]
+        if _file_exists(p) {
+            println("  verb " + nm + ": present")
+            n = n + 1
+        } else {
+            println("  verb " + nm + ": MISSING (" + p + ")")
+        }
+        i = i + 1
+    }
+    return n
+}
+
+fn main() {
+    println("hexa-ufo atlas consistency test")
+    println("")
+    println("[1] 484-tier L(k)=24^(k-15) lattice arithmetic sanity")
+    let lat_ok = test_lattice()
+    println("    " + (if lat_ok { "PASS" } else { "FAIL" }))
+    println("")
+    println("[2] 10-verb count")
+    let n = test_verbs()
+    let verbs_ok = (n == 10)
+    println("    " + str(n) + "/10 verbs present — " + (if verbs_ok { "PASS" } else { "FAIL" }))
+    println("")
+    let pass = lat_ok && verbs_ok
+    if pass {
+        println("__HEXA_UFO_ATLAS_CONSISTENCY__ PASS")
+    } else {
+        println("__HEXA_UFO_ATLAS_CONSISTENCY__ FAIL")
+        exit(1)
+    }
+}

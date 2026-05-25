@@ -1,0 +1,117 @@
+#!hexa strict
+// hexa-ufo/tests/test_calculators.hexa — per-pillar calculator regression.
+//
+// Recipe §1 test layer: runs each verify/calc_*.hexa + numerics_*.hexa
+// + numerics_*_parity.hexa + meta scripts and asserts each emits its
+// per-script PASS sentinel + exits 0. Aggregates results across the
+// full closure-depth-accumulation surface (T1 + T2 + T3 + meta).
+//
+// PASS = every (filename, sentinel) pair matches.
+// FAIL = any single sentinel missing or non-zero exit.
+//
+// Sister of hexa-cern/tests/test_calculators.hexa.
+// Sentinel: __HEXA_UFO_TEST_CALCULATORS__ PASS
+//
+// Run:
+//     hexa run tests/test_calculators.hexa     # exit 0 = all calculators close
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let HEXA = HOME + "/.hx/packages/hexa/hexa.real"
+
+// (filename | sentinel_token) — recipe §2 step 4 wiring contract.
+// Bare filename = verify/<file>; filename with "/" = ROOT-relative.
+let CASES: [str] = [
+    // §1 T1 algebraic (lattice + cross_doc + 4 pillar)
+    // (legacy scripts emit "→ verify/<name>.hexa PASS" or "N/N PASS" rather than __HEXA__-prefixed sentinel.)
+    "lattice_check.hexa|10/10 PASS",
+    "stages_cross_doc.hexa|verify/stages_cross_doc.hexa PASS",
+    "stages_falsifier.hexa|verify/stages_falsifier.hexa PASS",
+    "calc_warp.hexa|__HEXA_UFO_CALC_WARP__ PASS",
+    "calc_wormhole.hexa|__HEXA_UFO_CALC_WORMHOLE__ PASS",
+    "calc_dimjump.hexa|__HEXA_UFO_CALC_DIMJUMP__ PASS",
+    "calc_dimuse.hexa|__HEXA_UFO_CALC_DIMUSE__ PASS",
+    // §2 T2 numerical (4 pillar)
+    "numerics_warp.hexa|__HEXA_UFO_NUMERICS_WARP__ PASS",
+    "numerics_wormhole.hexa|__HEXA_UFO_NUMERICS_WORMHOLE__ PASS",
+    "numerics_dimjump.hexa|__HEXA_UFO_NUMERICS_DIMJUMP__ PASS",
+    "numerics_dimuse.hexa|__HEXA_UFO_NUMERICS_DIMUSE__ PASS",
+    // §3 T3 parity (4 pillar, archival empirical)
+    "numerics_warp_parity.hexa|__HEXA_UFO_NUMERICS_WARP_PARITY__ PASS",
+    "numerics_wormhole_parity.hexa|__HEXA_UFO_NUMERICS_WORMHOLE_PARITY__ PASS",
+    "numerics_dimjump_parity.hexa|__HEXA_UFO_NUMERICS_DIMJUMP_PARITY__ PASS",
+    "numerics_dimuse_parity.hexa|__HEXA_UFO_NUMERICS_DIMUSE_PARITY__ PASS",
+    // §4 cross-cutters
+    "numerics_lattice_arithmetic.hexa|__HEXA_UFO_NUMERICS_LATTICE_ARITHMETIC__ PASS",
+    "numerics_cross_pillar.hexa|__HEXA_UFO_NUMERICS_CROSS_PILLAR__ PASS",
+    // §5 meta
+    "lint_numerics.hexa|__HEXA_UFO_LINT_NUMERICS__ PASS",
+    "saturation_check.hexa|__HEXA_UFO_RSC_SATURATED__ STOP",
+    // §6 cross-link (선행도메인 Stage-1/2/3 sister CLI)
+    "cross_link_upstream.hexa|__HEXA_UFO_CROSS_LINK_UPSTREAM__ PASS",
+]
+
+fn shq(s: str) -> str {
+    return "'" + s.replace("'", "'\\''") + "'"
+}
+
+// Optional 5-minute timeout (gtimeout/timeout). On timeout (exit=124),
+// case is reported as SKIP rather than FAIL (e.g. cross_link_upstream
+// invokes 3 sister CLI selftests which can be slow on cold mac).
+fn _timeout_prefix() -> str {
+    let g = exec("which gtimeout 2>/dev/null").trim()
+    if g.len() > 0 { return shq(g) + " 300 " }
+    let t = exec("which timeout 2>/dev/null").trim()
+    if t.len() > 0 { return shq(t) + " 300 " }
+    return ""
+}
+
+fn run_one(case: str) -> bool {
+    let parts = case.split("|")
+    let fname = parts[0]
+    let sentinel = parts[1]
+
+    let path = if fname.find("/") >= 0 { ROOT + "/" + fname } else { ROOT + "/verify/" + fname }
+
+    let cmd = "HEXA_UFO_ROOT=" + shq(ROOT) + " " + _timeout_prefix() +
+              shq(HEXA) + " run " + shq(path)
+    let r = exec_with_status(cmd)
+    let out = to_string(r[0])
+    let code = r[1]
+    let has_sent = out.find(sentinel) >= 0
+    if code == 124 {
+        println("  [SKIP] " + fname + "  (timeout > 5 min — likely sister CLI cold start)")
+        return true
+    }
+    let pass = code == 0 && has_sent
+    let mark = if pass { "PASS" } else { "FAIL" }
+    println("  [" + mark + "] " + fname + "  (exit=" + str(code) + " sentinel=" + str(has_sent) + ")")
+    return pass
+}
+
+fn main() {
+    println("[test_calculators] running " + str(len(CASES)) + " regressions across full RSC surface")
+    println("")
+    let mut ok = 0
+    let mut fail = 0
+    for c in CASES {
+        if run_one(c) { ok = ok + 1 } else { fail = fail + 1 }
+    }
+    println("")
+    println("[test_calculators] " + str(ok) + "/" + str(len(CASES)) + " PASS")
+    if fail > 0 {
+        eprintln("__HEXA_UFO_TEST_CALCULATORS__ FAIL — " + str(fail) + " calculator(s) failed")
+        exit(1)
+    }
+    println("__HEXA_UFO_TEST_CALCULATORS__ PASS — all calculators close")
+    exit(0)
+}

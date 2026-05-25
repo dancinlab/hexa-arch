@@ -1,0 +1,131 @@
+# hexa.toml — hexa-ufo standalone package manifest
+#
+# Spec: shared/hexa-lang/hexa-toml-spec.json (version 1.0.0)
+# Distribution target: hx install hexa-ufo
+# Provenance: extracted from canon/domains/sf-ufo/ on 2026-05-06
+#             (n6-arch SHA c0f1f570; sister to hexa-bio standalone)
+
+[package]
+name = "hexa-ufo"
+version = "1.0.0"
+entry = "cli/hexa-ufo.hexa"
+description = "UFO Substrate Atlas + 7-stage Propulsion (grav/hover/cloak/teleport/sim/warp/wormhole/dimjump/dimuse). alien_index 🛸6 → 🛸16 meta² → 🛸∞⁴ → 🛸ULTRA → 🛸CARD → 🛸BEYOND → 🛸ABSOLUTE = 𝔚 (n=6 substrate → meta² self-closure → Knuth-arrow tetration → uncomputable → large cardinals → Kunen-violating → Cantor 𝔚). 1890-LOC main atlas + 10 propulsion verbs. Stage-1 Meissner / Stage-2 fusion / Stage-3 antimatter cross-link to public sister repos; Stage-4 warp / Stage-5 wormhole / Stage-6 dim-jump / Stage-7 dim-use ship as IN-TREE spec docs with 13 falsifier preregister (F-WARP/F-WORM/F-DIM/F-USE). Each stage academically UNPROVEN — sentinel PASS ≠ empirical PASS."
+license = "MIT"
+authors = ["박민우 <nerve011235@gmail.com>"]
+repository = "https://github.com/dancinlab/hexa-ufo"
+homepage = "https://github.com/dancinlab/hexa-ufo"
+readme = "README.md"
+keywords = ["ufo", "propulsion", "alien-index", "alcubierre", "wormhole", "meissner", "fusion", "antimatter", "n6-invariant"]
+categories = ["science-fiction", "speculative-engineering", "propulsion", "atlas"]
+
+[lib]
+# Library entry — atlas browser placeholder (read-only).
+entry = "ufo/module/ufo_nexus_scan.hexa"
+
+[[bin]]
+name = "hexa-ufo"
+path = "cli/hexa-ufo.hexa"
+
+[test]
+runner = "hexa"
+files = [
+    "tests/test_atlas_consistency.hexa",
+    "tests/test_stages_propulsion.hexa",
+    "tests/test_calculators.hexa",
+    "tests/test_lattice.hexa",
+    "tests/test_cli_verify.hexa",
+    "tests/test_all.hexa",
+]
+
+# ── hx install hook ───────────────────────────────────────
+# install.hexa runs under hx package manager (hexa-lang) at install time.
+# Phases: pre   → none required (pure-text atlas + stub modules).
+#         post  → quick atlas-consistency selftest (warn-only, not a blocker).
+[scripts]
+install = "install.hexa"
+
+# ── Modules manifest (1 atlas + 10 propulsion verbs + 3 verify scripts) ───
+# ufo                    — main atlas (1890 LOC narrative + 484-tier L(k)=24^(k-15) table)
+# grav/hover/cloak/teleport/sim — 5 propulsion sub-axis docs (atlas pattern)
+# warp/wormhole/dimjump/dimuse  — 4 in-tree Stage-4~7 substrate spec docs (medium-integration 2026-05-07)
+# verify/                — runnable invariant audits (lattice + stages_cross_doc + stages_falsifier)
+[modules]
+hexa = [
+    "ufo/module/ufo_nexus_scan.hexa",
+    "verify/lattice_check.hexa",
+    "verify/stages_cross_doc.hexa",
+    "verify/stages_falsifier.hexa",
+    "verify/calc_warp.hexa",
+    "verify/calc_wormhole.hexa",
+    "verify/calc_dimjump.hexa",
+    "verify/calc_dimuse.hexa",
+    "verify/numerics_warp.hexa",
+    "verify/numerics_wormhole.hexa",
+    "verify/numerics_dimjump.hexa",
+    "verify/numerics_dimuse.hexa",
+    "verify/numerics_warp_parity.hexa",
+    "verify/numerics_wormhole_parity.hexa",
+    "verify/numerics_dimjump_parity.hexa",
+    "verify/numerics_dimuse_parity.hexa",
+    "verify/cross_link_upstream.hexa",
+    "verify/lint_numerics.hexa",
+    "verify/saturation_check.hexa",
+    "verify/numerics_lattice_arithmetic.hexa",
+    "verify/numerics_cross_pillar.hexa",
+    "verify/run_all.hexa",
+]
+docs = [
+    "ufo/doc/hexa-ufo.md",
+    "ufo/doc/warp-dimension-design.md",
+    "grav/hexa-grav.md",
+    "hover/hexa-hover.md",
+    "cloak/hexa-cloak.md",
+    "teleport/hexa-teleport.md",
+    "sim/hexa-sim.md",
+    "warp/hexa-warp.md",
+    "wormhole/hexa-wormhole.md",
+    "dimjump/hexa-dimjump.md",
+    "dimuse/hexa-dimuse.md",
+    "docs/meta-closure-nav/meta-closure-nav.md",
+    "docs/meta-closure-nav/sf-novel-six.md",
+    "docs/meta-closure-nav/README.md",
+    "docs/numerics_methodology.md",
+    "docs/t4_hardware_explainer.md",
+    "docs/hexa_ecosystem_survey.md",
+]
+
+# ── Dependencies ───────────────────────────────────────────
+# Pure-hexa atlas browser. Zero Python deps. Zero network.
+[dependencies]
+hexa-lang = ">=1.0.0"
+
+# ── Closure provenance ────────────────────────────────────
+# v1.0.0 closure: 1 atlas (1890 LOC) + 10 verbs (5 documented sub-axes +
+# 4 in-tree Stage-4~7 substrate specs + propulsion-stage table). All 7
+# propulsion stages substrate-grounded — Stage-1/2/3 cross-link to
+# public sister repos; Stage-4~7 ship as in-tree spec + falsifier preregister
+# (medium integration 2026-05-07). 13 falsifiers (F-WARP/F-WORM/F-DIM/F-USE)
+# audited by verify/stages_falsifier.hexa.
+[closure]
+verbs_total = 10
+verbs_wired_atlas = 10
+propulsion_stages_total = 7
+propulsion_stages_substrate_grounded = 7
+propulsion_stages_tbd = 0
+falsifiers_preregistered = 13
+verify_scripts = 20
+rsc_saturated = "sat-1 + sat-2 + sat-3 (2026-05-09 · 17/17 saturation_check PASS · STOP signal)"
+verdict = "ATLAS_PASS_PROPULSION_FULL"
+extracted_from = "canon/domains/sf-ufo/ @ 2026-05-06 (SHA c0f1f570)"
+stage_4_to_7_integrated = "2026-05-07 (medium integration: spec.md + verify/* in-tree, separate sister repos collapsed)"
+
+# ── Scope honesty ─────────────────────────────────────────
+[scope]
+honest_scope = "ATLAS browser + 7-stage propulsion substrate. Stage-1 (Meissner) / Stage-2 (fusion) / Stage-3 (antimatter) cross-link to dancinlab sister repos. Stage-4 (warp Alcubierre) / Stage-5 (wormhole Morris-Thorne) / Stage-6 (dimjump KK ladder 4D→26D) / Stage-7 (dimuse τ=4 100c composite) ship as IN-TREE spec docs with 13 falsifier preregister. Empirical claim for Stage-4~7 is academically UNPROVEN — verify/* sentinel PASS validates lattice + token consistency, NOT empirical apparatus."
+not_scope = ["actual flight hardware", "prototype build", "FAA / aerospace certification", "warp-bubble engineering (no NEC violation control demonstrated)", "wormhole stabilization (no exotic-matter source)", "dimensional-jump KK-tower (no LHC observation)", "Stage-7 self-cycle energy (composite UNPROVEN²)"]
+alien_index_caveat = "alien_index 🛸6 → 🛸16 meta² → 🛸∞⁴ → 🛸ULTRA → 🛸CARD → 🛸BEYOND → 🛸ABSOLUTE = 𝔚 spans known engineering (RT-SC, fusion, antimatter — all with sister repos) through speculative physics (Alcubierre warp, Morris-Thorne wormhole, KK extra dimensions, composite warp+dimjump) through pure conjecture (Calabi-Yau navigation, 🛸16 meta² self-closure) into mathematical extension: 🛸∞⁴ Knuth-arrow tetration (24↑↑↑↑) → 🛸ULTRA uncomputable (TREE/BB/Rayo) → 🛸CARD large cardinals (inaccessible/Mahlo/Woodin/I0) → 🛸BEYOND Kunen-violating (Reinhardt/Berkeley) → 🛸ABSOLUTE = 𝔚 (Cantor Absolute Infinity, 'all possible mathematical structures'). The 484-tier L(k)=24^(k-15) lattice is an arithmetic indexing convention, not an empirical claim. n=6 uniqueness σ·φ=n·τ=24 is Π₀¹-arithmetical → Δ₀-absolute across every layer including 𝔚 (closure invariant under all Knuth-arrow degrees + cardinal extensions). See docs/meta-closure-nav/ for the canonical reference + SF-소설 입문서."
+
+# ── Cost profile ──────────────────────────────────────────
+[cost]
+mac_local_default = "$0 (pure hexa atlas browser; no network, no compute)"
+selftest = "$0 (verb count + lattice arithmetic sanity check; <1s wall-clock)"
