@@ -2,6 +2,17 @@
 
 Append-only history sister of `CERN.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-26T05:00Z — BLUE-MAX 탐색 결론: 🔵 N/A (연속 물리량 = 🟢 천장) · 4 atom 🟢 verified · verify=로컬직접 교훈
+
+g69 BLUE-MAX(🔵 algebraic-root pair) 를 CERN wakefield 에 적용 시도 → **🔵 도달 불가가 정직한 결론**. verify-native closure 는 🟢 SUPPORTED-NUMERICAL 에서 완성 (= 원래 tabletop closure 의 천장이 옳았음).
+
+- [x] wakefield verify atom 4종 모두 **🟢 SUPPORTED-NUMERICAL** verify (로컬 Mac 직접, g5 verdict verbatim):
+  - `wakefield_e0_gv_m(1.0)=96.159` · `wakefield_lambda_um(1.0)=33.389` (기존)
+  - `wakefield_omega_p_sq(1.0)=3.18261e+27` (sqrt-free 대수근) · `wakefield_e0_lambda_product(1.0)=3210.7` (n18-invariant 상수) — 신규 2종 · 4종 모두 `|Δ|≤5e-13` · atlas 등록됨
+- [x] **🔵 BLUE-MAX 물리적 N/A 확정** — verify CLI 의 🔵 SUPPORTED-FORMAL 는 정수/symbolic `_recompute`(int) 경로 전용. 연속 EM 물리량(√·무리수 상수곱)은 `_recompute_float` → 무조건 🟢. sqrt-free 대수근(omega_p_sq)을 추가해도 float→🟢 태그. g69 의 🔵 pairing 은 number-theory/정수구조 도메인(antimatter 양자수 등)에만 적용 — CERN wakefield 같은 연속물리엔 적용 불가. **🟢 ≠ 제작불가** (verify tier ⊥ 물리 buildability — LWFA 는 BELLA 8 GeV 등 실재)
+- [x] 비싼 교훈 (메모리 박음 [[reference_hexa_verify_host_mini]]) — `hexa verify --expr` 는 **로컬 Mac 직접 Bash 포그라운드**가 정답. pool(ubu-1 segfault·ubu-2 무네트워크/stale·mini-pool stale) + route 훅으로 보내면 "toolchain 붕괴" 오진. INBOX #1137 의 "origin/main 회귀" 주장은 ubu-1 호스트-특정으로 정정 필요(로컬 정상)
+- [x] 신규 2 atom hexa-lang land (verify_cli.hexa + calc_dispatch.hexa)
+
 ## 2026-05-25T13:30Z — **CERN 도메인 tabletop 기준 구현 완료** (closure decision)
 
 - [x] **completion criterion 정의** — RF 축 4-cell closed-form/algorithm closure + tabletop(plasma-wakefield) 축 cold-linear closed-form + 1-D linear PIC parity. 이것이 demiurge public-surface clean-room scope 안에서 자율적으로 도달 가능한 최대치. 사용자 결정 (2026-05-25, "테이블탑 기준으로 완료")
