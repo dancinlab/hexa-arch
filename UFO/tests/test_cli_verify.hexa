@@ -1,0 +1,126 @@
+#!hexa strict
+// hexa-ufo/tests/test_cli_verify.hexa — CLI verify aggregate regression.
+//
+// Recipe §1 test layer: invokes `cli/hexa-ufo.hexa verify` (which
+// internally runs verify/run_all.hexa) and asserts:
+//   1. exit 0 (all 20 verify scripts pass when called via CLI surface)
+//   2. output contains aggregator marker "scripts passed"
+//   3. CLI status output contains expected n=6 closure lines
+//
+// This validates the CLI surface itself — does the user-facing
+// `hexa-ufo verify` command faithfully expose the underlying
+// verify/run_all.hexa contract? Catches CLI dispatcher regressions
+// (e.g. someone refactors cmd_verify to skip a verify script silently).
+//
+// Sister of hexa-cern/tests/test_cli_verify.hexa.
+// Sentinel: __HEXA_UFO_TEST_CLI_VERIFY__ PASS
+//
+// Run:
+//     hexa run tests/test_cli_verify.hexa
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let CLI = ROOT + "/cli/hexa-ufo.hexa"
+let HEXA = HOME + "/.hx/packages/hexa/hexa.real"
+
+fn shq(s: str) -> str {
+    return "'" + s.replace("'", "'\\''") + "'"
+}
+
+fn _timeout_prefix() -> str {
+    let g = exec("which gtimeout 2>/dev/null").trim()
+    if g.len() > 0 { return shq(g) + " 300 " }
+    let t = exec("which timeout 2>/dev/null").trim()
+    if t.len() > 0 { return shq(t) + " 300 " }
+    return ""
+}
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+fn run_cli(sub: str) -> [any] {
+    let cmd = "HEXA_UFO_ROOT=" + shq(ROOT) + " " + _timeout_prefix() +
+              shq(HEXA) + " run " + shq(CLI) + " " + sub
+    return exec_with_status(cmd)
+}
+
+fn check_cli_verify_aggregate() {
+    let r = run_cli("verify")
+    let out = to_string(r[0])
+    let code = r[1]
+    let has_pass = out.find("scripts passed") >= 0
+    let has_atlas = out.find("PASS — all hexa-ufo invariants hold") >= 0 ||
+                    out.find("invariants hold") >= 0
+    _check(code == 0 && has_pass && has_atlas,
+           "cli/hexa-ufo verify → run_all aggregate exit 0 + 'scripts passed' marker",
+           "exit=" + str(code) + " has_pass=" + str(has_pass) + " has_atlas=" + str(has_atlas))
+}
+
+fn check_cli_status_n6() {
+    let r = run_cli("status")
+    let out = to_string(r[0])
+    let code = r[1]
+    let has_propulsion = out.find("propulsion stack") >= 0
+    let has_falsifiers = out.find("F-WARP") >= 0 && out.find("F-USE") >= 0
+    _check(code == 0 && has_propulsion && has_falsifiers,
+           "cli/hexa-ufo status emits propulsion stack + F-WARP/F-USE falsifiers",
+           "exit=" + str(code) + " propulsion=" + str(has_propulsion) +
+           " falsifiers=" + str(has_falsifiers))
+}
+
+fn check_cli_lattice_master_holds() {
+    let r = run_cli("lattice --json")
+    let out = to_string(r[0])
+    let code = r[1]
+    let holds = out.find("\"holds\":true") >= 0
+    _check(code == 0 && holds,
+           "cli/hexa-ufo lattice --json emits 'holds:true' (master identity)",
+           "exit=" + str(code) + " holds=" + str(holds))
+}
+
+fn check_cli_selftest_pass() {
+    let r = run_cli("selftest")
+    let out = to_string(r[0])
+    let code = r[1]
+    let has_pass = out.find("__HEXA_UFO_SELFTEST__ PASS") >= 0
+    _check(code == 0 && has_pass,
+           "cli/hexa-ufo selftest emits __HEXA_UFO_SELFTEST__ PASS",
+           "exit=" + str(code) + " has_pass=" + str(has_pass))
+}
+
+fn main() {
+    println("[test_cli_verify] CLI: " + CLI)
+    println("")
+
+    check_cli_verify_aggregate()
+    check_cli_status_n6()
+    check_cli_lattice_master_holds()
+    check_cli_selftest_pass()
+
+    println("")
+    let pass_n = RUN - FAIL
+    println("[test_cli_verify] " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        eprintln("__HEXA_UFO_TEST_CLI_VERIFY__ FAIL — " + str(FAIL) + " CLI surface check(s) failed")
+        exit(1)
+    }
+    println("__HEXA_UFO_TEST_CLI_VERIFY__ PASS — CLI faithfully exposes verify surface")
+    exit(0)
+}

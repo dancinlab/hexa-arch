@@ -1,0 +1,252 @@
+#!hexa strict
+// hexa-ufo/verify/numerics_lattice_arithmetic.hexa — n=6 lattice
+// float ↔ int precision cross-check (recipe §7.4 priority 8 cross-cutter).
+//
+// `verify/lattice_check.hexa` proves the n=6 closures using INTEGER
+// arithmetic (σ·φ = 12·2 = 24 etc.). This script repeats the same
+// derivations using `self/runtime/math_pure` floating-point routines
+// (sqrt_pure, pow_pure, log_pure, exp_pure) and asserts they agree
+// to sub-1e-9 relative error.
+//
+// Why: the per-pillar numerics scripts (numerics_warp, numerics_wormhole,
+// numerics_dimjump, numerics_dimuse) compose math_pure calls with these
+// same n=6 anchors. If math_pure drifts on the integer-equivalent
+// anchors (e.g. sqrt(144) ≠ 12), every downstream numeric is
+// contaminated. This script gives that drift its own regression slot.
+//
+// Sister of hexa-cern/verify/numerics_lattice_arithmetic.hexa.
+// Sentinel: __HEXA_UFO_NUMERICS_LATTICE_ARITHMETIC__ PASS
+//
+// Run:
+//     hexa run verify/numerics_lattice_arithmetic.hexa
+
+use "self/runtime/math_pure"
+
+let HOME = env("HOME")
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+// ── n=6 lattice canonical integer values ─────────────────────────────────
+let SIGMA_INT       = 12
+let TAU_INT         = 4
+let PHI_INT         = 2
+let MU_INT          = 1
+let N_INT           = 6
+let SOPFR_INT       = 5
+let J2_INT          = 24
+let SIGMA_PHI_INT   = 10        // σ - φ = warp factor
+let SIGMA_SQ_INT    = 144       // σ² = VDB reduction
+let SIGMA_CUBED_INT = 1728      // σ³ = R_c factor (12^3)
+let COMPOSITE_INT   = 100       // (σ-φ)² = composite speed factor
+
+// Float counterparts
+let SIGMA = 12.0
+let PHI   = 2.0
+let TAU   = 4.0
+let MU    = 1.0
+let N     = 6.0
+
+// helper: relative error |a - b| / |b|
+fn rel_err(a: float, b: float) -> float {
+    let d = a - b
+    let abs_d = if d < 0.0 { -d } else { d }
+    let abs_b = if b < 0.0 { -b } else { b }
+    if abs_b == 0.0 { return abs_d }
+    return abs_d / abs_b
+}
+
+let TOL = 1.0e-9
+
+// ── §1 sqrt / pow / cube cross-checks ────────────────────────────────────
+
+fn check_sqrt_sigma_squared() {
+    let v = sqrt_pure(SIGMA * SIGMA)
+    let err = rel_err(v, SIGMA)
+    _check(err < TOL,
+           "sqrt_pure(σ²) = σ  (sqrt(144) = 12)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+fn check_sqrt_composite_factor() {
+    // sqrt((σ-φ)²) = σ-φ = 10  (composite Stage-7 anchor)
+    let v = sqrt_pure(float(COMPOSITE_INT))
+    let err = rel_err(v, SIGMA - PHI)
+    _check(err < TOL,
+           "sqrt_pure((σ-φ)²) = σ-φ  (sqrt(100) = 10)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+fn check_pow_sigma_2() {
+    let v = pow_pure(SIGMA, 2.0)
+    let err = rel_err(v, float(SIGMA_SQ_INT))
+    _check(err < TOL,
+           "pow_pure(σ, 2) = σ² = 144  (VDB reduction)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+fn check_pow_sigma_3() {
+    let v = pow_pure(SIGMA, 3.0)
+    let err = rel_err(v, float(SIGMA_CUBED_INT))
+    _check(err < TOL,
+           "pow_pure(σ, 3) = σ³ = 1728  (R_c compactification factor)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+fn check_pow_sigma_phi_2() {
+    let v = pow_pure(SIGMA - PHI, 2.0)
+    let err = rel_err(v, float(COMPOSITE_INT))
+    _check(err < TOL,
+           "pow_pure(σ-φ, 2) = (σ-φ)² = 100  (composite Stage-7 c-factor)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+// ── §2 master identity float-form ────────────────────────────────────────
+
+fn check_master_identity_float() {
+    let lhs = SIGMA * PHI
+    let rhs = N * TAU
+    let ok_lhs = rel_err(lhs, 24.0) < TOL
+    let ok_rhs = rel_err(rhs, 24.0) < TOL
+    let ok_eq  = rel_err(lhs, rhs) < TOL
+    _check(ok_lhs && ok_rhs && ok_eq,
+           "master identity float: σ·φ = n·τ = 24",
+           "σ·φ = " + str(lhs) + ", n·τ = " + str(rhs))
+}
+
+fn check_hc2_equiv_float() {
+    let v = SIGMA * TAU
+    let err = rel_err(v, 48.0)
+    _check(err < TOL,
+           "Hc2-equiv float: σ·τ = 48 (sister hexa-rtsc cross-link)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+// ── §3 dimension-ladder rungs (dimjump cross-check) ─────────────────────
+
+fn check_ladder_rungs_float() {
+    let r4  = TAU                               // 4
+    let r6  = N                                 // 6
+    let r10 = SIGMA - PHI                       // 10
+    let r11 = SIGMA - MU                        // 11
+    let r24 = float(J2_INT)                     // 24
+    let r26 = float(J2_INT) + PHI               // 26
+    let ok = (rel_err(r4, 4.0) < TOL) && (rel_err(r6, 6.0) < TOL) &&
+             (rel_err(r10, 10.0) < TOL) && (rel_err(r11, 11.0) < TOL) &&
+             (rel_err(r24, 24.0) < TOL) && (rel_err(r26, 26.0) < TOL)
+    _check(ok,
+           "dim-ladder float: {τ, n, σ-φ, σ-μ, J₂, J₂+φ} = {4, 6, 10, 11, 24, 26}",
+           "")
+}
+
+// ── §4 log / exp round-trip stability ────────────────────────────────────
+
+fn check_log_exp_roundtrip_sigma() {
+    let v = exp_pure(log_pure(SIGMA))
+    let err = rel_err(v, SIGMA)
+    _check(err < TOL,
+           "exp_pure(log_pure(σ)) = σ  (math_pure transcendental round-trip)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+fn check_log_exp_roundtrip_composite() {
+    let v = exp_pure(log_pure(float(COMPOSITE_INT)))
+    let err = rel_err(v, float(COMPOSITE_INT))
+    _check(err < TOL,
+           "exp_pure(log_pure(100)) = 100  (composite anchor round-trip)",
+           "v = " + str(v) + ", rel err = " + str(err))
+}
+
+// ── §5 int-vs-float anchor agreement (key derivations) ──────────────────
+
+fn check_int_float_sigma_phi() {
+    let int_val = float(SIGMA_PHI_INT)
+    let float_val = SIGMA - PHI
+    _check(rel_err(int_val, float_val) < TOL,
+           "int σ-φ == float σ-φ (warp factor consistency)",
+           "int = " + str(int_val) + ", float = " + str(float_val))
+}
+
+fn check_int_float_composite() {
+    let int_val = float(COMPOSITE_INT)
+    let float_val = (SIGMA - PHI) * (SIGMA - PHI)
+    _check(rel_err(int_val, float_val) < TOL,
+           "int (σ-φ)² == float (σ-φ)² = 100 (Stage-7 composite)",
+           "int = " + str(int_val) + ", float = " + str(float_val))
+}
+
+fn check_int_float_sigma_cubed() {
+    let int_val = float(SIGMA_CUBED_INT)
+    let float_val = SIGMA * SIGMA * SIGMA
+    _check(rel_err(int_val, float_val) < TOL,
+           "int σ³ == float σ³ = 1728 (R_c factor)",
+           "int = " + str(int_val) + ", float = " + str(float_val))
+}
+
+let FALSIFIERS: [str] = [
+    "sqrt_pure(144) ≠ 12 within 1e-9 → math_pure sqrt drift contaminates all numerics",
+    "pow_pure(σ, 3) ≠ 1728 within 1e-9 → R_c compactification floor unreliable",
+    "exp(log(σ)) round-trip > 1e-9 → transcendental stability floor breached",
+    "int σ-φ ≠ float σ-φ → integer/float anchor drift in Stage-7 composite",
+    "ladder rungs float deviate from int → dim-jump pillar contaminated",
+    "master identity σ·φ = n·τ float drift → entire n=6 closure undermined",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/numerics_lattice_arithmetic — float ↔ int n=6 cross-check")
+    println("========================================================================")
+    println("  tolerance: " + str(TOL) + " (sub-1e-9 relative error)")
+    println("")
+
+    println("§1 sqrt / pow precision cross-checks")
+    check_sqrt_sigma_squared()
+    check_sqrt_composite_factor()
+    check_pow_sigma_2()
+    check_pow_sigma_3()
+    check_pow_sigma_phi_2()
+
+    println("")
+    println("§2 master identity float form")
+    check_master_identity_float()
+    check_hc2_equiv_float()
+
+    println("")
+    println("§3 dimension-ladder rungs (dimjump cross-check)")
+    check_ladder_rungs_float()
+
+    println("")
+    println("§4 log / exp round-trip stability")
+    check_log_exp_roundtrip_sigma()
+    check_log_exp_roundtrip_composite()
+
+    println("")
+    println("§5 int ↔ float anchor agreement")
+    check_int_float_sigma_phi()
+    check_int_float_composite()
+    check_int_float_sigma_cubed()
+
+    println("")
+    println("  FALSIFIERS (" + str(FALSIFIERS.len()) + "):")
+    for f in FALSIFIERS { println("    ✗ " + f) }
+    println("")
+    println("========================================================================")
+    let pass_n = RUN - FAIL
+    println("  " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        println("  → numerics_lattice_arithmetic FAIL — " + str(FAIL) + " checks failed")
+        println("__HEXA_UFO_NUMERICS_LATTICE_ARITHMETIC__ FAIL")
+        exit(1)
+    }
+    println("  HONEST C3: math_pure precision floor holds — downstream numerics safe.")
+    println("__HEXA_UFO_NUMERICS_LATTICE_ARITHMETIC__ PASS")
+    exit(0)
+}

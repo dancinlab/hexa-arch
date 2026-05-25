@@ -1,0 +1,162 @@
+#!hexa strict
+// hexa-ufo/verify/lint_numerics.hexa — meta-lint for numerics_*.hexa scripts.
+//
+// Recipe §4 invariants — every `verify/numerics_*.hexa` (T2 + T3 tier)
+// must satisfy 5 closed-form requirements:
+//
+//   1. import `self/runtime/math_pure` (no raw float math sneaking in)
+//   2. emit `__HEXA_UFO_<NAME>__` sentinel prefix + `__ PASS` suffix
+//   3. declare a `FALSIFIERS` list (named retract conditions)
+//   4. call `exit(0)` on PASS path (shell-friendly verdict)
+//   5. carry `let mut RUN = …` + `let mut FAIL = …` counters
+//      (per-section PASS/FAIL accounting)
+//
+// Plus §4 inventory check — `NUMERICS_SCRIPTS` array length must equal
+// the on-disk count of `verify/numerics_*.hexa` (drift detector).
+//
+// Sister of hexa-cern/verify/lint_numerics.hexa.
+// Sentinel: __HEXA_UFO_LINT_NUMERICS__ PASS
+//
+// Run:
+//   hexa run verify/lint_numerics.hexa     # exit 0 = all invariants hold
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let VERIFY_DIR = ROOT + "/verify"
+
+fn _read(p: str) -> str {
+    if file_exists(p) == false { return "" }
+    return read_file(p)
+}
+
+fn _has(t: str, s: str) -> bool {
+    if t.len() == 0 { return false }
+    return t.find(s) >= 0
+}
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+// ── enumerated numerics_*.hexa inventory (drift detector) ────────────────
+//
+// Hand-listed (rather than glob) so the audit itself is a closed-form
+// regression target — adding numerics_foo.hexa silently without
+// registering it here will trip §4 inventory check.
+
+let NUMERICS_SCRIPTS: [str] = [
+    "numerics_warp.hexa",
+    "numerics_wormhole.hexa",
+    "numerics_dimjump.hexa",
+    "numerics_dimuse.hexa",
+    "numerics_warp_parity.hexa",
+    "numerics_wormhole_parity.hexa",
+    "numerics_dimjump_parity.hexa",
+    "numerics_dimuse_parity.hexa",
+    "numerics_lattice_arithmetic.hexa",
+    "numerics_cross_pillar.hexa",
+]
+
+// Required substrings per recipe §4
+let REQ_IMPORT_MATH     = "use \"self/runtime/math_pure\""
+let REQ_SENTINEL_PREFIX = "__HEXA_UFO_"
+let REQ_SENTINEL_SUFFIX = "__ PASS"
+let REQ_FALSIFIERS_LIST = "FALSIFIERS"
+let REQ_EXIT_0          = "exit(0)"
+let REQ_RUN_COUNTER     = "let mut RUN ="
+let REQ_FAIL_COUNTER    = "let mut FAIL ="
+
+fn check_script(name: str) {
+    let path = VERIFY_DIR + "/" + name
+    let txt = _read(path)
+    if txt.len() == 0 {
+        _check(false, name + " — file present", path + " missing or empty")
+        return
+    }
+
+    let ok_math       = _has(txt, REQ_IMPORT_MATH)
+    let ok_sentinel_p = _has(txt, REQ_SENTINEL_PREFIX)
+    let ok_sentinel_s = _has(txt, REQ_SENTINEL_SUFFIX)
+    let ok_falsifiers = _has(txt, REQ_FALSIFIERS_LIST)
+    let ok_exit_0     = _has(txt, REQ_EXIT_0)
+    let ok_run        = _has(txt, REQ_RUN_COUNTER)
+    let ok_fail       = _has(txt, REQ_FAIL_COUNTER)
+
+    _check(ok_math,
+           name + " — imports self/runtime/math_pure",
+           if !ok_math { "MISSING: " + REQ_IMPORT_MATH } else { "" })
+    _check(ok_sentinel_p && ok_sentinel_s,
+           name + " — emits __HEXA_UFO_<NAME>__ PASS sentinel",
+           "")
+    _check(ok_falsifiers,
+           name + " — declares FALSIFIERS list",
+           "")
+    _check(ok_exit_0,
+           name + " — calls exit(0) on PASS path",
+           "")
+    _check(ok_run && ok_fail,
+           name + " — has RUN / FAIL accounting counters",
+           "")
+}
+
+fn check_inventory_complete() {
+    let cmd = "ls " + VERIFY_DIR + "/numerics_*.hexa 2>/dev/null | wc -l | tr -d ' '"
+    let raw = exec(cmd).trim()
+    let on_disk = int(raw)
+    let listed = NUMERICS_SCRIPTS.len()
+    _check(on_disk == listed,
+           "inventory complete: NUMERICS_SCRIPTS list count == on-disk count",
+           "listed = " + str(listed) + ", on disk = " + str(on_disk))
+}
+
+let FALSIFIERS: [str] = [
+    "any numerics_*.hexa missing math_pure import → raw float math sneaks in",
+    "any numerics_*.hexa missing __HEXA_UFO_*__ PASS sentinel → CI cannot detect PASS",
+    "any numerics_*.hexa missing FALSIFIERS list → retract conditions undeclared",
+    "any numerics_*.hexa missing exit(0) → shell exit code unreliable",
+    "any numerics_*.hexa missing RUN/FAIL counters → per-section accounting broken",
+    "NUMERICS_SCRIPTS list count diverges from on-disk count → meta-lint stale",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/lint_numerics — recipe §4 invariant meta-lint")
+    println("  (every verify/numerics_*.hexa must follow the regression pattern)")
+    println("========================================================================")
+    println("  scanning " + str(NUMERICS_SCRIPTS.len()) + " numerics_*.hexa script(s)")
+    println("")
+
+    for name in NUMERICS_SCRIPTS { check_script(name) }
+    println("")
+    check_inventory_complete()
+
+    println("")
+    println("  FALSIFIERS (" + str(FALSIFIERS.len()) + "):")
+    for f in FALSIFIERS { println("    ✗ " + f) }
+    println("========================================================================")
+    let pass_n = RUN - FAIL
+    println("  " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        println("__HEXA_UFO_LINT_NUMERICS__ FAIL")
+        exit(1)
+    }
+    println("__HEXA_UFO_LINT_NUMERICS__ PASS — all " +
+            str(NUMERICS_SCRIPTS.len()) + " numerics scripts conform")
+    exit(0)
+}

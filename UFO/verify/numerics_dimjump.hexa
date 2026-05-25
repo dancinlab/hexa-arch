@@ -1,0 +1,264 @@
+#!hexa strict
+// hexa-ufo/verify/numerics_dimjump.hexa — Stage-6 dimjump T2 numerical bridge.
+//
+// Numerical SI re-derivation for the Calabi-Yau / Kaluza-Klein dimjump
+// pillar. Computes physical-unit values for the n=6 derived quantities
+// (calc_dimjump.hexa = T1 algebraic) and verifies:
+//
+//   1. Compactification radius R_c = σ^(n/φ)·ℓ_Pl ≈ 2.79 × 10⁻³² m.
+//   2. KK mass spectrum m_KK = n·ℏ/(R_c·c) — convert to TeV → confirm
+//      it's far above LHC 14 TeV reach (compatible with null observation).
+//   3. R_c well below sub-mm gravity sensitivity ~ 10⁻⁶ m → null result
+//      compatible with closed-form (no torsion-balance contradiction).
+//   4. E_fold(d=1) = M_Pl·c² / (σ-φ)¹ → ≈ 2 × 10¹⁸ GeV barrier
+//      (above any accessible energy scale).
+//   5. Dimension ladder rungs match algebraic identifiers numerically.
+//
+// Sister of numerics_warp.hexa, numerics_wormhole.hexa.
+// Sentinel: __HEXA_UFO_NUMERICS_DIMJUMP__ PASS
+//
+// Run:
+//     hexa run verify/numerics_dimjump.hexa     # exit 0 = closed-form holds
+
+use "self/runtime/math_pure"
+
+let HOME = env("HOME")
+
+fn _root() -> str {
+    let r = env("HEXA_UFO_ROOT")
+    if r.len() > 0 { return r }
+    let pwd = exec("pwd").trim()
+    if pwd.len() > 0 { return pwd }
+    return HOME + "/.hexa-ufo"
+}
+
+let ROOT = _root()
+let DOC_DIM = ROOT + "/dimjump/hexa-dimjump.md"
+
+fn _read(p: str) -> str {
+    if file_exists(p) == false { return "" }
+    return read_file(p)
+}
+
+fn _has(t: str, s: str) -> bool {
+    if t.len() == 0 { return false }
+    return t.find(s) >= 0
+}
+
+let mut RUN = 0
+let mut FAIL = 0
+
+fn _check(ok: bool, label: str, detail: str) {
+    RUN = RUN + 1
+    let mark = if ok { "PASS" } else { "FAIL" }
+    if !ok { FAIL = FAIL + 1 }
+    println("  [" + mark + "] " + label)
+    if detail.len() > 0 { println("         · " + detail) }
+}
+
+// ── physical constants (SI) ──────────────────────────────────────────────
+let C_LIGHT  = 2.99792458e8        // c (m/s)
+let HBAR     = 1.054571817e-34     // ℏ (J·s)
+let L_PLANCK = 1.616255e-35        // ℓ_Pl (m)
+let M_PLANCK = 2.176434e-8         // M_Pl (kg)
+let EV_PER_J = 6.241509074e18      // 1 J in eV
+let GEV_PER_J = 6.241509074e9      // 1 J in GeV
+
+// ── n=6 lattice constants ────────────────────────────────────────────────
+let SIGMA = 12.0
+let TAU   = 4.0
+let PHI   = 2.0
+let MU    = 1.0
+let N     = 6.0
+let J2    = 24.0
+
+// ── derived physical-unit dimjump parameters ─────────────────────────────
+// R_c = ℓ_Pl · σ^(n/φ) = ℓ_Pl · 12^3 = 1728 · ℓ_Pl
+let RC_FACTOR    = SIGMA * SIGMA * SIGMA            // 1728 (n/φ = 3)
+let RC_M         = L_PLANCK * RC_FACTOR             // ≈ 2.79e-32 m
+
+// m_KK = n · ℏ / (R_c · c) [kg]
+let M_KK_KG      = (N * HBAR) / (RC_M * C_LIGHT)
+let M_KK_E_J     = M_KK_KG * C_LIGHT * C_LIGHT     // m_KK·c² in J
+let M_KK_E_GEV   = M_KK_E_J * GEV_PER_J            // m_KK·c² in GeV
+let M_KK_E_TEV   = M_KK_E_GEV / 1000.0             // in TeV
+
+// E_fold(d=1) = M_Pl · c² / (σ − φ)¹
+let E_FOLD_D1_J   = M_PLANCK * C_LIGHT * C_LIGHT / (SIGMA - PHI)
+let E_FOLD_D1_GEV = E_FOLD_D1_J * GEV_PER_J        // ≈ 2e18 GeV
+
+// dimension ladder
+let LADDER_4D    = TAU                  //  4
+let LADDER_6D    = N                    //  6
+let LADDER_10D   = SIGMA - PHI          // 10
+let LADDER_11D   = SIGMA - MU           // 11
+let LADDER_24D   = J2                   // 24
+let LADDER_26D   = J2 + PHI             // 26
+
+// ── consistency / regime checks ──────────────────────────────────────────
+
+fn check_master_identity() {
+    let lhs = SIGMA * PHI
+    let rhs = N * TAU
+    _check(lhs == 24.0 && rhs == 24.0,
+           "master identity σ·φ = n·τ = 24 (numerical)",
+           "σ·φ = " + str(lhs) + ", n·τ = " + str(rhs))
+}
+
+fn check_rc_value() {
+    // R_c = 1728 · ℓ_Pl ≈ 2.79e-32 m
+    let expected = 1728.0 * L_PLANCK
+    let diff = RC_M - expected
+    let rel = if diff < 0.0 { -diff } else { diff } / expected
+    _check(rel < 1.0e-12 && RC_M > 1.0e-33 && RC_M < 1.0e-31,
+           "R_c = σ^(n/φ)·ℓ_Pl = 1728·ℓ_Pl ≈ 2.79e-32 m",
+           "R_c = " + str(RC_M) + " m, 1728·ℓ_Pl = " + str(expected))
+}
+
+fn check_rc_below_submm() {
+    // sub-mm gravity sensitivity ~ 10⁻⁶ m. R_c ~ 10⁻³² m is 26 OOM below.
+    let submm_floor = 1.0e-6
+    _check(RC_M < submm_floor,
+           "R_c ≪ sub-mm gravity sensitivity (~ 1e-6 m) — null compatible",
+           "R_c / submm_floor = " + str(RC_M / submm_floor))
+}
+
+fn check_mkk_above_lhc() {
+    // LHC reach ~ 14 TeV. Closed-form m_KK·c² should be far above.
+    // m_KK·c² = n·ℏ·c / R_c → ≈ 6 · 1.055e-34 · 3e8 / 2.79e-32 J ≈ 6.8e-3 J ?
+    // Actually let me compute: 6 · 1.055e-34 = 6.33e-34, times c = 1.9e-25,
+    // divided by R_c (2.79e-32) = 6.81e6 J. In GeV: 4.25e16 GeV >> 14 TeV.
+    let lhc_tev = 14.0
+    _check(M_KK_E_TEV > lhc_tev,
+           "m_KK·c² ≫ LHC 14 TeV (KK-resonance hunt null compatible)",
+           "m_KK·c² = " + str(M_KK_E_TEV) + " TeV vs LHC = 14 TeV")
+}
+
+fn check_efold_above_planck_scale_div_10() {
+    // E_fold(d=1) ≈ M_Pl·c² / 10. M_Pl·c² ≈ 1.22e19 GeV, so E_fold ≈ 1.22e18 GeV.
+    let lower = 1.0e17                 // tolerance: > 1e17 GeV
+    let upper = 1.0e20                 // tolerance: < 1e20 GeV
+    _check(E_FOLD_D1_GEV > lower && E_FOLD_D1_GEV < upper,
+           "E_fold(d=1) ≈ M_Pl·c²/10 in [1e17, 1e20] GeV",
+           "E_fold = " + str(E_FOLD_D1_GEV) + " GeV")
+}
+
+fn check_efold_factor() {
+    // E_fold(d=1) / (M_Pl·c²) should equal 1/(σ-φ) = 0.1.
+    let m_pl_c2 = M_PLANCK * C_LIGHT * C_LIGHT
+    let ratio = E_FOLD_D1_J / m_pl_c2
+    let expected = 1.0 / 10.0
+    let diff = ratio - expected
+    let rel = if diff < 0.0 { -diff } else { diff } / expected
+    _check(rel < 1.0e-12,
+           "E_fold(d=1) / (M_Pl·c²) = 1/(σ-φ) = 0.1",
+           "ratio = " + str(ratio) + " (expected 0.1)")
+}
+
+fn check_ladder_monotone() {
+    let l: [float] = [LADDER_4D, LADDER_6D, LADDER_10D, LADDER_11D,
+                      LADDER_24D, LADDER_26D]
+    let mut prev = l[0]
+    let mut mono = true
+    let mut k = 1
+    while k < l.len() {
+        if l[k] <= prev { mono = false }
+        prev = l[k]
+        k = k + 1
+    }
+    _check(mono,
+           "dimension ladder monotone 4 < 6 < 10 < 11 < 24 < 26",
+           "rungs: 4 6 10 11 24 26")
+}
+
+fn check_ladder_values() {
+    let ok = (LADDER_4D == 4.0) && (LADDER_6D == 6.0) &&
+             (LADDER_10D == 10.0) && (LADDER_11D == 11.0) &&
+             (LADDER_24D == 24.0) && (LADDER_26D == 26.0)
+    _check(ok,
+           "ladder rungs match {τ, n, σ-φ, σ-μ, J₂, J₂+φ} = {4,6,10,11,24,26}",
+           "values: " + str(LADDER_4D) + " " + str(LADDER_6D) + " " +
+           str(LADDER_10D) + " " + str(LADDER_11D) + " " +
+           str(LADDER_24D) + " " + str(LADDER_26D))
+}
+
+// ── spec-doc anchor checks ───────────────────────────────────────────────
+
+fn check_anchor_lhc_null() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "LHC 14 TeV") || _has(txt, "14 TeV") ||
+             _has(txt, "KK-resonance hunt null") || _has(txt, "F-DIM-1")
+    _check(ok, "dimjump spec anchors LHC 14 TeV null (F-DIM-1)",
+           "looking for LHC null in " + DOC_DIM)
+}
+
+fn check_anchor_submm() {
+    let txt = _read(DOC_DIM)
+    let ok = _has(txt, "sub-millimeter gravity") || _has(txt, "sub-mm gravity") ||
+             _has(txt, "torsion-balance") || _has(txt, "Eöt-Wash") ||
+             _has(txt, "F-DIM-2")
+    _check(ok, "dimjump spec anchors sub-mm gravity null (F-DIM-2)",
+           "looking for sub-mm gravity in " + DOC_DIM)
+}
+
+let FALSIFIERS: [str] = [
+    "LHC observes m_KK ≤ 14 TeV → demote n=6 R_c=σ^(n/φ) closed-form (F-DIM-1)",
+    "sub-mm gravity test detects deviation at R > 10⁻⁶ m → demote R_c (F-DIM-2)",
+    "vacuum-energy transition observed at scale ≠ E_fold → demote barrier (F-DIM-3)",
+    "ladder rung at non-{4,6,10,11,24,26} value observed → demote n=6 ladder",
+    "Randall-Sundrum effective R_c lands in TeV regime → revisit warped extension scope",
+]
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-ufo verify/numerics_dimjump — Stage-6 dimjump T2 numerical bridge")
+    println("========================================================================")
+
+    println("")
+    println("  inputs (n=6 closed-form):")
+    println("    σ τ φ μ n J₂      = 12 4 2 1 6 24")
+    println("    σ^(n/φ)            = 12³ = " + str(RC_FACTOR))
+    println("    R_c                = " + str(RC_M) + " m")
+    println("    m_KK·c²            = " + str(M_KK_E_TEV) + " TeV  (= " + str(M_KK_E_GEV) + " GeV)")
+    println("    E_fold(d=1)        = " + str(E_FOLD_D1_GEV) + " GeV")
+    println("")
+    println("  ladder (numerical):")
+    println("    4D=" + str(LADDER_4D) + ", 6D=" + str(LADDER_6D) + ", 10D=" +
+            str(LADDER_10D) + ", 11D=" + str(LADDER_11D) + ", 24D=" +
+            str(LADDER_24D) + ", 26D=" + str(LADDER_26D))
+    println("")
+
+    println("§1 algebraic ↔ numerical consistency")
+    check_master_identity()
+    check_rc_value()
+    check_efold_factor()
+    check_ladder_values()
+    check_ladder_monotone()
+
+    println("")
+    println("§2 empirical-bound regimes")
+    check_rc_below_submm()
+    check_mkk_above_lhc()
+    check_efold_above_planck_scale_div_10()
+
+    println("")
+    println("§3 spec-doc anchors")
+    check_anchor_lhc_null()
+    check_anchor_submm()
+
+    println("")
+    println("  FALSIFIERS (" + str(FALSIFIERS.len()) + "):")
+    for f in FALSIFIERS { println("    ✗ " + f) }
+    println("")
+    println("========================================================================")
+    let pass_n = RUN - FAIL
+    println("  " + str(pass_n) + "/" + str(RUN) + " checks passed")
+    if FAIL > 0 {
+        println("  → numerics_dimjump FAIL — " + str(FAIL) + " checks failed")
+        println("__HEXA_UFO_NUMERICS_DIMJUMP__ FAIL")
+        exit(1)
+    }
+    println("  HONEST C3: numerical SI re-derivation ≠ empirical KK / CY₃ realization.")
+    println("__HEXA_UFO_NUMERICS_DIMJUMP__ PASS")
+    exit(0)
+}

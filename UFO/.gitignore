@@ -1,0 +1,14 @@
+# runtime artifacts (audit log + per-run markers from cli/hexa-ufo.hexa)
+state/*
+!state/.gitkeep
+
+# editor / OS junk
+.DS_Store
+*.swp
+*~
+
+# build / temp output
+/tmp/
+*.out
+build/out/
+

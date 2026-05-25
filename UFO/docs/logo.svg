@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-label="hexa-ufo logo">
+  <polygon points="70,8 130,42 130,98 70,132 10,98 10,42"
+           fill="none" stroke="#bf8700" stroke-width="6"
+           stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="70" cy="78" rx="44" ry="10" fill="none" stroke="#bf8700" stroke-width="5"/>
+  <path d="M 36 78 Q 70 50 104 78" fill="none" stroke="#bf8700" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="70" cy="62" r="6" fill="none" stroke="#bf8700" stroke-width="4"/>
+</svg>

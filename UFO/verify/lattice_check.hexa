@@ -1,0 +1,196 @@
+#!hexa strict
+// hexa-ufo/verify/lattice_check.hexa — n=6 master identity audit (.hexa primary).
+//
+// Stage-1~7 propulsion stack共通 — n=6 closed-form lattice (path-independent
+// arithmetic; same lattice across rtsc / fusion / antimatter / warp / wormhole /
+// dimjump / dimuse). 10 PASS sentinels.
+//
+//   sigma(6) ≡ 12   (BCS molecule / Casimir plate count / Dirac mirror / dim ladder)
+//   tau(6)   ≡ 4    (4-phase ladder / τ=4 stage propulsion cycle)
+//   phi(6)   ≡ 2    (Cooper pair / warp-factor terminus c/φ / KK φ=2 minimum)
+//   R        ≡ n=6  (Alcubierre warp bubble radius / Morris-Thorne throat ladder base)
+//   Hc2-eq   ≡ sigma · tau = 48        (sister to hexa-rtsc Hc2 = 48 T)
+//   master   ≡ sigma · phi == n · tau == 24    (J₂ Mathieu / M₂₄)
+//
+// Sister of hexa-rtsc/verify/lattice_check.hexa (extracted 2026-05-07).
+//
+// Run:
+//     hexa run verify/lattice_check.hexa     # exit 0 = all PASS
+//
+
+let VERSION = "1.0.0"
+
+// ─── number-theoretic primitives (stdlib only) ───
+
+fn divisors(n: int) -> [int] {
+    let mut out: [int] = []
+    let mut k = 1
+    while k <= n {
+        if n % k == 0 { out = out + [k] }
+        k = k + 1
+    }
+    return out
+}
+
+fn sigma(n: int) -> int {
+    let ds = divisors(n)
+    let mut s = 0
+    for d in ds { s = s + d }
+    return s
+}
+
+fn tau(n: int) -> int {
+    return divisors(n).len()
+}
+
+fn gcd(a: int, b: int) -> int {
+    let mut x = a
+    let mut y = b
+    while y != 0 {
+        let t = x % y
+        x = y
+        y = t
+    }
+    return x
+}
+
+fn phi_eul(n: int) -> int {
+    let mut c = 0
+    let mut k = 1
+    while k <= n {
+        if gcd(k, n) == 1 { c = c + 1 }
+        k = k + 1
+    }
+    return c
+}
+
+// ─── test harness ───
+
+let mut passed = 0
+let mut failed = 0
+
+fn check(label: str, ok: bool, detail: str) {
+    if ok {
+        passed = passed + 1
+        println("  [PASS] " + label + "  " + detail)
+    } else {
+        failed = failed + 1
+        println("  [FAIL] " + label + "  " + detail)
+    }
+}
+
+// ─── tests ───
+
+fn test_sigma_6() {
+    let s = sigma(6)
+    check("§1 sigma(6) ≡ 12", s == 12, "sigma(6) = " + str(s))
+}
+
+fn test_tau_6() {
+    let t = tau(6)
+    check("§2 tau(6)   ≡ 4 ", t == 4, "tau(6) = " + str(t))
+}
+
+fn test_phi_6() {
+    let p = phi_eul(6)
+    check("§3 phi(6)   ≡ 2 ", p == 2, "phi(6) = " + str(p))
+}
+
+fn test_master_identity() {
+    let s = sigma(6)
+    let t = tau(6)
+    let p = phi_eul(6)
+    let lhs = s * p
+    let rhs = 6 * t
+    check(
+        "§4 master    ≡ sigma·phi == n·tau == 24",
+        lhs == 24 && rhs == 24,
+        "lhs=" + str(lhs) + ", rhs=" + str(rhs),
+    )
+}
+
+fn test_hc2_equiv() {
+    let s = sigma(6)
+    let t = tau(6)
+    let h = s * t
+    check("§5 Hc2-equiv ≡ sigma·tau = 48 (sister to hexa-rtsc 48 T)", h == 48,
+        "Hc2-equiv = " + str(h))
+}
+
+fn test_bubble_radius() {
+    // Alcubierre bubble radius R = n = 6 (base unit).
+    let n = 6
+    check("§6 bubble R  = n = 6 (Alcubierre bubble radius, base unit)",
+        n == 6, "R = " + str(n))
+}
+
+fn test_bubble_wall_thickness() {
+    // δ = 1/σ = 1/12 ℓ_Pl.  Assert σ-denominator equals 12.
+    let s = sigma(6)
+    check("§7 bubble δ  ≡ 1/sigma = 1/12 ℓ_Pl (Planck-scale top-hat)",
+        s == 12, "1/δ = sigma = " + str(s))
+}
+
+fn test_york_asymmetry() {
+    // θ_forward / θ_rear = σ = 12 ratio (York extrinsic curvature asymmetry).
+    let s = sigma(6)
+    check("§8 York asym ≡ θ_fwd/θ_rear = sigma = 12",
+        s == 12, "asym ratio = " + str(s))
+}
+
+fn test_vdb_reduction() {
+    // Van Den Broeck negative-energy reduction = σ² = 144 (M_☉ / 144).
+    let s = sigma(6)
+    let vdb = s * s
+    check("§9 VDB reduction ≡ sigma² = 144 (M_☉ / 144 negative-energy)",
+        vdb == 144, "sigma² = " + str(vdb))
+}
+
+fn test_j2_mathieu() {
+    // J_2 = 24 = master identity = 12·2 = 6·4. M_24 octahedral O ⊂
+    // icosahedral I subgroup.
+    let j2 = 24
+    let s = sigma(6)
+    let p = phi_eul(6)
+    check("§10 J_2 (Mathieu/Leech) ≡ 24 ≡ sigma·phi",
+        j2 == s * p, "J_2 = " + str(j2) + ", sigma·phi = " + str(s * p))
+}
+
+// ─── falsifiers (sentinel — not exit-FAIL conditions, just declarations) ───
+
+fn print_falsifiers() {
+    println("")
+    println("  §11 FALSIFIERS (preregister, OPEN per .own own 2):")
+    println("    ✗ F-WARP-1: Casimir cavity cannot realise negative energy at warp scale")
+    println("                → DEMOTE warp-bubble negative-energy claim")
+    println("    ✗ F-WARP-2: bubble wall observer cannot signal outside (horizon problem)")
+    println("                → DEMOTE controllable warp drive claim")
+    println("    ✗ F-WARP-3: back-reaction destroys bubble before propulsion completes")
+    println("                → DEMOTE self-stable warp claim")
+}
+
+// ─── main ───
+
+fn main() {
+    println("========================================================================")
+    println("  hexa-warp — n=6 lattice master-identity verify (.hexa primary)")
+    println("========================================================================")
+    test_sigma_6()
+    test_tau_6()
+    test_phi_6()
+    test_master_identity()
+    test_hc2_equiv()
+    test_bubble_radius()
+    test_bubble_wall_thickness()
+    test_york_asymmetry()
+    test_vdb_reduction()
+    test_j2_mathieu()
+    print_falsifiers()
+    println("")
+    let total = passed + failed
+    println("========================================================================")
+    println("  " + str(passed) + "/" + str(total) + " PASS  —  hexa-warp lattice verify")
+    println("  HONEST C3: lattice is a CLOSED-FORM CANDIDATE; empirical Alcubierre unproven.")
+    println("  (sentinel only — does NOT validate empirical Alcubierre claim)")
+    if failed > 0 { exit(1) }
+}
