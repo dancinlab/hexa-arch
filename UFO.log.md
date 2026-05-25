@@ -2,6 +2,25 @@
 
 Append-only history sister of `UFO.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-26T01:30:00Z — Phase A Stage-4~7 falsifier preregister LANDED (13 F-* · UNPROVEN)
+
+Phase A 상위 사다리 Stage-4 warp · Stage-5 wormhole · Stage-6 dim-jump · Stage-7 dim-use 를 **falsifier preregister** (반증 조건 사전등록) 로 닫음 — 실설계/물리증명 아님. 13개 falsifier (F-WARP/WORM/DIM/USE) 를 in-tree source (`UFO/{warp,wormhole,dimjump,dimuse}/hexa-*.md`) 에서 추출해 한국어 ledger + 17-type tape 로 등록. 전부 `OPEN` @ v1.0 · 물리는 academically UNPROVEN. lattice 산술(σ·τ=48 · (σ−φ)²=100 · R_c=1728 ℓ_Pl)은 검증 가능하나, 그 정수가 가리키는 물리는 미증명 — 둘 명확히 구분 (bookkeeping closure ≠ empirical truth). @D d2 (불가능 선언 금지 · 미증명 사전등록으로 정직) · @D d3/d4/d9/d10 준수. 문서 한국어 · 코드 영문.
+
+- [x] `UFO/verify/stage4-7-falsifier-preregister.md` — §0 TL;DR (UNPROVEN falsifier-only · 13-falsifier 표) · §1 Stage-4 warp (Alcubierre δ=1/σ R=6 · F-WARP-{1,2,3} 측정량·falsify 임계 · σ·τ=48 산술 일관성) · §2 Stage-5 wormhole (Morris-Thorne b₀=ℓ_Pl·σ=12ℓ_Pl · F-WORM-{1,2,3}) · §3 Stage-6 dim-jump (KK 4D→6D→10D→11D→24D→26D · R_c=1728ℓ_Pl · F-DIM-{1,2,3}) · §4 Stage-7 dim-use ((σ−φ)²=100c τ=4 · F-USE-{1,2,3,4}) · §5 monotone {OPEN,CONFIRMED,DEMOTED} + alien_index 🛸6→🛸ABSOLUTE 참조 · §6 honest stance (산술≠진실 · cross-link)
+- [x] `UFO/verify/stage4-7-falsifier-preregister.tape` — `@V`1.0 · `@I id001 ufo/falsifier` (🛸 alias `falsifier`) · `@C` lattice + identities · `@F` ×13 falsifier 노드 (stage/pattern/measure/falsify/status=OPEN) · `@D` ×4 honest-stance governance (do/dont) · `@X` ×7 cross-link · 17-type 알파벳만 (tape-lint @D do/dont 통과)
+- [x] F-WARP-1 Casimir 음에너지 ρ=−ℏc/(τ·d⁴) vs Pfenning-Ford QI bound · F-WARP-2 horizon 신호 불가 · F-WARP-3 back-reaction 붕괴 τ_collapse vs τ_propulsion — 전부 OPEN
+- [x] F-WORM-1 b₀>ℓ_Pl 외계물질 source 불가 · F-WORM-2 quantum-interest throat 붕괴 (ANEC bound) · F-WORM-3 chronology protection CTC 금지 — 전부 OPEN
+- [x] F-DIM-1 LHC 14 TeV KK null (m_KK) · F-DIM-2 sub-mm 중력 null (R_c=1728ℓ_Pl) · F-DIM-3 vacuum-energy 전이 미관측 (E_fold) — 전부 OPEN
+- [x] F-USE-1 warp ANEC 포화 (upstream) · F-USE-2 KK>14TeV (upstream) · F-USE-3 self-cycle 2법칙 위반 · F-USE-4 composite 동시 불안정화 — 전부 OPEN
+- [x] `UFO.md` Stage-4·5·6·7 milestone 4개 `[ ]` → `[x] ... LANDED PR pending (F-* preregister · UNPROVEN)` flip
+- [x] CONSTRAINT 준수 — Stage-4~7 절대 "verified/proven" 미표기 · 전부 OPEN falsifier · academically UNPROVEN (hexa-ufo stance 유지) · 산술 닫힘 vs 물리 미증명 명시 구분
+
+deferred:
+- [ ] lattice arithmetic 검증 실행 — `UFO/verify/lattice_check.hexa` + `calc_{warp,wormhole,dimjump,dimuse}.hexa` `hexa run` 으로 σ·τ=48 · (σ−φ)²=100 · R_c=1728 정수 항등식 🟢 도장 (Phase D LATTICE_POLICY 흡수와 연동)
+- [ ] alien_index chain 등록 — 13 falsifier OPEN 상태 ↔ 🛸6→🛸ABSOLUTE 구간 lock (DEMOTE 없이는 alien_index 상승 불가 · Phase D LIMIT_BREAKTHROUGH 흡수)
+- [ ] Phase D EXPERIMENTS+HYPOTHESES 흡수 — 13-falsifier 상태 set monotone 카탈로그 통합
+- [ ] F-USE-3/4 composite-specific simulator (v1.1.0) — self-cycle 2법칙 + 동시 안정성 sim (pool/cloud per @D d7 sizing 후 micro-exp)
+
 ## 2026-05-26T00:30:00Z — Stage-3 orbital antimatter γ-rocket I_sp verify LANDED 🟢
 
 Phase A Stage-3 orbital (antimatter γ-rocket anti-H + H · 고도 200 km ~ 1 AU). ANTIMATTER substrate (γ-rocket · Penning 3-freq + Ioffe trap depth verify 🟢 완료) 위에 γ-rocket I_sp closed-form (annihilation `E = 2·m_p·c²` → relativistic exhaust → `I_sp = c/g` 광자 천장 3.057e7 s) 의 numerical recompute 를 `hexa verify --expr` 3건으로 🟢 SUPPORTED-NUMERICAL 도장. ANTIMATTER verified atom 재사용 (idempotent atlas fold) · @D d3/d4/d6/d9/d10 준수. 문서 한국어 · 코드 영문.
