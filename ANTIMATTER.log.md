@@ -2,6 +2,47 @@
 
 Append-only history sister of `ANTIMATTER.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T12:44Z — absorbed=true 종결 (14/14 · 全 non-wet-lab gate PASS)
+
+ANTIMATTER 도메인 **absorbed flip = true**. @D d5 ("absorbed=true ⇔ all non-wet-lab gates PASS — wet-lab is downstream confirmation") 준수: **全 non-wet-lab gate PASS** 확인 + CPT Δ measured-oracle 은 wet-lab downstream 으로 정직 유보(d5 의 wet-lab 비차단 조항 명시). 추가 verify/record 산출 없음 — landed 된 verdict 의 inventory close 이며 projection 으로 flip 하지 않는다 (d5 explicit). 다음은 closure 직전 gate audit (각 gate 의 closing PR + verbatim verdict 출처).
+
+### gate audit — 7공정 verify-native (origin/main 직접 확인 · @D g5)
+
+- [x] ⓵생성 — pair-production threshold (`pair_threshold_factor(1)=6` 🔵 + `pair_threshold_kinetic(938.272)=5629.63` 🟢 + `pair_threshold_total(938.272)=6567.9` 🟢) — closing PR **#158** · record `exports/antimatter/verify/2026-05-25T09-12-57Z/`.
+- [x] ⓶감속 — AD/ELENA 상대론 ladder (`rel_kinetic_from_p`/`rel_p_from_kinetic` ×4 rungs · roundtrip |Δ|=7.4e-13 · negative-control 🔴) — closing PR **#162** · hexa-lang PR #1014 · record `exports/antimatter/verify/2026-05-25T10-43-31Z/`.
+- [x] ⓷포획 — Penning 3-frequency + Brown–Gabrielse invariance (`penning_omega_plus`/`penning_omega_minus`/`penning_invariance`, 잔차 |Δ|=0.0) 🟢×3 — closing PR **#157** · record `exports/antimatter/verify/2026-05-25T09-11-36Z/penning_3freq_20260525T091136Z.json` (✅ on-disk).
+- [x] ⓸냉각 — cyclotron cooling τ_c∝B^(−2) 🔵 + 5T/1T ratio 0.04 🟢 + (m_p/m_e)³ speedup 🟢 + 🔴×2 negative-control — closing PR **#164** · hexa-lang PR #1015 · record `exports/antimatter/verify/2026-05-25T10-46-06Z/`.
+- [x] ⓹합성 — 3-body recombination `recomb_3body_density_power(1)=2` 🔵 + `recomb_3body_exponent()=-4.5` 🟢 + `recomb_3body_tratio(100,4)=1953125.0` 🟢 + 🔴×3 negative-control — closing PR **#166** · hexa-lang PR #1018 · record `exports/antimatter/verify/2026-05-25T10-43-31Z/recomb_3body_20260525T104331Z.json` (✅ on-disk).
+- [x] ⓺가둠 — Ioffe-Pritchard B_min · trap depth (`ioffe_loop_bz`/`ioffe_mirror_bmin`/`ioffe_mirror_bcoil`/`ioffe_mirror_deltab`/`ioffe_trap_depth_k`/`mu_b_over_kb` 🟢×7 · ΔB=0.5249T → trap depth 0.353K · 음성대조 🔴×1) — closing PR **#168** (RTSC/Wheeler toolchain 직계 상속, 신규 자기학 fn 없음) · record `exports/antimatter/verify/2026-05-25T11-05-17Z/ioffe_trap_2026-05-25T11-05-17Z.json` (✅ on-disk).
+- [x] ⓻측정 — 1S-2S Rydberg leading `f=(3/4)·R∞·c` (`transition_factor_1s2s()=0.75` + `h1s2s_rydberg(1.09737e7,2.99792e8)=2.46738` 🟢×2) — closing PR **#159** · hexa-lang PR #1005 · record `exports/antimatter/verify/2026-05-25T09-13-09Z/`.
+
+### gate audit — meta (verify ledger + 7-verb pipe + handoff)
+
+- [x] V1-V4 tier ledger 통합 — `exports/antimatter/verify/V_ledger_2026-05-25T10-58-43Z.md` (refresh 2026-05-25T11:16Z 반영: 🔵 3 · 🟢 20 · 🔴 8 negative-control · 🟠/🔴 INSUFFICIENT 잔존 = **0**) — closing PR **#167** + refresh in **#169**.
+- [x] 7-verb 풀파이프 1회 관통 (specify→structure→design→analyze→synthesize→verify→handoff · stamp `2026-05-25T11-16-10Z`) — closing PR **#169**.
+- [x] 공장 설계 인계 doc — `exports/antimatter/handoff/2026-05-25T11-16-10Z/antimatter_trap_source_handoff_2026-05-25T11-16-10Z.json` (coil winding · cryostat 4K · UHV · ²²Na+Surko e⁺ source · B-field map ref) — closing PR **#169**.
+
+### d5 정직 stance — wet-lab caveat (CPT Δ DEFERRED, non-blocking)
+
+@D d5 verbatim: *"absorbed=true ⇔ all non-wet-lab gates PASS — wet-lab is downstream confirmation"* + *"don't block `absorbed` on wet-lab measurement"*. 따라서:
+
+- **반수소 1S-2S H̄ vs H 의 측정 CPT Δ** (ALPHA 2018 ≈2e-12) 는 measured oracle 이 필요한 **downstream wet-lab confirmation** 이며, 본 도메인의 absorbed flip 을 **차단하지 않는다** (d5 explicit). leading 폐형해 `f≈2.4674 PHz` 는 🟢 SUPPORTED-NUMERICAL 로 닫혔고(#159), 15자리 정밀 재현은 환산질량 m_e/(m_e+m_p)≈0.99946 + QED/Lamb 잔차(~1e-5)로 정직 명시 — overclaim 없음.
+- getdp FEM cross-check 는 strictly-optional 이라 정직 SKIP — Wheeler 폐형해 + libm-class 수치 재계산만으로 ⓺가둠 trap depth 닫음 (PR #168).
+- 실제 반수소 생성·트랩·분광은 **wet-lab downstream**. 본 도메인은 **공장 설계의 verify-native + handoff doc** 단계까지가 scope (도메인 @goal 의 (a)+(b)).
+
+### 집계 — 14/14 (全 non-wet-lab gate PASS)
+
+| 종류 | 닫힘 / 전체 |
+|------|------------|
+| 공정축 (⓵-⓻) | **7 / 7** |
+| 7-verb 풀파이프 1회 관통 | **1 / 1** |
+| 공장 설계 인계 doc | **1 / 1** |
+| V1-V4 verify ledger (V1·V2·V3·V4) | **4 / 4** |
+| absorbed=true (meta) | **1 / 1** (flip 본 entry) |
+| **합계** | **14 / 14** |
+
+> 결론: 全 non-wet-lab gate PASS — @D d5 만족. `absorbed=true`. CPT Δ measured-oracle 은 downstream wet-lab confirmation (d5 wet-lab 비차단 조항). 다음 단계는 도메인 외부 (CERN AD/ALPHA-class 시설 실측), 본 도메인 scope 밖.
+
 ## 2026-05-25T11:16Z — 7-verb 풀파이프 + 공장 인계 doc (반수소 트랩+소스 라인 cell · milestone 16+17 CLOSE)
 
 **반수소 트랩+소스 라인** 1개 공정 cell 로 demiurge 7-verb 척추(specify→structure→design→analyze→synthesize→verify→handoff)를 end-to-end 1회 관통. 7th verb(handoff) 산출 = 트랩·소스 팹 사양 = milestone 17. **single stamp `2026-05-25T11-16-10Z`** 로 7 record 산출.
