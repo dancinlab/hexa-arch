@@ -1,0 +1,61 @@
+{
+  "domain": "ANTIMATTER",
+  "process_stage": "⓺가둠 (confinement) — 7th / last non-wet-lab process stage",
+  "milestone": "Ioffe-Pritchard 자기최소 트랩 B장 + trap depth (RTSC getdp 4.0 · Wheeler 폐형해 상속) — verify",
+  "iso_stamp": "2026-05-25T11-05-17Z",
+  "physics": {
+    "trap_type": "magnetic-minimum (magnetic bottle) — two coaxial mirror coils, |B| local min at center rising outward; holds NEUTRAL low-field-seeking ground-state antihydrogen (μ ≈ μ_B)",
+    "on_axis_loop_B": "B_loop(ζ) = μ₀·I·a² / (2·(a²+ζ²)^(3/2))   [inherited RTSC/Wheeler primitive — hexa-lang/stdlib/material/magnet/current_loop_offaxis.hexa loop_offaxis_Bz at r=0, NOVEL-TOOL M2.4]",
+    "mirror_superposition": "B(z) = B_loop(z−s/2) + B_loop(z+s/2);  s>a ⇒ z=0 is a true on-axis minimum",
+    "trap_depth": "U_depth/k_B = (μ_B/k_B)·ΔB,  ΔB = B_coil − B_min",
+    "key_constant": "μ_B/k_B = 0.67171 K/T (1 T well ⇒ 0.672 K; ALPHA ~0.5 T ⇒ ~0.5 K)"
+  },
+  "coil_params": {
+    "loop_radius_a_m": 0.10,
+    "ampere_turns_I_A": 100000.0,
+    "mirror_separation_s_m": 0.40,
+    "note": "s/a = 4 > Helmholtz spacing (s>a) ⇒ center z=0 is a genuine on-axis B minimum (magnetic bottle); coils at z = ±0.20 m"
+  },
+  "results": {
+    "B_loop_single_at_center_T": 0.6283185310599999,
+    "B_min_trap_center_T": 0.1123970357578378,
+    "B_coil_plane_T": 0.6372826268042674,
+    "delta_B_T": 0.5248855910464296,
+    "trap_depth_K": 0.35257290312882134,
+    "trap_depth_K_per_1T_reference": 0.6717138156258398,
+    "mu_B_over_k_B_K_per_T": 0.6717138156258398
+  },
+  "constants_CODATA_2018": {
+    "mu0_H_per_m": 1.25663706212e-6,
+    "mu_B_J_per_T": 9.2740100783e-24,
+    "k_B_J_per_K": 1.380649e-23
+  },
+  "verify": {
+    "form": "hexa verify --expr <fn> ... (hexa CLI, NOT LLM self-judgement; @D g5 verbatim)",
+    "host": "mini only (POOL_DISABLE=1)",
+    "binary": "~/core/hexa-lang/bin/hexa-verify (rebuilt via tool/build_hexa_verify.sh; canonical root)",
+    "new_fns": [
+      "ioffe_loop_bz(a,I,ζ)",
+      "ioffe_mirror_bmin(a,I,s)",
+      "ioffe_mirror_bcoil(a,I,s)",
+      "ioffe_mirror_deltab(a,I,s)",
+      "ioffe_trap_depth_k(ΔB)",
+      "mu_b_over_kb()"
+    ],
+    "rtsc_inheritance": "reuses the RTSC/Wheeler on-axis current-loop closed form (loop_offaxis_Bz r=0 / wheeler.hexa family) — magnet toolchain directly inherited per ANTIMATTER ⓺ design",
+    "getdp_FEM_cross_check": "SKIPPED (strictly optional; closed-form verify fully landed, kept scope tight)"
+  },
+  "verbatim_verdicts": [
+    "verify --expr ioffe_loop_bz(0.1,100000.0,0.0)=0.628319 | calc=0.628319 ≈ expected 0.628319 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr ioffe_mirror_bmin(0.1,100000.0,0.4)=0.112397 | calc=0.112397 ≈ expected 0.112397 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr ioffe_mirror_bcoil(0.1,100000.0,0.4)=0.637283 | calc=0.637283 ≈ expected 0.637283 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr ioffe_mirror_deltab(0.1,100000.0,0.4)=0.524886 | calc=0.524886 ≈ expected 0.524886 (|Δ|=1.11022e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr ioffe_trap_depth_k(0.524886)=0.352573 | calc=0.352573 ≈ expected 0.352573 (|Δ|=1.66533e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr ioffe_trap_depth_k(1.0)=0.671714 | calc=0.671714 ≈ expected 0.671714 (|Δ|=2.22045e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "verify --expr mu_b_over_kb()=0.671714 | calc=0.671714 ≈ expected 0.671714 (|Δ|=2.22045e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL",
+    "NEGATIVE CONTROL: verify --expr ioffe_mirror_deltab(0.1,100000.0,0.4)=0.9 | calc=0.524886 ≠ expected 0.9 (|Δ|=0.375114 > ε=1e-9) | tier = 🔴 FALSIFIED"
+  ],
+  "tiers_summary": "🟢×7 SUPPORTED-NUMERICAL + 🔴×1 FALSIFIED (negative control) — verify-native closed (TECS-L result-agnostic)",
+  "absorbed": false,
+  "absorbed_note": "still false — meta milestones (7-verb full pipe, handoff doc) + ⓻측정 CPT measured-oracle remain (@D d5); wet-lab is downstream confirmation"
+}

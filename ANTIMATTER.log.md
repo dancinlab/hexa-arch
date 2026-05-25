@@ -2,6 +2,24 @@
 
 Append-only history sister of `ANTIMATTER.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T11:05Z — ⓺가둠 Ioffe-Pritchard 자기최소 트랩 verify (RTSC 자석 toolchain 상속 · 7공정 마지막 공정축 CLOSE)
+
+마지막으로 열려있던 **⓺가둠**(confinement) 공정축을 verify-native 로 닫음. 중성 반수소는 페닝트랩(전하기반)으로 못 잡으니 **자기최소(magnetic bottle) 트랩** — 동축 거울코일 쌍이 |B| 를 중심에서 최소로 만들고 사방으로 상승시켜, 저자기장추종 자기모멘트(μ≈μ_B)인 ground-state H̄ 를 안쪽으로 되민다. **RTSC 자석 toolchain 직계 상속**: 온축 전류고리 폐형해 `B_loop(ζ)=μ₀Ia²/(2(a²+ζ²)^1.5)` 는 `hexa-lang/stdlib/material/magnet/current_loop_offaxis.hexa::loop_offaxis_Bz` (r=0, NOVEL-TOOL M2.4 PR #900) · Wheeler 가족과 동일 primitive 를 재사용 (신규 자기학 fn 안 만듦; trap-superposition+depth wrapper만 추가). 대표 거울코일 a=0.1m·NI=1e5A·s=0.4m (s>a → 중심이 참 온축 최소 = magnetic bottle).
+
+verify host = mini only (`POOL_DISABLE=1`) · hexa-verify 재빌드(canonical root `tool/build_hexa_verify.sh`) · 6 신규 hexa-native fn (`ioffe_loop_bz`/`ioffe_mirror_bmin`/`ioffe_mirror_bcoil`/`ioffe_mirror_deltab`/`ioffe_trap_depth_k`/`mu_b_over_kb`, verify_cli.hexa +174줄 순수 추가 · 기존 ANTIMATTER fn 보존). getdp FEM cross-check 는 strictly-optional 이라 scope-tight 위해 정직 SKIP. record: `exports/antimatter/verify/2026-05-25T11-05-17Z/ioffe_trap_2026-05-25T11-05-17Z.json`.
+
+verbatim verdicts (@D g5 · LLM 자기판정 금지):
+
+- [x] (a) 온축 B_loop 폐형해 — `verify --expr ioffe_loop_bz(0.1,100000.0,0.0)=0.628319 | calc=0.628319 ≈ expected 0.628319 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] B_min(중심) — `verify --expr ioffe_mirror_bmin(0.1,100000.0,0.4)=0.112397 | calc=0.112397 ≈ expected 0.112397 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] B_coil(코일면) — `verify --expr ioffe_mirror_bcoil(0.1,100000.0,0.4)=0.637283 | calc=0.637283 ≈ expected 0.637283 (|Δ|=0.0 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] (b) field trap depth ΔB — `verify --expr ioffe_mirror_deltab(0.1,100000.0,0.4)=0.524886 | calc=0.524886 ≈ expected 0.524886 (|Δ|=1.11022e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] trap depth K (ΔB=0.5249T) — `verify --expr ioffe_trap_depth_k(0.524886)=0.352573 | calc=0.352573 ≈ expected 0.352573 (|Δ|=1.66533e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] trap depth K (1T 기준=0.672K) — `verify --expr ioffe_trap_depth_k(1.0)=0.671714 | calc=0.671714 ≈ expected 0.671714 (|Δ|=2.22045e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] (c) μ_B/k_B 상수 — `verify --expr mu_b_over_kb()=0.671714 | calc=0.671714 ≈ expected 0.671714 (|Δ|=2.22045e-16 ≤ ε=1e-9) | tier = 🟢 SUPPORTED-NUMERICAL`
+- [x] 음성대조 (거짓 ΔB=0.9 주장) — `verify --expr ioffe_mirror_deltab(0.1,100000.0,0.4)=0.9 | calc=0.524886 ≠ expected 0.9 (|Δ|=0.375114 > ε=1e-9) | tier = 🔴 FALSIFIED`
+- [x] 집계 — 🟢×7 SUPPORTED-NUMERICAL + 🔴×1 FALSIFIED(음성대조). **7공정(생성→감속→포획→냉각→합성→가둠→측정) 전부 verify-native 닫힘** · `absorbed=false` 유지 (7-verb 풀파이프 + 인계 doc + ⓻측정 CPT 실측 oracle 미완 · @D d5). V-ledger(#167)의 ⓺=🟠 PENDING 은 예상된 staleness — 후속 round 가 refresh (그대로 둠).
+
 ## 2026-05-25T10:58Z — V1-V4 verify ledger 통합 (round-1+2 닫힌 atom 인벤토리 · @D g5 verbatim 인용)
 
 round-1+2 verify 작업(6/7 공정 닫힘)을 깔끔한 tier ledger 로 통합. **재실행 아님** — 이미 landed 된 atom 의 verbatim verdict 를 log/record 에서 인용(@D g5; LLM 자기판정 금지). 신규 hexa fn 추가 없음 · `verify_cli.hexa` 미수정 (DOC/LEDGER task).
