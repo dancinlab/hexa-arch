@@ -1,7 +1,18 @@
-# <slug> — paper title placeholder
+# rtsc-superconductor — 🧲 RTSC monograph
 
-> One-line framing of the paper. Replace this block with paper-specific
-> notes (status · target length · companion records / data).
+> **RTSC — Room-Temperature Superconductor Materials & Magnet: a closed-form
+> $T_c$ / FEM-field verification stack.** Mirrors the HEXA-FUSION 7-gate
+> monograph structure for the RTSC domain's dual axis: materials discovery
+> (McMillan / Allen-Dynes $T_c$ over sourced DFT inputs, calibrated against
+> MgB₂ / Nb₃Sn / Nb / YBCO) and magnet design (GetDP axisymmetric solenoid
+> FEM cross-checked against the Wheeler closed form to Δ=+1.42%).
+>
+> **Status: SCAFFOLD + BODY pass.** Body §1-9 + §Full Pipeline complete (10
+> pages, xelatex). Appendices A–J are scoped SKELETONS with `% TODO (fill
+> batch)` markers — appendix bodies + comparison pgfplots charts land in fill
+> batches. **absorbed=false is permanent**: no room-temperature superconductor
+> is claimed; DFT el-ph inputs are sourced, and high-pressure synthesis +
+> multi-lab replication are downstream wet-lab (pipeline stages 8-9).
 
 ## Source layout
 
