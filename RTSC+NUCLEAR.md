@@ -60,6 +60,8 @@ gate_type/absorbed/skip-cascade 정책을 소유하고, sim.hexa 는 **숫자만
 | `royer_log10_t` (NC2) | nuclear | α-반감기 질량의존 refit (A^⅙·√Z) | (c) | 🟢 | NC1 의 자매 fit (ensemble member) |
 | `consensus_alpha` → `ConsensusAlpha` (NC3) | nuclear | unweighted mean/min/max/spread_dex | (c) | 🟢 | ★**MIRROR** of material `Consensus` |
 | `c_gate_window_score` + `n11_alpha_cell` → `NuclideScore` (N11) | nuclear | (c)-gate 삼각창 priority score + funnel cell | (c→funnel) | 🟢 | ★**MIRROR** of RTSC N5 funnel |
+| `sf_log10_t` + `total_halflife`/`c_gate_total_cell` → `DecayTotal` (C1) | nuclear | Ren-Xu SF log₁₀T + α⊕SF partial-rate combiner (T_tot = 1/(λ_α+λ_SF) · b_α/b_SF branching) | (c) | 🟢 | α-only NC1·2·3 을 α⊕SF total-survival 로 정직화 (SF-dominated SHE 하향) |
+| `island_weight` + `n11_island_cell` → `IslandScore` (C2) | nuclear | shell-gap island Gaussian: exp(−d²/2σ²), d²=dZ²+dN² (nearest magic Z∈{82,114,120,126}·N∈{126,184}) × C1 (c)-total score | (a)-prior→(c) composite | 🟢 | 유사 슬롯 of RTSC convex-hull E_above_hull 거리 가중 (산술 독립 — §아래) |
 | `bcs_weak_tc` | material | BCS 약결합 Tc = 1.13·Θ_D·e^(−1/λ) | (b) | 🔵 | closed-form 항등식 |
 | `mcmillan_tc` | material | McMillan 중간결합 Tc | (b) | 🔵 | AD 의 base kernel |
 | `allen_dynes_tc` / `allen_dynes_full` | material | 강결합 f1·f2 보정 Tc | (b) | 🔵 | 본 도메인 default predictor |
@@ -89,7 +91,44 @@ nuclear/sim.hexa   ConsensusAlpha { mean, min, max, spread_dex, n }
   항등식) · nuclear kernel = 🟢 SUPPORTED-NUMERICAL (Geiger-Nuttall family 는 ~400 known
   α-emitter 에 대한 *semi-empirical fit* — 항등식 아님, 그래서 한 tier 아래). 둘 다 sim PASS
   ≠ measurement 는 동일.
-- 버전: nuclear `sim.hexa` v0.2.0 · material `sim.hexa` v0.3.0 (BCS GL 부가 커널 9종으로 v0.2.0→v0.3.0 확장).
+- 버전: nuclear `sim.hexa` **v0.3.0** · material `sim.hexa` v0.3.0.
+  - nuclear v0.2.0→v0.3.0 경로: **C1** (`sf_log10_t`+`total_halflife`→`DecayTotal` α⊕SF combiner · v0.2.1) → **C2** (`island_weight`+`n11_island_cell`→`IslandScore` shell-gap island Gaussian · v0.3.0). header `@version 0.3.0` 확인 (origin/main).
+  - material v0.2.0→v0.3.0 경로: BCS/GL 부가 커널 9종 확장 (μ*·ξ·κ·λ_L·Hc·U·Δ(0)·ξ₀).
+
+#### ★ MIRROR 후보 — C2 magic-number 거리 가중 ↔ RTSC convex-hull E_above_hull 거리 가중
+
+C2 의 magic-number-distance Gaussian (안정성 anchor 까지의 거리로 후보를 re-rank) 은
+RTSC 의 convex-hull E_above_hull 거리 가중 (안정성 anchor=hull 까지의 거리로 후보를
+re-rank) 과 **같은 "안정성-거리 prior" 직관**을 공유한다. 정직 평결 (g25 / §F3):
+
+```
+nuclear C2   island_weight = exp(−d²/2σ²)  ·  d² = dZ²+dN² (→ nearest magic Z,N)
+                   │  sim.hexa Path-A 닫힌형 · σ HYPERPARAM · (c) composite re-ranker
+RTSC (a)     E_above_hull 거리 → 안정성 score  ·  d = hull 까지 형성E 거리
+                   │  pymatgen Phase Diagram / MP 데이터-브릿지 gate · (a) 본 gate
+```
+
+**평결 = 유사 슬롯, 산술 독립 (MIRROR 아님).** 둘 다 "안정성 anchor 거리 가중"
+이라는 *직관*은 공유하나 진짜 동형이 아닌 이유 3가지 (g25 — 억지 금지):
+1. **레이어가 다르다** — C2 는 `sim.hexa` libm-only 닫힌형 microkernel · RTSC E_above_hull
+   은 pymatgen/MP **데이터-브릿지/install-gated** gate (sim.hexa 에 hull 커널 없음 — 확인).
+   §F2 는 sim.hexa 커널 인벤토리이므로 RTSC 측엔 대응 *커널*이 애초에 없다.
+2. **슬롯이 다르다** — C2 의 island weight 는 (a)-안정성 *직관*을 빌려오되 nuclear (c)-gate
+   composite (`n11_island_cell`: c_total_score × island_weight) 에 *곱해지는* re-ranker.
+   E_above_hull 은 RTSC §F1 (a) **본 gate** 자체. 같은 (a)-prior 슬롯에 *산다*기보다,
+   C2 는 (a)-flavored prior 를 (c) 점수에 주입하는 cross-slot fold 이다.
+3. **함수형이 다르다** — C2 = exp(−d²/2σ²) Gaussian (bounded (0,1] · σ HYPERPARAM) ·
+   E_above_hull = 선형 형성E 거리 → 임계 threshold. 산술 공유 없음 (NC3↔Consensus
+   의 σ=1 환원 같은 닫힌 대응 관계가 여기엔 없다).
+
+→ NC3↔`Consensus` 가 *진짜* MIRROR (σ=1 대입 시 환원되는 닫힌 대응)인 것과 달리,
+C2↔hull 은 **개념적 자매(안정성-거리 prior)이되 코드/슬롯/산술은 독립** — supply
+통합 오버클레임 회피 (§F3 R4: parallel funnel · not 통합 경로). 향후 RTSC 측이
+hull-distance Gaussian 을 sim.hexa 닫힌형 커널로 박으면 그때 *진짜* MIRROR 승격 가능.
+
+> **DRIFT 경고**: §F2 는 sim.hexa **버전 핀** (현재 nuclear v0.3.0 / material v0.3.0)
+> — 커널 추가/버전 bump 시 이 인벤토리는 **수동 동기화** 필요 (자동 lint 미적용 ·
+> uncovered gap). 본 sync 자체가 v0.2.0 핀이 C1·C2 land 후 stale 였던 사례.
 
 ### §F3. 공유 R4 불변식 (single statement)
 
