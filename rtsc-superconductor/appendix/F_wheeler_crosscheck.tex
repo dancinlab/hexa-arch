@@ -91,6 +91,34 @@ $0.069391$\,T. All \tierGreen\ at $\varepsilon=10^{-9}$
 \end{table}
 
 % -------------------------------------------------------------------------
+\subsection{The long-solenoid limit (self-test 1 worked)}
+\label{app:wh-longlimit}
+
+Self-test 1 pins the prefactor by checking the infinite-solenoid limit. As
+$L\!\gg\!R$ at $z\!=\!0$, both bracket terms in Eq.~\eqref{eq:wh-bz}
+approach $\pm1$:
+\begin{equation}
+\frac{L/2}{\sqrt{(L/2)^2+R^2}} \;=\;
+  \frac{1}{\sqrt{1+(2R/L)^2}} \;\xrightarrow{\,L\gg R\,}\;
+  1 - \tfrac12\!\left(\frac{2R}{L}\right)^2 + \mathcal{O}\!\big((R/L)^4\big),
+\end{equation}
+so the on-axis field telescopes to
+\begin{equation}
+B_z(0) \;\xrightarrow{\,L\gg R\,}\; \frac{\mu_0 NI}{2L}\,(1-(-1))
+  \;=\; \frac{\mu_0 NI}{L} \;=\; \mu_0 n I,
+\label{eq:long-limit}
+\end{equation}
+the textbook infinite-solenoid result with $n=N/L$ the turn density. For
+the reference coil the finite-length correction is
+$1-\tfrac12(2R_{\text{eff}}/L)^2\approx1-0.045$, i.e.\ the finite solenoid
+sits $\sim\!4.5$\% below $\mu_0 nI$ --- well within the test's $0.5$\%
+\emph{tolerance band around the corrected value}, confirming the prefactor
+$\mu_0 NI/2L$ is implemented correctly. This is why a single-radius Wheeler
+evaluation is a good \emph{field} anchor: the geometry factor is a smooth
+$\mathcal{O}((R/L)^2)$ correction, unlike the inductance (which integrates
+the full winding and is $-21$\% off, \S\ref{app:wh-bridge}).
+
+% -------------------------------------------------------------------------
 \subsection{Wheeler-vs-GetDP on-axis overlay (the bridge)}
 \label{app:wh-chart}
 

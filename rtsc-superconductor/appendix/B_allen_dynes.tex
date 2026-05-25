@@ -144,6 +144,33 @@ unstable). \textbf{None is a measurement} --- \texttt{absorbed=false}.}
 \end{table}
 
 % -------------------------------------------------------------------------
+\subsection{Worked example --- h3cl to $140.324$\,K}
+\label{app:ad-worked}
+
+The headline value is worth tracing so the $f_1$/$f_2$ machinery is
+concrete. With $\lambda=1.30$, $\omega_{\log}=1350$\,K, $\mu^{*}=0.10$, the
+$f_1$-only pieces of Eq.~\eqref{eq:ad-app} are:
+\begin{align}
+\Lambda_1 &= 2.46\,(1+3.8\cdot0.10) = 2.46\cdot1.38 = 3.3948, \notag\\
+f_1 &= \big[1+(1.30/3.3948)^{3/2}\big]^{1/3}
+     = \big[1+(0.23697)\big]^{1/3} = (1.23697)^{1/3} = 1.07346, \notag\\
+\text{exponent} &= -\,\frac{1.04\,(1+1.30)}{1.30 - 0.10\,(1+0.62\cdot1.30)}
+     = -\,\frac{2.392}{1.11940} = -2.13686. \notag
+\end{align}
+With $f_2\!=\!1$ this gives $T_c=(1.07346\cdot1350/1.20)\,e^{-2.13686}
+\approx142.5$\,K; the \emph{registered} kernel value is
+$\texttt{allen\_dynes\_tc}=140.324$\,K, the small difference
+($\sim\!1.5$\%) being the kernel's $f_2$ spectral-shape factor
+(Eq.~\ref{eq:f2}) on the h3cl $\bar\omega_2/\omega_{\log}$ ratio, which the
+$f_2\!=\!1$ hand-evaluation above drops. The kernel reproduces its
+\emph{own} registered $140.324$\,K to $|\Delta|=2.8\times10^{-11}$ --- the
+only non-zero residual in the ledger, a libm transcendental ($e^x$,
+$x^{3/2}$, $x^{1/3}$) rounding artifact, eleven orders of magnitude inside
+$\varepsilon=10^{-9}$. The strong-coupling lift over McMillan
+($f_1\!=\!1$) at this intermediate $\lambda$ is $+7.3$\%; it grows to
+$+43$\% by $\lambda=3.4$ (Fig.~\ref{fig:ad-vs-mcm-ratio}).
+
+% -------------------------------------------------------------------------
 \subsection{Where the two formulas split}
 \label{app:ad-split}
 

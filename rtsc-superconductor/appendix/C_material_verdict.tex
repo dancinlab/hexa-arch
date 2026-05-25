@@ -159,6 +159,36 @@ conventional formula for cuprates.}
 \end{figure}
 
 % -------------------------------------------------------------------------
+\subsection{A worked falsifier --- F-SC-2 on MgB$_2$}
+\label{app:mat-worked}
+
+To make the dispatch concrete, the MgB$_2$ verdict's F-SC-2 ($T_c$
+consistency) evidence string is, verbatim from the exported JSON:
+\begin{lstlisting}
+"id":     "F-SC-2-mcmillan-tc",
+"name":   "McMillan/Allen-Dynes Tc consistency",
+"status": "PASS",
+"evidence": "tier1 ConductorRecord spec.tc_k=39.0 vs tier3 r_t
+             headline.tc_k=39.0 (|delta|/Tc_pred=0.000 <= 0.5)"
+\end{lstlisting}
+The falsifier computes
+\begin{equation}
+\frac{|T_c^{\text{tier1}} - T_c^{\text{tier3}}|}{T_c^{\text{pred}}}
+  \;=\; \frac{|39.0 - 39.0|}{39.0} \;=\; 0.000 \;\le\; 0.5,
+\end{equation}
+so it returns \texttt{PASS} with confidence $0.5$ (a PASS that consumes one
+of two needed inputs). The F-RTSC-2 window check on the same record
+verifies $T_c^{\text{tier3}}=39.0\!\in\![0.5\!\cdot\!39, 2.0\!\cdot\!39]
+=[19.5, 78.0]$, also \texttt{PASS}. The remaining four falsifiers
+\texttt{SKIP} for missing tier-2/tier-3 inputs (isotope, $H_{c2}$,
+Meissner, replication), yielding
+\texttt{aggregate=INCONCLUSIVE-MULTIPLE-MISSING}. This is the honest
+behavior: MgB$_2$'s $39$\,K $T_c$ is reproduced \emph{consistently} by the
+tier-1 model, but the verdict does not over-claim --- it records exactly
+which gates fired and which lacked data, and never flips
+\texttt{absorbed}.
+
+% -------------------------------------------------------------------------
 \subsection{YBCO --- the $d$-wave negative control}
 \label{app:mat-ybco}
 

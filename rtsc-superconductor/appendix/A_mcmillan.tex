@@ -163,6 +163,40 @@ neither is a measurement. Cross-ref Appendix~\ref{app:allendynes}.}
 \end{figure}
 
 % -------------------------------------------------------------------------
+\subsection{The companion BCS gap ratio (\tierBlue)}
+\label{app:mcmillan-bcs}
+
+The McMillan $T_c$ shares its weak-coupling foundation with the BCS
+universal gap ratio, registered separately as the \tierBlue\
+\texttt{bcs\_gap\_ratio} atom. In BCS theory \citep{bcs1957} the
+zero-temperature gap and $T_c$ both follow from the same self-consistent
+gap equation $1=N(0)V\!\int_0^{\hbar\omega_D}
+\tanh(\xi/2k_BT)/\xi\,d\xi$, whose weak-coupling solutions are
+\begin{equation}
+\Delta(0) = \frac{\hbar\omega_D}{\sinh(1/N(0)V)} \approx 2\hbar\omega_D\,
+  e^{-1/N(0)V},
+\qquad
+k_BT_c = \frac{2 e^{\gamma}}{\pi}\,\hbar\omega_D\, e^{-1/N(0)V},
+\label{eq:bcs-gap-tc}
+\end{equation}
+where $\gamma\!\approx\!0.5772$ is the Euler--Mascheroni constant. The
+material-dependent factor $\hbar\omega_D e^{-1/N(0)V}$ \emph{cancels} in
+the ratio, leaving the parameter-free universal constant
+\begin{equation}
+\frac{2\Delta(0)}{k_BT_c} \;=\; \frac{2\pi}{e^{\gamma}}
+  \;=\; 3.527\ldots
+\label{eq:bcs-ratio}
+\end{equation}
+This is the \tierBlue\ identity (a closed-form constant, no inputs): the
+\texttt{bcs\_gap\_ratio} atom recomputes $2\pi/e^{\gamma}=3.527$ to
+$|\Delta|=0$ at $\varepsilon=10^{-9}$ (Appendix~\ref{app:verify}). It is
+the deepest closure in the stack --- a pure number --- and it bounds the
+domain of the whole conventional axis: a measured $2\Delta/k_BT_c$ near
+$3.5$ is the signature of weak-coupling BCS pairing, while strong-coupling
+hydrides (and $d$-wave cuprates) deviate from it, which is the physical
+content the $f_1$ factor of Appendix~\ref{app:allendynes} encodes.
+
+% -------------------------------------------------------------------------
 \subsection{Verify atom and honest scope}
 \label{app:mcmillan-honest}
 
