@@ -1,0 +1,138 @@
+{
+  "schema": "rtsc-anharmonic-tc/0.1.0",
+  "batch_id": "rtsc-n5funnel-sweep-2026-05-25",
+  "candidate_id": "h3o",
+  "stamp": "2026-05-25T14:40Z",
+  "kind": "anharmonic-Tc-finalize — el-ph lambda BZ integration + Allen-Dynes",
+  "group": 16,
+  "structure_hint": "Im-3m (bcc, ibrav=3, celldm=4.89945 Bohr, 4 atoms O+3H)",
+  "question": "Given SSCHA dynamical stability (0 imaginary, PR #141), what is the anharmonic Tc once the el-ph lambda is BZ-integrated honestly?",
+
+  "stability_recap": {
+    "sscha_verdict": "STABILIZED — h3o_sscha_result.json: 27 harmonic imaginary modes -> 0 anharmonic; min_freq ~ -3.3e-5 cm^-1 (acoustic); free-energy Hessian also positive-definite",
+    "stable": true,
+    "source_json": "h3o_sscha.json (PR #141)"
+  },
+
+  "epc_source": {
+    "file": "elph_dense_parsed.json (ubu-1:~/rtsc-h3o-sscha/, parsed 14:11)",
+    "ph_x_input_dyn": "h3o_elph.dyn1/2/3",
+    "broadening_used": "0.020 Ry (Gaussian, ngauss=0) — DOS ~ 2.62 states/spin/Ry/cell; confirmed == the 0.020 column of h3o_elph.dyn*.elph.*",
+    "CRITICAL_HONESTY_FLAG": "The el-ph (ph.x electron_phonon) was run on the HARMONIC dynamical matrix (h3o_elph.dyn*), NOT on the SSCHA-stabilized anharmonic dyn (h3o_sscha_final.dyn*). Evidence: the phonon frequencies stored alongside lambda in h3o_elph.dyn* are imaginary at exactly the modes with negative lambda (Gamma -676.9, q2 -498/-461/-443/-214, H -606.6 cm^-1). So the available lambda is HARMONIC-EPC, carrying the same dynamical-instability artifacts. A truly anharmonic lambda requires re-running ph.x electron_phonon on h3o_sscha_final.dyn* (the next_step recorded in h3o_sscha.json was NOT executed against the SSCHA dyn).",
+    "negative_lambda_origin": "lambda_qnu = gamma_qnu / (pi * N(Ef) * omega_qnu^2). For imaginary harmonic modes omega^2 < 0 -> lambda < 0 (unphysical). For the near-zero-omega q2 mode 5 (706 cm^-1 harmonic but gamma=4405 GHz), 1/omega^2 inflates lambda to +3.92 (divergent outlier). Both are dynamical-instability artifacts of the harmonic EPC, not converged anharmonic physics."
+  },
+
+  "q_grid": {
+    "mesh": "2x2x2 (BCC, ibrav=3) — 8 total q, 3 irreducible",
+    "irreducible_q_and_star_weights": {
+      "q1_Gamma": {"coords": [0.0, 0.0, 0.0], "weight": 1, "star_members_listed": 1},
+      "q2_half":  {"coords": [0.0, 0.5, -0.5], "weight": 6, "star_members_listed": 6},
+      "q3_H":     {"coords": [0.0, 0.0, -1.0], "weight": 1, "star_members_listed": 1}
+    },
+    "weight_sanity": "1 + 6 + 1 = 8 = 2^3 (full BCC grid) — verified against h3o_elph.dyn* star listings",
+    "mode_resolved_lambda_per_q": {
+      "q1_Gamma": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "q2_half":  [-0.4236, -0.0789, -0.9143, -1.1881, 3.9165, 0.1162, 0.0030, 0.0672, 0.1940, 0.1564, 0.0024, 0.1189],
+      "q3_H":     [-0.0712, -0.0712, -0.0712, 0.0307, 0.0307, 0.0307, 0.0092, 0.0092, 0.0092, 0.0305, 0.0305, 0.0305]
+    },
+    "per_q_raw_sum_lambda": {"q1_Gamma": 0.0, "q2_half": 1.9697, "q3_H": -0.0024}
+  },
+
+  "lambda_BZ_integration": {
+    "formula": "lambda_BZ = Sum_q w_q Sum_nu lambda_qnu / Sum_q w_q  (Wtot = 8)",
+    "honest_treatments": {
+      "a_raw_incl_negatives": {
+        "lambda_BZ": 1.477,
+        "rationale": "literal definition — all modes including unphysical negative-lambda imaginary modes AND the +3.92 divergent outlier. The negatives partially cancel the divergent positive."
+      },
+      "b_negatives_excluded": {
+        "lambda_BZ": 3.457,
+        "rationale": "drop the unphysical negative-lambda (imaginary) modes. BUT this RETAINS the +3.92 q2-mode5 divergence outlier, which INFLATES the result above the harmonic 2.479 — judged unphysical (the +3.92 is itself a 1/omega^2 divergence artifact, not real strong coupling)."
+      },
+      "c_negatives_and_divergent_excluded": {
+        "lambda_BZ": 0.520,
+        "rationale": "drop BOTH negative-lambda imaginary modes AND the +3.92 divergent outlier (|lambda|>3 cutoff). Most conservative / cleanest physical estimate from the surviving well-behaved positive modes."
+      }
+    },
+    "physical_judgment": "The honest physical lambda_BZ lies BETWEEN (a) 1.48 and (c) 0.52. Treatment (b) 3.46 is rejected (inflated by the +3.92 divergence artifact). Because the ENTIRE EPC is harmonic-source on an unstable structure, NO single value is rigorous; the range 0.5-1.5 brackets the best available estimate. This is markedly WEAKER than the (invalid) harmonic claim 2.479.",
+    "harmonic_reference": 2.479,
+    "harmonic_validity": "INVALID — harmonic lambda=2.479 computed on a dynamically unstable (27 imaginary modes) structure"
+  },
+
+  "omega_log": {
+    "anharmonic_source": "sscha_minim.freqs (final converged row, Ry -> cm^-1; all 96 supercell modes REAL after SSCHA; 3 acoustic ~0 dropped)",
+    "n_real_modes": 93,
+    "min_cm": 259.5,
+    "max_cm": 1718.2,
+    "mean_cm": 1085.5,
+    "omega_log_plain_logavg_anharm_cm": 969.2,
+    "omega_log_lambda_weighted_positive_modes_cm": 771.2,
+    "chosen_omega_log_cm": 969.2,
+    "chosen_omega_log_rationale": "plain log-average of the anharmonic (real, SSCHA-stabilized) frequencies — the trustworthy phonon spectrum. The lambda-weighted variant (771) uses the harmonic-source lambda and is lower; reported for transparency.",
+    "harmonic_reference_cm": 1096.6,
+    "harmonic_reference_note": "harmonic omega_log 1096.6 cm^-1 (== 1097); anharmonic spectrum is SOFTER (969) because the deepest harmonic imaginary mode hardened to only +260 cm^-1 (low optical), pulling the log-average down"
+  },
+
+  "anharmonic_Tc": {
+    "method": "hexa verify --expr allen_dynes_tc <lambda_BZ> <omega_log> <mu_star> (g5 verbatim, POOL_DISABLE=1, ~/core/hexa-lang)",
+    "omega_log_used_cm": 969.2,
+    "results": {
+      "treatment_a_raw_lambda_1.477": {
+        "mu_0.10_Tc_K": 108.86,
+        "mu_0.13_Tc_K": 99.12
+      },
+      "treatment_c_conservative_lambda_0.520": {
+        "mu_0.10_Tc_K": 13.70,
+        "mu_0.13_Tc_K": 8.61
+      }
+    },
+    "anharmonic_Tc_range_K": "9 - 109 (mu* 0.10-0.13, lambda_BZ 0.52-1.48)",
+    "vs_harmonic_invalid_180K": "anharmonic Tc is FAR BELOW the (invalid) harmonic 180K under every honest treatment — even the most generous (raw lambda=1.48, mu*=0.10) gives only 109K"
+  },
+
+  "hexa_verify_verbatim": [
+    "verify --expr allen_dynes_tc(2.479,1097.0,0.1)=180.0   -> calc=179.845   [HARMONIC baseline, INVALID structure]",
+    "verify --expr allen_dynes_tc(1.477,969.2,0.1)=108.862  -> calc=108.862   [anharmonic (a) raw, mu*=0.10]",
+    "verify --expr allen_dynes_tc(1.477,969.2,0.13)=99.1155 -> calc=99.1155   [anharmonic (a) raw, mu*=0.13]",
+    "verify --expr allen_dynes_tc(0.52,969.2,0.1)=13.7001   -> calc=13.7001   [anharmonic (c) conservative, mu*=0.10]",
+    "verify --expr allen_dynes_tc(0.52,969.2,0.13)=8.60866  -> calc=8.60866   [anharmonic (c) conservative, mu*=0.13]",
+    "TIER_NOTE: hexa verify --expr ε=1e-9 is tighter than the 6-sig-fig display, so each line prints 🔴 on the rounded expected; the load-bearing artifact is the verbatim allen_dynes_tc(lambda,omega,mu*)=Tc formula evaluation itself (libm Newton recompute, reproducible)."
+  ],
+
+  "M8_reevaluation": {
+    "gate": "M8 = (pressure < 50 GPa) AND (dynamically stable) AND (Tc > 200K)",
+    "stable": {"pass": true, "value": "SSCHA STABILIZED (0 imaginary, aux + Hessian)", "source": "h3o_sscha.json #141"},
+    "Tc": {"pass": false, "value": "9-109 K (anharmonic, honest range) << 200K", "note": "harmonic 180K was INVALID; true anharmonic Tc fails the 200K bar by a wide margin"},
+    "pressure": {"pass": "UNDETERMINED", "value": "celldm=4.89945 Bohr fixed; no EOS / pressure scan run", "note": "EOS not computed — pressure gate undetermined, but moot since Tc gate already fails"},
+    "M8_score": "1/3 (stable only) — was 0/3 in prior ledger (harmonic, unstable). Net: stability gained, Tc collapsed.",
+    "verdict": "FAIL M8 — CLOSED negative (g_micro_exp_honest_sweep)"
+  },
+
+  "honest_conclusion": {
+    "headline": "h3o is dynamically STABLE under SSCHA anharmonicity, but the el-ph coupling that survives is WEAK -> LOW anharmonic Tc (9-109K), not the 180K harmonic mirage.",
+    "trade_reconfirmed": "RTSC §10 d7 wall RE-CONFIRMED at the SAME candidate: harmonic h3o looked like a 180K HTSC ONLY because the soft (imaginary) modes artificially enhanced lambda=2.479. Anharmonic renormalization HARDENS those modes (stability gained) which DESTROYS the soft-mode lambda enhancement (coupling lost). Stability <-> strong-lambda are anti-correlated AT THE SAME MATERIAL, not just across siblings. This is the cleanest single-material demonstration of the RTSC trade-off.",
+    "harmonic_180K_status": "INVALID and now superseded — computed on a 27-imaginary-mode structure; the physical (stable) h3o is a sub-110K superconductor at best.",
+    "residual_caveat_honest": "Even the 9-109K range is OPTIMISTIC-CEILING: the el-ph lambda itself is HARMONIC-source (ph.x ran on h3o_elph.dyn*, not h3o_sscha_final.dyn*). A rigorous anharmonic lambda (ph.x electron_phonon on the SSCHA dyn) would likely be LOWER still, since the stiffened anharmonic phonons further suppress 1/omega^2 coupling. So 'stable but weak coupling -> low Tc' is the robust honest verdict regardless of which lambda treatment.",
+    "fate": "h3o: anharmonic-stable, low-Tc. NOT an HTSC candidate. d2 breakthrough on STABILITY succeeded (Im-3m rescued); d6 honesty on Tc enforced (no forcing 180K). M8 FAIL."
+  },
+
+  "breakthrough_paths_forward": [
+    "Rigorous anharmonic lambda: re-run ph.x electron_phonon='simple' on h3o_sscha_final.dyn* (not the harmonic dyn) to replace the harmonic-source lambda with a true SSCHA-renormalized lambda. Will tighten the 9-109K range and almost certainly LOWER the ceiling.",
+    "Pressure-Tc trade curve: EOS + celldm scan — does lower pressure recover any soft-mode lambda before stability is lost (the RTSC trade boundary)?",
+    "Pivot to h3br (ledger best base): group-17 sibling is the only N5 candidate with BOTH stability (16/16) AND strong lambda=4.42; raise its omega_log (531K) via lighter substitution to push Tc>200K — lambda is saturated, omega_log is the free knob."
+  ],
+
+  "provenance": {
+    "epc_parse": "elph_dense_parsed.json (ubu-1)",
+    "anharmonic_freqs": "sscha_minim.freqs final row (ubu-1)",
+    "q_weights": "h3o.dyn0 / h3o_elph.dyn1-3 star listings (ubu-1)",
+    "bz_integration": "lambda_BZ = weighted sum over irreducible q; 3 honest treatments",
+    "allen_dynes": "hexa verify --expr allen_dynes_tc (POOL_DISABLE=1, ~/core/hexa-lang)",
+    "recompute_cost_usd": 0.0,
+    "recompute_note": "data recovered from ubu-1 (already computed); zero new compute / zero rent per @D d7"
+  },
+
+  "absorbed": false,
+  "provisional": true,
+  "absorbed_note": "M8 FAIL (Tc gate) — CLOSED negative. absorbed stays false (not an HTSC hit). Honest finalization complete: stable=true, Tc=low. The harmonic 180K row in the ledger is corrected by this anharmonic finalization."
+}
