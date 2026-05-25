@@ -320,13 +320,17 @@ fn check_thermal_margin() {
 }
 
 // ⟲-7 EM→thermal coupling is ACTIVE (not a trivial decoupled fixed point):
-// T_magnet at the converged AoA differs from the bare cold floor.
+// T_magnet at the converged AoA is consistent with the thermal map AND lies
+// strictly above the bare cold floor (the EM duty raised it).  At a TOL-
+// converged fixed point the under-relaxed T* equals thermal_T_of_AoA(AoA*)
+// only within the iteration tolerance, so compare against TOL (not 1e-9).
 fn check_coupling_active() {
     let tmag = FP[3]; let aoa = FP[2]
     let t_chk = thermal_T_of_AoA(aoa)
-    _check(_rel(tmag, t_chk) < 1.0e-9 && tmag > T_BASE,
+    _check(_rel(tmag, t_chk) < TOL && tmag > T_BASE,
            "EM→thermal back-coupling active (T* > T_base, consistent)",
-           "T*(AoA " + str(aoa) + "°) = " + str(tmag) + " K > T_base " + str(T_BASE) + " K")
+           "T*(AoA " + str(aoa) + "°) = " + str(tmag) + " K > T_base " + str(T_BASE) +
+           " K (thermal-map T = " + str(t_chk) + " K, Δrel = " + str(_rel(tmag, t_chk)) + ")")
 }
 
 // ⟲-8 under-relaxation invariance: a TIGHTER ω still lands on the SAME fixed
@@ -349,21 +353,30 @@ fn check_relaxation_invariance() {
     }
     let ra = _rel(aoa, FP[2]); let rt = _rel(tmag, FP[3])
     let rs = _rel(sig, FP[4])
-    _check(ra < 1.0e-3 && rt < 1.0e-3 && rs < 1.0e-3,
+    // Two independently TOL-converged states each sit within TOL of the TRUE
+    // fixed point, so their mutual gap is bounded by ~2·TOL (triangle ineq).
+    let inv_tol = 2.0 * TOL
+    _check(ra < inv_tol && rt < inv_tol && rs < inv_tol,
            "fixed point is ω-invariant (ω=0.4 lands on same state)",
-           "AoA Δrel = " + str(ra) + ", T Δrel = " + str(rt) + ", σ Δrel = " + str(rs))
+           "AoA Δrel = " + str(ra) + ", T Δrel = " + str(rt) + ", σ Δrel = " + str(rs) +
+           " (all < 2·TOL = " + str(inv_tol) + ")")
 }
 
-// ⟲-9 single-coil EM anchor identity: the verified `ioffe_loop_bz` 3.01593 T
-// (em-6coil §4.1) is the cold-point on-axis field — confirm the B(T) derating
-// at T_base reproduces the ≈1.48 T design B_center (NI-scaling anchor) within
-// the cryo derating, i.e. B(T_base) ≈ B_CENTER0 (cold floor, no derating).
+// ⟲-9 EM B(T) derating-law identity: the layer's HTS B_c(T) map must equal the
+// closed-form GL two-fluid derating B_CENTER0·(1−(T_base/Tc)²) EXACTLY (the law
+// is the EM→thermal back-coupling kernel).  Anchor: B_CENTER0 is the NI-scaling
+// design B_center (1.48 T), itself rooted in the verified `ioffe_loop_bz`
+// 3.01593 T single-coil on-axis field (em-6coil §4.1).  At 4.2 K the derating is
+// (4.2/90)² ≈ 2.18e-3 — small but NOT negligible at 1e-3, so the honest check is
+// the exact law, not a "≈ B_center" rounding claim.
 fn check_em_anchor() {
     let b_cold = em_b_of_T(T_BASE)
-    // at 4.2 K the (T/Tc)² derating is ~0.2 ‰ → B ≈ B_CENTER0.
-    _check(_rel(b_cold, B_CENTER0) < 1.0e-3,
-           "EM cold-point B(T_base) ≈ design B_center (derating negligible @4.2 K)",
-           "B(4.2 K) = " + str(b_cold) + " T ≈ B_center " + str(B_CENTER0) + " T")
+    let r = T_BASE / TC_HTS
+    let b_law = B_CENTER0 * (1.0 - r * r)
+    _check(_rel(b_cold, b_law) < 1.0e-9,
+           "EM B(T) = B_center·(1−(T/Tc)²) GL derating-law identity (exact)",
+           "B(4.2 K) = " + str(b_cold) + " T = law " + str(b_law) +
+           " T (derating (4.2/90)² = " + str(r * r) + ", B_center anchor 1.48 T)")
 }
 
 let FALSIFIERS: [str] = [
