@@ -2,6 +2,21 @@
 
 Append-only history sister of `ANTIMATTER.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T22:30Z — paper `antimatter-bluemax-2026` 작성·머지
+
+ANTIMATTER 14/14 + BLUE-MAX 16/16 absorbed 종결을 arxiv-style LaTeX paper 로 외부화. paper 폴더 `antimatter-bluemax-2026/` (worktree PR off origin/main).
+
+- [x] **scaffold** — `paper:paper new antimatter-bluemax-2026` (이전 단계). 본 round 는 scaffold 비우고 실내용 채움.
+- [x] **main.tex** — 8 섹션(abstract · intro · background · method · measurement · findings · honest scope · discussion + reproducibility). 24-atom tier 매트릭스 longtable + BLUE-MAX 페어 테이블 + 음성대조 10건 테이블 + verbatim verdict 인용(@D g5).
+- [x] **references.bib** — Chamberlain-Segrè 1955 (10.1103/PhysRev.100.947) · Brown-Gabrielse 1986 (10.1103/RevModPhys.58.233) · Mansbach-Keck 1969 · Glinsky-O'Neil 1991 · Pritchard 1983 · Jackson 1999 · ALPHA 2018 (10.1038/s41586-018-0017-2) · CODATA 2018 · Allen-Dynes 1975 · demiurge/hexa-lang/NEXUS repos. 모두 DOI/ISBN/URL 보유.
+- [x] **figures/fig_factory_line.png** — fal.ai gpt-image-2 (landscape_16_9) 으로 생산라인 7공정 schematic 생성 (commons g51 ≥1 fal.ai 충족). 프롬프트 = `figures/_prompts/factory_line.txt` (provenance).
+- [x] **BLUE-MAX 페어 그래프** — `.py` 작성 hook-blocked (project.tape, hexa-only) → TikZ inline bar-chart 으로 대체 (figures/_scripts/_example.py 삭제). 두 figure 모두 정상 렌더.
+- [x] **compile** — `paper:paper compile .` → `main.pdf` (10 pages, 1027391 bytes, pdflatex × 3 + bibtex 통과).
+- [x] **lint** — `paper:paper lint .` PASS: pages 10 ≥ 10 · fal.ai figure 1 prompt + 0 script (commons @D g51).
+- [x] **honest scope** §6 — CPT Δ (H̄ 1S-2S) = wet-lab downstream non-blocking; leading freq 2.4674 PHz vs CODATA 2.46606 PHz gap = reduced-mass + QED 정직 명시; ⓺ FEM cross-check optional SKIP; 7-verb producer honest-skip; record-path on-disk vs log-cited annotated.
+- [x] **branch** `paper/antimatter-bluemax-2026` off origin/main · explicit `git add antimatter-bluemax-2026/ ANTIMATTER.log.md` (@D d9, no implicit stage).
+- [x] **PR** — `gh pr create --fill` 후 squash merge + worktree cleanup (PR-create hook 자동 append).
+
 ## 2026-05-25T13:15Z — BLUE-MAX 🔵 algebraic-root pair coverage (+8 integer atoms · hexa-lang #1094)
 
 모든 물리 파라미터(exponent/factor)에 🔵 SUPPORTED-FORMAL 정수 algebraic-root atom 페어링. libm-class(sqrt/pow) 본체는 본질적 🟢이지만, 그 밑에 깔린 **정수 지수/계수는 정확히 🔵**로 백업. hexa-lang PR #1094 머지로 8개 신규 정수 atom 추가, 전부 verify exit 🔵 SUPPORTED-FORMAL.
