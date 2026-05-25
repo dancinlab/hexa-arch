@@ -326,9 +326,6 @@ last postop  = res/dummy.txt — t=0.025s · 6-PostOp 값 (energy / current / et
 - [ ] (deferred) nonlinear B-H — iron yoke 옵션 받을 때
 - [ ] (deferred) H-formulation — HTS-grade, multi-week
 
-### q/k-mesh prime heuristic (n=6/666 brainstorm real-fit)
-- **q/k-mesh 선택 = small-prime(2,3,5)-rich 크기만 · 큰 소수 인수 회피.** 예: 666=2·3²·37 의 37 이 small-prime 망을 벗어나 대칭축약(symmetry reduction)+FFT 가 비효율 → 24³·6³ 이 옳은 이유(24=2³·3, 6=2·3 = small-prime-rich, dense BZ sampling + FFT/symmetry 친화). 666 brainstorm 의 유일 actionable negative insight — q-grid 는 6³·8³(=2⁶) 처럼 2·3 인수만 쓰고, 37 같은 큰 소수가 끼는 크기는 피한다.
-
 ---
 
 ## 6. Domain rename plan (NOT this session)
@@ -590,6 +587,8 @@ if !(a && b && c && d && e):
 7. **graphene 류 도 RTSC 아님**. Twisted bilayer graphene (Cao 2018) Tc ~ 1.7 K. fancy 물질이라도 (b) 미달.
 
 → 향후 어떤 RTSC 후보가 등장하면 본 §8.9 의 5-gate matrix 에 row 추가, 5-gate 각각 결과 명시. 통과 row 가 *발생하면* 그때 absorbed=true 후보 — 그 전까지 §8.8 invariant 그대로.
+
+> **NUCLEAR×RTSC bridge (2026-05-25)**: SHE/장수명 nuclear isomer 는 §8.9 (a) bulk 합성 시료를 영구 공급 못함 — 벽은 반감기 아닌 *생산량* (SHE = atom-at-a-time, <20 원자; 거시 결정과 10¹⁵+ 배 격차). SHE single-atom 화학은 실재하나 bulk SC 아님 (원자 1개엔 Tc 미정의). 상세: `exports/nuclear_discovery/bridge/2026-05-25-nuclear-rtsc-bridge.md` · NUCLEAR.md §3.4.
 
 ## 8.10 Nb attestation 은 RTSC 가 아니다 (honest 정정)
 
@@ -1074,8 +1073,6 @@ Group-16 verdict (3/4 LANDED): H₃S = sweet spot · H₃Se = weaker coupling ou
 | **H₃X group 14-17 serial orchestrator** (h3c → h3n → ... 한 인스턴스) | ⏳ **in-progress** — single Vast.ai instance, serial-chain orchestration | parallel fanout 의 cross-validation · 같은 후보들을 직렬로 흘려 결과 reproducibility 확인 |
 
 본 fanout 의 핵심: §9.12 H₃S 교과서급 6³ q ladder + §9.12.A 4³ q honest baseline 가 *protocol* 으로 박혀 있어 동일 grid 정책으로 group-wide sweep 가능 (per-candidate manual setup 없이 자동화 가능 — `process_completed_pod.sh` 가 schema-uniform record 보장).
-
-> **H₃X enumeration vocabulary (n=6/666 brainstorm real-fit)**: H₃X 의 anion X 를 group 14-17 의 **4 column** 으로 완전열거하는 것은 τ(6)=4 (6 의 약수 개수 = {1,2,3,6} = 4) 약수 구조와 정렬한다 — enumeration 완전성(d4 generic — column 추가/제거 = manifest-only)의 *vocabulary*. **honest: 4 ≠ 6** — group 14-17 의 4-column 화학(주기율표 p-block 의 covalent-polar transition)이 REAL anchor 이고, τ(6)=4 는 4-column 을 *세는* τ-약수 정당화일 뿐이지 n=6 design cause 아님 (g25). 666 brainstorm null: group 을 666 류로 over-split 하는 것은 가치 없음 — actionable 한 것은 group-14/15/16/17 4-column sweep 의 완전열거뿐 (d4 manifest-only · g26-clean).
 
 #### ALIGNN family-wide d7 wall ML baseline (9/9 후보 · 2026-05-24)
 
