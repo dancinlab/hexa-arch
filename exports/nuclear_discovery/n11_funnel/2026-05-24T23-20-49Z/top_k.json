@@ -1,0 +1,57 @@
+{
+  "domain": "nuclear",
+  "verb": "verify",
+  "kind": "n11_zn_funnel",
+  "producer": "sim.hexa@nuclear-N11",
+  "absorbed": false,
+  "gate_type": "nuclear-novel-discovery-simulation",
+  "provisional": true,
+  "query": { "Z_range": [114, 122], "N_range": [170, 184], "accelerator_band_log10_s": [-6.0, 3.0] },
+  "top_k_candidates": [
+    {
+      "name": "Lv-293",
+      "Z": 116, "N": 177, "A": 293,
+      "Q_alpha_MeV": 10.54,
+      "Q_alpha_source": "measured E_alpha first-detection (Lv->Fl) 10.54 MeV",
+      "gate_type": "nuclear-novel-discovery-simulation",
+      "absorbed": false,
+      "prediction": { "consensus_mean_log10_T_s": -0.762858, "consensus_spread_dex": 0.286312 },
+      "scores": { "c_gate_score": 0.836191, "gate_coverage": 0.2, "composite_score": 0.167238 }
+    },
+    {
+      "name": "Og-294",
+      "Z": 118, "N": 176, "A": 294,
+      "Q_alpha_MeV": 11.65,
+      "Q_alpha_source": "NUBASE2020 / discovery 11.65 MeV (Phase2 anchor)",
+      "gate_type": "nuclear-novel-discovery-simulation",
+      "absorbed": false,
+      "prediction": { "consensus_mean_log10_T_s": -2.93088, "consensus_spread_dex": 0.218102 },
+      "scores": { "c_gate_score": 0.682027, "gate_coverage": 0.2, "composite_score": 0.136405 }
+    },
+    {
+      "name": "Fl-289",
+      "Z": 114, "N": 175, "A": 289,
+      "Q_alpha_MeV": 9.71,
+      "Q_alpha_source": "measured decay energy 1998 Dubna 9.71 MeV",
+      "gate_type": "nuclear-novel-discovery-simulation",
+      "absorbed": false,
+      "prediction": { "consensus_mean_log10_T_s": 0.947753, "consensus_spread_dex": 0.292698 },
+      "scores": { "c_gate_score": 0.456055, "gate_coverage": 0.2, "composite_score": 0.091211 }
+    }
+  ],
+  "scope_caveats": [
+    "(s1) Closed-form HEURISTIC over the (c) alpha-decay half-life gate only; (a)(b)(d)(e) gates install-gated (N6 HFB / N9 shell-model are B-path).",
+    "(s2) NUCLEAR.md 3.3 NO fabrication: Q_alpha from a CITED table only (AME2020 / NUBASE2020 measured); uncited (Z,N) cells honest-skip install-gated.",
+    "(s3) absorbed=false 永久. 'Z=119 후보일 가능성' != 'Z=119 후보임' != 'Z=119 발견됨'. (d) production sigma + (e) recoil-separator detection wet-lab dependent permanently."
+  ],
+  "citations": [
+    "Viola & Seaborg 1966 J Inorg Nucl Chem 28:741 (NC1)",
+    "Sobiczewski/Parkhomenko 2005 PRC 72.044316 (VS refit)",
+    "Royer 2000 J Phys G 26:1149 arxiv:nucl-th/0510074 (NC2)",
+    "arxiv:2105.01035 AME2020 (Q_alpha source)",
+    "NUBASE2020 Kondev et al Chinese Phys C 45:030001",
+    "Poenaru & Gherghescu 2017 arxiv:1706.04068 (SHE context)",
+    "NUCLEAR.md 6.2 (N11) + RTSC.md 9.10 (N5 pattern)"
+  ],
+  "recommendation": "top_k is an accelerator beam-time priority shortlist. absorbed=true requires GSI/JINR/RIKEN beam + SHIP/DGFRS/GARIS detection + IUPAC priority — none from sim (NUCLEAR.md 7). '가능성' != '임'."
+}

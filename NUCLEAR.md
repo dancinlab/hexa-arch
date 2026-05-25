@@ -1,5 +1,7 @@
 # NUCLEAR — Nuclear Discovery Simulation Stack (5-gate · N6–N10 cohorts)
 
+@goal: Rank top-K candidate nuclides (superheavy Z>118 + drip-line) via a 5-gate a-e sim funnel for accelerator beam-time priority — absorbed=false 영구; sim PASS = wet-lab priority hint, never a discovery claim
+
 > Sibling of `RTSC.md` §9 (compositional discovery — *new SC material*). NUCLEAR.md target = *elemental discovery* — superheavy / drip-line **nuclides**. Same R4 invariant family (`absorbed=false` 영구 · prediction never claims measurement).
 
 ---
@@ -94,10 +96,13 @@ If HFBTHO / KSHELL / KEWPIE2 binaries are not available on the host:
 - **`install-gated` is the PASS verdict** (mirror RTSC §9.9.1 Phase 1 wrap-as-is — *honest skip is acceptable first-land*).
 - Don't invent numerical results. Don't synthesize plausible-sounding mass tables. Citation rigor: every record emits `citations: [arxiv:..., NSDC link, paper DOI]`.
 
-### §3.4 Half-life threshold caveat (cross-stack)
+### §3.4 Half-life threshold caveat → SHE→RTSC bulk-solid bridge 평결 (cross-stack)
 
-- Z > 118 superheavy half-lives are typically μs–ms (oganesson: 0.7 ms; Ts: ~50 ms; Mc: ~150 ms; predicted Z=119 / 120: similar μs–ms range).
-- **SHE that wouldn't form crystals = irrelevant for RTSC carryover**. The two stacks (RTSC = compositional, NUCLEAR = elemental) are *parallel funnels*, not unified — acknowledge but don't conflate.
+- Z > 118 superheavy 반감기는 통상 μs–ms (Og 0.7 ms · Ts ~50 ms · Mc ~150 ms · 예측 Z=119/120 유사 μs–ms). island-of-stability 낙관 모델은 일부 미합성 핵종(²⁹⁸Fl·²⁹⁶Cn 등)에 수백~수천 년 수명을 *예측*하나 — 0개 합성됨 (N=184 영역 현 빔 도달 불가 · @D d7 "예측 ≠ 발견").
+- **binding constraint 는 반감기가 아니라 생산량이다.** 가장 짧은 SHE 수명(Og 0.7 ms)조차 결정 핵생성 시간(MD ~ns)을 6 자릿수 초과 — 시간상 격자 형성은 가능. 진짜 벽: SHE 는 one-atom-at-a-time, 통산 <20 원자, Og ~1 atom/month 로만 생산되고 각자 ms 내 붕괴 → RTSC bulk/Tc 측정에 필요한 ~10¹⁵–10²² 원자를 동시에 모으는 것과 10¹⁵+ 배 격차.
+- **single-atom 예외 (honest)**: SHE *화학* 은 실재하는 진짜 과학이나 single-atom 상대론적 기체상 화학(thermochromatography 흡착 엔탈피·휘발성, Cn·Fl·Nh·Mc)이지 bulk 초전도가 아니다 — 초전도는 many-body collective 현상으로 원자 1개에 Tc 가 정의되지 않으며 RTSC §8.9 의 어떤 gate(특히 bulk 측정 (b))도 못 채운다.
+- **isomer 체크**: 장수명 isomer(¹⁸⁰ᵐTa T½>2.9×10¹⁷ yr · ¹⁷⁸ᵐ²Hf 31 yr)는 모두 Ta·Hf 같은 일상 원소 — 이미 bulk 결정, SHE 아님. SHE isomer 가 수명을 늘려도 생산량 축은 불변 → 평결 안 바뀜.
+- **평결**: SHE/장수명 isomer → RTSC bulk-solid bridge **없음 (NO)**. 두 스택(RTSC=조성 · NUCLEAR=원소)은 같은 R4 family 의 *parallel funnel*, 물질 공급 경로로 통합 안 됨. ⚠️ flat "불가능" 아님 — 평결을 바꾸는 단일 트리거 = *분(min) 단위 수명 island-of-stability 핵종의 거시량 생산*; 이는 차세대 neutron-rich beam factory(FRIB급+)와 cross-section ~pb→거시량 10¹⁵배 생산률 도약이라는 이중 천문학적 전제를 요구. 상세 bracket: `exports/nuclear_discovery/bridge/2026-05-25-nuclear-rtsc-bridge.md`.
 
 ### §3.5 Citation rigor (R4 protection)
 
@@ -272,8 +277,8 @@ python3 stdlib/nuclear/hfbtho_adapter.py <Z> <N> <out_dir>
 | Phase 2 (5-baseline × 2-cohort = 10-cell stabilization audit) | ✅ **LANDED** · 10/10 PASS · 0 absorbed=true · 8 install-gated + 2 simulation (²³⁸U + ²⁹⁴Og) · ²⁹⁴Og anchor reproduced (-2.93±0.22 dex vs obs -3.15) · ²³⁸U +0.30 dex deviation honest (low-Q_α calibration edge) | (audit only) | `archive/session-notes/2026-05-22-nuclear-9-phase2-stabilization.md` |
 | Phase 3 (microkernel identification audit · N6+N7) | ✅ **LANDED** (rolled into Phase 2 audit §7) · NC1 (`_viola_seaborg_log10_t`) · NC2 (`_royer_log10_t`) · NC3 (`_consensus`) — all in N7 · N6 = 0 candidates (HFB SCF anti-pattern carve-out) | (audit only) | `archive/session-notes/2026-05-22-nuclear-9-phase2-stabilization.md` §7 |
 | Phase 4 #1 (Path A microkernel port · NP1 bundle = NC1+NC2+NC3) | ✅ **LANDED** · 250 LOC actual · `stdlib/nuclear/sim.hexa` v0.1.0 (new module · mirror of `stdlib/material/sim.hexa` v0.2.0) · **31/31 parity PASS** · all rel_err=0.0 IEEE 754 bit-for-bit · ²³⁸U + ²⁹⁴Og Phase 2 anchors reproduced verbatim (regression=0) · NC3 dedicated struct (Option B · MIRROR comment to material/sim.hexa Consensus) | hexa-lang `bf16ebdd` (`stdlib/nuclear/sim.hexa` v0.1.0) | `archive/session-notes/2026-05-22-nuclear-phase4-1-parity-verify.md` |
-| Phase 5 (N8/N9/N10 wrap land) | ⏳ **DEFERRED** · per Phase 1 launch note §10 (separate sessions per external lib install audit) | — | — |
-| Phase 6 (N11 funnel cohort · mirror RTSC §9.10) | ⏳ **DEFERRED** · enumerate (Z, N) candidate space, rank by (a)(b)(c) composite, emit top-K accelerator priority list | — | — |
+| Phase 5 (N8/N9/N10 wrap land) | ✅ **LANDED** · 3-PR stack · 6 honest-skip 경로 (install-gated = PASS per §3.3) · 0 absorbed=true · N8 σ ~10× scatter caveat + "accelerator priority hint, never confirmation" (gate d wet-lab dependent) · N9 weights-missing (interaction .snt/.int) · N10 weights-missing (chiral-EFT ME) + A≤30 soft-ceiling flag (out-of-scope≠impossible · @D d2) | hexa-lang `4c10eed6` · `stdlib/nuclear/{n8_fusion_evap,n9_shell_model,n10_abinitio}_adapter.py` · PR #907/#913/#917 | `archive/session-notes/` |
+| Phase 6 (N11 funnel cohort · mirror RTSC §9.10) | ✅ **LANDED** · `sim.hexa` v0.2.0 N11 (`c_gate_window_score` + `n11_alpha_cell` chaining NC1/NC2/NC3) · top-K JSON (NUCLEAR.md §6.1 schema) · cited-Q_α SHE shortlist Lv-293 > Og-294 > Fl-289 (c_gate 0.836/0.682/0.456) · Z=119–122 honest-skip install-gated (§3.3 no Q_α fabrication) · N7 kernels verify-registered → 2/2 🟢 SUPPORTED-NUMERICAL (\|Δ\|=0.0) · Og-294 anchor regression=0 | hexa-lang `cdb24cfe` (PR #914 · `stdlib/nuclear/sim.hexa` v0.2.0 + `tool/verify_cli.hexa`) | `exports/nuclear_discovery/n11_funnel/<stamp>/top_k.json` |
 
 #### Phase 2 honest blockers (resolved · documented · or carry-forward)
 
@@ -353,3 +358,10 @@ If any future record (NUCLEAR or hexa-lang stdlib/nuclear adapter) ever surfaces
 ---
 
 Historical log entries are in [`./NUCLEAR.log.md`](./NUCLEAR.log.md).
+- [x] Phase 1 — N6 HFBTHO + N7 WKB wrap-as-is land
+- [x] Phase 2 — 10-cell stabilization audit (Og-294 anchor)
+- [x] Phase 3 — microkernel identification audit (NC1/NC2/NC3)
+- [x] Phase 4 — Path A sim.hexa parity port (31/31 bit-for-bit)
+- [x] Phase 5 — N8/N9/N10 wrap land (fusion-evap sigma · shell-model · ab-initio)
+- [x] Phase 6 — N11 funnel cohort (enumerate Z,N → top-K accelerator priority)
+- [x] NUCLEAR x RTSC bridge — honest-exception bracketing: SHE/isomer → RTSC bulk = NO (벽=생산량 not 반감기; SHE single-atom 화학은 예외). exports/nuclear_discovery/bridge/2026-05-25-nuclear-rtsc-bridge.md
