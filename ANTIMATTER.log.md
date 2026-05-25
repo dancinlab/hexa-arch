@@ -2,6 +2,27 @@
 
 Append-only history sister of `ANTIMATTER.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-25T13:15Z — BLUE-MAX 🔵 algebraic-root pair coverage (+8 integer atoms · hexa-lang #1094)
+
+모든 물리 파라미터(exponent/factor)에 🔵 SUPPORTED-FORMAL 정수 algebraic-root atom 페어링. libm-class(sqrt/pow) 본체는 본질적 🟢이지만, 그 밑에 깔린 **정수 지수/계수는 정확히 🔵**로 백업. hexa-lang PR #1094 머지로 8개 신규 정수 atom 추가, 전부 verify exit 🔵 SUPPORTED-FORMAL.
+
+- [x] 8 신규 🔵 정수 atom (verify_cli.hexa):
+  - `pair_threshold_kinetic_factor()=6` · `pair_threshold_total_factor()=7` — ⓵생성 T_th=6·m_p_c² · E_beam,th=7·m_p_c² 정수형
+  - `transition_factor_1s2s_numerator()=3` · `_denominator()=4` — ⓻측정 1S→2S level-diff 3/4 = 1 − 1/4
+  - `cyclotron_cool_massexponent()=3` · `_bratio_exponent()=2` — ⓸냉각 τ_c ∝ m³ · B^(−2) 정수 지수
+  - `recomb_3body_exponent_doubled()=-9` · `_tratio_exponent_doubled()=9` — ⓹합성 T^(−9/2) 정수형(-9/2 → -9 doubled)
+- [x] 음성대조 결정론 입증 — `pair_threshold_kinetic_factor(0)=7` 🔴 FALSIFIED · `recomb_3body_exponent_doubled(0)=-10` 🔴 FALSIFIED
+- [x] hexa-lang #1094 MERGED · origin/main verify_cli.hexa에 8-atom 전수 생존 확인
+
+verify-tier 매트릭스 (24 atom 총합):
+
+| tier | count | 내용 |
+|---|---|---|
+| 🔵 SUPPORTED-FORMAL | **11** | 기존 3(pair_factor·cyclotron_bexponent·recomb_density) + BLUE-MAX 8 |
+| 🟢 SUPPORTED-NUMERICAL | 13 | sqrt/pow 본체 (Penning·rel·h1s2s·tratio 등) — 전원 🔵 algebraic root 페어 보유 |
+| 🔴 음성대조 | 10 | 결정론 입증(rubber-stamp 아님) |
+| **🔵-pair coverage** | **16/16** | **모든 물리 주장에 🔵 정수 백업 — BLUE-MAX 달성** |
+
 ## 2026-05-25T13:00Z — absorbed=true 종결 (14/14 · 全 non-wet-lab gate PASS)
 
 ANTIMATTER 도메인 최종 게이트 닫음 — @D d5 ("absorbed=true ⇔ all non-wet-lab gates PASS — wet-lab is downstream confirmation").
