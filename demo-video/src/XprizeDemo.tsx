@@ -167,7 +167,12 @@ const Hook01: React.FC = () => {
 
 const Domains02: React.FC = () => {
   const frame = useCurrentFrame();
-  const tiles = Array.from({ length: 20 }, (_, i) => i);
+  const tiles = [
+    "RTSC", "AURA", "XPRIZE", "CARDIO+", "ANTIMATTER",
+    "MONDALOY", "NOREFLOW", "HERPES", "DAPTPGX", "ISR",
+    "LPA", "TTR", "QD", "COSME", "LENS+ECOPAD",
+    "RTSC+NUCLEAR", "ABSORPTION", "ANIMA", "FUSION", "DEMIURGE",
+  ];
   return (
     <AbsoluteFill style={{ background: palette.bg0 }}>
       <div
@@ -195,22 +200,32 @@ const Domains02: React.FC = () => {
           gap: 24,
         }}
       >
-        {tiles.map((i) => {
+        {tiles.map((name, i) => {
           const delay = i * 1.5;
           const o = interpolate(frame, [delay, delay + 10], [0, 1], { extrapolateRight: "clamp" });
           const ty = interpolate(frame, [delay, delay + 10], [30, 0], { extrapolateRight: "clamp" });
           return (
             <div
-              key={i}
+              key={name}
               style={{
                 height: 110,
-                background: `linear-gradient(135deg, ${palette.accent}22, ${palette.accent2}22)`,
-                border: `1px solid ${palette.accent}44`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: `linear-gradient(135deg, ${palette.accent}33, ${palette.accent2}33)`,
+                border: `1px solid ${palette.accent}66`,
                 borderRadius: 12,
                 opacity: o,
                 transform: `translateY(${ty}px)`,
+                fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace',
+                fontSize: name.length > 9 ? 18 : 22,
+                fontWeight: 700,
+                color: palette.fg,
+                letterSpacing: 1,
               }}
-            />
+            >
+              {name}
+            </div>
           );
         })}
       </div>
@@ -437,42 +452,78 @@ const Analyze07: React.FC = () => {
 const Verify08: React.FC = () => {
   const frame = useCurrentFrame();
   const tiers = [
-    { name: "SUPPORTED-FORMAL", c: "#3b82f6" },
-    { name: "SUPPORTED-NUMERICAL", c: "#10b981" },
-    { name: "SUPPORTED-BY-CITATION", c: "#eab308" },
-    { name: "INSUFFICIENT", c: "#f97316" },
-    { name: "FALSIFIED", c: "#ef4444" },
+    { emoji: "🔵", name: "FORMAL",      c: "#3b82f6" },
+    { emoji: "🟢", name: "NUMERICAL",   c: "#10b981" },
+    { emoji: "🟡", name: "CITATION",    c: "#eab308" },
+    { emoji: "🟠", name: "INSUFFICIENT",c: "#f97316" },
+    { emoji: "🔴", name: "FALSIFIED",   c: "#ef4444" },
   ];
-  const badge = interpolate(frame, [180, 220], [0, 1], { extrapolateRight: "clamp" });
+  const badge = interpolate(frame, [200, 240], [0, 1], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ background: palette.bg0, padding: "100px 80px" }}>
-      <div style={{ fontSize: 32, color: palette.muted, letterSpacing: 4, fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <AbsoluteFill style={{ background: palette.bg0, padding: "120px 80px" }}>
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: 32,
+          color: palette.muted,
+          letterSpacing: 4,
+          fontFamily: 'Inter, system-ui, sans-serif',
+        }}
+      >
         VERIFY · hexa calculator · 5 tiers
       </div>
-      <div style={{ marginTop: 60, display: "flex", flexDirection: "column", gap: 18 }}>
+      {/* horizontal 5-tier bar */}
+      <div
+        style={{
+          marginTop: 120,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-end",
+          gap: 28,
+        }}
+      >
         {tiers.map((t, i) => {
-          const o = interpolate(frame, [i * 18, i * 18 + 18], [0, 1], { extrapolateRight: "clamp" });
+          const o = interpolate(frame, [i * 14, i * 14 + 18], [0, 1], { extrapolateRight: "clamp" });
+          const ty = interpolate(frame, [i * 14, i * 14 + 18], [60, 0], { extrapolateRight: "clamp" });
           return (
             <div
               key={t.name}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 30,
+                width: 280,
                 opacity: o,
-                transform: `translateX(${(1 - o) * 40}px)`,
+                transform: `translateY(${ty}px)`,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
               }}
             >
               <div
                 style={{
-                  width: 80,
-                  height: 80,
+                  width: 200,
+                  height: 200,
                   background: t.c,
-                  borderRadius: 12,
-                  boxShadow: `0 0 28px ${t.c}88`,
+                  borderRadius: 24,
+                  boxShadow: `0 0 60px ${t.c}aa`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 100,
                 }}
-              />
-              <div style={{ fontSize: 36, color: palette.fg, fontFamily: 'ui-monospace, monospace', letterSpacing: 1 }}>
+              >
+                {t.emoji}
+              </div>
+              <div
+                style={{
+                  marginTop: 28,
+                  fontSize: 28,
+                  color: palette.fg,
+                  fontFamily: 'ui-monospace, monospace',
+                  letterSpacing: 2,
+                  textAlign: "center",
+                  fontWeight: 700,
+                }}
+              >
                 {t.name}
               </div>
             </div>
@@ -482,21 +533,30 @@ const Verify08: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          right: 100,
-          bottom: 220,
-          padding: "30px 60px",
-          background: palette.bad,
-          color: palette.fg,
-          fontSize: 64,
-          fontWeight: 900,
-          borderRadius: 24,
-          transform: `scale(${badge}) rotate(-8deg)`,
-          opacity: badge,
-          boxShadow: "0 20px 60px rgba(239,68,68,0.6)",
-          fontFamily: 'Inter, system-ui, sans-serif',
+          left: 0,
+          right: 0,
+          bottom: 200,
+          textAlign: "center",
         }}
       >
-        0 LLM verdicts
+        <span
+          style={{
+            display: "inline-block",
+            padding: "26px 72px",
+            background: palette.bad,
+            color: palette.fg,
+            fontSize: 72,
+            fontWeight: 900,
+            borderRadius: 28,
+            transform: `scale(${badge}) rotate(-3deg)`,
+            opacity: badge,
+            boxShadow: "0 20px 60px rgba(239,68,68,0.55)",
+            fontFamily: 'Inter, system-ui, sans-serif',
+            letterSpacing: 1,
+          }}
+        >
+          0 LLM verdicts
+        </span>
       </div>
     </AbsoluteFill>
   );
@@ -504,31 +564,98 @@ const Verify08: React.FC = () => {
 
 const Synth09: React.FC = () => {
   const frame = useCurrentFrame();
-  const targets = ["pool · ubu-1", "Vertex AI Training", "Cloud Run", "Vast.ai GPU"];
+  // GCP-only targets — pool / Vast.ai 등 외부 인프라 demo 외로 제거
+  const targets = [
+    "Cloud Run",
+    "Vertex AI Training",
+    "Compute Engine GPU",
+    "Cloud Build",
+  ];
   return (
-    <AbsoluteFill style={{ background: palette.bg0, display: "flex", alignItems: "center", justifyContent: "center", gap: 60 }}>
+    <AbsoluteFill style={{ background: palette.bg0, padding: "100px 80px" }}>
       <div
         style={{
-          padding: "30px 50px",
-          border: `3px solid ${palette.accent}`,
-          borderRadius: 16,
-          fontSize: 42,
-          fontWeight: 800,
-          color: palette.fg,
+          textAlign: "center",
+          fontSize: 32,
+          color: palette.muted,
+          letterSpacing: 4,
           fontFamily: 'Inter, system-ui, sans-serif',
         }}
       >
-        demiurge cli synth
+        SYNTH · Google Cloud dispatch
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        {targets.map((t, i) => {
-          const o = interpolate(frame, [i * 10, i * 10 + 18], [0, 1], { extrapolateRight: "clamp" });
-          return (
-            <div key={t} style={{ opacity: o, fontSize: 28, color: palette.accent2, fontFamily: 'Inter, system-ui, sans-serif' }}>
-              → {t}
-            </div>
-          );
-        })}
+      {/* source box + horizontal arrows + 4 GCP targets in a row */}
+      <div
+        style={{
+          marginTop: 200,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 24,
+        }}
+      >
+        <div
+          style={{
+            padding: "30px 40px",
+            border: `3px solid ${palette.accent}`,
+            background: `${palette.accent}15`,
+            borderRadius: 16,
+            fontSize: 32,
+            fontWeight: 800,
+            color: palette.fg,
+            fontFamily: 'Inter, system-ui, sans-serif',
+            whiteSpace: "nowrap",
+          }}
+        >
+          demiurge cli
+        </div>
+        <div style={{ fontSize: 64, color: palette.accent2 }}>→</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 16,
+          }}
+        >
+          {targets.map((t, i) => {
+            const o = interpolate(frame, [i * 12, i * 12 + 18], [0, 1], { extrapolateRight: "clamp" });
+            const tx = interpolate(frame, [i * 12, i * 12 + 18], [40, 0], { extrapolateRight: "clamp" });
+            return (
+              <div
+                key={t}
+                style={{
+                  opacity: o,
+                  transform: `translateX(${tx}px)`,
+                  padding: "22px 32px",
+                  background: `linear-gradient(135deg, #4285F488, #34A85388)`,
+                  borderRadius: 14,
+                  fontSize: 26,
+                  fontWeight: 600,
+                  color: palette.fg,
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {t}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 220,
+          textAlign: "center",
+          fontSize: 28,
+          color: palette.hot,
+          fontFamily: 'ui-monospace, monospace',
+        }}
+      >
+        deterministic routing · zero LLM in the dispatch path
       </div>
     </AbsoluteFill>
   );
@@ -801,12 +928,12 @@ const Close15: React.FC = () => {
 const Outro16: React.FC = () => {
   const frame = useCurrentFrame();
   const evidence = [
-    "✓ Gemini API · live call",
-    "✓ 7 Google Cloud products",
-    "✓ new project · post 2026-05-19",
-    "✓ custom domain · Google SSL",
-    "✓ 5 locales · zero global friction",
-    "✓ verify sacred · 0 LLM verdicts",
+    "Gemini API · live call",
+    "7 Google Cloud products",
+    "new project · post 2026-05-19",
+    "custom domain · Google SSL",
+    "5 locales · zero global friction",
+    "verify sacred · 0 LLM verdicts",
   ];
   return (
     <AbsoluteFill style={{ background: palette.bg0, padding: 80 }}>
@@ -821,21 +948,39 @@ const Outro16: React.FC = () => {
       >
         XPRIZE evidence
       </div>
-      <div style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 24, paddingLeft: 180 }}>
+      {/* 2-column × 3-row horizontal grid */}
+      <div
+        style={{
+          marginTop: 80,
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 24,
+          padding: "0 140px",
+        }}
+      >
         {evidence.map((e, i) => {
-          const o = interpolate(frame, [i * 14, i * 14 + 22], [0, 1], { extrapolateRight: "clamp" });
+          const o = interpolate(frame, [i * 12, i * 12 + 20], [0, 1], { extrapolateRight: "clamp" });
+          const ty = interpolate(frame, [i * 12, i * 12 + 20], [30, 0], { extrapolateRight: "clamp" });
           return (
             <div
               key={e}
               style={{
-                fontSize: 36,
-                color: palette.good,
+                padding: "26px 36px",
+                background: `${palette.good}15`,
+                border: `2px solid ${palette.good}66`,
+                borderRadius: 14,
+                fontSize: 28,
+                color: palette.fg,
                 fontFamily: 'ui-monospace, monospace',
                 opacity: o,
-                transform: `translateX(${(1 - o) * 30}px)`,
+                transform: `translateY(${ty}px)`,
+                display: "flex",
+                alignItems: "center",
+                gap: 18,
               }}
             >
-              {e}
+              <span style={{ color: palette.good, fontSize: 36 }}>✓</span>
+              <span>{e}</span>
             </div>
           );
         })}
@@ -843,7 +988,7 @@ const Outro16: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          bottom: 140,
+          bottom: 100,
           left: 0,
           right: 0,
           textAlign: "center",
