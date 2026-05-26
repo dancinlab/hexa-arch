@@ -86,6 +86,14 @@ Sibling repo `github.com/dancinlab/hexa-aura` 봉인:
 
 - [x] N15 AURA audit cell LANDED (hexa-lang PR #1437 · 133 LOC · 5 blocks: audit scope + 7 consistency checks + 6 g3 axes + summary stats + outputs)
 
+## Next-list N16-N20 — cross-link + 실측 정밀화 (N1-N15 일주 후)
+
+- [x] N16 선행 도메인 cross-link 5 cells (aura.demi [xlink.*]) LANDED (PR #295 · 77 LOC · chip+component+firmware+brain+bio)
+- [x] N17 5 도메인 역방향 cross-link [xlink.aura_*] LANDED (이 PR · 5 도메인 .demi 각 +12 LOC · peer view)
+- [x] N18 N13 ngspice 실측 path PROVEN (pool:ubu-1 · ngspice 42 install + v1+v2 batch run · numerical output 획득 · g3 ILLUSTRATIVE)
+- [ ] N19 N13.3 ADS1299 macro-model 정밀화 (INBOX entry LANDED · 이 PR · TI macro fetch + 정밀 deck redesign + atlas register · follow-up)
+- [ ] N20 cellrun substrate hexa 전환 — 4 선행 도메인 (chip · component · firmware · brain) hexa 전환 (bio 완료) · cross-domain hexa-native 통일
+
 ## 7-verb cell 상태
 
 | verb | substrate | absorbed | gate | 근거 |
