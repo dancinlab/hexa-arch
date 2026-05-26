@@ -1,0 +1,46 @@
+&control
+  calculation = 'vc-relax'
+  prefix = 'h3br'
+  outdir = '/home/aiden/rtsc_h3br_pscan/100gpa/out'
+  pseudo_dir = '/home/aiden/rtsc_h3br_pscan/pseudo'
+  tprnfor = .true.
+  tstress = .true.
+  nstep = 200
+  forc_conv_thr = 1.0d-4
+  etot_conv_thr = 1.0d-5
+/
+&system
+  ibrav = 3
+  celldm(1) = 6.60
+  nat = 4
+  ntyp = 2
+  ecutwfc = 60
+  ecutrho = 600
+  occupations = 'smearing'
+  smearing = 'mp'
+  degauss = 0.02
+/
+&electrons
+  conv_thr = 1.0d-10
+  mixing_beta = 0.5
+  electron_maxstep = 250
+/
+&ions
+  ion_dynamics = 'bfgs'
+/
+&cell
+  cell_dynamics = 'bfgs'
+  press = 1000.0
+  press_conv_thr = 0.5
+  cell_dofree = 'all'
+/
+ATOMIC_SPECIES
+  Br 79.904 Br.pbe-n-rrkjus_psl.1.0.0.UPF
+  H 1.008 H.pbe-rrkjus_psl.1.0.0.UPF
+ATOMIC_POSITIONS alat
+  Br 0.0 0.0 0.0
+  H 0.5 0.0 0.0
+  H 0.0 0.5 0.0
+  H 0.0 0.0 0.5
+K_POINTS automatic
+  8 8 8 0 0 0

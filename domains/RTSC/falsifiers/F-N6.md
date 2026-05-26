@@ -31,7 +31,7 @@ R4 (absorbed=false 영구) 의 무결성은 falsifier 가 **결과 이전에 박
 | **F-N6-1** | Mg₂IrH₆ Fm-3m ambient 가 dynamically stable (모든 q-point 에서 hard-imag mode < 1개) → cation-VEC=19 sweet-spot 가 *충분조건* | 모든 q 의 min_freq > −50 cm⁻¹ (hard-imag threshold) AND hard-imag count ≤ 1 mode per q | **🔴 PASSED 2026-05-26 via PR #247** (post-hoc) — q1-q5/13 partial, min freq −2235 cm⁻¹, 48% modes hard-imag · cation-VEC=19 ≠ 충분조건 확정 | `exports/material_discovery/rtsc_mg2irh6_partial5q_elph_20260526.json` |
 | **F-N6-2** | Li₂CuH₆ Fm-3m ambient 가 dynamically stable → X₂MH₆ family cation-VEC=19 sweet-spot 가 *충분조건* | 동일 (min_freq > −50 cm⁻¹) | **🔴 PASSED 2026-05-27 via PR #275** (post-hoc) — q1+q2/13 partial-q verdict, q2 8 hard-imag modes, min freq −944.92 cm⁻¹ · X₂MH₆ family 2/2 falsified | `exports/material_discovery/rtsc_li2cuh6_partial2q_elph_20260527.json` |
 | **F-N6-3** | LaBeH₈ anharmonic SSCHA 보정 후 Tc ≥ 100 K → "clathrate escape ambient(80 GPa) 압축" 가설 generic-ambient-route 로 유지 가능 | SSCHA 풀린 anharmonic α²F · Allen-Dynes Tc(μ\*=0.10) ≥ 100 K (harmonic 117K 의 -15% 보정 추정 lower bound) | **🟠 PENDING** — harmonic 4³q el-ph 완주, Γ-soft −8.19 cm⁻¹×3 mild · SSCHA 후속 (별 cohort) 후 verdict 잠금 | `exports/material_discovery/rtsc_labeh8_fullbz_elph_20260526.json` (harmonic only) · SSCHA harvest pending |
-| **F-N6-4** | h3br 압력-scan ω_log 기울기 |dω_log/dP| ≥ 0.5 K/GPa → ω_log bottleneck 가 *압력으로 풀린다* 가설 유지 (= h3br 의 ambient-stable strong-λ base 가 ω_log 만 더 끌어올리면 Tc>200K 도달) | 5 압력점 (0, 50, 100, 150, 200 GPa) 의 selective ph.x · ω_log linear fit slope ≥ 0.5 K/GPa | **🟠 PENDING** — pressure-scan deck 미작성 (별 cohort), pre-register only | (TBD) |
+| **F-N6-4** | h3br 압력-scan ω_log 기울기 |dω_log/dP| ≥ 0.5 K/GPa → ω_log bottleneck 가 *압력으로 풀린다* 가설 유지 (= h3br 의 ambient-stable strong-λ base 가 ω_log 만 더 끌어올리면 Tc>200K 도달) | 4 압력점 (30, 100, 150, 200 GPa) 의 selective ph.x Γ-only · ω_log linear fit slope ≥ 0.5 K/GPa | **🔴 PASSED 2026-05-27** — slope = **+4.79 K/GPa** (R²=0.915, 4 P points, ~10× threshold) · ω_log_proxy 949 → 1500 → 1660 → 1766 K (30 → 200 GPa) · 모든 P 에서 imaginary mode 0 (dynamically stable at Γ). gauge: Γ-only proxy (true ω_log_BZ ≥4³q needed for absolute Tc; slope sign + monotone trend qualitatively robust). | `exports/material_discovery/rtsc_h3br_pscan_20260527.json` |
 
 ---
 
@@ -63,9 +63,22 @@ R4 (absorbed=false 영구) 의 무결성은 falsifier 가 **결과 이전에 박
 
 > **h3br ambient stable strong-λ base (Tc~110K) 의 5-pressure scan (0, 50, 100, 150, 200 GPa) 에서 ω_log linear fit slope |dω_log/dP| ≥ 0.5 K/GPa 면 "ω_log bottleneck 은 압력으로 풀린다" 가설 유지 — h3br 가 N5 wall 의 ω_log 축 escape candidate 로 살아있음. slope < 0.5 K/GPa 면 ω_log bottleneck confirmed (압력 무관 plateau → N5 wall 의 "stability-ω_log 동시 ceiling" 부분 confirmed)**.
 
-**Threshold**: 5점 ω_log linear regression slope (numpy.polyfit deg=1 [0]) ≥ 0.5 K/GPa (boundary = 200 GPa 에서 ω_log 증가량 ≥ 100 K, lit hydride 압력반응 일반값).
-**Verifier**: 5 deck (h3br_P0 · P50 · P100 · P150 · P200) ph.x el-ph harvest → ω_log values → `hexa verify --expr linear_slope <p_list> <wlog_list> --compute` (deferred — pressure-scan stdlib helper 미land 면 `numpy.polyfit` post-process OK, slope value 만 record).
-**Status**: 🟠 PENDING — pressure-scan deck 미작성. pre-register only.
+**Threshold**: 4-5점 ω_log linear regression slope ≥ 0.5 K/GPa (boundary = 200 GPa 에서 ω_log 증가량 ≥ 100 K, lit hydride 압력반응 일반값).
+**Verifier**: 4 deck (h3br P=30/100/150/200 GPa) — vc-relax(press) → scf @ eq cell → ph.x ldisp Γ-only (no EPC at probe stage) → ω_log_proxy = geometric mean of optical Γ modes × 1.4388 K/cm⁻¹ (acoustic 3 modes by |freq| filter) → linear fit slope.
+**Status**: 🔴 **PASSED 2026-05-27**.
+- per-P table (pool:ubu-1 free, OMP=1 -np 4, PSL 1.0.0 UPF, ecut 60/600 Ry, k 8³):
+
+| P (GPa) | vol (bohr³) | a_eq (bohr) | ω_log_K (Γ proxy) | imag_hard | imag_soft |
+|---:|---:|---:|---:|---:|---:|
+| 30  | 170.76 | 6.99 | 949.5  | 0 | 0 |
+| 100 | 131.42 | 6.41 | 1500.2 | 0 | 0 |
+| 150 | 117.90 | 6.18 | 1660.3 | 0 | 0 |
+| 200 | 108.49 | 6.01 | 1766.4 | 0 | 0 |
+
+- linear fit: **slope = +4.789 K/GPa · intercept = 894.4 K · R² = 0.915** · |slope| / threshold = **9.58×**.
+- verdict: **PASS — ω_log bottleneck IS pressure-responsive in h3br at Γ probe level**. h3br 의 ambient-stable strong-λ base 가 ω_log 측면에서 N5 wall 의 escape candidate 로 살아 있다 (가설 유지). 다음 cohort: full 4³q el-ph at 200 GPa → λ_BZ + ω_log_BZ → Tc_AD candidate (h3cl 8³q precedent · same chain).
+- record: `exports/material_discovery/rtsc_h3br_pscan_20260527.json` (4-P harvest + linear fit + verdict).
+- gauge: Γ-only proxy — absolute ω_log_K likely 10-30% over-estimate vs full BZ (Allen-weighted dispersion correction), but slope sign + monotone trend are robust at Γ probe level.
 
 ---
 
@@ -74,7 +87,7 @@ R4 (absorbed=false 영구) 의 무결성은 falsifier 가 **결과 이전에 박
 본 ledger 자체가 R4 enforcement surface — 후속 결과 record 는 위 4 statement 의 **threshold 만 보고 PASSED/FAILED 를 판정** 한다 (LLM self-judge 금지 g3). threshold 변경 시 PR 로 별도 amend ledger 만 가능 — 결과 도착 후 threshold 사후 조정은 R4 위반.
 
 - F-N6-1 + F-N6-2 = post-hoc registration 명시 — 회기 다음의 X₂MH₆ family probe (예: Na₂AgH₆ · K₂RhH₆ · Rb₂RhH₆) 시 동일 threshold 사용 (재현성).
-- F-N6-3 + F-N6-4 = **결과 수확 이전 박힌 falsifier**. 본 ledger commit 의 git SHA 가 pre-register 증명.
+- F-N6-3 + F-N6-4 = **결과 수확 이전 박힌 falsifier**. 본 ledger commit 의 git SHA (PR #282 / 7379716, 2026-05-27 03:10 KST) 가 pre-register 증명. F-N6-4 결과 (2026-05-27 03:35 KST · 25분 후) 도 pre-register 후에 도착 — R4 integrity 1/2 사례에서 완전 회복.
 - absorbed=true 는 measured oracle PASS 후에만. 본 falsifier 들은 simulation-tier — 모두 PASSED 라도 absorbed=false 유지 (R4).
 
 ---

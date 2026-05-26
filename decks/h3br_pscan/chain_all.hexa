@@ -1,0 +1,20 @@
+// h3br pressure-scan 4-P chain runner — F-N6-4 falsifier verifier
+// runbook (executed remotely via `pool on ubu-1` heredoc); hexa-native per project.tape.
+//
+// Per P ∈ {30, 100, 150, 200} GPa:
+//   1. vc-relax (press=P*10 kbar, cell_dofree='all') @ celldm seed=6.60 bohr
+//   2. extract equilibrium celldm from "Begin final coordinates"
+//   3. scf @ equilibrium cell (patch __CELLDM__)
+//   4. ph.x Gamma-only single q-point
+//   5. harvest ω_log_proxy = exp(<ln ω_pos>) × 1.4388 K/cm⁻¹
+//
+// total cost: $0 (pool ubu-1 free) · ~1h per P × 4 = 4h.
+//
+// honesty:
+//   - Γ-only is fast probe; full BZ ω_log needs ≥4³q. caveat in verdict.
+//   - press flag effect on cell_dofree='all' BCC = isotropic compression.
+//   - hard-imag (freq < -50 cm⁻¹) flagged in harvest; if present, ω_log_proxy includes only positive modes.
+
+pub fn pscan_chain() -> str {
+  "4 pressures sequential on ubu-1 — see embedded bash heredoc in dispatcher"
+}

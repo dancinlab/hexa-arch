@@ -1,0 +1,182 @@
+{
+  "domain": "material",
+  "verb": "verify",
+  "kind": "rtsc_h3br_pressure_scan_omega_log_F_N6_4_falsifier_verifier",
+  "stamp": "20260526T183536Z",
+  "producer": "QE 7.5 (conda) pw.x+ph.x (vc-relax + scf + Gamma-only phonon, no EPC) \u00b7 4-P sweep on pool:ubu-1 (free)",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "gate_type": "simulation-only-prediction",
+  "R4_protection": true,
+  "falsifier_pre_registered": "F-N6-4 (domains/RTSC/falsifiers/F-N6.md commit 7379716 pre-harvest)",
+  "system": "H3Br Im-3m BCC primitive (1 Br + 3 H = 4 atoms), ibrav=3, PSL 1.0.0 UPF (Br.pbe-n-rrkjus_psl + H.pbe-rrkjus_psl), PBE PAW",
+  "method": {
+    "pseudopotentials": "Br.pbe-n-rrkjus_psl.1.0.0.UPF + H.pbe-rrkjus_psl.1.0.0.UPF",
+    "scf": "ecutwfc=60 Ry, ecutrho=600 Ry, 8x8x8 k-grid, MP smearing degauss=0.02 Ry",
+    "vc_relax": "press = P_GPa*10 kbar, cell_dofree='all', BFGS ions+cell, forc_conv_thr 1e-4, press_conv_thr 0.5 kbar",
+    "phonon": "ph.x ldisp=.true. nq=1 (Gamma-only single q), tr2_ph=1e-12 \u2014 pure phonon, no EPC",
+    "omega_log_proxy": "sort modes by |freq|, drop bottom-3 (acoustic at Gamma), geometric mean of remaining positive modes \u00d7 1.4388 K/cm^-1",
+    "cores": "pool:ubu-1, OMP=1, -np 4 (sharing host with concurrent h3cl_8q ph.interp -np 4 on 16-core)"
+  },
+  "pressures": [
+    {
+      "P_GPa": 30,
+      "volume_bohr3": 170.7616,
+      "celldm_bohr_eq": 6.989939,
+      "omega_log_K_gamma_proxy_filtered": 949.4520000367514,
+      "omega_log_K_gamma_proxy_raw_unfiltered": 949.4520000367522,
+      "gamma_freqs_cm_all": [
+        -3.78383,
+        -3.78383,
+        -3.78383,
+        473.380612,
+        473.380612,
+        473.380612,
+        532.395779,
+        532.395779,
+        532.395779,
+        1140.178069,
+        1140.178069,
+        1140.178069
+      ],
+      "gamma_freqs_cm_optical_only": [
+        473.380612,
+        473.380612,
+        473.380612,
+        532.395779,
+        532.395779,
+        532.395779,
+        1140.178069,
+        1140.178069,
+        1140.178069
+      ],
+      "n_modes_imag_hard_optical": 0,
+      "n_modes_imag_soft_optical": 0,
+      "n_modes_positive_optical": 9
+    },
+    {
+      "P_GPa": 100,
+      "volume_bohr3": 131.42073,
+      "celldm_bohr_eq": 6.405671,
+      "omega_log_K_gamma_proxy_filtered": 1500.157384973206,
+      "omega_log_K_gamma_proxy_raw_unfiltered": 405.6457049128449,
+      "gamma_freqs_cm_all": [
+        5.574124,
+        5.574124,
+        5.574124,
+        692.995188,
+        692.995188,
+        692.995188,
+        962.020847,
+        962.020847,
+        962.020847,
+        1700.178356,
+        1700.178356,
+        1700.178356
+      ],
+      "gamma_freqs_cm_optical_only": [
+        692.995188,
+        692.995188,
+        692.995188,
+        962.020847,
+        962.020847,
+        962.020847,
+        1700.178356,
+        1700.178356,
+        1700.178356
+      ],
+      "n_modes_imag_hard_optical": 0,
+      "n_modes_imag_soft_optical": 0,
+      "n_modes_positive_optical": 9
+    },
+    {
+      "P_GPa": 150,
+      "volume_bohr3": 117.89731,
+      "celldm_bohr_eq": 6.177953,
+      "omega_log_K_gamma_proxy_filtered": 1660.3320145538946,
+      "omega_log_K_gamma_proxy_raw_unfiltered": 459.1579656504577,
+      "gamma_freqs_cm_all": [
+        6.74937,
+        6.74937,
+        6.74937,
+        707.505231,
+        707.505231,
+        707.505231,
+        1097.861138,
+        1097.861138,
+        1097.861138,
+        1978.365233,
+        1978.365233,
+        1978.365233
+      ],
+      "gamma_freqs_cm_optical_only": [
+        707.505231,
+        707.505231,
+        707.505231,
+        1097.861138,
+        1097.861138,
+        1097.861138,
+        1978.365233,
+        1978.365233,
+        1978.365233
+      ],
+      "n_modes_imag_hard_optical": 0,
+      "n_modes_imag_soft_optical": 0,
+      "n_modes_positive_optical": 9
+    },
+    {
+      "P_GPa": 200,
+      "volume_bohr3": 108.49283,
+      "celldm_bohr_eq": 6.009113,
+      "omega_log_K_gamma_proxy_filtered": 1766.436219719259,
+      "omega_log_K_gamma_proxy_raw_unfiltered": 495.3177195110294,
+      "gamma_freqs_cm_all": [
+        7.589989,
+        7.589989,
+        7.589989,
+        702.022604,
+        702.022604,
+        702.022604,
+        1194.803577,
+        1194.803577,
+        1194.803577,
+        2206.200536,
+        2206.200536,
+        2206.200536
+      ],
+      "gamma_freqs_cm_optical_only": [
+        702.022604,
+        702.022604,
+        702.022604,
+        1194.803577,
+        1194.803577,
+        1194.803577,
+        2206.200536,
+        2206.200536,
+        2206.200536
+      ],
+      "n_modes_imag_hard_optical": 0,
+      "n_modes_imag_soft_optical": 0,
+      "n_modes_positive_optical": 9
+    }
+  ],
+  "linear_fit": {
+    "slope_K_per_GPa": 4.789305715910506,
+    "intercept_K": 894.3777189115168,
+    "r_squared": 0.9152339453301688,
+    "n_points": 4
+  },
+  "F_N6_4_falsifier": {
+    "threshold_abs_slope_K_per_GPa": 0.5,
+    "observed_slope_K_per_GPa": 4.789305715910506,
+    "verdict": "PASS_omega_log_responsive_to_pressure (positive)"
+  },
+  "honesty_caveats": [
+    "Gamma-only is a FAST probe; true omega_log_BZ needs full q-grid (>=4^3). Slope sign + magnitude likely qualitatively right but absolute K values are upper-bound proxies.",
+    "press flag effect depends on vc-relax cell_dofree='all' BCC isotropic compression.",
+    "No el-ph coupling computed at this probe stage (lambda left for follow-up if slope warrants).",
+    "vc-relax convergence: 3 BFGS steps typical; one cohort showed BFGS step=0 if initial cell already at target P (no false-converge in v2 chain \u2014 vol-based celldm extraction).",
+    "Acoustic-mode filter = bottom-3 |freq|; numerical noise can place acoustic at \u00b15 cm^-1 (e.g., 30 GPa: -3.78 cm^-1; 100 GPa: +5.57 cm^-1). Filter is symmetric and physically correct (3 acoustic at Gamma by translational symmetry).",
+    "celldm_bohr_eq = a_conv from V_primitive = a_conv^3/2 (BCC primitive). NOT QE input alat field (which stays = seed 6.60 by QE convention; CELL_PARAMETERS rescale)."
+  ]
+}
