@@ -1,0 +1,32 @@
+{
+  "_status": "PLACEHOLDER — populated post-run",
+  "material": "Mg2IrH6 (polymorph escape, soft-mode displaced)",
+  "parent_structure": "Fm-3m (K2PtCl6 prototype) — falsified ambient 2026-05-26",
+  "method": "h3as soft-mode displacement transfer · ε=0.08 Å along Mg2IrH6 dyn1 mode 1 (-2235 cm-1, Γ, pure H-cage tilt)",
+  "compute": {
+    "host": "ubu-2 (free pool)",
+    "workdir": "$HOME/rtsc_mg2irh6_polymorph",
+    "np": 6,
+    "code": "QE 7.5 (miniforge3 qe env, conda)",
+    "cost_usd": 0.0
+  },
+  "deck": "decks/mg2irh6_polymorph/{relax.in,scf.in,ph.in,run.hexa,build_displaced.hexa,extract_eigenvec.hexa}",
+  "pseudopotentials": {
+    "H": "H.pbe-rrkjus_psl.1.0.0.UPF",
+    "Ir": "Ir.pbe-n-rrkjus_psl.0.2.3.UPF",
+    "Mg": "Mg.pbe-spnl-rrkjus_psl.1.0.0.UPF"
+  },
+  "displacement_amplitude_ang": 0.08,
+  "softest_mode_extracted": {
+    "from": "ubu-1:~/rtsc_mg2irh6/mg2irh6.dyn1",
+    "q": [0.0, 0.0, 0.0],
+    "freq_cm1": -2235.067,
+    "character": "pure H-cage tilt — Ir/Mg stationary, all 6 H atoms displace coherently along Oh-symmetric pattern",
+    "norm_check": 1.0
+  },
+  "VERDICT": null,
+  "verdict_reason": null,
+  "honesty_protocol": "g63 verdict branch · d6 no force · R4 absorbed=false (sim≠measured) · h3as method may not transfer (metal-octahedral ≠ hexa-hydrate cluster)",
+  "campaign_branch": "feat/rtsc-magnet-wheeler-v2 / cycle-mg2irh6-polymorph-2026-05-27",
+  "date_utc": "2026-05-27"
+}
