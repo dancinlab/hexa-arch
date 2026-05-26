@@ -1,0 +1,59 @@
+&CONTROL
+  calculation     = 'vc-relax'
+  prefix          = 'mg2irh6_poly'
+  outdir          = './out'
+  pseudo_dir      = './pseudo'
+  forc_conv_thr   = 1.0d-4
+  etot_conv_thr   = 1.0d-6
+  tstress         = .true.
+  tprnfor         = .true.
+  nstep           = 300
+/
+&SYSTEM
+  ibrav           = 0
+  nat             = 9
+  ntyp            = 3
+  ecutwfc         = 80
+  ecutrho         = 800
+  occupations     = 'smearing'
+  smearing        = 'mp'
+  degauss         = 0.02
+  nosym           = .true.
+  noinv           = .true.
+/
+&ELECTRONS
+  conv_thr        = 1.0d-10
+  mixing_beta     = 0.3
+  electron_maxstep = 200
+/
+&IONS
+  ion_dynamics    = 'bfgs'
+/
+&CELL
+  cell_dynamics   = 'bfgs'
+  press           = 0.0
+  cell_dofree     = 'all'
+/
+ATOMIC_SPECIES
+  Mg  24.305   Mg.pbe-spnl-rrkjus_psl.1.0.0.UPF
+  Ir  192.217  Ir.pbe-n-rrkjus_psl.0.2.3.UPF
+  H    1.008   H.pbe-rrkjus_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+  -3.2499418408   0.0000000000   3.2499418408
+   0.0000000000   3.2499418408   3.2499418408
+  -3.2499418408   3.2499418408   0.0000000000
+
+ATOMIC_POSITIONS angstrom
+  Ir   0.0000000000   0.0000000000   0.0000000000
+  Mg   0.0000000000   1.6249709204   0.0000000000
+  Mg   0.0000000000   4.8749127611   0.0000000000
+  H    0.0230940000   0.4452420322  -0.4221480322
+  H    0.0230940000   1.1797288882  -1.1566348882
+  H   -0.4452420322   0.9135780644   0.4221480322
+  H   -1.1797288882   2.3825517764   1.1566348882
+  H    0.4221480322   0.4221480322   0.0000000000
+  H    1.1566348882   1.1566348882   0.0000000000
+
+K_POINTS automatic
+  8 8 8  0 0 0
