@@ -3,6 +3,37 @@
 > Append-only progression log for the AURA (post-aural wearable BCI) domain.
 > Snapshot SSOT: [aura.md](aura.md) · verb-cell manifest: [aura.demi](aura.demi)
 
+## 2026-05-27 — D1-D7 dossier substance 일괄 LANDED — 🎉 7-verb substance 일주 완성
+
+V1-V7 producer skeleton (PR #1338~#1366) 이후 D1-D7 substance content 일괄 추가 완성.
+
+| D | verb | hexa-lang PR | LOC | block 수 |
+|---|---|---|---|---|
+| D1 | specify | #1371 | +97 | 6 (intended_use·IFU·predicate·user_needs·performance·safety) |
+| D2 | structure | #1374 | +76 | 5 (sensor·AFE·BLE·battery·mechanical) |
+| D3 | design | #1376 | +53 | 4 (kicad·ngspice·freecad·nrf-firmware) |
+| D4 | analyze | #1381 | +42 | 3 (mne-dataset·openems-antenna·openems-sar) |
+| D5 | synthesize | #1384 | +53 | 4 (firmware-build·dsp-bundle·release·ci) |
+| D6 | verify(EM) | #1386 | +44 | 3 (openems-run·sar-run·honest-gap-report) |
+| D7 | handoff | #1389 | +60 | 4 (fda-510k·eu-mdr·bt-sig·emc) |
+
+**총 +425 LOC** illustrative substance content · **29 substantive blocks**.
+
+g3 honest: 모든 D 마일스톤 substance는 **ILLUSTRATIVE reference targets** · NOT regulatory commitments / vendor-qualified / accredited measurements. absorbed=false PERMANENTLY 유지 — 진짜 accredited closure는 A1-A4(downstream lab gates) territory.
+
+핵심 illustrative 결정:
+- 제품: AURA-100 (post-aural wearable BCI · Class II non-implantable)
+- 센서: 16ch bilateral · Ag/AgCl 5mm dry + 하이드로젤 옵션
+- AFE: TI ADS1299 ×2 daisy · 24-bit ΣΔ · ~1µV-pp noise · CMRR ≥110dB
+- 무선: Nordic nRF5340 · BLE 5.3 · LE 2M PHY · custom EEG GATT service
+- 배터리: Li-Po 200mAh ×2 / CR2032 옵션 · 12h runtime · USB-C 90min charge
+- 기구: 클램셸+클립 · 25g/side · 의료급 실리콘 · IPX4
+- 510(k) predicate: Muse S Athena + Dreem 3
+- NB 후보: BSI Group / TUV SUD
+- BQTF 후보: Element Materials / Sporton
+- EMC testhouse 후보: UL Solutions / TUV Rheinland / SGS / Intertek
+- 안전: 'MR Unsafe' 라벨 until G1 brk Sim4Life-parity 워크플로우 확보
+
 ## 2026-05-27 — V7 handoff producer LANDED (hexa-native) — 🎉 7-verb 일주 완성
 
 - `stdlib/aura/handoff.hexa` 신규 166 LOC (hexa-lang PR #1366 MERGED) — final verb.

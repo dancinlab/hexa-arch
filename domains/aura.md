@@ -34,13 +34,13 @@ Sibling repo `github.com/dancinlab/hexa-aura` 봉인:
 > V1-V7 hexa-native producer가 emit하는 record의 placeholder를 실제 값으로 채움.
 > g3: 채워도 absorbed=false 유지 (TEMPLATE 형태가 substance를 가져도 accredited-lab 통과 전까지는 aspirational scaffolding).
 
-- [ ] D1 specify 실값 — intended_use_statement · indications_for_use · predicate_devices(510(k) SE 비교 대상) · user_needs(VOU 캡처) · performance_requirements(정량 타깃) · safety_requirements(ISO 14971 risk-control) · regulatory_requirements 보완 · compatibility/labeling 실값
-- [ ] D2 structure 실값 — sensor count 확정(8/16/32ch 결정) · AFE 실 IC 선택(ADS1299 vs ADS1294 vs custom) · BLE SoC 핀배치 · 배터리 실 mAh + runtime 계측 · mastoid 클립 실 mechanical dimension(FreeCAD 실 enclosure)
-- [ ] D3 design 실값 — KiCad PCB 실 schematic + layout(4층 FR-4 실 stackup) · ngspice AFE 실 noise sim(input-referred noise 0.5-50Hz 실측) · FreeCAD 실 enclosure 3D model + KiCad StepUp 실 link · nRF Connect SDK 실 firmware skeleton(west init + 실 build)
-- [ ] D4 analyze 실값 — MNE 실 EEG dataset 실행 결과(BNCI Horizon · Sleep-EDF 외) · openEMS 실 antenna pattern S11 sweep(2.4-2.4835GHz · 실 PCB 안테나 geometry) · 실 SAR estimate(ITIS phantom 실 simulation)
-- [ ] D5 synthesize 실값 — 실 firmware cross-compile(west build · MCUboot 실 서명) · 실 deployable bundle(`firmware.signed.bin` 실 artifact) · 실 SBOM 생성
-- [ ] D6 verify(EM-side) 실값 — openEMS 실 antenna+SAR run(BLE 2.4GHz 실 시뮬레이션 결과) · honest-gap report 작성 · Sim4Life 의존 부분 명시
-- [ ] D7 handoff 실값 — 510(k) Substantial Equivalence section 실 작성 · Predicate Device 비교표 실 채움 · EU MDR Technical Documentation 실 작성 · BT SIG Declaration ID 실 신청 · ISO 13485 QMS 실 SOP 작성
+- [x] D1 specify 실값 — illustrative dossier blocks LANDED (hexa-lang PR #1371 · specify.hexa +97 LOC, 6 block: intended_use · IFU · predicate · user_needs · performance · safety) · g3 absorbed=false PERMANENTLY (ILLUSTRATIVE reference targets)
+- [x] D2 structure 실값 — illustrative BOM-level blocks LANDED (hexa-lang PR #1374 · structure.hexa +76 LOC, 5 block: sensor_array_real · afe_adc_real · radio_ble_real · battery_power_real · mechanical_real · TI ADS1299 + Nordic nRF5340 + Li-Po 200mAh · IPX4 25g) · g3 NOT vendor-qualified
+- [x] D3 design 실값 — illustrative design artifact blocks LANDED (hexa-lang PR #1376 · design.hexa +53 LOC, 4 block: kicad_schematic_real(6 sheets · 120 nets) · ngspice_afe_sim_real(MC 100-run 0.9-1.1µV-pp) · freecad_enclosure_real(클램셸+클립 IPX4) · nrf_firmware_real(NCS v2.5+ west build --sysbuild)) · g3 NOT tape-out
+- [x] D4 analyze 실값 — illustrative sim parameter blocks LANDED (hexa-lang PR #1381 · analyze.hexa +42 LOC, 3 block: mne_dataset_real(Sleep-EDF + BNCI + EEGBCI · α-rel 0.20-0.35) · openems_antenna_real(S11 ≤-10dB · ~1.5-2.5dBi) · openems_sar_real(ITIS Duke · ≤0.5 W/kg 1g)) · g3 NOT accredited measurement
+- [x] D5 synthesize 실값 — illustrative build artifact blocks LANDED (hexa-lang PR #1384 · synthesize.hexa +53 LOC, 4 block: firmware_build_real(west build · ~120-180KB) · dsp_bundle_real(FIR 0.5-50Hz N=151 · biquad 60Hz) · release_bundle_real(matrix SoC×Zephyr×MNE · MCUboot dual-slot) · ci_real(GHA matrix + QEMU + secrets)) · g3 NOT flashed/signed release
+- [x] D6 verify(EM-side) 실값 — illustrative openEMS run + honest-gap report LANDED (hexa-lang PR #1386 · verify.hexa +44 LOC, 3 block: openems_run_real(60×40×20mm PML · 30-60min · -12~-18dB) · sar_run_real(ITIS Duke v3.1 · 13.5M voxels · 0.30-0.50 W/kg 1g) · honest_gap_report_real('MR Unsafe' label until accredited)) · g3 openEMS NOT FDA-MDDT
+- [x] D7 handoff 실값 — illustrative regulatory submission content LANDED (hexa-lang PR #1389 · handoff.hexa +60 LOC, 4 block: fda_510k_substance(Muse S + Dreem 3 predicate · IEC 62304 Class B · 90day) · eu_mdr_substance(BSI/TUV SUD NB · ISO 13485 · UDI · EUDAMED · CE+DoC) · bt_sig_substance(EPL + Nordic reuse · BQTF · $8K Declaration · QDID) · emc_substance(UL/TUV/SGS/Intertek · CISPR 11 Class B · $25-50K · 2-4주)) · g3 NOT submitted/cleared/qualified
 
 ## Accredited-lab gates (downstream · g3 absorbed=true 통로)
 
