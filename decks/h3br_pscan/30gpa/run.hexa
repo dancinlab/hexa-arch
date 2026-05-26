@@ -1,0 +1,41 @@
+// h3br pressure-scan single-P chain — F-N6-4 falsifier verifier
+// runbook (hexa-native — actual exec inline via `pool on ubu-1 'bash <<EOF ... EOF'`)
+//
+// CHAIN: vc-relax(press=P kbar) → extract eq celldm → scf @ eq → ph.x Gamma-only → harvest ω_log proxy
+//
+// pool ubu-1 free · OMP_NUM_THREADS=1 · -np 6 · ecut 60/600 Ry · k 8x8x8
+//
+// inputs (siblings of this file):
+//   relax.in : vc-relax with &cell press=P_KBAR cell_dofree='all'
+//   scf.in   : scf with placeholder __CELLDM__
+//   ph.in    : ph.x ldisp=.false. Gamma-only single q-point 0 0 0
+
+pub fn chain_P_GPa(P_GPA: i64) -> str {
+  // P_KBAR = P_GPA * 10 — patched into relax.in via sed before dispatch
+  // returns: "harvest.json" path on ubu-1 with omega_log_K_gamma_proxy field
+  "/home/aiden/rtsc_h3br_pscan/${P_GPA}gpa/harvest.json"
+}
+
+// remote bash chain (executed via `pool on ubu-1 'bash <<EOF ... EOF'`):
+//
+//   set -e
+//   cd /home/aiden/rtsc_h3br_pscan/${P_GPA}gpa
+//   source ~/etc/qe_env.sh
+//   export OMP_NUM_THREADS=1
+//   mpirun -np 6 --bind-to none pw.x -in relax.in > relax.out 2>&1
+//   CELLDM=$(awk '/Begin final coordinates/{flag=1} flag && /lattice parameter/{print $5; exit}' relax.out)
+//   if [ -z "$CELLDM" ]; then
+//     VOL=$(awk '/Begin final coordinates/{flag=1} flag && /new unit-cell volume/{print $5; exit}' relax.out)
+//     CELLDM=$(python3 -c "print((2*$VOL)**(1/3))")
+//   fi
+//   PCALC=$(awk '/Begin final coordinates/{flag=1} flag && /total[ ]+stress/{print $6; exit}' relax.out)
+//   sed "s/__CELLDM__/${CELLDM}/" scf.in > scf.eq.in
+//   mpirun -np 6 --bind-to none pw.x -in scf.eq.in > scf.out 2>&1
+//   mpirun -np 6 --bind-to none ph.x -in ph.in > ph.out 2>&1
+//   # harvest ω_log proxy = exp(<ln(positive Γ-modes)>) [cm^-1] × 1.4388 [K/cm^-1]
+//
+// HONESTY:
+//   - Γ-only is fast probe; true ω_log_BZ needs full q-grid (q≥4³). caveat in verdict.
+//   - press flag effect depends on cell_dofree='all' for BCC isotropic.
+//   - d6: first-principles only, no plateau-forcing.
+//   - cost: $0 (pool free).

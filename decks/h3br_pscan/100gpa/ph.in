@@ -1,0 +1,10 @@
+h3br Gamma-only phonon probe (no EPC) -- F-N6-4 omega_log proxy
+&inputph
+  prefix = 'h3br'
+  outdir = '/home/aiden/rtsc_h3br_pscan/100gpa/out'
+  fildyn = '/home/aiden/rtsc_h3br_pscan/100gpa/h3br.dyn'
+  ldisp = .true.
+  nq1 = 1, nq2 = 1, nq3 = 1
+  tr2_ph = 1.0d-12
+  recover = .true.
+/
