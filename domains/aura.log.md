@@ -3,6 +3,14 @@
 > Append-only progression log for the AURA (post-aural wearable BCI) domain.
 > Snapshot SSOT: [aura.md](aura.md) · verb-cell manifest: [aura.demi](aura.demi)
 
+## 2026-05-27 — V5 synthesize producer LANDED (hexa-native)
+
+- `stdlib/aura/synthesize.hexa` 신규 146 LOC (hexa-lang PR #1347 MERGED).
+- 4 block: firmware_bundle (Zephyr RTOS Apache-2.0 + nRF Connect SDK BSD-3 · west+cmake+ninja meta-build · MCUboot ed25519/RSA-2048 서명 · OTA SMP over BLE) · dsp_pipeline (V4 analyze territory 통합 · 0.5-50Hz bandpass+notch+Welch PSD · naive-DFT companion=`_dft_alpha_band_batch.hexa` G33 · JSONL over BLE GATT custom EEG service) · bundle_skeleton (`<release>/{firmware.signed.bin, dsp_manifest.json, README.md}` · 호환성 매트릭스 SoC × Zephyr × MNE · MCUboot dual-slot rollback · SHA-256 무결성) · ci_integration (GitHub Actions matrix nRF52840+5340+54L15 · QEMU native_posix/qemu_cortex_m3 smoke · shellcheck+clang-tidy+checkpatch.pl · GHA Releases + SBOM 발행).
+- cellrun manifest 변경: `[cell.synthesize]` substrate=python3 → hexa, script=*.py → *.hexa, required_deps=python3 → hexa, python_candidates 제거.
+- 마일스톤: V5 → `[~]` in-progress (producer LANDED).
+- g3 honesty: `absorbed=false` PERMANENTLY · 실 cross-compile은 firmware domain D73 cellrun territory · 실 DSP emit은 V4 analyze.
+
 ## 2026-05-27 — V4 analyze producer LANDED (hexa-native)
 
 - `stdlib/aura/analyze.hexa` 신규 140 LOC (hexa-lang PR #1345 MERGED).
