@@ -3,6 +3,18 @@
 > Append-only progression log for the AURA (post-aural wearable BCI) domain.
 > Snapshot SSOT: [aura.md](aura.md) · verb-cell manifest: [aura.demi](aura.demi)
 
+## 2026-05-27 — V1 specify producer LANDED (hexa-native)
+
+- `stdlib/aura/specify.hexa` 신규 124 LOC (hexa-lang PR #1338 MERGED).
+- 패턴: `bio.hexa` 루트 디스패처 sentinel 스타일.
+- 출력: `AURA_SPECIFY_OK record_kind=aura_specify_record geometry_id=aura_specify_v1 gate=GATE_OPEN absorbed=false version=0.1.0` + `__HEXA_AURA_SPECIFY__ PASS` + 8 regulatory base 라인 + 7 design-input source + 5 EMC immunity level + 4 scope_caveat.
+- 표준 매핑: 21 CFR 820.30 (FDA Class II Design Controls) · EU MDR 2017/745 (Class IIa) · IEC 60601-1 Ed.3.2 (일반 안전) · IEC 60601-1-2 Ed.4.1 (EMC) · BT SIG Core Spec v5.x · ISO 14971 (위험관리) · ISO 10993-1 (생체적합성 skin-contact).
+- cellrun manifest 변경 (이 PR): `domains/aura.demi [cell.specify]` `substrate=python3` → `hexa`, `script=stdlib/aura/specify.py` → `stdlib/aura/specify.hexa`, `required_deps=python3` → `hexa`, `python_candidates` 라인 제거.
+- 마일스톤 상태: V1 → `[~]` in-progress (producer LANDED, dossier content 실제 채움은 follow-up).
+- g3 honesty: `absorbed=false` PERMANENTLY — dossier skeleton은 aspirational scaffolding, NEVER an FDA-cleared submission. 인계 절차(510(k) · Notified Body · BT SIG qualification)는 다 accredited-lab gate 통과 후 별도.
+
+## 2026-05-26 — domain ingest from sibling repo
+
 ## 2026-05-26 — domain ingest from sibling repo
 
 - 🎧 AURA 도메인 demiurge 본체로 이관 (sibling repo `hexa-aura` 봉인 결정).

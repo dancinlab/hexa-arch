@@ -15,7 +15,7 @@ Sibling repo `github.com/dancinlab/hexa-aura` 봉인:
 ## Milestones (7-verb absorbed 끌어올리기)
 
 - [x] V0 aura+verify absorbed=true — Sleep-EDF spectral parity 8.4e-07 · G33 LANDED · D117 2nd cell first-flip · R8 4/4 CLOSURE
-- [ ] V1 aura+specify — FDA Design Input(21 CFR 820.30) + IEC 60601-1 + -1-2 EMC + BT SIG 매핑 dossier-skeleton
+- [~] V1 aura+specify — producer hexa-native LANDED (hexa-lang PR #1338 · `stdlib/aura/specify.hexa` 124 LOC, sentinel emit + 8 regulatory base + 7 design-input source + 5 EMC immunity level + 4 scope_caveat) · dossier content 실제 채움(intended_use_statement · IFU · predicate_devices · user_needs · performance_requirements)은 follow-up · absorbed=false PERMANENTLY (g3)
 - [ ] V2 aura+structure — 다중전극 dry/wet EEG sensor array + AFE/ADC + BLE radio + 전원 partitioning + mastoid 클립 mechanical
 - [ ] V3 aura+design — KiCad PCB(+ngspice AFE) + FreeCAD enclosure(StepUp 연동) + nRF Connect SDK BLE 5.x firmware skeleton
 - [ ] V4 aura+analyze — MNE-Python band-power(alpha/beta/gamma) + openEMS FDTD antenna pattern + SAR estimate
