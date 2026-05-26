@@ -2,6 +2,16 @@
 
 Append-only history sister of `CERN.md`. Each entry starts with `## <ISO timestamp> — <header>` (newest on top); body = `- [x]` (done) / `- [ ]` (pending) checkbox tasks.
 
+## 2026-05-26T09:30Z — /cycle 라운드: xsuite analyze cell + Geant4/particle 설치(벽 돌파) + §4 ledger reconciliation
+
+CERN /cycle 2-agent fan-out 결과 land + §4 ledger 정합. A(xsuite) 정상 완료, C(Geant4) rate-limit 사망 → parent 가 checkpoint 회수해 포그라운드 land.
+
+- [x] **A — xsuite analyze cell** (#236) — 7 TeV FODO full twiss-table 특성화 (β_x/y=83.6/81.5m · Q_x=Q_y=0.00424 · 자연색수차 −0.00424 · D_x=0 dipole-free · momentum-compaction≈0). synthesize headline(β_x_max·Q_x)과 cross-consistent. GATE_OPEN(toy textbook FODO · measured-ring 아님). 환경: xtrack 0.104.1 은 py3.9 import 실패(PEP-604) → python3.12 우회(메모리 등재)
+- [x] **C — Geant4 + particle 설치·HEXA-PORT 등록** (#239) — particle 0.26.2 (PDG mass/charge 검증) + Geant4 11.3.2 conda-forge(pool ubu-1 env `geant4` py3.12) · smoke PASS(RunManager 구성+NIST G4_Si/G4_WATER I-값 PDG정확+G4ParticleTable). **`geant4_pybind` trampoline segfault 벽 돌파**(@D d2) — 선행 A3 `pip geant4-pybind` pybind11 소유권 segfault 를 conda-forge 공식 빌드(ABI-매칭)로 우회. HEXA-PORT P8 오라클 등재
+- [x] **rate-limit 회수** — C 가 PR 직전 throttle 사망(3 checkpoint commit push됨) → parent rebase(stale-base xsuite/UFO 삭제 동반 교정) → fresh 브랜치 land #239
+- [x] **§4 ledger reconciliation** — stale flip: line 150 blowout `[ ]`→`[x]`(#235) · line 146 xsuite `[ ]`→`[x]`(#236) · line 144 Geant4 설치 `[ ]`→`[x]`(#239) · line 147 stub `[x]`(substrate 본해는 별 cycle 명시) · §1 verb-map(ANALYZE ✓xsuite · VERIFY ◐Geant4) · §2.1 Geant4 cell · downstream Geant4 행(tooling 벽 돌파 → Stage 4 in-scope 승격)
+- [ ] **Bethe-Bloch Stage 4** — Geant4-MC 4-보정 parity → 이제 **runnable**(Geant4 #239 설치), 다음 라운드 dispatch (in-scope 승격 — tooling 벽 해소)
+
 ## 2026-05-26T08:30Z — 탁상가속기 2-D 비선형 blowout PIC sweep 완료 (무료 CPU $0 · downstream 당겨 완료)
 
 `## downstream` 의 "2-D blowout PIC (GPU)" 항목을 GPU 없이 **무료 pool CPU(ubu-1)** 로 당겨 완료. FBPIC 2-D cylindrical, a0 강도 사다리 3점 — 모두 6000 step.
