@@ -3,48 +3,29 @@
 
 import Link from "next/link";
 import { listDomains } from "@/lib/domains";
-import { getLocale, getMessages, t } from "@/lib/i18n";
-import { LangSwitcher } from "@/components/LangSwitcher";
+import { getMessages, t } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic"; // filesystem-backed; never cache
 
 export default async function HomePage() {
-  const [domains, locale, m] = await Promise.all([
-    listDomains(),
-    getLocale(),
-    getMessages(),
-  ]);
+  const [domains, m] = await Promise.all([listDomains(), getMessages()]);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10 font-mono">
-      <header className="mb-8 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">{t(m, "home.title")}</h1>
-          <p className="text-sm text-neutral-500">
-            {t(m, "home.subtitle_a")}
-            <a
-              href="https://www.geminixprize.com"
-              className="underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t(m, "home.subtitle_link")}
-            </a>
-            {t(m, "home.subtitle_b")}
-          </p>
-        </div>
-        <nav className="flex items-center gap-3 text-sm">
-          <Link href="/pricing" className="underline">
-            {t(m, "nav.pricing")}
-          </Link>
-          <Link href="/account" className="underline">
-            {t(m, "nav.account")}
-          </Link>
-          <Link href="/discover" className="underline">
-            {t(m, "nav.discover")}
-          </Link>
-          <LangSwitcher current={locale} />
-        </nav>
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold">{t(m, "home.title")}</h1>
+        <p className="text-sm text-neutral-500">
+          {t(m, "home.subtitle_a")}
+          <a
+            href="https://www.geminixprize.com"
+            className="underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t(m, "home.subtitle_link")}
+          </a>
+          {t(m, "home.subtitle_b")}
+        </p>
       </header>
 
       <section>
