@@ -167,11 +167,13 @@ const Hook01: React.FC = () => {
 
 const Domains02: React.FC = () => {
   const frame = useCurrentFrame();
+  // SSOT: /DOMAINS.md (5축 × 4) — atom · matter · chip · bio · chem
   const tiles = [
-    "RTSC", "AURA", "XPRIZE", "CARDIO+", "ANTIMATTER",
-    "MONDALOY", "NOREFLOW", "HERPES", "DAPTPGX", "ISR",
-    "LPA", "TTR", "QD", "COSME", "LENS+ECOPAD",
-    "RTSC+NUCLEAR", "ABSORPTION", "ANIMA", "FUSION", "DEMIURGE",
+    "RTSC", "FUSION", "ANTIMATTER", "QUBIT",
+    "BATTERY-LI", "PEROVSKITE", "GRAPHENE", "METAMATERIAL",
+    "NEUROMORPHIC", "PHOTONIC-IC", "MEMRISTOR", "SPINTRONIC",
+    "CRISPR", "MRNA", "ORGANOID", "PROTEIN-FOLD",
+    "CATALYST", "MOF", "ELECTROCHEM", "PHOTOREDOX",
   ];
   return (
     <AbsoluteFill style={{ background: palette.bg0 }}>
