@@ -29,14 +29,13 @@
 # clearance + IEC 60601-1-2 EMC + Bluetooth SIG qualification = accredited-
 # lab gates outside this map).
 
-# --- WIRED: specify (Class II design dossier skeleton) ----------------------
+# --- WIRED: specify (Class II design dossier skeleton, hexa-native V1) ------
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/aura/specify.py
+substrate         = hexa
+script            = stdlib/aura/specify.hexa
 record_kind       = aura_specify_record
 output_dir        = exports/aura/specify
-required_deps     = python3
+required_deps     = hexa
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
