@@ -1,0 +1,65 @@
+{
+  "domain": "cern",
+  "verb": "analyze",
+  "kind": "xsuite_fodo_twiss_analyze",
+  "stamp": "20260526T072444Z",
+  "producer": "xsuite@0.51.1",
+  "measurement_gate": "GATE_OPEN",
+  "absorbed": false,
+  "scope_caveats": [
+    "FODO cell parameters (L_d=1 m drift, L_q=0.1 m quad, k1=0.25) are TEXTBOOK \u2014 NOT calibrated to any real ring (LHC / FCC-ee / SPS). This is an ANALYZE characterization (periodic 4-D Twiss summary), distinct from the cern+synthesize parity which shipped only beta_x_max + q_x against the Wiedemann/Lee thick-quad oracle.",
+    "Dispersion D_x = D_y = 0 because the cell has no dipoles (pure quad+drift FODO) \u2014 physically correct for this lattice, not a missing field. Natural chromaticity dQ_x = dQ_y < 0 as expected for a focusing lattice with no sextupole correction.",
+    "Optics-only \u2014 no space charge, IBS, impedance, beam-beam, or radiation. measurement_gate = GATE_OPEN / absorbed=false: this is ALGORITHM output, not a measured-ring tune. A flip needs a sourced ring optics deck + measured Twiss."
+  ],
+  "citations": [
+    "arxiv:2310.00317 \u2014 Xsuite integrated beam-physics framework (Iadarola et al., 2023).",
+    "arxiv:2412.16006 \u2014 MAD-NG standalone linear/non-linear optics design (Deniau, 2024).",
+    "Wiedemann, Particle Accelerator Physics \u00a76.2 + \u00a77.4 (thick-quad FODO periodic Twiss).",
+    "CERN Beam Physics Group \u2014 Xsuite docs at xsuite.web.cern.ch."
+  ],
+  "skipped_reason": null,
+  "gate_type": "hexa-native-absent",
+  "provisional": true,
+  "lattice": {
+    "type": "FODO (QF \u00b7 D \u00b7 QD \u00b7 D, thick quads)",
+    "L_d_m": 1.0,
+    "L_q_m": 0.1,
+    "k1_per_m2": 0.25,
+    "p0c_GeV": 7000.0,
+    "particle": "proton",
+    "twiss_method": "4d"
+  },
+  "twiss_summary": {
+    "beta_x_max_m": 83.57863006666393,
+    "beta_x_min_m": 81.51493931737507,
+    "beta_y_max_m": 83.57863006666423,
+    "beta_y_min_m": 81.51493931737534,
+    "q_x_tune": 0.00424218442044344,
+    "q_y_tune": 0.00424218442044344,
+    "dq_x_chromaticity": -0.00424243533302608,
+    "dq_y_chromaticity": -0.00424243533302608,
+    "dispersion_x_max_m": 0.0,
+    "dispersion_y_max_m": 0.0,
+    "alpha_x_min": -1.0443525929169863,
+    "alpha_x_max": 1.0443525929169901,
+    "alpha_y_min": -1.0443525929169806,
+    "alpha_y_max": 1.0443525929170028,
+    "mu_x_phase_advance": 0.00424218442044344,
+    "mu_y_phase_advance": 0.00424218442044344,
+    "momentum_compaction_factor": -2.4241188432036175e-11,
+    "s_positions_m": [
+      0.0,
+      0.1,
+      1.1,
+      1.2000000000000002,
+      2.2
+    ],
+    "cell_length_m": 2.2
+  },
+  "headline": {
+    "beta_x_max_m": 83.57863006666393,
+    "q_x_tune": 0.00424218442044344,
+    "q_y_tune": 0.00424218442044344,
+    "dq_x_chromaticity": -0.00424243533302608
+  }
+}
