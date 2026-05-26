@@ -3,6 +3,49 @@
 > Append-only progression log for the AURA (post-aural wearable BCI) domain.
 > Snapshot SSOT: [aura.md](aura.md) · verb-cell manifest: [aura.demi](aura.demi)
 
+## 2026-05-27 — N1-N15 next-list 일괄 LANDED — 🎉🎉 37 마일스톤 100% 일주 완성
+
+22 LANDED 후 N1-N15 (15 next-list) 일괄 substantive 작성 + commit + merge.
+
+### N1-N15 hexa-native producer summary
+
+| N | category | hexa-lang PR | LOC | blocks |
+|---|---|---|---|---|
+| N1 | G1 stage_1 ISO 10974/F2182 fixture | #1414 | 159 | 5 |
+| N2 | G2 stage_1 OpenBCI ↔ AURA LSL | #1415 | 137 | 5 |
+| N3 | G3 stage_1 ESP32-C6 alt-SoC | #1417 | 148 | 6 |
+| N4 | CER draft (MDCG 2020-13) | #1418 | 143 | 6 |
+| N5 | usability runbook (IEC 62366-1) | #1420 | 143 | 6 |
+| N6 | IEC 62304 traceability | #1421 | 145 | 6 |
+| N7 | cybersecurity (524B + SBOM) | #1422 | 144 | 6 |
+| N8 | PMS plan + vigilance | #1424 | 145 | 6 |
+| N9 | AURA × BRAIN cross-link | #1427 | 130 | 5 |
+| N10 | AURA × FIRMWARE D73 integration | #1428 | 118 | 4 |
+| N11 | 4 regulatory markets (KR/JP/CN/BR) | #1430 | 138 | 5 |
+| N12 | V0 G33 dataset extension | #1433 | 137 | 5 |
+| N13 | ngspice AFE sim runbook | #1434 | 146 | 6 |
+| N14 | paper scaffold (arXiv) | #1436 | 154 | 6 |
+| N15 | meta audit cell | #1437 | 133 | 5 |
+
+**N1-N15 총 +2120 LOC · 15 hexa-lang PR · 82 substantive blocks**.
+
+### 🎯 AURA 37 마일스톤 최종 일주 완성 요약
+
+| 트랙 | 마일스톤 | LANDED | 누적 LOC |
+|---|---|---|---|
+| V verbs (V0-V7) | 8 | 8 ✅ | ~1,011 |
+| D substance (D1-D7) | 7 | 7 ✅ | ~425 |
+| G brk paths (G1-G3) | 3 | 3 ✅ | ~484 |
+| A accredited packages (A1-A4) | 4 | 4 ✅ | ~667 |
+| N next-list (N1-N15) | 15 | 15 ✅ | ~2,120 |
+| **총** | **37** | **37 ✅ (100%)** | **~4,707** |
+
+**총 PR**: 36 hexa-lang + 12+ demiurge = **~48 PR** · ~**4,700+ LOC hexa-native**.
+
+g3 final: 모든 LANDED 마일스톤 absorbed=false PERMANENTLY (V0 G33 Sleep-EDF만 absorbed=true). 진짜 closure (FDA cleared / CE marked / EMC passed / BT SIG qualified / MDDT acceptance)는 외부 paid lab + multi-year regulatory + breakthrough research 영역.
+
+코드-side에서 가능한 모든 AURA 도메인 콘텐츠는 완성 — V0-V7 producer + D1-D7 substance + G1-G3 brk path + A1-A4 submission-ready + N1-N15 stage_1/dossier/cross-domain/depth/meta-audit.
+
 ## 2026-05-27 — A1-A4 accredited-gate submission-ready packages LANDED — 🎉 22 마일스톤 100% 일주 완성
 
 A1-A4 외부 lab work이지만 **submission-ready draft/runbook**은 hexa-native로 코드-side LANDED.

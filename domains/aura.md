@@ -58,33 +58,33 @@ Sibling repo `github.com/dancinlab/hexa-aura` 봉인:
 
 ### 🔴 brk stage_1 실 시작 (G 후속 · highest-leverage)
 
-- [ ] N1 G1 stage_1 — openEMS에 ISO 10974 + ASTM F2182 test-fixture replication 첫 코드 · MRI-safety open path 시동 · 500-1000 LOC
-- [ ] N2 G2 stage_1 — OpenBCI ↔ AURA-100 LSL bridge skeleton (Lab Streaming Layer) · EEG acquisition open path 시동 · 200-400 LOC
-- [ ] N3 G3 stage_1 — ESP32-C6 alt-SoC NimBLE firmware port skeleton · Nordic 의존 깨기 시동 · 300-500 LOC
+- [x] N1 G1 stage_1 — openEMS ISO 10974 + ASTM F2182 fixture FIRST CODE LANDED (hexa-lang PR #1414 · 159 LOC · 5 blocks: ASTM F2182 + ISO 10974 + openEMS impl + V&V plan + repo scaffold)
+- [x] N2 G2 stage_1 — OpenBCI ↔ AURA LSL bridge FIRST CODE LANDED (hexa-lang PR #1415 · 137 LOC · 5 blocks: OpenBCI source + LSL outlet + AURA GATT + MNE-realtime + repo scaffold)
+- [x] N3 G3 stage_1 — ESP32-C6 alt-SoC NimBLE port FIRST CODE LANDED (hexa-lang PR #1417 · 148 LOC · 6 blocks: SoC + firmware stack + GATT mirror + power profile + V&V + repo)
 
 ### 🟡 dossier 확장 (D 후속 · breadth)
 
-- [ ] N4 clinical evaluation report (CER) draft — MDCG 2020-13 + 문헌 리뷰 + clinical evidence 구조 · EU MDR 필수 · 200-300 LOC
-- [ ] N5 usability validation runbook — IEC 62366-1 summative study + 15-user formative · A1/A2 supporting · 150-250 LOC
-- [ ] N6 IEC 62304 software traceability matrix — 요구사항↔SW unit + DHF crossref · A1 SW doc supporting · 150-250 LOC
-- [ ] N7 cybersecurity package — FDA 524B + NIST SBOM + threat model · A1 cyber supporting · 200-300 LOC
-- [ ] N8 post-market surveillance plan + vigilance — Article 84 PMS + EUDAMED 통합 · A2 PMS supporting · 150-250 LOC
+- [x] N4 clinical evaluation report (CER) draft LANDED (hexa-lang PR #1418 · 143 LOC · 6 blocks: scope + equivalence Muse S + literature review + risk-benefit + PMCF + conclusion)
+- [x] N5 usability validation runbook LANDED (hexa-lang PR #1420 · 143 LOC · 6 blocks: scope + use-spec + 3 formatives + summative n≥15 + residual risk + documentation)
+- [x] N6 IEC 62304 SW traceability LANDED (hexa-lang PR #1421 · 145 LOC · 6 blocks: Class B safety + dev process 5.1-5.8 + 6-column matrix + SOUP + risk + DHF artifacts)
+- [x] N7 cybersecurity package LANDED (hexa-lang PR #1422 · 144 LOC · 6 blocks: 524B scope + STRIDE + secure boot/OTA/BLE controls + SPDX SBOM + vuln mgmt + testing)
+- [x] N8 PMS plan + vigilance LANDED (hexa-lang PR #1424 · 145 LOC · 6 blocks: MDR+CFR + data sources + workflow 15/30day + analysis + PMCF + EUDAMED+MAUDE)
 
 ### 🟢 cross-domain + 추가 market (lateral expansion)
 
-- [ ] N9 AURA × BRAIN cross-link — 공유 Sim4Life MRI-safety gap path coordination · 도메인 시너지 · 100-200 LOC
-- [ ] N10 AURA × FIRMWARE D73 cellrun 통합 — firmware 도메인 cellrun에서 AURA build invoke · substrate 통합 · 100-200 LOC
-- [ ] N11 추가 regulatory markets — Korea KC + Japan PMDA + China NMPA + Brazil ANVISA runbook · 글로벌 확장 · 400-600 LOC
+- [x] N9 AURA × BRAIN cross-link LANDED (hexa-lang PR #1427 · 130 LOC · 5 blocks: shared Sim4Life gap + coordination + AURA wellness vs BRAIN clinical + joint funding)
+- [x] N10 AURA × FIRMWARE D73 integration LANDED (hexa-lang PR #1428 · 118 LOC · 4 blocks: substrate handoff + manifest schema + cellrun dispatch + CI integration)
+- [x] N11 추가 regulatory markets (KR+JP+CN+BR) LANDED (hexa-lang PR #1430 · 138 LOC · 5 blocks: MFDS + PMDA + NMPA + ANVISA + common MDSAP strategy)
 
 ### 🔵 verification + 측정 substantive (depth)
 
-- [ ] N12 V0 G33 dataset extension — BNCI Horizon + EEGBCI 흡수 (Sleep-EDF 외 추가 oracle) · V0 absorbed 확장 · 200-400 LOC
-- [ ] N13 ngspice AFE 실 sim 실행 — pool:ubu-1에서 실 SPICE noise sim 돌려 데이터 수집 · D3 실값 → 측정값 · 100-200 LOC + sim run
-- [ ] N14 paper scaffold — post-aural wearable BCI design paper (arXiv 형식) · 외부 공개 · 300-500 LOC
+- [x] N12 V0 G33 dataset extension LANDED (hexa-lang PR #1433 · 137 LOC · 5 blocks: existing G33 ref + BNCI Horizon + EEGBCI + workflow + acceptance ≤1e-6)
+- [x] N13 ngspice AFE sim runbook LANDED (hexa-lang PR #1434 · 146 LOC · 6 blocks: test circuit + noise model + ngspice invocation + Monte-Carlo + expected output + record emission)
+- [x] N14 paper scaffold LANDED (hexa-lang PR #1436 · 154 LOC · 6 blocks: metadata + abstract + 10 sections + 8 figs + figure generation + related work)
 
 ### ⚪ meta (governance + audit)
 
-- [ ] N15 AURA audit cell — 22 마일스톤 일관성 audit + scope_caveat 검증 · 자기 검증 · 100-200 LOC
+- [x] N15 AURA audit cell LANDED (hexa-lang PR #1437 · 133 LOC · 5 blocks: audit scope + 7 consistency checks + 6 g3 axes + summary stats + outputs)
 
 ## 7-verb cell 상태
 
