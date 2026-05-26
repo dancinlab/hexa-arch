@@ -96,12 +96,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (firmware build pointer) -----------------------------
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/aura/synthesize.py
+substrate         = hexa
+script            = stdlib/aura/synthesize.hexa
 record_kind       = aura_synthesize_record
 output_dir        = exports/aura/synthesize
-required_deps     = python3
+required_deps     = hexa
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
