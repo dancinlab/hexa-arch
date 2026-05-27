@@ -51,6 +51,13 @@ export default async function DashboardPage({
   ]);
   if (!user) redirect("/signin");
 
+  // If no ?d= in URL but domains exist, redirect to ?d=<first> so middleware
+  // syncs the active-domain cookie. Without this, fresh visits leave the
+  // cookie empty → verb clicks bounce back to /dashboard (the P0 symptom).
+  if (!sp.d && domains.length > 0) {
+    redirect(`/dashboard?d=${encodeURIComponent(domains[0].name)}`);
+  }
+
   const active =
     (sp.d && domains.find((d) => d.name === sp.d)) || domains[0] || null;
 
