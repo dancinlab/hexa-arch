@@ -9,12 +9,12 @@ export function SpecForm({ domain, target }: { domain: string; target?: Record<s
   const fields = target ?? { goal: `${domain} target`, eta: "TBD" };
   return (
     <div className="space-y-2 text-sm">
-      <div className="flex items-center gap-2 text-xs uppercase text-gray-500">📜 spec form</div>
-      <dl className="grid grid-cols-2 gap-1 rounded-[6px] border border-gray-200 p-3">
+      <div className="flex items-center gap-2 text-xs uppercase text-muted">📜 spec form</div>
+      <dl className="grid grid-cols-2 gap-1 rounded-chip border border-hairline bg-surface-strong p-3">
         {Object.entries(fields).map(([k, v]) => (
           <div key={k} className="contents">
-            <dt className="text-gray-500">{k}</dt>
-            <dd className="font-mono">{String(v)}</dd>
+            <dt className="text-muted">{k}</dt>
+            <dd className="font-mono text-body-strong">{String(v)}</dd>
           </div>
         ))}
       </dl>
@@ -31,13 +31,13 @@ export function DesignSchematic({ nodes }: { nodes?: string[] }) {
         const x = 20 + i * 95;
         return (
           <g key={n}>
-            <rect x={x} y={30} width={80} height={40} rx={4} className="fill-gray-100 stroke-gray-400" />
-            <text x={x + 40} y={55} textAnchor="middle" className="fill-gray-900 text-[11px] font-mono">{n}</text>
-            {i < items.length - 1 && <path d={`M ${x + 80} 50 L ${x + 95} 50`} className="stroke-gray-500" markerEnd="url(#arr)" />}
+            <rect x={x} y={30} width={80} height={40} rx={4} className="fill-surface-strong stroke-hairline-strong" />
+            <text x={x + 40} y={55} textAnchor="middle" className="fill-ink text-[11px] font-mono">{n}</text>
+            {i < items.length - 1 && <path d={`M ${x + 80} 50 L ${x + 95} 50`} className="stroke-body-strong" markerEnd="url(#arr)" />}
           </g>
         );
       })}
-      <defs><marker id="arr" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto"><path d="M0,0 L6,3 L0,6 Z" className="fill-gray-500" /></marker></defs>
+      <defs><marker id="arr" markerWidth={6} markerHeight={6} refX={5} refY={3} orient="auto"><path d="M0,0 L6,3 L0,6 Z" className="fill-body-strong" /></marker></defs>
     </svg>
   );
 }
@@ -53,9 +53,9 @@ export function AnalyzeChart({ series }: { series?: Array<{ label: string; value
         const x = 20 + i * 70;
         return (
           <g key={d.label}>
-            <rect x={x} y={100 - h} width={50} height={h} className="fill-green-400 stroke-green-700" />
-            <text x={x + 25} y={115} textAnchor="middle" className="fill-gray-600 text-[10px]">{d.label}</text>
-            <text x={x + 25} y={100 - h - 4} textAnchor="middle" className="fill-gray-900 text-[10px] font-mono">{d.value.toFixed(2)}</text>
+            <rect x={x} y={100 - h} width={50} height={h} className="fill-[#f4c5a8] stroke-body-strong" />
+            <text x={x + 25} y={115} textAnchor="middle" className="fill-body text-[10px]">{d.label}</text>
+            <text x={x + 25} y={100 - h - 4} textAnchor="middle" className="fill-ink text-[10px] font-mono">{d.value.toFixed(2)}</text>
           </g>
         );
       })}
@@ -69,8 +69,8 @@ export function RecipeLadder({ steps }: { steps?: string[] }) {
   return (
     <ol className="space-y-1 text-sm">
       {items.map((s, i) => (
-        <li key={i} className="flex items-center gap-2 rounded-[6px] border border-gray-200 bg-gray-50 px-2 py-1">
-          <span className="rounded-[6px] bg-gray-900 px-1.5 py-0.5 text-xs font-mono text-white">{i + 1}</span>
+        <li key={i} className="flex items-center gap-2 rounded-chip border border-hairline bg-surface-strong px-2 py-1 text-body-strong">
+          <span className="rounded-chip bg-ink px-1.5 py-0.5 text-xs font-mono text-white">{i + 1}</span>
           <span>{s}</span>
         </li>
       ))}
@@ -89,9 +89,9 @@ export function VerdictMatrix({ rows }: { rows?: Array<{ claim: string; tier: "�
     <table className="w-full text-sm">
       <tbody>
         {data.map((r, i) => (
-          <tr key={i} className="border-b border-gray-200">
+          <tr key={i} className="border-b border-hairline">
             <td className="py-1 pr-2 text-2xl">{r.tier}</td>
-            <td className="py-1 font-mono text-xs">{r.claim}</td>
+            <td className="py-1 font-mono text-xs text-body-strong">{r.claim}</td>
           </tr>
         ))}
       </tbody>
