@@ -116,12 +116,18 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-[auto_1fr_340px] overflow-hidden [&>*]:min-w-0">
-        {/* ① left rail — 8-verb spine (collapsible) */}
+      {/* layout order: 8-verb spine | LLM chat | main work-zone */}
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        {/* ① left rail — 8-verb spine (collapsible, owns its own width) */}
         <WorkbenchSpine activeName={activeName} spineLabel={t(m, "dashboard.spine")} />
 
-        {/* ② work zone */}
-        <section className="overflow-y-auto px-8 py-6">
+        {/* ② LLM chat assist (Gemini draft) — fixed width */}
+        <div className="w-[340px] shrink-0">
+          <AssistChat note={t(m, "dashboard.assist_note")} />
+        </div>
+
+        {/* ③ work zone — main, fills remaining */}
+        <section className="min-w-0 flex-1 overflow-y-auto px-8 py-6">
           {showProjects ? (
             <>
               <h1 className="mb-1 text-2xl font-bold tracking-tight">
@@ -198,9 +204,6 @@ export default async function DashboardPage({
           )}
         </section>
 
-        {/* ③ right rail — LLM chat assist (Gemini draft).
-            NOTE: old verb-shortcut assist rail disabled; chat panel below. */}
-        <AssistChat note={t(m, "dashboard.assist_note")} />
       </div>
     </main>
   );

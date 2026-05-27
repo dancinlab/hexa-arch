@@ -48,7 +48,7 @@ export function WorkbenchSpine({
   return (
     <nav
       className={
-        "flex flex-col gap-2 overflow-y-auto border-r border-neutral-300 p-3 text-sm transition-[width] duration-200 dark:border-neutral-700 " +
+        "flex h-full shrink-0 flex-col gap-2 overflow-y-auto border-r border-neutral-300 p-3 text-sm transition-[width] duration-200 dark:border-neutral-700 " +
         (collapsed ? "w-14" : "w-52")
       }
     >
