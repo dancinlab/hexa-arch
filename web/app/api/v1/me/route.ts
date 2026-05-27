@@ -5,27 +5,27 @@
 // Used by client to gate /admin · fork action · subscription pages.
 
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/session";
+import { currentUser } from "@/lib/session";
 import { getDoc } from "@/lib/firestore";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  const session = await getSession();
-  if (!session) {
+  const u = await currentUser();
+  if (!u) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
   let role = "user";
   try {
-    const doc = await getDoc(`users/${session.localId}`);
+    const doc = await getDoc(`users/${u.localId}`);
     if (doc && (doc as Record<string, unknown>).role === "admin") role = "admin";
   } catch {
     // Firestore unreachable -> default to "user"; do not 500.
   }
   return NextResponse.json({
     authenticated: true,
-    uid: session.localId,
-    email: session.email,
+    uid: u.localId,
+    email: u.email,
     role,
   });
 }
