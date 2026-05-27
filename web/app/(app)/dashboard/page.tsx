@@ -16,7 +16,9 @@ import { listDomains } from "@/lib/domains";
 import { getMessages, getLocale, t } from "@/lib/i18n";
 import { DomainSwitcher } from "@/components/DomainSwitcher";
 import { WorkbenchMenu } from "@/components/WorkbenchMenu";
-import { ProjectsMenu } from "@/components/ProjectsMenu";
+import {
+  Telescope, FileText, Network, PenTool, Activity, Combine, CheckCircle2, Send,
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -24,21 +26,21 @@ const REPO_ROOT =
   process.env.DEMIURGE_DATA_ROOT ?? path.resolve(process.cwd(), "..");
 
 // 8-verb spine — discover (8th, head) sits ABOVE the canonical 7.
-const SPINE: Array<{ verb: string; domainScoped: boolean }> = [
-  { verb: "discover", domainScoped: false },
-  { verb: "spec", domainScoped: true },
-  { verb: "structure", domainScoped: true },
-  { verb: "design", domainScoped: true },
-  { verb: "analyze", domainScoped: true },
-  { verb: "synth", domainScoped: true },
-  { verb: "verify", domainScoped: true },
-  { verb: "handoff", domainScoped: true },
+const SPINE: Array<{ verb: string; domainScoped: boolean; Icon: typeof FileText }> = [
+  { verb: "discover", domainScoped: false, Icon: Telescope },
+  { verb: "spec", domainScoped: true, Icon: FileText },
+  { verb: "structure", domainScoped: true, Icon: Network },
+  { verb: "design", domainScoped: true, Icon: PenTool },
+  { verb: "analyze", domainScoped: true, Icon: Activity },
+  { verb: "synth", domainScoped: true, Icon: Combine },
+  { verb: "verify", domainScoped: true, Icon: CheckCircle2 },
+  { verb: "handoff", domainScoped: true, Icon: Send },
 ];
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ d?: string }>;
+  searchParams: Promise<{ d?: string; view?: string }>;
 }) {
   const [user, m, locale, domains, sp] = await Promise.all([
     currentUser(),
@@ -50,6 +52,7 @@ export default async function DashboardPage({
   if (!user) redirect("/signin");
 
   const names = domains.map((d) => d.name);
+  const showProjects = sp.view === "projects";
   const active =
     (sp.d && domains.find((d) => d.name === sp.d)) || domains[0] || null;
 
@@ -87,14 +90,24 @@ export default async function DashboardPage({
             demiurge
           </Link>
           <span className="text-neutral-300 dark:text-neutral-700">/</span>
-          <ProjectsMenu
-            label={t(m, "dashboard.title")}
-            projects={domains.map((d) => ({ name: d.name, goal: d.goal }))}
-            current={activeName}
-          />
-          <span className="text-neutral-300 dark:text-neutral-700">/</span>
-          {names.length > 0 && (
-            <DomainSwitcher names={names} current={activeName} />
+          <Link
+            href="/dashboard?view=projects"
+            className={
+              "text-sm hover:text-neutral-900 dark:hover:text-neutral-100 " +
+              (showProjects
+                ? "font-semibold text-neutral-900 dark:text-neutral-100"
+                : "text-neutral-500")
+            }
+          >
+            {t(m, "dashboard.title")}
+          </Link>
+          {!showProjects && (
+            <>
+              <span className="text-neutral-300 dark:text-neutral-700">/</span>
+              {names.length > 0 && (
+                <DomainSwitcher names={names} current={activeName} />
+              )}
+            </>
           )}
         </div>
         <div className="flex items-center gap-4">
@@ -118,11 +131,11 @@ export default async function DashboardPage({
 
       <div className="grid min-h-0 flex-1 grid-cols-[200px_1fr_260px] overflow-hidden [&>*]:min-w-0">
         {/* ① left rail — 8-verb spine */}
-        <nav className="flex flex-col gap-0.5 overflow-y-auto border-r border-neutral-300 p-4 text-sm dark:border-neutral-700">
-          <span className="mb-2 text-[11px] uppercase tracking-wider text-neutral-500">
+        <nav className="flex flex-col gap-2 overflow-y-auto border-r border-neutral-300 p-4 text-sm dark:border-neutral-700">
+          <span className="mb-1 text-[11px] uppercase tracking-wider text-neutral-500">
             {t(m, "dashboard.spine")}
           </span>
-          {SPINE.map(({ verb, domainScoped }, i) => {
+          {SPINE.map(({ verb, domainScoped, Icon }, i) => {
             const href =
               domainScoped && activeName
                 ? `/${verb}/${encodeURIComponent(activeName)}`
@@ -131,11 +144,12 @@ export default async function DashboardPage({
               <Link
                 key={verb}
                 href={href}
-                className="flex items-center justify-between rounded border border-neutral-300 px-3 py-2 text-neutral-700 hover:border-neutral-900 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-100 dark:hover:text-neutral-50"
+                className="flex items-center gap-2.5 rounded border border-neutral-300 px-3 py-2.5 text-neutral-700 hover:border-neutral-900 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-100 dark:hover:text-neutral-50"
               >
+                <Icon size={15} className="shrink-0 text-neutral-400" />
                 <span>{verb}</span>
                 {i === 0 && (
-                  <span className="text-[10px] uppercase tracking-wider text-neutral-400">
+                  <span className="ml-auto text-[10px] uppercase tracking-wider text-neutral-400">
                     head
                   </span>
                 )}
@@ -146,7 +160,49 @@ export default async function DashboardPage({
 
         {/* ② work zone */}
         <section className="overflow-y-auto px-8 py-6">
-          {!active ? (
+          {showProjects ? (
+            <>
+              <h1 className="mb-1 text-2xl font-bold tracking-tight">
+                {t(m, "dashboard.title")}
+              </h1>
+              <p className="mb-6 text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+                projects · {domains.length}
+              </p>
+              <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+                {domains.map((d) => {
+                  const dp =
+                    d.progress && d.progress.total > 0
+                      ? Math.round((100 * d.progress.done) / d.progress.total)
+                      : null;
+                  return (
+                    <Link
+                      key={d.name}
+                      href={`/dashboard?d=${encodeURIComponent(d.name)}`}
+                      className="flex flex-col gap-2 rounded border border-neutral-300 p-4 hover:border-neutral-900 hover:bg-neutral-50 dark:border-neutral-700 dark:hover:border-neutral-100 dark:hover:bg-neutral-900"
+                    >
+                      <span className="text-sm font-bold tracking-tight">{d.name}</span>
+                      {d.goal && (
+                        <span className="line-clamp-2 text-[11px] leading-relaxed text-neutral-500">
+                          {d.goal}
+                        </span>
+                      )}
+                      {dp !== null && (
+                        <div className="mt-auto flex items-center gap-2 pt-1">
+                          <div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
+                            <div
+                              className="h-full rounded-full bg-neutral-900 dark:bg-neutral-100"
+                              style={{ width: `${dp}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] text-neutral-500">{dp}%</span>
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </>
+          ) : !active ? (
             <p className="text-sm text-neutral-500">{t(m, "dashboard.empty")}</p>
           ) : (
             <>
