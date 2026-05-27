@@ -18,6 +18,7 @@ import { DomainSwitcher } from "@/components/DomainSwitcher";
 import { WorkbenchMenu } from "@/components/WorkbenchMenu";
 import { WorkbenchSpine } from "@/components/WorkbenchSpine";
 import { AssistChat } from "@/components/AssistChat";
+import { DashboardSummary } from "@/components/DashboardSummary";
 
 export const dynamic = "force-dynamic";
 
@@ -205,6 +206,7 @@ export default async function DashboardPage({
         </section>
 
       </div>
+      <DashboardSummary />
     </main>
   );
 }
