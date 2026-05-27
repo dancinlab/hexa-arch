@@ -1,7 +1,7 @@
 {
   "version": "1.0-temp",
   "schema_origin": "sidecar INBOX #193 (~/.pool/pods.json proposed)",
-  "last_updated_utc": "2026-05-27T15:00Z",
+  "last_updated_utc": "2026-05-28T00:30Z",
   "campaign": "rtsc-293K-1atm",
   "budget": {
     "krw": 1000000,
@@ -118,6 +118,30 @@
         "cabeh8"
       ],
       "ssh_note": "hexa cloud exec required (cloud-guard blocks raw ssh)"
+    },
+    "local-ubu-1": {
+      "host": "ubu-1",
+      "provider": "pool",
+      "kind": "linux-cpu",
+      "cores_note": "shared with host workload",
+      "status": "running",
+      "cost_usd_per_hr": 0,
+      "jobs": [
+        "h3cl_interp_ablation"
+      ],
+      "dispatch_note": "pool on ubu-1 — no rent, no $"
+    },
+    "local-ubu-2": {
+      "host": "ubu-2",
+      "provider": "pool",
+      "kind": "linux-cpu",
+      "cores_note": "shared with host workload",
+      "status": "running",
+      "cost_usd_per_hr": 0,
+      "jobs": [
+        "mg2irh6_polymorph"
+      ],
+      "dispatch_note": "pool on ubu-2 — no rent, no $"
     }
   },
   "jobs": {
@@ -393,11 +417,35 @@
       "status": "running",
       "stage": "vc-relax",
       "started_utc": "2026-05-27T14:59:34Z",
+      "elapsed_min_at_snapshot": 47,
+      "relax_out_kb_at_snapshot": 246,
       "pid": 1149,
       "np": 8,
       "watcher": "b08qnguq6",
       "est_wall_h": 40,
       "hypothesis": "Sc/Y/Ca M-Be-H 자매 완성 (가장 가벼운 비방사성 cation)",
+      "verdict": "PENDING"
+    },
+    "h3cl_interp_ablation": {
+      "pod": "local-ubu-1",
+      "status": "running",
+      "stage": "ph.interp",
+      "np": 7,
+      "watcher": "bhayd8tmk",
+      "anchor_tc_K": 140,
+      "hypothesis": "interp(true|false) ablation — simple vs interp el-ph",
+      "verdict": "PENDING"
+    },
+    "mg2irh6_polymorph": {
+      "pod": "local-ubu-2",
+      "status": "running",
+      "stage": "ph",
+      "dyn_count_at_snapshot": 2,
+      "iter_at_snapshot": 2,
+      "cpu_h_at_snapshot": 16.4,
+      "np": 6,
+      "watcher": "b0b3r04yd",
+      "hypothesis": "Mg₂IrH₆ polymorph dyn-stability check",
       "verdict": "PENDING"
     }
   },
