@@ -3,7 +3,7 @@
 // raw JSON dump · placeholder 를 넘겨주던 걸 여기로 통합):
 //   record  = 도메인 메타 (title · @goal · 진행도 bar)
 //   history = 도메인 log tail (12줄)
-// verb page 는 이제 slot 만 전달. shadcn Modern 톤.
+// verb page 는 이제 slot 만 전달. ElevenLabs 시맨틱 토큰 톤.
 
 import type { ReactNode } from "react";
 import fs from "node:fs/promises";
@@ -36,27 +36,27 @@ export async function VerbShell({
   const record = entry ? (
     <div className="space-y-1.5">
       <div className="flex items-baseline gap-2">
-        <span className="font-sans font-semibold text-gray-900">
+        <span className="font-sans font-semibold text-ink">
           {entry.title ?? entry.name}
         </span>
-        <span className="font-mono text-[10px] text-gray-400">{domain}</span>
+        <span className="font-mono text-[10px] text-muted-soft">{domain}</span>
         {pct !== null && (
-          <span className="ml-auto font-sans text-[11px] text-gray-500">
+          <span className="ml-auto font-sans text-[11px] text-muted">
             {entry.progress!.done}/{entry.progress!.total} · {pct}%
           </span>
         )}
       </div>
       {entry.goal && (
-        <p className="font-sans text-[11px] leading-snug text-gray-600">🎯 {entry.goal}</p>
+        <p className="font-sans text-[11px] leading-snug text-body">🎯 {entry.goal}</p>
       )}
       {pct !== null && (
-        <div className="h-1.5 overflow-hidden rounded-full bg-gray-100">
-          <div className="h-full rounded-full bg-gray-900" style={{ width: `${pct}%` }} />
+        <div className="h-1.5 overflow-hidden rounded-full bg-surface-strong">
+          <div className="h-full rounded-full bg-ink" style={{ width: `${pct}%` }} />
         </div>
       )}
     </div>
   ) : (
-    <span className="text-gray-400">domain &lsquo;{domain}&rsquo; — no record</span>
+    <span className="text-muted-soft">domain &lsquo;{domain}&rsquo; — no record</span>
   );
 
   let logTail = "";
@@ -69,7 +69,7 @@ export async function VerbShell({
     }
   }
   const history = (
-    <pre className="max-h-40 overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-gray-600">
+    <pre className="max-h-40 overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-body">
       {logTail || "(no log)"}
     </pre>
   );

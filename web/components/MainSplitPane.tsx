@@ -1,6 +1,6 @@
 // MainSplitPane — Q2 layout · 위=record · 중간=시각화 slot · 아래=history.
 // Server-rendered shell; slot/history children injected by the verb page.
-// shadcn Modern 톤 (border-gray-200 · rounded-[10px] · shadow-sm).
+// ElevenLabs 톤 — 흰 메인 위 밴드는 bg-canvas 틴트 + border-hairline 로 구분.
 
 import type { ReactNode } from "react";
 
@@ -16,14 +16,14 @@ function Band({
   return (
     <section
       className={[
-        "rounded-lg border border-gray-200 bg-gray-50 p-3",
+        "rounded-panel border border-hairline bg-canvas p-3",
         grow ? "flex-1 min-h-0" : "",
       ].join(" ")}
     >
-      <div className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500">
+      <div className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted">
         {label}
       </div>
-      <div className={grow ? "h-full" : "font-mono text-xs text-gray-700"}>{children}</div>
+      <div className={grow ? "h-full" : "font-mono text-xs text-body-strong"}>{children}</div>
     </section>
   );
 }
