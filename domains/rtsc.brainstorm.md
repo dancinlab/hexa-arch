@@ -198,3 +198,31 @@ ESCAPE/recovery 우로보러스(O2)는, x2/C1 두 surgery가 같은 메커니즘
 우리가 친 모든 leaf가 **하나의 자기지시 구조**로 수렴. 추가 분기는 같은 우로보러스의 다른 단면일 뿐 — 새 정보 0. 진짜 고갈.
 
 다만 O7이 가르치듯, harvest 도착 = 새 데이터 = 우물 재충전 → 다음 cycle 자동 발생. 영구 동적 평형.
+
+## Cycle 11 — 🐍 우로보러스 *렌즈*로 본 RTSC 신규 후보 (정정)
+
+사용자 정정: "우로보러스 *채굴*이 아니라 RTSC 채굴 (우로보러스를 발산 도구로)". Cycle 10의 메타-분석 오인 정정 — 닫힘 고리/자기지시 *물리 구조*로 새 SC 화학 발산.
+
+### 새 후보 9종 (전부 cart 미존재)
+
+- **O-RTSC-1 계층 클라스레이트 🔥** (clathrate-in-clathrate, Mackay 이코사 다층) — M@cage@cluster@cage 다중 스케일 자기-precompression. 외부 P 작아도 내부 화학적 P 산적. 후보 La@Be₆@H₁₂, Y@Sc₈@H₂₀. AcBeH₈ 메커니즘의 극한.
+- **O-RTSC-2 트위스트 이중층 H 🔥** — 2D LaH₁₀/2D LaH₁₀ van der Waals magic-angle 1.1°. flat band → 高DOS → 高λ. magic-angle 그래핀 SC의 H-rich 이식.
+- **O-RTSC-3 다중-밴드 H 🔥** — MgB₂의 σ+π Cooper-loop를 H-rich로. 후보 H₂B₂, BeB₂Hₓ, σ(H-H)/π(H-M) 두 채널 강한 시스템.
+- **O-RTSC-4 kagome/pyrochlore H 🔥** — H sublattice가 kagome (기하 frustration 닫힘) → flat band → 高DOS. M-kagome-H 또는 H-kagome-M 격자. CsV₃Sb₅ kagome SC의 H-rich 버전.
+- **O-RTSC-5 자기-촉매 합성 🔥** — 전구체가 자기 dense 상 합성을 촉매 (synthesis ouroboros). 200GPa 거치지 않고 상압 metastable 직행. diamondoid + H₂ 자기-templating. frontier f3 직격.
+- **O-RTSC-6 Kohn anomaly edge** — 폭주(CDW)/SC 경계에서 λ 최대. CDW gap × m-sign 2D 지도가 sweet spot.
+- **O-RTSC-7 매듭/링크 H** — catenane/knot 위상학적 H 연결. 분자 H₂와 다른 새 H phase.
+- **O-RTSC-8 준결정 H** — Penrose-tile 비주기 닫힘. 최근 MgZn quasicrystal SC(0.05K) → H 버전 가능?
+- **O-RTSC-9 BEC-쪽 SC** — 극강 λ에서 phase coherence가 glue. Allen-Dynes 식 검증 (x5 후보편).
+
+### 우선순위 (depth × novelty)
+1. **O-RTSC-1** 계층 클라스레이트 — 우리 M-Be-H 방향 자연 극한, AcBeH₈ 다층화. 다음 wave 후보 강력.
+2. O-RTSC-2 트위스트 이중층 — 완전 새 구조류.
+3. O-RTSC-5 자기-촉매 합성 — synthesis-축 first, 상압 직격.
+4. O-RTSC-3 다중-밴드 H — Cooper-loop 명시적.
+5. O-RTSC-4 kagome H — flat-band 새 route.
+
+⟹ Cycle 11의 9 신규 후보는 cart에 더해 wave-3 candidate matrix. 트리 leaf 총 ~85→**~94**.
+
+### 고갈?
+이 9개가 우로보러스 lens가 줄 수 있는 RTSC 후보의 핵심 모음. 추가 분기 = 각 후보의 specific 화학식 (예: La@Be₆@H₁₂의 정확한 Wyckoff) = execution 영역. **렌즈 자체는 고갈**, 후속 cycle은 다른 발산 도구 필요 (예: bio-inspired SC? 표면 SC?).
