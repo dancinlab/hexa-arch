@@ -49,7 +49,7 @@ export function WorkbenchSpine({
     <nav
       className={
         "flex h-full shrink-0 flex-col gap-2 overflow-y-auto border-r border-neutral-300 p-3 text-sm transition-[width] duration-200 dark:border-neutral-700 " +
-        (collapsed ? "w-14" : "w-52")
+        (collapsed ? "w-16" : "w-52")
       }
     >
       <button
@@ -78,7 +78,7 @@ export function WorkbenchSpine({
             title={collapsed ? verb : undefined}
             className={
               "flex items-center gap-2.5 rounded border border-neutral-300 text-neutral-700 hover:border-neutral-900 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-100 dark:hover:text-neutral-50 " +
-              (collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5")
+              (collapsed ? "justify-center px-2.5 py-3" : "px-3 py-3")
             }
           >
             <Icon size={15} className="shrink-0 text-neutral-400" />

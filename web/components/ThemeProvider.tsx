@@ -10,9 +10,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <NextThemes
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="light"
       enableSystem
-      storageKey="demiurge-theme"
+      storageKey="demiurge-theme-2"
       disableTransitionOnChange
     >
       {children}
