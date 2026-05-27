@@ -301,5 +301,29 @@ pod-2 (`vast-cuda-ssh9-15988`, ssh9.vast.ai:15988, 128c) 에 lit-known 초전도
 - extract.py: **alat→bohr cell fix** (relaxed CELL_PARAMETERS(alat=X) 벡터 ×X → `CELL_PARAMETERS bohr`) — wave-3 `rgen: too many r-vectors` crash 회피. YH6 fixed 패턴 계승.
 - 압력 (kbar): CeH₉=1000(100GPa) · YH₉=2500(250GPa, P6₃/mmc-1 harmonic-stable >250) · YH₁₀=2500(250GPa) · Li₂MgH₁₆=2500(250GPa).
 
-### 발사 상태
-(아래 "발사 결과" 섹션이 d16 dry-run + fire 후 채워짐 — pod-2 ssh9.vast.ai:15988 transport 가용 시)
+### 발사 상태 — ⛔ TRANSPORT BLOCKED (정직 보고, d2 breakthrough-path 첨부)
+
+| 후보 | deck | d16 dry-run | fire | PID |
+|------|------|-------------|------|-----|
+| CeH9 | ✅ authored+staged | ⛔ BLOCKED | ⛔ | — |
+| YH9  | ✅ authored+staged | ⛔ BLOCKED | ⛔ | — |
+| YH10 | ✅ authored+staged | ⛔ BLOCKED | ⛔ | — |
+| Li2MgH16 | ✅ authored+staged | ⛔ BLOCKED | ⛔ | — |
+
+**원인 (정직)**: pod-2 `ssh9.vast.ai:15988` (contract 38095989) + pod-1 `ssh6.vast.ai:28500`
+(37868501) 둘 다 **vast.ai SSH-proxy outage**. 진단:
+- TCP port OPEN (`nc -zv ssh9.vast.ai 15988` succeeded) — 네트워크/pod 살아있음.
+- vast API contract LIVE (`hexa cloud list` 2 instances).
+- 그러나 SSH handshake `exit 255` — `hexa cloud exec` (cycle A) AND `copy-to` (cycle B) 둘 다,
+  `--insecure` + `--identity ~/.ssh/id_vast_anima` 유무 무관. → vast 게이트웨이 측 SSH 프록시 장애
+  (우리 키/네트워크 문제 아님). cloud-guard 자체가 "Stop retrying" 권고.
+
+**우리 쪽 작업은 100% 완료** — 좌표 조사(환각 0) + deck 4종 author + extract.py alat→bohr fix +
+worktree 영구 저장. transport 만 막힘.
+
+**breakthrough paths (d2, parent/next-agent 용)**:
+1. vast proxy 복구 대기 후 재시도 (`exports/wave3b-decks/FIRE-RUNBOOK.md` §0 probe → §1-5).
+2. pod 이 실제로 죽었으면 deck 은 pod-agnostic — fresh vast pod rent → pseudo+deck 스테이징 → 발사.
+3. pseudo 파일명 해소 (`~/wave3/pseudo/` 의 rrkjus_psl 1.0.0 → 베어 `<El>.UPF` 심링크) = RUNBOOK §1.
+
+**deck SSOT**: `exports/wave3b-decks/{CeH9,YH9,YH10,Li2MgH16}/` + 공용 `extract.py` + `FIRE-RUNBOOK.md`.
