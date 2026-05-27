@@ -14,12 +14,11 @@
 # measurement lives in an accredited lab, not here. cellrun = D72 thin shim.
 
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/specify.py
+substrate         = hexa
+script            = stdlib/metamaterial/specify.hexa
 record_kind       = metamaterial_specify_record
 output_dir        = exports/metamaterial/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -29,12 +28,11 @@ scope_caveats     = [
 ]
 
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/structure.py
+substrate         = hexa
+script            = stdlib/metamaterial/structure.hexa
 record_kind       = metamaterial_structure_record
 output_dir        = exports/metamaterial/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -44,12 +42,11 @@ scope_caveats     = [
 ]
 
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/design.py
+substrate         = hexa
+script            = stdlib/metamaterial/design.hexa
 record_kind       = metamaterial_design_record
 output_dir        = exports/metamaterial/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -59,12 +56,11 @@ scope_caveats     = [
 ]
 
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/analyze.py
+substrate         = hexa
+script            = stdlib/metamaterial/analyze.hexa
 record_kind       = metamaterial_analyze_record
 output_dir        = exports/metamaterial/analyze
-required_deps     = python3, numpy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -74,12 +70,11 @@ scope_caveats     = [
 ]
 
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/synthesize.py
+substrate         = hexa
+script            = stdlib/metamaterial/synthesize.hexa
 record_kind       = metamaterial_synthesize_record
 output_dir        = exports/metamaterial/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -89,12 +84,11 @@ scope_caveats     = [
 ]
 
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/verify.py
+substrate         = hexa
+script            = stdlib/metamaterial/verify.hexa
 record_kind       = metamaterial_verify_record
 output_dir        = exports/metamaterial/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -104,12 +98,11 @@ scope_caveats     = [
 ]
 
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/metamaterial/handoff.py
+substrate         = hexa
+script            = stdlib/metamaterial/handoff.hexa
 record_kind       = metamaterial_handoff_record
 output_dir        = exports/metamaterial/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

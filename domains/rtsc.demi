@@ -25,12 +25,11 @@
 
 # --- WIRED: specify (RTSC candidate-class spec skeleton) --------------------
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/specify.py
+substrate         = hexa
+script            = stdlib/rtsc/specify.hexa
 record_kind       = rtsc_specify_record
 output_dir        = exports/rtsc/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -41,12 +40,11 @@ scope_caveats     = [
 
 # --- WIRED: structure (candidate-screening graph skeleton) ------------------
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/structure.py
+substrate         = hexa
+script            = stdlib/rtsc/structure.hexa
 record_kind       = rtsc_structure_record
 output_dir        = exports/rtsc/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -57,12 +55,11 @@ scope_caveats     = [
 
 # --- WIRED: design (falsifier-cascade pipeline dossier) --------------------
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/design.py
+substrate         = hexa
+script            = stdlib/rtsc/design.hexa
 record_kind       = rtsc_design_record
 output_dir        = exports/rtsc/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -75,12 +72,11 @@ scope_caveats     = [
 # Existing producer: stdlib/rtsc/pyfemm_magnetics.py. FEMM Windows-only,
 # Wine-only on macOS — Linux pool honest-skip on Darwin.
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/analyze.py
+substrate         = hexa
+script            = stdlib/rtsc/analyze.hexa
 record_kind       = rtsc_analyze_record
 output_dir        = exports/rtsc/analyze
-required_deps     = python3, pyfemm
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -91,12 +87,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (synthesis-recipe bundle skeleton) ------------------
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/synthesize.py
+substrate         = hexa
+script            = stdlib/rtsc/synthesize.hexa
 record_kind       = rtsc_synthesize_record
 output_dir        = exports/rtsc/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -108,12 +103,11 @@ scope_caveats     = [
 # --- WIRED (ROI 16 · GetDP HTS H-/A-phi 3-D EM): verify --------------------
 # Existing producer: stdlib/rtsc/getdp_hts.py (D61).
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/verify.py
+substrate         = hexa
+script            = stdlib/rtsc/verify.hexa
 record_kind       = rtsc_verify_record
 output_dir        = exports/rtsc/verify
-required_deps     = python3, getdp
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -124,12 +118,11 @@ scope_caveats     = [
 
 # --- WIRED: handoff (peer-review publication dossier skeleton) -------------
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/rtsc/handoff.py
+substrate         = hexa
+script            = stdlib/rtsc/handoff.hexa
 record_kind       = rtsc_handoff_record
 output_dir        = exports/rtsc/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

@@ -14,12 +14,11 @@
 # measurement lives in an accredited lab, not here. cellrun = D72 thin shim.
 
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/specify.py
+substrate         = hexa
+script            = stdlib/green-nh3/specify.hexa
 record_kind       = green-nh3_specify_record
 output_dir        = exports/green-nh3/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -29,12 +28,11 @@ scope_caveats     = [
 ]
 
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/structure.py
+substrate         = hexa
+script            = stdlib/green-nh3/structure.hexa
 record_kind       = green-nh3_structure_record
 output_dir        = exports/green-nh3/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -44,12 +42,11 @@ scope_caveats     = [
 ]
 
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/design.py
+substrate         = hexa
+script            = stdlib/green-nh3/design.hexa
 record_kind       = green-nh3_design_record
 output_dir        = exports/green-nh3/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -59,12 +56,11 @@ scope_caveats     = [
 ]
 
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/analyze.py
+substrate         = hexa
+script            = stdlib/green-nh3/analyze.hexa
 record_kind       = green-nh3_analyze_record
 output_dir        = exports/green-nh3/analyze
-required_deps     = python3, pymatgen
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -74,12 +70,11 @@ scope_caveats     = [
 ]
 
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/synthesize.py
+substrate         = hexa
+script            = stdlib/green-nh3/synthesize.hexa
 record_kind       = green-nh3_synthesize_record
 output_dir        = exports/green-nh3/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -89,12 +84,11 @@ scope_caveats     = [
 ]
 
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/verify.py
+substrate         = hexa
+script            = stdlib/green-nh3/verify.hexa
 record_kind       = green-nh3_verify_record
 output_dir        = exports/green-nh3/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -104,12 +98,11 @@ scope_caveats     = [
 ]
 
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/green-nh3/handoff.py
+substrate         = hexa
+script            = stdlib/green-nh3/handoff.hexa
 record_kind       = green-nh3_handoff_record
 output_dir        = exports/green-nh3/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

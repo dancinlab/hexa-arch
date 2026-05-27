@@ -14,12 +14,11 @@
 # measurement lives in an accredited lab, not here. cellrun = D72 thin shim.
 
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/specify.py
+substrate         = hexa
+script            = stdlib/memristor/specify.hexa
 record_kind       = memristor_specify_record
 output_dir        = exports/memristor/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -29,12 +28,11 @@ scope_caveats     = [
 ]
 
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/structure.py
+substrate         = hexa
+script            = stdlib/memristor/structure.hexa
 record_kind       = memristor_structure_record
 output_dir        = exports/memristor/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -44,12 +42,11 @@ scope_caveats     = [
 ]
 
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/design.py
+substrate         = hexa
+script            = stdlib/memristor/design.hexa
 record_kind       = memristor_design_record
 output_dir        = exports/memristor/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -59,12 +56,11 @@ scope_caveats     = [
 ]
 
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/analyze.py
+substrate         = hexa
+script            = stdlib/memristor/analyze.hexa
 record_kind       = memristor_analyze_record
 output_dir        = exports/memristor/analyze
-required_deps     = python3, numpy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -74,12 +70,11 @@ scope_caveats     = [
 ]
 
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/synthesize.py
+substrate         = hexa
+script            = stdlib/memristor/synthesize.hexa
 record_kind       = memristor_synthesize_record
 output_dir        = exports/memristor/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -89,12 +84,11 @@ scope_caveats     = [
 ]
 
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/verify.py
+substrate         = hexa
+script            = stdlib/memristor/verify.hexa
 record_kind       = memristor_verify_record
 output_dir        = exports/memristor/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -104,12 +98,11 @@ scope_caveats     = [
 ]
 
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/memristor/handoff.py
+substrate         = hexa
+script            = stdlib/memristor/handoff.hexa
 record_kind       = memristor_handoff_record
 output_dir        = exports/memristor/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

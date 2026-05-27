@@ -14,12 +14,11 @@
 # measurement lives in an accredited lab, not here. cellrun = D72 thin shim.
 
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/specify.py
+substrate         = hexa
+script            = stdlib/neuromorphic/specify.hexa
 record_kind       = neuromorphic_specify_record
 output_dir        = exports/neuromorphic/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -29,12 +28,11 @@ scope_caveats     = [
 ]
 
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/structure.py
+substrate         = hexa
+script            = stdlib/neuromorphic/structure.hexa
 record_kind       = neuromorphic_structure_record
 output_dir        = exports/neuromorphic/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -44,12 +42,11 @@ scope_caveats     = [
 ]
 
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/design.py
+substrate         = hexa
+script            = stdlib/neuromorphic/design.hexa
 record_kind       = neuromorphic_design_record
 output_dir        = exports/neuromorphic/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -59,12 +56,11 @@ scope_caveats     = [
 ]
 
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/analyze.py
+substrate         = hexa
+script            = stdlib/neuromorphic/analyze.hexa
 record_kind       = neuromorphic_analyze_record
 output_dir        = exports/neuromorphic/analyze
-required_deps     = python3, numpy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -74,12 +70,11 @@ scope_caveats     = [
 ]
 
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/synthesize.py
+substrate         = hexa
+script            = stdlib/neuromorphic/synthesize.hexa
 record_kind       = neuromorphic_synthesize_record
 output_dir        = exports/neuromorphic/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -89,12 +84,11 @@ scope_caveats     = [
 ]
 
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/verify.py
+substrate         = hexa
+script            = stdlib/neuromorphic/verify.hexa
 record_kind       = neuromorphic_verify_record
 output_dir        = exports/neuromorphic/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -104,12 +98,11 @@ scope_caveats     = [
 ]
 
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/neuromorphic/handoff.py
+substrate         = hexa
+script            = stdlib/neuromorphic/handoff.hexa
 record_kind       = neuromorphic_handoff_record
 output_dir        = exports/neuromorphic/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

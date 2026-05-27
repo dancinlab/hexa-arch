@@ -26,12 +26,11 @@
 
 # --- WIRED: specify (absorber spec skeleton — Eg / PCE / stability target) --
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/specify.py
+substrate         = hexa
+script            = stdlib/perovskite/specify.hexa
 record_kind       = perovskite_specify_record
 output_dir        = exports/perovskite/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -42,12 +41,11 @@ scope_caveats     = [
 
 # --- WIRED: structure (ABX3 lattice + tolerance-factor skeleton) ------------
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/structure.py
+substrate         = hexa
+script            = stdlib/perovskite/structure.hexa
 record_kind       = perovskite_structure_record
 output_dir        = exports/perovskite/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -58,12 +56,11 @@ scope_caveats     = [
 
 # --- WIRED: design (device stack ETL/absorber/HTL dossier skeleton) ---------
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/design.py
+substrate         = hexa
+script            = stdlib/perovskite/design.hexa
 record_kind       = perovskite_design_record
 output_dir        = exports/perovskite/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -91,12 +88,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (precursor + anti-solvent recipe bundle skeleton) ----
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/synthesize.py
+substrate         = hexa
+script            = stdlib/perovskite/synthesize.hexa
 record_kind       = perovskite_synthesize_record
 output_dir        = exports/perovskite/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -107,12 +103,11 @@ scope_caveats     = [
 
 # --- WIRED: verify (SCAPS-1D / drift-diffusion J-V parity) ------------------
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/verify.py
+substrate         = hexa
+script            = stdlib/perovskite/verify.hexa
 record_kind       = perovskite_verify_record
 output_dir        = exports/perovskite/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -123,12 +118,11 @@ scope_caveats     = [
 
 # --- WIRED: handoff (stability protocol + scale-up dossier skeleton) --------
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/perovskite/handoff.py
+substrate         = hexa
+script            = stdlib/perovskite/handoff.hexa
 record_kind       = perovskite_handoff_record
 output_dir        = exports/perovskite/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

@@ -25,12 +25,11 @@
 
 # --- WIRED: specify (ITER-class operating-point spec skeleton) --------------
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/specify.py
+substrate         = hexa
+script            = stdlib/fusion/specify.hexa
 record_kind       = fusion_specify_record
 output_dir        = exports/fusion/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -41,12 +40,11 @@ scope_caveats     = [
 
 # --- WIRED: structure (vessel + magnet + blanket topology skeleton) ---------
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/structure.py
+substrate         = hexa
+script            = stdlib/fusion/structure.hexa
 record_kind       = fusion_structure_record
 output_dir        = exports/fusion/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -57,12 +55,11 @@ scope_caveats     = [
 
 # --- WIRED: design (HTS magnet + first-wall dossier skeleton) ---------------
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/design.py
+substrate         = hexa
+script            = stdlib/fusion/design.hexa
 record_kind       = fusion_design_record
 output_dir        = exports/fusion/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -75,12 +72,11 @@ scope_caveats     = [
 # Existing producer: stdlib/fusion/plasma_metrics.py + .hexa kernel.
 # D61-from-birth · D72 thin shim (plasma-physics single-domain).
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/analyze.py
+substrate         = hexa
+script            = stdlib/fusion/analyze.hexa
 record_kind       = fusion_analyze_record
 output_dir        = exports/fusion/analyze
-required_deps     = python3, plasmapy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -91,12 +87,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (operating-point recipe bundle skeleton) -------------
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/synthesize.py
+substrate         = hexa
+script            = stdlib/fusion/synthesize.hexa
 record_kind       = fusion_synthesize_record
 output_dir        = exports/fusion/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -109,12 +104,11 @@ scope_caveats     = [
 # Existing producer: stdlib/fusion/openmc_tbr.py (D61 · κ-cohort).
 # kernels/mc_transport/ 2nd consumer per D72.
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/verify.py
+substrate         = hexa
+script            = stdlib/fusion/verify.hexa
 record_kind       = fusion_verify_record
 output_dir        = exports/fusion/verify
-required_deps     = python3, openmc
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -125,12 +119,11 @@ scope_caveats     = [
 
 # --- WIRED: handoff (operating-permit dossier skeleton) ---------------------
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/fusion/handoff.py
+substrate         = hexa
+script            = stdlib/fusion/handoff.hexa
 record_kind       = fusion_handoff_record
 output_dir        = exports/fusion/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

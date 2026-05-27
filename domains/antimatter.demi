@@ -25,12 +25,11 @@
 
 # --- WIRED: specify (CPT-test experiment spec skeleton) ---------------------
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/specify.py
+substrate         = hexa
+script            = stdlib/antimatter/specify.hexa
 record_kind       = antimatter_specify_record
 output_dir        = exports/antimatter/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -41,12 +40,11 @@ scope_caveats     = [
 
 # --- WIRED: structure (detector + trap geometry skeleton) -------------------
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/structure.py
+substrate         = hexa
+script            = stdlib/antimatter/structure.hexa
 record_kind       = antimatter_structure_record
 output_dir        = exports/antimatter/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -57,12 +55,11 @@ scope_caveats     = [
 
 # --- WIRED: design (RF cavity + electrode dossier skeleton) -----------------
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/design.py
+substrate         = hexa
+script            = stdlib/antimatter/design.hexa
 record_kind       = antimatter_design_record
 output_dir        = exports/antimatter/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -77,12 +74,11 @@ scope_caveats     = [
 # never in cockpit/scripts/). FIFTH cohort domain crossing measuring-
 # producer threshold and FIRST particle-physics cell.
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/analyze.py
+substrate         = hexa
+script            = stdlib/antimatter/analyze.hexa
 record_kind       = antimatter_analyze_record
 output_dir        = exports/antimatter/analyze
-required_deps     = python3, particle
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -93,12 +89,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (Penning-trap config bundle skeleton) ----------------
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/synthesize.py
+substrate         = hexa
+script            = stdlib/antimatter/synthesize.hexa
 record_kind       = antimatter_synthesize_record
 output_dir        = exports/antimatter/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -111,12 +106,11 @@ scope_caveats     = [
 # Existing producer: stdlib/antimatter/geant4_verify.py (D61 · κ-cohort).
 # kernels/mc_transport/ 4th consumer candidate per D72.
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/verify.py
+substrate         = hexa
+script            = stdlib/antimatter/verify.hexa
 record_kind       = antimatter_verify_record
 output_dir        = exports/antimatter/verify
-required_deps     = python3, geant4
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -127,12 +121,11 @@ scope_caveats     = [
 
 # --- WIRED: handoff (CERN proposal + safety-case skeleton) ------------------
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/antimatter/handoff.py
+substrate         = hexa
+script            = stdlib/antimatter/handoff.hexa
 record_kind       = antimatter_handoff_record
 output_dir        = exports/antimatter/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

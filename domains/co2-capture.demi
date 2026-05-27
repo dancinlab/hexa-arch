@@ -14,12 +14,11 @@
 # measurement lives in an accredited lab, not here. cellrun = D72 thin shim.
 
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/specify.py
+substrate         = hexa
+script            = stdlib/co2-capture/specify.hexa
 record_kind       = co2-capture_specify_record
 output_dir        = exports/co2-capture/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -29,12 +28,11 @@ scope_caveats     = [
 ]
 
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/structure.py
+substrate         = hexa
+script            = stdlib/co2-capture/structure.hexa
 record_kind       = co2-capture_structure_record
 output_dir        = exports/co2-capture/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -44,12 +42,11 @@ scope_caveats     = [
 ]
 
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/design.py
+substrate         = hexa
+script            = stdlib/co2-capture/design.hexa
 record_kind       = co2-capture_design_record
 output_dir        = exports/co2-capture/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -59,12 +56,11 @@ scope_caveats     = [
 ]
 
 [cell.analyze]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/analyze.py
+substrate         = hexa
+script            = stdlib/co2-capture/analyze.hexa
 record_kind       = co2-capture_analyze_record
 output_dir        = exports/co2-capture/analyze
-required_deps     = python3, pymatgen
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -74,12 +70,11 @@ scope_caveats     = [
 ]
 
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/synthesize.py
+substrate         = hexa
+script            = stdlib/co2-capture/synthesize.hexa
 record_kind       = co2-capture_synthesize_record
 output_dir        = exports/co2-capture/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -89,12 +84,11 @@ scope_caveats     = [
 ]
 
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/verify.py
+substrate         = hexa
+script            = stdlib/co2-capture/verify.hexa
 record_kind       = co2-capture_verify_record
 output_dir        = exports/co2-capture/verify
-required_deps     = python3, scipy
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -104,12 +98,11 @@ scope_caveats     = [
 ]
 
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/co2-capture/handoff.py
+substrate         = hexa
+script            = stdlib/co2-capture/handoff.hexa
 record_kind       = co2-capture_handoff_record
 output_dir        = exports/co2-capture/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [

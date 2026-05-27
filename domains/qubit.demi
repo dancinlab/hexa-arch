@@ -25,12 +25,11 @@
 
 # --- WIRED: specify (qubit spec skeleton — f01 / T1 / T2 / anharmonicity) ---
 [cell.specify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/specify.py
+substrate         = hexa
+script            = stdlib/qubit/specify.hexa
 record_kind       = qubit_specify_record
 output_dir        = exports/qubit/specify
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -41,12 +40,11 @@ scope_caveats     = [
 
 # --- WIRED: structure (Josephson junction + resonator geometry skeleton) ----
 [cell.structure]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/structure.py
+substrate         = hexa
+script            = stdlib/qubit/structure.hexa
 record_kind       = qubit_structure_record
 output_dir        = exports/qubit/structure
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -57,12 +55,11 @@ scope_caveats     = [
 
 # --- WIRED: design (circuit-QED dossier — EJ/EC, coupling, readout) ---------
 [cell.design]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/design.py
+substrate         = hexa
+script            = stdlib/qubit/design.hexa
 record_kind       = qubit_design_record
 output_dir        = exports/qubit/design
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -90,12 +87,11 @@ scope_caveats     = [
 
 # --- WIRED: synthesize (fab process bundle — Al/AlOx junction skeleton) -----
 [cell.synthesize]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/synthesize.py
+substrate         = hexa
+script            = stdlib/qubit/synthesize.hexa
 record_kind       = qubit_synthesize_record
 output_dir        = exports/qubit/synthesize
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -106,12 +102,11 @@ scope_caveats     = [
 
 # --- WIRED: verify (QuTiP master-equation T1/T2 + gate-fidelity parity) -----
 [cell.verify]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/verify.py
+substrate         = hexa
+script            = stdlib/qubit/verify.hexa
 record_kind       = qubit_verify_record
 output_dir        = exports/qubit/verify
-required_deps     = python3, qutip
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
@@ -122,12 +117,11 @@ scope_caveats     = [
 
 # --- WIRED: handoff (cryostat integration + calibration dossier skeleton) ---
 [cell.handoff]
-substrate         = python3
-python_candidates = python3.13, python3.12, python3
-script            = stdlib/qubit/handoff.py
+substrate         = hexa
+script            = stdlib/qubit/handoff.hexa
 record_kind       = qubit_handoff_record
 output_dir        = exports/qubit/handoff
-required_deps     = python3
+required_deps     =
 gate_default      = OPEN
 absorbed_default  = false
 scope_caveats     = [
