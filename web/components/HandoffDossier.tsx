@@ -34,7 +34,7 @@ export function HandoffDossier({ domain }: { domain: string }) {
   }, [domain]);
 
   if (error) return <div className="text-xs text-red-500">{error}</div>;
-  if (!dossier) return <div className="text-xs text-neutral-500">로딩…</div>;
+  if (!dossier) return <div className="text-xs text-slate-500">로딩…</div>;
 
   const m = dossier.manifest;
   const pct = m.verb_count
@@ -47,32 +47,32 @@ export function HandoffDossier({ domain }: { domain: string }) {
         <span className="text-2xl">📦</span>
         <div className="flex-1">
           <div className="font-bold">{dossier.domain} dossier</div>
-          <div className="text-xs text-neutral-500">
+          <div className="text-xs text-slate-500">
             {dossier.generated_at.slice(0, 19).replace("T", " ")} ·{" "}
             {m.complete_count}/{m.verb_count} 완료 ({pct}%)
           </div>
         </div>
         <a
-          className="rounded border border-blue-500 px-3 py-1 text-xs text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950"
+          className="rounded-[6px] border border-slate-900 px-3 py-1 text-xs text-slate-900 hover:bg-slate-100"
           href={`/api/v1/handoff/${domain}?download=1`}
         >
           ⬇ 다운로드 (.json)
         </a>
       </div>
       <div className="grid grid-cols-3 gap-2 text-xs">
-        <div className="rounded border border-green-300 bg-green-50 px-2 py-1 dark:border-green-700 dark:bg-green-950">
+        <div className="rounded-[6px] border border-green-300 bg-green-50 px-2 py-1">
           🟢 complete {m.complete_count}
         </div>
-        <div className="rounded border border-yellow-300 bg-yellow-50 px-2 py-1 dark:border-yellow-700 dark:bg-yellow-950">
+        <div className="rounded-[6px] border border-yellow-300 bg-yellow-50 px-2 py-1">
           🟡 in_progress {m.in_progress_count}
         </div>
-        <div className="rounded border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-600 dark:bg-neutral-900">
+        <div className="rounded-[6px] border border-slate-200 bg-slate-50 px-2 py-1">
           ⚪ todo {m.todo_count}
         </div>
       </div>
       <details className="text-xs">
         <summary className="cursor-pointer">📜 records ({dossier.records.length})</summary>
-        <pre className="mt-1 max-h-72 overflow-auto rounded bg-neutral-100 p-2 text-[10px] dark:bg-neutral-900">
+        <pre className="mt-1 max-h-72 overflow-auto rounded-[6px] bg-slate-100 p-2 text-[10px]">
           {JSON.stringify(dossier.records, null, 2)}
         </pre>
       </details>
