@@ -10,8 +10,10 @@ import path from "node:path";
 import { currentUser } from "@/lib/session";
 import { listDomains } from "@/lib/domains";
 import { getMessages, t } from "@/lib/i18n";
+import { logToTrajectory } from "@/lib/trajectory";
 import { DomainSwitcher } from "@/components/DomainSwitcher";
 import { DashboardSummary } from "@/components/DashboardSummary";
+import { TrajectoryPanel } from "@/components/TrajectoryPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +68,7 @@ export default async function DashboardPage({
     (sp.d && domains.find((d) => d.name === sp.d)) || domains[0] || null;
 
   let logTail = "";
+  let trajectory: ReturnType<typeof logToTrajectory> = [];
   if (active) {
     try {
       const logFull = await fs.readFile(
@@ -73,6 +76,7 @@ export default async function DashboardPage({
         "utf8",
       );
       logTail = logFull.split("\n").slice(0, 30).join("\n");
+      trajectory = logToTrajectory(logFull);
     } catch {
       logTail = "(no log yet)";
     }
@@ -119,6 +123,10 @@ export default async function DashboardPage({
             </pre>
           </details>
         </section>
+      )}
+
+      {active && (
+        <TrajectoryPanel sessionId={active.name.toLowerCase()} entries={trajectory} />
       )}
 
       <DashboardSummary />
