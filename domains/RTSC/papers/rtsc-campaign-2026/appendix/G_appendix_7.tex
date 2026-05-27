@@ -93,6 +93,29 @@ are explicitly flagged as \emph{post-hoc} registrations so the next
 $X_2MH_6$ family probe (\ce{Na2AgH6}, \ce{K2RhH6}, \dots) uses the same
 threshold.
 
+\paragraph{The verification escalation (V1$\to$V4).}
+The tier register was not assigned in one pass; it is the endpoint of a
+four-step escalation that is itself a guard against premature confidence.
+\begin{enumerate}\itemsep0.2em
+\item \textbf{V1 --- inventory.} 52 claims triaged into the six tiers by
+  inspection (no recompute yet).
+\item \textbf{V2 --- replay.} An attempt to recompute the supercon claims
+  found that the \texttt{hexa verify} calculator had \emph{zero}
+  electron--phonon functions: $7/7$ landed at \tierOrange\ INSUFFICIENT. This
+  was recorded as an honest gap, not papered over.
+\item \textbf{V3 --- recompute.} After the calculator gained six supercon
+  primitives (\texttt{allen\_dynes\_tc}, \texttt{mcmillan\_tc},
+  \texttt{bcs\_gap\_ratio}, \texttt{lambda\_anharm\_suppress},
+  \texttt{stability\_coupling\_margin}, \dots), the V2 gap closed: the
+  Allen--Dynes $T_c$ claims recompute to libm precision, $15/15$ at
+  \tierGreen.
+\item \textbf{V4 --- ledger.} The unified register (Tab.~\ref{tab:tiers}),
+  including the N5 funnel sweep.
+\end{enumerate}
+The point of recording V2's $7/7$ \tierOrange\ is that a verification surface
+with no calculator path is honestly INSUFFICIENT, not silently SUPPORTED ---
+the gap was named before it was closed.
+
 \paragraph{The permanent \texttt{absorbed=false} statement.}
 No candidate passes the non-wet-lab RTSC gate ($T_c \ge \SI{270}{\kelvin}$ at
 ambient pressure). The best stable prediction is \ce{H3Br} at

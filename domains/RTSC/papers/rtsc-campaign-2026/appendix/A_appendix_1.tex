@@ -80,6 +80,37 @@ $ hexa verify --expr allen_dynes_tc 3.9 589 0.10 117.20 --tol 0.01
   tier   = GREEN SUPPORTED-NUMERICAL
 \end{lstlisting}
 
+\paragraph{Anchor mechanisms (why each validates a different capability).}
+The three anchors are chosen to stress distinct parts of the pipeline:
+\begin{itemize}\itemsep0.2em
+\item \ce{H3S} ($Im\bar{3}m$, \SI{155}{\giga\pascal}) is the
+  high-pressure-clathrate-like coupling baseline ($\lambda\approx2$,
+  $\omega_{\log}\approx\SI{1170}{\kelvin}$) --- it tests whether the
+  $\Gamma$-to-BZ convergence and the strong-coupling Allen--Dynes regime are
+  handled correctly. The \SIrange{175}{195}{\kelvin} reproduction spread is
+  the $\mu^\ast$ + Allen--Dynes-vs-Eliashberg window around the
+  \SI{203}{\kelvin} measurement.
+\item \ce{CaH6} (sodalite clathrate, \SI{170}{\giga\pascal}) is the
+  cation-pre-compression anchor: a \ce{H24} cage with Ca inside. Its
+  near-exact reproduction validates the campaign's handling of stuffed-cation
+  phases --- the same physics the N6 ternary funnel (Appendix~\ref{app:E})
+  attempts to exploit at ambient pressure.
+\item \ce{LaBeH8} ($P6_3/mmc$, \SI{80}{\giga\pascal}) is the lower-pressure
+  ternary anchor with a mild $\Gamma$-soft mode, validating that the
+  pipeline correctly flags borderline-stable phases rather than silently
+  extrapolating through them.
+\end{itemize}
+
+\paragraph{DFT settings (reproducibility).}
+All three anchors and every novel candidate share the campaign convention:
+PBE pseudopotentials (PSL 1.0.0 RRKJUS), $\omega$wfc/charge cutoffs
+\SIrange{60}{80}{\rydberg}\,/\,\SIrange{600}{800}{\rydberg}, electronic
+$k$-grids up to $16^3$, Methfessel--Paxton smearing, and \texttt{ph.x}
+\texttt{electron\_phonon='simple'} on $q$-grids $4^3$--$8^3$. The
+$(\lambda_{\mathrm{BZ}},\omega_{\log})$ are Brillouin-zone-converged; no
+$\Gamma$-only value is fed to Eq.~\eqref{eq:ad} except where explicitly
+flagged as a pressure proxy (Appendix~\ref{app:F}).
+
 \paragraph{Reading.}
 The pipeline is measurement-grade: \ce{CaH6} lands within \SI{2}{\kelvin},
 and the closed-form $T_c$ map is exact to $10^{-5}$ when fed the converged

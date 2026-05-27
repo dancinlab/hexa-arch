@@ -57,6 +57,53 @@ already produces --- and it is the methodological complement to the N5 wall
 soft-mode artifact, and escape is the disciplined way to find out whether a
 stable polymorph survives underneath.
 
+\paragraph{Diagnosing the soft eigenvector: \ce{H3O} as a case study.}
+The method's first step --- identifying which atoms move along the soft mode
+--- can often be settled before any displacement, from symmetry and
+mass-weighting alone. \ce{H3O} in the high-symmetry $Pm\bar{3}m$
+inverse-perovskite (O at the $1a$ inversion centre, three H at $3d$
+edge-midpoints) carries 43 imaginary branches across $16$ irreducible
+$q$-points, the worst at the zone boundary $L$ ($-\SI{1133}{\per\centi\meter}$)
+and a triply-degenerate $T_{1u}$ optical mode at $\Gamma$
+($-\SI{682}{\per\centi\meter}$). Two independent arguments fix the
+eigenvector on the hydrogen sublattice:
+\begin{itemize}\itemsep0.2em
+\item \emph{Mass-weighting.} Since $\omega\propto1/\sqrt{m}$ and
+  $\sqrt{m_O/m_H}\approx4$, oxygen-dominated branches live below
+  $\sim\SI{500}{\per\centi\meter}$; every imaginary branch here is in the
+  H-dominated high-frequency band.
+\item \emph{Group theory (decisive).} O sits at the inversion centre, so its
+  displacements are absorbed entirely into the acoustic $T_{1u}$ translation;
+  the $\Gamma$ optical $T_{1u}$ at $-\SI{682}{\per\centi\meter}$ is a
+  \emph{pure} H-sublattice transverse displacement (proton off-centering /
+  O--H bend), with O stationary.
+\end{itemize}
+The instruction is therefore clear: freeze the zone-boundary distortion (the
+strongest channel) into a periodicity-doubled, lower-symmetry supercell and
+relax --- exactly the soft-mode-escape procedure, with the caveat that the
+relaxed low-symmetry phase typically lowers $\lambda$. \ce{H3O}'s harmonic
+$\lambda_{\mathrm{BZ}}=2.5$, $T_c\approx\SI{190}{\kelvin}$ are extrapolated
+\emph{through} the imaginary branches and are physically untrustworthy until
+a stable polymorph is fixed; the anharmonic SSCHA band (9--\SI{109}{\kelvin})
+is the honest envelope (Appendices~\ref{app:B}, \ref{app:D}).
+
+\paragraph{Three escape routes (generality).}
+Soft-mode escape is one of three ways an imaginary mode can be cured, and the
+\ce{H3O} diagnosis shows when each applies:
+\begin{enumerate}\itemsep0.2em
+\item \textbf{Lower-symmetry relax} (the \ce{H3As} route): follow the soft
+  eigenvector to the true ground-state polymorph. Definitive when a stable
+  polymorph exists underneath.
+\item \textbf{Pressure} (proton-well restoration): compression can turn a
+  double-well proton potential back into a single well, hardening the soft
+  mode --- the mechanism behind the \ce{H3Br} pressure scan
+  (Appendix~\ref{app:F}).
+\item \textbf{Anharmonic SSCHA}: a harmonic imaginary curvature can become
+  real once anharmonic free-energy curvature is included (the \ce{H3S},
+  \ce{LaH10} precedent). Note an isotope swap alone does \emph{not} cure a
+  harmonic imaginary mode --- the curvature is mass-independent.
+\end{enumerate}
+
 \paragraph{Honest scope.}
 \ce{H3As}-$R3m$ at \SI{56}{\kelvin} is not a record and not ambient. The
 methodology, not the number, is the contribution. The $R3m$ verdict is a

@@ -103,3 +103,29 @@ A positive slope is not a victory. Two caveats bound the result:
 (\SI{158}{\kelvin}, high pressure) and a live escape candidate for the
 $\omega_{\log}$ axis of the N5 wall --- but it confirms, rather than
 overturns, the ambient ceiling.
+
+\paragraph{The two \ce{H3Br} state points.}
+\ce{H3Br} appears twice in this monograph and the distinction matters. The
+low-pressure branch (Appendix~\ref{app:B}) carries extreme harmonic coupling
+($\lambda=4.42$) but a low $\omega_{\log}=\SI{531}{\kelvin}$, giving
+$T_c=\SI{110}{\kelvin}$:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,frame=single,xleftmargin=0pt]
+$ hexa verify --expr allen_dynes_tc 4.4191 530.7 0.10 109.8 --tol 0.1
+  calc   = 109.796   tier = GREEN SUPPORTED-NUMERICAL  (H3Br strong-lambda branch)
+\end{lstlisting}
+The \SI{200}{\giga\pascal} record trades coupling ($\lambda=2.156$) for
+nearly double the $\omega_{\log}$ ($\SI{1046}{\kelvin}$), and that trade is
+\emph{net positive} for $T_c$ ($110\to\SI{158}{\kelvin}$) precisely because
+the Allen--Dynes prefactor $\omega_{\log}/1.2$ dominates once $\lambda$ is
+saturated. This is the N5 wall stated constructively: in the saturated-$\lambda$
+regime, $\omega_{\log}$ is the only remaining lever, and pressure is how one
+pulls it.
+
+\paragraph{Recommended next cohort.}
+The disciplined continuation is a full $4^3$ electron--phonon calculation at
+\SI{200}{\giga\pascal} (replacing the $\Gamma$-only proxy with a true
+$\lambda_{\mathrm{BZ}}$ and $\omega_{\log,\mathrm{BZ}}$), following the
+\ce{H3Cl} $8^3$-$q$ precedent. If the BZ-converged $\omega_{\log}$ holds
+within the proxy's $10$--$30\%$ band, \ce{H3Br}'s record stands; if it falls,
+the record is revised downward but the slope sign (the falsifier's actual
+claim) is unaffected.
