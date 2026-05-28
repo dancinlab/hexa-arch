@@ -62,28 +62,28 @@ export default async function AppLayout({
       <div className="flex h-screen bg-canvas text-ink antialiased [font-family:var(--font-inter),system-ui,sans-serif]">
         {/* 좌: 세로 전체 레일 — canvas 틴트(복구). 최상단 브랜드 로고 + verb(상단) + 요리선생 채팅(하단) */}
         <aside className="flex w-72 shrink-0 flex-col border-r border-hairline bg-canvas">
-          {/* 브랜드 로고 — 랜딩 SiteHeader 워드마크와 폰트 100% 동일:
-              시스템 산세리프 · font-black · uppercase · 22px · letterSpacing -0.04em · 노랑 닷.
-              본체만 text-ink 토큰(다크 자동 추종) — 랜딩은 검정 위 white(배경만 다름).
-              여백 px-4 = 8verb 메뉴 좌측 인셋(래퍼 p-2 + 아이템 px-2 = 16px)과 동일 정렬. */}
-          <Link
-            href="/dashboard"
-            aria-label="demiurge — home"
-            className="flex shrink-0 items-center px-4 py-3 hover:opacity-80"
-          >
-            <span
-              className="font-black uppercase leading-none text-ink"
-              style={{
-                fontFamily:
-                  "ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', sans-serif",
-                fontSize: 22,
-                letterSpacing: "-0.04em",
-              }}
-            >
-              demiurge<span className="text-yellow-300">.</span>
-            </span>
-          </Link>
+          {/* 브랜드 로고 + 8verb 메뉴를 같은 p-2 컨테이너에 두어 동일 그리드.
+              로고 Link 도 verb 아이템과 똑같이 px-2 py-1.5 → 좌측이 verb 아이콘 컬럼(16px)에
+              정확히 정렬 + 상하 여백도 verb 아이템과 동일 + mb-0.5 로 아이템 간 gap-0.5 리듬 일치.
+              폰트는 랜딩 SiteHeader 100% 동일(시스템 산세리프·font-black·22px·-0.04em·노랑 닷). */}
           <div className="shrink-0 p-2">
+            <Link
+              href="/dashboard"
+              aria-label="demiurge — home"
+              className="mb-0.5 flex items-center px-2 py-1.5 hover:opacity-80"
+            >
+              <span
+                className="font-black uppercase leading-none text-ink"
+                style={{
+                  fontFamily:
+                    "ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', sans-serif",
+                  fontSize: 22,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                demiurge<span className="text-yellow-300">.</span>
+              </span>
+            </Link>
             <VerbTreeNav domain={activeDomain ?? undefined} i18n={i18n} />
           </div>
           <div className="min-h-0 flex-1">
