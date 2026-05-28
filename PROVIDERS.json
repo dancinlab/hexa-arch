@@ -4,6 +4,7 @@
     "purpose": "machine-readable registry of compute providers + walltime optimizations for RTSC DFT el-ph campaign",
     "created_utc": "2026-05-28",
     "ref_doc": "domains/rtsc.compute_services.md",
+    "global_ssot": "hexa-lang CLOUD M8 absorbed this 4-tier pattern into the global catalog ~/.hx/cloud/providers.json (served by `hexa cloud providers list|fit|recommend`). This file is the RTSC-campaign-specific SUPERSET — keep campaign-anchored picks here; the shared provider catalog lives in the global SSOT.",
     "campaign_anchor": {
       "active_jobs": 16,
       "first_verdict": "YH10 Tc 227.5K@250GPa (PR #486, atlas folded #1909)",
