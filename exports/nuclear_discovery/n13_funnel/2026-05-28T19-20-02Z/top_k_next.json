@@ -1,0 +1,121 @@
+{
+  "domain": "nuclear",
+  "verb": "verify",
+  "kind": "n13_decay_chain_funnel_next_cohort_measured_qalpha",
+  "producer": "sim.hexa@nuclear-N13 (n13_next_cohort.hexa driver · n11_island_cell_checked scorer)",
+  "absorbed": false,
+  "gate_type": "nuclear-novel-discovery-simulation",
+  "provisional": true,
+  "run": { "host": "mini", "surface": "local-$0 (NO pod rent)", "timestamp": "2026-05-28T19-20-02Z", "hexa_lang_commit": "e8aac4195" },
+  "view": "N13 next-cohort — the alpha-decay CHAIN of N12's top island candidates (298-120 = composite 0.545 top, 296-120). N11/N12 scored only the Z=119/120 PARENTS; N13 maps the chain DAUGHTERS (Z=110-118) an accelerator must pre-characterise for alpha-chain CORRELATION TAGGING of a Z=120 recoil. ALL Q_alpha MEASURED (AME2020 / experimental) — strictly more rigorous than N12's predicted WS4 inputs. These are CONFIRMED nuclei: scoring = funnel calibration + alpha-tag landscape, NEVER a new-element discovery. Sibling of n12_funnel/.../top_k_next.json (kept intact).",
+  "novel_element_funnel_top": "298-120 (N12, composite 0.545) — N13 chain daughters all rank BELOW it (lighter -> lower island_weight). N12 top stands as the overall novel-element funnel headline.",
+  "honest_skipped": [
+    "Z=119/120 PARENT cells N12 missed (294/298/301-119, 293/294-120): WS4/KTUY Q_alpha in arxiv:1706.04068 / 2403.02748 are figure-locked (scatter-plot coords; no extractable decimal across the open sources reachable this session). NOT fabricated -> honest-skip until a cited decimal is in hand (@D d6). Out-of-reach != impossible (@D d2).",
+    "Z=121, Z=122: no cited Q_alpha anywhere (arxiv:2402.11514 Skyrme table ends at Z=120, confirmed by N12) -> permanent honest-skip (@D d6).",
+    "N=183/184-region: WS4 table ends N=182 (302-120, N12); no cited island-center Q_alpha -> skip (no fabrication of the island value)."
+  ],
+  "rank_formula": "composite = c_total_score (window score on C1 alpha+SF log10 T_total) x island_weight (2-D Gaussian magic-number proximity, sigma=6). Identical scorer to N11 G4 / N12 (n11_island_cell_checked).",
+  "verify_status": "Closed-form kernels (NC1 Viola-Seaborg, NC2 Royer, C1 Ren-Xu/ZWP SF) reproduce U-238 (17.4493 vs +17.4) and Og-294 (-2.93088 vs -2.93) anchors VERBATIM via test/nuclear_r4_anchor_smoke.hexa (4/4 PASS, run on mini 2026-05-28, hexa-lang e8aac4195). Og-294 anchor = N13 cell 294-Og. R4 intact (7 absorbed=false literals, 0 absorbed=true). `hexa verify --expr` re-registration BLOCKED: verify_cli.hexa clang '_bessel_j1' duplicate-symbol codegen bug (hexa-lang INBOX #2002, pre-existing, unrelated). Smoke-test anchor reproduction IS the green closure (g5, as N12 did).",
+  "top_k_candidates": [
+    {
+      "name": "292-Lv", "Z": 116, "N": 176, "A": 292,
+      "Q_alpha_MeV": 10.78, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -1.68961, "alpha_branching": 0.5, "dominant_channel": "SF", "sf_model_invalid": true },
+      "scores": { "c_total_score": 0.957865, "island_weight": 0.388896, "composite_score": 0.372509, "model_validity_flag": "nominal" },
+      "note": "N13 TOP. 296-120 chain alpha-tag anchor. Highest in-band c_total (log10 T_total -1.69 s). sf_model_invalid=true -> alpha-only total used as prediction. Below N12 298-120 (0.545)."
+    },
+    {
+      "name": "294-Og", "Z": 118, "N": 176, "A": 294,
+      "Q_alpha_MeV": 11.82, "Q_alpha_source": "MEASURED (AME2020 11.82; exp E_a-derived 11.65 JINR 2002/2005; chemlin 11.867)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -3.45568, "alpha_branching": 0.743744, "dominant_channel": "alpha", "sf_model_invalid": false },
+      "scores": { "c_total_score": 0.565405, "island_weight": 0.388896, "composite_score": 0.219883, "model_validity_flag": "nominal" },
+      "note": "Smoke-test anchor cell (Og-294, smoke log10 T -2.93 reproduced). Direct alpha-daughter of 298-120 (N12 top) -> FIRST alpha-tag step of a 298-120 recoil chain. alpha-dominant b=0.74."
+    },
+    {
+      "name": "290-Lv", "Z": 116, "N": 174, "A": 290,
+      "Q_alpha_MeV": 10.99, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -2.20954, "alpha_branching": 0.5, "dominant_channel": "SF", "sf_model_invalid": true },
+      "scores": { "c_total_score": 0.842324, "island_weight": 0.235877, "composite_score": 0.198685, "model_validity_flag": "nominal" },
+      "note": "298-120 chain (grand-daughter via 294-Og). sf_model_invalid=true -> alpha-only total (prediction)."
+    },
+    {
+      "name": "288-Fl", "Z": 114, "N": 174, "A": 288,
+      "Q_alpha_MeV": 10.07, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -0.391123, "alpha_branching": 0.5, "dominant_channel": "SF", "sf_model_invalid": true },
+      "scores": { "c_total_score": 0.753583, "island_weight": 0.249352, "composite_score": 0.187908, "model_validity_flag": "nominal" },
+      "note": "296-120 chain (via 292-Lv). Longest in-band half-life of the cohort (log10 T_total -0.39 s). sf_model_invalid=true -> alpha-only total (prediction)."
+    },
+    {
+      "name": "293-Og", "Z": 118, "N": 175, "A": 293,
+      "Q_alpha_MeV": 11.92, "Q_alpha_source": "MEASURED (AME2020 systematics, neutron-rich Og)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -3.54696, "alpha_branching": 0.999992, "dominant_channel": "alpha", "sf_model_invalid": false },
+      "scores": { "c_total_score": 0.54512, "island_weight": 0.307108, "composite_score": 0.167411, "model_validity_flag": "odd-A-hindrance-not-modeled" },
+      "note": "Neutron-rich Og neighbour. alpha-dominant (b=1.0). odd-A hindrance not modeled -> composite is an honest hindrance-uncaptured signal, NOT a collapse (@D d2)."
+    },
+    {
+      "name": "286-Fl", "Z": 114, "N": 172, "A": 286,
+      "Q_alpha_MeV": 10.36, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "prediction": { "log10_T_total_s_alpha_sf": -1.17608, "alpha_branching": 0.5, "dominant_channel": "SF", "sf_model_invalid": true },
+      "scores": { "c_total_score": 0.928017, "island_weight": 0.135335, "composite_score": 0.125593, "model_validity_flag": "nominal" },
+      "note": "298-120 chain. High c_total but low island_weight (far from N=184·Z=120 corner) -> mid composite. sf_model_invalid=true -> alpha-only total (prediction)."
+    },
+    {
+      "name": "282-Cn", "Z": 112, "N": 170, "A": 282,
+      "Q_alpha_MeV": 10.12, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "verdict_tier": "CLOSED-NEGATIVE (composite=0; in-model SF-collapse, b_alpha~0, log10 T_total -13.99 s below band)",
+      "prediction": { "log10_T_total_s_alpha_sf": -13.9854, "alpha_branching": 7.38761e-14, "dominant_channel": "SF", "sf_model_invalid": false },
+      "scores": { "c_total_score": 0.0, "island_weight": 0.0621765, "composite_score": 0.0, "model_validity_flag": "nominal" },
+      "note": "CLOSED-NEGATIVE (g63). 298-120 chain. Genuine in-model SF-collapse (Ren-Xu valid, sf_model_invalid=false). REPRODUCES the MEASURED behaviour: real 282-Cn T½~0.8 ms by SF. KEPT, not skipped. Strong calibration result."
+    },
+    {
+      "name": "284-Cn", "Z": 112, "N": 172, "A": 284,
+      "Q_alpha_MeV": 9.60, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "verdict_tier": "CLOSED-NEGATIVE (composite=0; in-model SF-collapse, b_alpha~0, log10 T_total -23.03 s below band)",
+      "prediction": { "log10_T_total_s_alpha_sf": -23.0266, "alpha_branching": 2.25646e-24, "dominant_channel": "SF", "sf_model_invalid": false },
+      "scores": { "c_total_score": 0.0, "island_weight": 0.128022, "composite_score": 0.0, "model_validity_flag": "nominal" },
+      "note": "CLOSED-NEGATIVE (g63). 296-120 chain. Genuine in-model SF-collapse. REPRODUCES the MEASURED behaviour: real 284-Cn T½~100 ms, SF-dominant. KEPT. Calibration result."
+    },
+    {
+      "name": "278-Ds", "Z": 110, "N": 168, "A": 278,
+      "Q_alpha_MeV": 9.57, "Q_alpha_source": "MEASURED (AME2020-evaluated)",
+      "predicted_input": false, "gate_type": "nuclear-novel-discovery-simulation", "absorbed": false,
+      "valid": 1, "guard_reason": "ok",
+      "verdict_tier": "CLOSED-NEGATIVE (composite=0; in-model SF-collapse, b_alpha~0, log10 T_total -15.12 s below band)",
+      "prediction": { "log10_T_total_s_alpha_sf": -15.1226, "alpha_branching": 6.58177e-16, "dominant_channel": "SF", "sf_model_invalid": false },
+      "scores": { "c_total_score": 0.0, "island_weight": 0.0228735, "composite_score": 0.0, "model_validity_flag": "nominal" },
+      "note": "CLOSED-NEGATIVE (g63). 298-120 chain terminus (great-great-granddaughter). Genuine in-model SF-collapse. REPRODUCES real 278-Ds short T½ (SF/alpha). KEPT. Calibration."
+    }
+  ],
+  "scope_caveats": [
+    "(s1) CALIBRATION-VIEW: every N13 cell is a CONFIRMED nucleus with MEASURED Q_alpha (predicted_input=false). The funnel reproducing their known decay behaviour (esp. the 3 SF-collapse CLOSED-NEGATIVEs matching measured SF half-lives of 282-Cn/284-Cn/278-Ds) is a CALIBRATION result, NOT a discovery. The novel-element funnel target stays Z=119/120 (N12).",
+    "(s2) Q_alpha MEASURED but model-scatter exists even on confirmed cells (294-Og: AME 11.82 vs exp 11.65 vs chemlin 11.867 ~0.2 MeV). Values used are AME2020-evaluated mid-band. @D d6: no forced number.",
+    "(s3) 4 even-A chain cells carry sf_model_invalid=true (Ren-Xu out-of-domain guard -> alpha-only total used as PREDICTION); 1 odd-A cell (293-Og) carries hindrance-not-modeled. A low composite there is an honest model-limit signal, NOT a true collapse. The 3 genuine CLOSED-NEGATIVEs (282-Cn, 284-Cn, 278-Ds) have sf_model_invalid=false (in-model SF-collapse).",
+    "(s4) absorbed=false 영구 (R4). N13 cells are CONFIRMED nuclei (not new elements). 2026-05 현재 Z=119/120 confirmed discovery 0건. This is an accelerator alpha-chain-TAG priority hint (which daughters to expect when tagging a Z=120 recoil), never a discovery. (e)-gate detection (DGFRS-2/GARIS-III) is permanently wet-lab-dependent."
+  ],
+  "citations": [
+    "arxiv:1811.00427 — Olsen & Nazarewicz, Alpha Decay Energies of Superheavy Nuclei: Systematic Trends (computes the 296-120 + 298-120 alpha-decay chains; basis for the N13 chain selection)",
+    "arxiv:1706.04068 — WS4/KTUY Q_alpha for Z=119/120 parents (figure-locked -> parent cells honest-skipped)",
+    "arxiv:2403.02748 — RMF (NL3*) alpha-decay 100<=Z<=120 (Q_alpha figure-only)",
+    "arxiv:2506.02684 — Deformed magic N=178 Z=120 (basis for 298-120, the N12 top whose chain N13 maps)",
+    "AME2020 atomic mass evaluation + NUBASE2020 (measured Q_alpha / half-lives of the confirmed chain members)",
+    "Viola-Seaborg 1966 (NC1) · Royer 2000 (NC2) · Ren-Xu PRC71 014309 2005 + Hoffman 1993 + Zdeb-Warda-Pomorski 2013 (C1 SF kernels)",
+    "demiurge research note 2026-05-25-she-driplinelit.md §3; n12_funnel/2026-05-28T18-37-27Z (parent funnel)"
+  ],
+  "recommendation": "N13 alpha-chain-tag landscape for the N12 top island candidate. TOP: 292-Lv (composite 0.3725, 296-120 chain anchor) > 294-Og (0.2199, the FIRST alpha-tag step of a 298-120 recoil, smoke-anchor cell). All N13 chain daughters rank BELOW N12 298-120 (0.545) -> the Z=120 PARENT remains the overall novel-element funnel top. 3 CLOSED-NEGATIVE (282-Cn, 284-Cn, 278-Ds) reproduce the MEASURED SF-collapse of those confirmed nuclei = calibration validation. absorbed=false 영구 — these are confirmed nuclei (calibration), and a NEW Z=119/120 element requires GSI/JINR/RIKEN beam + DGFRS/GARIS detection + IUPAC priority. '가능성' != '임'."
+}

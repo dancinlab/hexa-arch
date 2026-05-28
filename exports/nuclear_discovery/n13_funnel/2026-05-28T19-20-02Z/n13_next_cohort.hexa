@@ -1,0 +1,100 @@
+// n13_next_cohort.hexa — NUCLEAR N13 funnel: next-cohort SHE candidate sweep.
+//
+// Sibling of the N12 next-cohort slice (n12_next_cohort.hexa) and the N11 G4
+// `_write_n11_novel_topk`. N12 ranked the Z=119/120 PARENT isotopes NOT in
+// N11 (298-120 = 0.545 top, OUT-ranking the entire N11 G4 cohort). N13
+// extends the funnel ALONG THE DECAY CHAIN of the N12 top island candidates
+// (298-120 and 296-120) — the alpha-chain daughters an accelerator must
+// pre-characterise for alpha-chain CORRELATION TAGGING of a Z=120 recoil.
+//
+// CRITICAL d6 SOURCING DECISION: the WS4/KTUY Q_alpha for the still-missed
+// Z=119/120 PARENT cells (294/298/301-119, 293/294-120) are figure-locked in
+// arxiv:1706.04068 / 2403.02748 (scatter-plot coords, no extractable decimal)
+// — so they are HONEST-SKIPPED here (no fabrication, @D d6). Instead N13
+// scores the DECAY-CHAIN MEMBERS, whose Q_alpha are MEASURED (AME2020 /
+// experimental synthesis) — strictly MORE rigorous than N12's predicted WS4
+// values. These are CONFIRMED nuclei: scoring them is funnel CALIBRATION +
+// alpha-tag landscape mapping, NEVER a discovery claim (R4 holds: a confirmed
+// nucleus is not a NEW element; the N13 funnel target is still Z=119/120).
+//
+// Q_alpha provenance (all MEASURED, AME2020-evaluated / experimental):
+//   294-Og  11.82  (AME2020; exp E_a-derived 11.65 JINR 2002/2005; chemlin 11.867)
+//   293-Og  11.92  (AME2020 systematics, neutron-rich Og)
+//   290-Lv  10.99  (AME2020 measured; 298-120 chain)
+//   292-Lv  10.78  (AME2020 measured; 296-120 chain)
+//   286-Fl  10.36  (AME2020 measured)
+//   288-Fl  10.07  (AME2020 measured)
+//   282-Cn  10.12  (AME2020 measured; SF-competing)
+//   284-Cn   9.60  (AME2020 measured; SF-dominant)
+//   278-Ds   9.57  (AME2020 measured)
+//
+// R4 invariant: gate_type=nuclear-novel-discovery-simulation · absorbed=false
+// 영구 (sim PASS = accelerator beam-time / alpha-tag priority hint, NEVER a
+// discovery). The novel-element funnel target stays Z=119/120 (N12).
+//
+// Run:  hexa run test/n13_next_cohort.hexa
+// Output: stdout panel (ROW|...) parsed by the harvester into top_k_next.json
+//         (mirror of n12_funnel/.../top_k_next.json schema).
+
+import "stdlib/nuclear/sim.hexa"
+
+// Accelerator band [lo,hi]=[-6,3] log10 s (identical to N11/N12 main / G4).
+let band_lo = 0.0 - 6.0
+let band_hi = 3.0
+let sigma = 6.0
+
+// One next-cohort cell: (Z,N,A,Q_alpha) → island-weighted (c)-gate composite.
+// Mirrors n12_row (stable machine-parsable ROW| line).
+fn n13_row(name: string, Z: int, N: int, A: int, Q_alpha_MeV: float) {
+    let s = n11_island_cell_checked(Z, N, A, Q_alpha_MeV, band_lo, band_hi, sigma)
+    let mv = _model_validity_code(Z, N)
+    let mut dom = "alpha"
+    if s.sf_dominates == 1 { dom = "SF" }
+    let mut sfinv = "false"
+    if s.sf_model_invalid == 1 { sfinv = "true" }
+    println("ROW|" + name +
+            "|Z=" + to_string(Z) +
+            "|N=" + to_string(N) +
+            "|A=" + to_string(A) +
+            "|Qa=" + to_string(Q_alpha_MeV) +
+            "|valid=" + to_string(s.valid) +
+            "|reason=" + _anz_reason_str(s.reason) +
+            "|Ltotal=" + to_string(s.log10_T_total_s) +
+            "|balpha=" + to_string(s.alpha_branching) +
+            "|ctotal=" + to_string(s.c_total_score) +
+            "|island=" + to_string(s.island_weight) +
+            "|composite=" + to_string(s.composite_score) +
+            "|dom=" + dom +
+            "|sf_model_invalid=" + sfinv +
+            "|mv=" + _model_validity_str(mv))
+}
+
+println("== NUCLEAR N13 next-cohort funnel (MEASURED Q_alpha · AME2020 decay-chain of N12 top 298-120/296-120) ==")
+println("== install-FREE (c)-gate: NC1 Viola-Seaborg + NC2 Royer + C1 alpha-SF + C2 island_weight ==")
+println("== R4: gate_type=nuclear-novel-discovery-simulation · absorbed=false 영구 ==")
+
+// ── 298-120 alpha-decay chain (N12 top island candidate; alpha-tag landscape) ──
+// 294-Og  N=176  Q_a 11.82 MeV  (AME2020; exp 11.65; the smoke-test anchor cell)
+n13_row("294-Og", 118, 176, 294, 11.82)
+// 290-Lv  N=174  Q_a 10.99 MeV  (AME2020 measured)
+n13_row("290-Lv", 116, 174, 290, 10.99)
+// 286-Fl  N=172  Q_a 10.36 MeV  (AME2020 measured)
+n13_row("286-Fl", 114, 172, 286, 10.36)
+// 282-Cn  N=170  Q_a 10.12 MeV  (AME2020 measured; SF-competing)
+n13_row("282-Cn", 112, 170, 282, 10.12)
+// 278-Ds  N=168  Q_a  9.57 MeV  (AME2020 measured)
+n13_row("278-Ds", 110, 168, 278, 9.57)
+
+// ── 296-120 alpha-decay chain sibling (other N12-top neighbor) ──
+// 292-Lv  N=176  Q_a 10.78 MeV  (AME2020 measured)
+n13_row("292-Lv", 116, 176, 292, 10.78)
+// 288-Fl  N=174  Q_a 10.07 MeV  (AME2020 measured)
+n13_row("288-Fl", 114, 174, 288, 10.07)
+// 284-Cn  N=172  Q_a  9.60 MeV  (AME2020 measured; SF-dominant)
+n13_row("284-Cn", 112, 172, 284, 9.60)
+
+// ── neutron-rich Og neighbor (Z=118 chain edge) ──
+// 293-Og  N=175  Q_a 11.92 MeV  (AME2020 systematics)
+n13_row("293-Og", 118, 175, 293, 11.92)
+
+println("== END N13 ==")
