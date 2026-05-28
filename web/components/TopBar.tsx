@@ -1,41 +1,77 @@
-// TopBar — Q3 상단 · 프로젝트 selector · 사용자 · /admin (role=admin 만).
-// PR#35: client component → layout 이 더 이상 async server fetch 안 함 →
-// SPA navigation 시 layout 전체 re-render 없음 (children 만 swap).
-// /api/v1/me 한 번 fetch 후 로컬 캐시.
-
-"use client";
+// TopBar — server component. Pure presentation: user, activeDomain, and i18n
+// strings all come as props from (app)/layout.tsx.
+// shadcn Modern 톤: accent = gray-900 (검정).
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-type Me = { authenticated: boolean; email?: string; role?: string };
+type TopBarUser = { email: string; role?: string };
 
-export function TopBar() {
-  const [me, setMe] = useState<Me | null>(null);
-  useEffect(() => {
-    let live = true;
-    fetch("/api/v1/me")
-      .then((r) => (r.ok ? r.json() : { authenticated: false }))
-      .then((d: Me) => { if (live) setMe(d); })
-      .catch(() => { if (live) setMe({ authenticated: false }); });
-    return () => { live = false; };
-  }, []);
+type TopBarI18n = {
+  topbarDomains: string;
+  topbarActiveProject: string;
+  topbarSignIn: string;
+  topbarAdmin: string;
+};
 
+export function TopBar({
+  user,
+  activeDomain,
+  i18n,
+}: {
+  user: TopBarUser | null;
+  activeDomain: string | null;
+  i18n: TopBarI18n;
+}) {
+  // ara 톤: gray 회색조 + indigo accent + Cormorant 세리프 로고.
   return (
-    <header className="flex items-center gap-3 border-b border-neutral-300 bg-white px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-950">
-      <Link href="/dashboard" className="font-bold">📐 demiurge</Link>
+    <header className="flex items-center gap-3 border-b border-gray-200 bg-white px-5 py-3 text-sm">
+      <Link
+        href="/dashboard"
+        className="font-serif text-lg font-semibold tracking-tight text-gray-900 hover:text-gray-900"
+      >
+        📐 demiurge
+      </Link>
+      {activeDomain && (
+        <>
+          <span className="text-gray-300" aria-hidden="true">/</span>
+          <Link
+            href={`/dashboard?d=${encodeURIComponent(activeDomain)}`}
+            title={i18n.topbarActiveProject}
+            className="rounded-full bg-gray-100 px-2 py-0.5 font-mono text-xs text-gray-900 hover:bg-gray-200"
+          >
+            {activeDomain}
+          </Link>
+        </>
+      )}
       <span className="flex-1" />
-      <Link href="/library" className="text-xs hover:underline">📖 library</Link>
-      <Link href="/matter" className="text-xs hover:underline">⚖️ matter</Link>
-      {me?.role === "admin" && (
-        <Link href="/admin" className="rounded border border-red-400 px-2 py-0.5 text-xs text-red-500">
-          ⚙️ /admin
+      <Link
+        href="/dashboard"
+        className="rounded-full px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+      >
+        {i18n.topbarDomains}
+      </Link>
+      {user?.role === "admin" && (
+        <Link
+          href="/admin"
+          className="rounded-full border border-rose-200 bg-rose-50 px-2 py-1 text-xs text-rose-700 hover:bg-rose-100"
+        >
+          ⚙️ {i18n.topbarAdmin}
         </Link>
       )}
-      {me?.authenticated ? (
-        <Link href="/account" className="text-xs">{me.email}</Link>
+      {user ? (
+        <Link
+          href="/account"
+          className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-200"
+        >
+          {user.email}
+        </Link>
       ) : (
-        <Link href="/signin" className="text-xs hover:underline">sign in</Link>
+        <Link
+          href="/signin"
+          className="rounded-full bg-gray-900 px-3 py-1 text-xs font-medium text-white hover:bg-gray-800"
+        >
+          {i18n.topbarSignIn}
+        </Link>
       )}
     </header>
   );

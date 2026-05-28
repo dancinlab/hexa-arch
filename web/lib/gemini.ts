@@ -49,10 +49,58 @@ async function fetchTokenFromMetadata(): Promise<string | null> {
   }
 }
 
+// Local dev: refresh a token by reading the ADC file directly and hitting the
+// OAuth token endpoint — NO gcloud subprocess (which hangs ~8s under a
+// nohup/GUI-launched server with a stripped PATH). Pure fetch · ~0.3s · cached
+// until ~1min before expiry. Prod never hits this (metadata server path).
+// Solves "token expires after 1h → 401" with zero manual refresh / restart.
+async function fetchTokenFromADC(): Promise<string | null> {
+  if (process.env.NODE_ENV === "production") return null;
+  try {
+    const os = await import("node:os");
+    const fsp = await import("node:fs/promises");
+    const nodePath = await import("node:path");
+    const adcPath =
+      process.env.GOOGLE_APPLICATION_CREDENTIALS ??
+      nodePath.join(os.homedir(), ".config/gcloud/application_default_credentials.json");
+    const adc = JSON.parse(await fsp.readFile(adcPath, "utf8")) as {
+      type?: string;
+      client_id?: string;
+      client_secret?: string;
+      refresh_token?: string;
+    };
+    if (adc.type !== "authorized_user" || !adc.refresh_token) return null;
+    const res = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: adc.client_id ?? "",
+        client_secret: adc.client_secret ?? "",
+        refresh_token: adc.refresh_token,
+        grant_type: "refresh_token",
+      }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { access_token: string; expires_in: number };
+    cachedToken = {
+      token: body.access_token,
+      expiresAt: Date.now() + (body.expires_in - 60) * 1000,
+    };
+    return body.access_token;
+  } catch {
+    return null;
+  }
+}
+
 async function getAccessToken(): Promise<string> {
   if (cachedToken && cachedToken.expiresAt > Date.now()) {
     return cachedToken.token;
   }
+  // Dev first: ADC OAuth refresh is always fresh (an env token can go stale at 1h).
+  const adcToken = await fetchTokenFromADC();
+  if (adcToken) return adcToken;
+
   const envToken = process.env.GOOGLE_ACCESS_TOKEN;
   if (envToken) return envToken;
 

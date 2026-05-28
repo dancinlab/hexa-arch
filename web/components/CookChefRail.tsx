@@ -1,18 +1,45 @@
-// CookChefRail — Q9 항상 펼침 🧑‍🍳 AI 요리선생 좌측 ② 컬럼.
-// Thin client wrapper over existing AssistChat — preserves Gemini call chain.
+// CookChefRail — server component. i18n strings flow as props.
+// shadcn Modern 톤. AssistChat 본체에 chat i18n + locale 전달.
 
-import { AssistChat } from "./AssistChat";
+import { AssistChat, type ChatI18n } from "./AssistChat";
 
-export function CookChefRail({ domain }: { domain: string }) {
+type ChefI18n = {
+  chefTitle: string;
+  chefAwaiting: string;
+  chefReady: string;
+};
+
+export function CookChefRail({
+  domain,
+  i18n,
+  chatI18n,
+  locale,
+}: {
+  domain: string;
+  i18n: ChefI18n;
+  chatI18n: ChatI18n;
+  locale: string;
+}) {
   return (
-    <aside className="flex h-full flex-col rounded border border-neutral-300 bg-white p-3 text-sm dark:border-neutral-700 dark:bg-neutral-900">
-      <header className="mb-2 flex items-center gap-2 border-b border-neutral-200 pb-2 dark:border-neutral-800">
-        <span className="text-lg">🧑‍🍳</span>
-        <span className="font-bold">요리선생</span>
-        <span className="ml-auto text-xs text-neutral-500">always on</span>
+    <aside className="flex h-full flex-col p-3 text-sm">
+      <header className="mb-2 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <span className="text-lg" aria-hidden="true">🧑‍🍳</span>
+        <div className="flex flex-col leading-tight">
+          <span className="font-serif text-base font-semibold text-gray-900">{i18n.chefTitle}</span>
+          {domain ? (
+            <span className="font-mono text-[10px] text-gray-500">· {domain}</span>
+          ) : (
+            <span className="text-[10px] text-gray-400">{i18n.chefAwaiting}</span>
+          )}
+        </div>
+        <span
+          className="ml-auto h-2 w-2 rounded-full bg-emerald-500"
+          title={i18n.chefReady}
+          aria-label={i18n.chefReady}
+        />
       </header>
-      <div className="flex-1 overflow-auto">
-        <AssistChat note={domain} />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <AssistChat note={domain} i18n={chatI18n} locale={locale} />
       </div>
     </aside>
   );
