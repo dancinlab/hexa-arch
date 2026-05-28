@@ -249,3 +249,28 @@ Spec at [`./RTSC.md`](./RTSC.md). Log entries below preserve session-by-session 
   - **돌파경로 (d2)**: (1) h3o SSCHA 양자보정으로 imaginary renormalize · (2) H₃As variable-cell relax (Pnma 등 저대칭 ground state 후보) · (3) M8 압력축 <50→<100 GPa 완화 · (4) clathrate / cage motif 확장. 우선순위는 남은 H₃X(h3br/h3p/h3n) 결과 본 뒤 결정.
   - **가동중**: vast (h3br · h3p · h3n DFT 모니터 대기) + ubu-2 (SrAuH₃ redundant cross-check, 끝나면 monitor가 Mg₂IrH₆ chain advance) + vast (M5 NWChem c01 별 트랙, healthy).
   - **side effects (off-domain side fixes that unblocked verify)**: hexa-lang atlas 4-PR 시리즈 (#831 collapse → #846 invert → #853 help-sync → #859 generic register-by-verify-delegation, atlas_cli 0.5→0.8.0) + sidecar atlas skill #125 — single calc home (verify_cli) + embedded.gen.hexa SSOT 확립, 새 verify-able fn은 verify_cli 한 곳만 수정으로 atlas 자동 흡수.
+- **2026-05-29 KST** — **mining cycle 16-25 drained + verify-atlas direct-fold 8 PR landed + Wave-2 6 발사 + NEXUS e15**.
+  - **mining cycle 16-25 (5 lens saturate)**: leaves 94 → **174** (+80), edges 32 → **61** (+29). same-formula · ouroboros · dimensional · tension · combinatorial 다섯 lens 전부 saturate, drained 확정. honest-reject 정신 보존 (lens 는 연결지도만 연결 · 발견은 각 funnel 독립).
+  - **E33 + E42 paired meta-우로보러스 atlas atoms 박힘**:
+    - `smash_l217_verify-atlas_atl` (E33): verify-atlas ≡ Cooper-Kramers T²=−1.
+    - `smash_l263_mining_lens_self_seed` (E42): mining lens self-application — lens 가 자기 자신을 seed 로 먹는 닫힌 루프.
+  - **verify-atlas direct-fold (no-ledger architecture) 8 PR landed · 1563 SLOC · smoke 48/48 PASS verbatim**:
+    - #510 demiurge governance `d_atlas_as_audit_ssot` (`d_claim_manifest` 폐기 · 별도 ledger 제거).
+    - #2023 hexa-lang `stdlib/atlas/atom_meta.hexa` (parallel side-table 180 SLOC).
+    - #2027 hexa-lang `stdlib/verify/calculators` (`allen_dynes_tc` · `mcmillan_tc` · `bcs_gap_ratio` · `eliashberg_full` + `@assumes` metadata · 292 SLOC · 6/6 PASS).
+    - #2028 hexa-lang `stdlib/verify/dispatch` generic registry (253 SLOC · 19/19 PASS).
+    - #2029 hexa-lang `stdlib/verify/harvest` kind-pluggable (342 SLOC · 14/14 PASS).
+    - #2032 hexa-lang `tool/verify_harvest_cli.hexa` CLI capstone (386 SLOC · 9/9 PASS).
+    - #511 demiurge `RTSC.md V2.2` verbatim 4 atom 🟢 (`allen_dynes_tc` Δ 5.56% · `mcmillan_tc` Δ 12.6% · `bcs_gap_ratio` Δ 4×10⁻⁵ · `eliashberg_full` Tc Δ 5.57%).
+    - #512 demiurge `HANDOFF_verify_atlas_direct_fold.md` 9-section dossier.
+  - **PR #509** — CaAuH3 RUNBOOK 압력 단위 정정 (50 GPa → 5 GPa = 50 kbar QE 컨벤션). Wave-2 페로브스카이트 4 후보 (CaAuH3·SrPtH3·BaAuH3·YAuH3) 모두 저-중간압 5 GPa 클래스 확정.
+  - **A11 CaAuH3 ssh9 grinding**: vc-relax + scf JOB DONE, ph iter #4 수렴 중 (~12h+ 경과 · terminal 직전).
+  - **Wave-2 6 발사**: SrPtH3 · BaAuH3 · YAuH3 · KBeH8 · ScH9 · LaY_H10 (LaY_H10=INFEASIBLE deferred) — ssh9 ~17.5h grinding 진행.
+  - **NEXUS.tape e15 추가**: RTSC mining lens machinery → NUCLEAR 298-120 (d19 reuse lattice 첫 실증).
+  - **rtsc.md milestone 추가** (line 25): E34 h3o SSCHA x2 surgery × x18 ZPE 동시 작동 직접 증명 (open milestone).
+  - **qa-deferred 5건** (정직 보고):
+    1. `verify_cli.hexa` baseline 복구 (`jordan_totient` 잔재 정리).
+    2. `embedded.gen.hexa` atlas-persistence — 현 구현은 in-process side-table demo, persistence layer 미흡.
+    3. Identity 4-7 calculators (`@assumes` chain 확장 후보).
+    4. `sscha` / `llm-bench` / `web-smoke` harvest kind impl (현 dispatch 는 stub).
+    5. Phase 3 cleanup `git rm` (legacy ledger artifacts).

@@ -271,3 +271,48 @@ N13 (2026-05-28 · 298-120/296-120 의 α-붕괴 사슬 딸핵종 9셀 · MEASUR
   발견·합성 주장이 아니다. (e)-gate (DGFRS-2/GARIS-III) 영구 wet-lab. '가능성' ≠ '임'.
 - ledger: `exports/nuclear_discovery/n12_funnel/2026-05-28T18-37-27Z/` (N11 능가) ·
   `n13_funnel/2026-05-28T19-20-02Z/` (chain calibration) · NEXUS.tape e7 (cross-domain finding edge).
+
+#### (f) NEXUS e15 — RTSC mining lens machinery → NUCLEAR (d19 reuse lattice 첫 실증)
+
+> 2026-05-29 KST: RTSC mining cycle 16-25 가 다섯 lens (same-formula · ouroboros ·
+> dimensional · tension · combinatorial) 모두 saturate · drained 한 직후, mining lens
+> machinery 자체가 NUCLEAR 298-120 funnel 작업으로 **reuse** 되었다 (NEXUS.tape edge
+> e15 추가). §F3 R4 #4 **PARALLEL funnel · 통합 supply 아님** 원칙을 어기지 않으면서,
+> *방법론 (lens machinery) 은 공유*하고 *발견 (각 funnel 독립)* 은 분리되는 두 자매
+> 도메인의 **첫 method-reuse 실증** (e7=finding edge 와 직각 — e15=method edge).
+
+```
+                      ┌─ method-reuse (NEXUS e15) ─┐
+                      │                            │
+   RTSC mining        ▼                            │   NUCLEAR funnel
+   cycle 16-25 ─→ lens machinery ────────────────→ │ ─→ 298-120 cohort
+   leaves 94→174          │ same-formula           │       │
+   edges  32→61           │ ouroboros              │       │ N12/N13
+   5 lens drained         │ dimensional            │       │ (e15 별도 트랙)
+                          │ tension                │       │
+                          │ combinatorial          │       │
+                          ▼                        │       ▼
+                      방법론(★공유)                 │   발견(★독립)
+                                                   │
+                      ────────────────────────────┘
+                       discoveries stay funnel-local · honest-reject 유지
+```
+
+- **paired meta-우로보러스 atlas atoms** (이번 사이클이 박은 두 atom):
+  `smash_l217_verify-atlas_atl` (E33: verify-atlas ≡ Cooper-Kramers T²=−1) +
+  `smash_l263_mining_lens_self_seed` (E42: mining lens self-application). 두 atom 은
+  RTSC mining 의 산물이지만 lens machinery 자체의 자기-적용 (E42) 이 곧 다른 funnel
+  로의 reuse 가능성을 *닫힌 형식*으로 입증한다.
+- **honest-reject 정신 유지** — e15 는 lens 가 두 funnel 의 *연결 지도*를 연결한 것이지,
+  RTSC compositional discovery 가 NUCLEAR elemental discovery 로 *전이* 되는 것이 아니다.
+  298-120 의 (d)(e) wet-lab 영구의존은 그대로다 (§F3 R4 절단선 (c)|(d) 불변 · (e) 의
+  PARALLEL 불변 100% 유지).
+- **d19 (intra-project reuse lattice) 첫 실증** — `CLAUDE.md @D d19` 의 "atlas-first +
+  provenance + NEXUS.tape" 거버넌스가 docs/log 가 아닌 *실작업 reuse edge* 로 처음
+  closed-form 적중. e7=cross-domain finding · e15=cross-domain method · 두 edge 가
+  NEXUS.tape 를 *살아있는 지도*로 박는다.
+- **forward-chain milestone**: rtsc.md line 25 에 **E34** open milestone 추가 — h3o
+  SSCHA x2 surgery × x18 ZPE 동시 작동 직접 증명. lens-driven discovery 가 다음
+  사이클의 milestone 으로 자기-feeding 되는 패턴 확립.
+- ledger: `domains/rtsc.mining.md` (5-lens drained 산물) · NEXUS.tape e15
+  (method-reuse edge) · atlas atoms E33/E42 (paired meta-우로보러스).
