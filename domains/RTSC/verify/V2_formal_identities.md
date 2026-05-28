@@ -396,3 +396,168 @@ verify --expr bcs_gap_ratio()=3.52775
 - timestamp: 2026-05-24T07:06Z (본문) · 2026-05-25 (V2.1 갱신)
 - domain: RTSC (room-temperature superconductivity)
 - governance: @D d1 (non-wet-lab → completed-form: V2 = closed-form replay) · @D d2 (wall surface paths, never concede: gap finding 으로 path forward 명시 → V2.1 에서 실현) · g5 (verdict verbatim) · g_atlas_binary_builtin (atlas register PR-only)
+
+---
+
+## V2.2 — PR-hx5 verify-harvest-CLI replay (2026-05-29)
+
+PR-hx5 chain (hexa-lang #2023 + #2027 + #2028 + #2029 + #2032) 으로 verify-atlas direct-fold 파이프라인 (`harvest → dispatch → tier → AtomMeta`) 이 end-to-end 작동. V2.1 에서 식별된 gap 이 stdlib `stdlib/verify/{calculators,dispatch,harvest}` + `stdlib/atlas/atom_meta` 로 닫혔고, 새 CLI `tool/verify_harvest_cli.hexa` 가 V2 7 identity 중 3개 (Identity 1, 2, 3) 와 보너스 1개 (Identity 4 변형: eliashberg_full Tc) 를 verbatim emit.
+
+### Identity 1 — Allen-Dynes Tc (PR-hx5 replay · verbatim)
+
+```
+hexa run tool/verify_harvest_cli.hexa \
+    --harvest /tmp/rtsc_replay_id1 --kind dft-elph --fn allen_dynes_tc \
+    --domain rtsc --material h3o \
+    --expected 181.16 --falsifier F-RTSC-AD-1
+```
+
+input fixture (ph.out mock): `lambda=2.5  omega_log=1100.0 K`
+
+verdict (verbatim):
+
+```
+HARVEST: 2 metrics extracted
+    lambda = 2.5
+    omega_log_K = 1100.0
+DISPATCH: allen_dynes_tc[1100.0, 2.5, 0.13] = 171.086
+TIER: 🟢 GATE_CLOSED_MEASURED (code=G)
+  value     = 171.086
+  expected  = 181.16
+  rel_err   = 0.0556103
+ATOM_META (in-process side-table fold):
+  atom_id    = allen_dynes_tc::1100.0::2.5::0.13
+  domain     = rtsc
+  material   = h3o
+  tier       = G
+  timestamp  = 2026-05-28T21:52:19Z
+  assumes    = [BCS-strong-coupling, Migdal-approximation (Omega_ph << E_F), harmonic-near-equilibrium, isotropic-Fermi-surface, Morel-Anderson mu_star renormalisation]
+  recipe     = hexa run tool/verify_harvest_cli.hexa --harvest /tmp/rtsc_replay_id1 --kind dft-elph --fn allen_dynes_tc --domain rtsc --material h3o
+  provenance = Allen-Dynes 1975 Phys.Rev.B 12 905 · plain form
+  falsifier  = F-RTSC-AD-1
+  store_len  = 1
+__VERIFY_HARVEST__ GREEN_MEASURED
+```
+
+**TIER 변경**: V2 본문 🟠 INSUFFICIENT → V2.2 🟢 GATE_CLOSED_MEASURED. rel_err 5.56 % (μ\*=0.13 default; V2 본문은 μ\*=0.10 사용했으므로 정합 오차).
+
+### Identity 2 — McMillan Tc (PR-hx5 replay · verbatim)
+
+```
+hexa run tool/verify_harvest_cli.hexa \
+    --harvest /tmp/rtsc_replay_id2 --kind dft-elph --fn mcmillan_tc \
+    --domain rtsc --material h3s \
+    --expected 148 --falsifier F-RTSC-MM-2
+```
+
+input fixture: `lambda=2.0  omega_log=1500.0 K`
+
+verdict (verbatim):
+
+```
+HARVEST: 2 metrics extracted
+    lambda = 2.0
+    omega_log_K = 1500.0
+DISPATCH: mcmillan_tc[1500.0, 2.0, 0.13] = 166.636
+TIER: 🟢 GATE_CLOSED_MEASURED (code=G)
+  value     = 166.636
+  expected  = 148.0
+  rel_err   = 0.125922
+ATOM_META (in-process side-table fold):
+  atom_id    = mcmillan_tc::1500.0::2.0::0.13
+  domain     = rtsc
+  material   = h3s
+  tier       = G
+  timestamp  = 2026-05-28T21:52:26Z
+  assumes    = [BCS-conventional-coupling (lambda <= 1.5), Debye-cutoff approximation (Theta_D scale), harmonic-near-equilibrium, isotropic-Fermi-surface, Morel-Anderson mu_star renormalisation]
+  recipe     = hexa run tool/verify_harvest_cli.hexa --harvest /tmp/rtsc_replay_id2 --kind dft-elph --fn mcmillan_tc --domain rtsc --material h3s
+  provenance = McMillan 1968 Phys.Rev. 167 331
+  falsifier  = F-RTSC-MM-2
+  store_len  = 1
+__VERIFY_HARVEST__ GREEN_MEASURED
+```
+
+**TIER 변경**: V2 본문 🟠 → V2.2 🟢. rel_err 12.6 % (보수적 ±20 % 안에 정합).
+
+### Identity 3 — BCS gap-Tc universal ratio (PR-hx5 replay · verbatim)
+
+```
+hexa run tool/verify_harvest_cli.hexa \
+    --harvest <any> --kind dft-elph --fn bcs_gap_ratio \
+    --domain rtsc --material universal \
+    --expected 3.5279 --falsifier F-RTSC-BCS-3
+```
+
+verdict (verbatim, closed-form precision):
+
+```
+DISPATCH: bcs_gap_ratio[] = 3.52775
+TIER: 🟢 GATE_CLOSED_MEASURED (code=G)
+  value     = 3.52775
+  expected  = 3.5279
+  rel_err   = 4.13907e-05
+ATOM_META (in-process side-table fold):
+  atom_id    = bcs_gap_ratio
+  domain     = rtsc
+  material   = universal
+  tier       = G
+  timestamp  = 2026-05-28T21:52:31Z
+  assumes    = [BCS-weak-coupling, s-wave-pairing, clean-limit (l >> xi_0), isotropic-Fermi-surface, phonon-mediated-attraction]
+  recipe     = hexa run tool/verify_harvest_cli.hexa --harvest /tmp/rtsc_replay_id2 --kind dft-elph --fn bcs_gap_ratio --domain rtsc --material universal
+  provenance = BCS 1957 Phys.Rev. 108 1175 · 2pi·exp(-gamma_E)
+  falsifier  = F-RTSC-BCS-3
+  store_len  = 1
+__VERIFY_HARVEST__ GREEN_MEASURED
+```
+
+**TIER 변경**: V2 본문 🟠 → V2.2 🟢. rel_err 4·10⁻⁵ (libm exp precision floor); expected 만 4-digit 입력이라 deviate, 5-digit 입력시 🔵 SUPPORTED-FORMAL 도달.
+
+### Identity 4 (bonus) — Eliashberg full strong-coupling Tc
+
+PR-hx2 가 신설한 `eliashberg_full(omega_log, omega2, lambda, mu_star)` 은 V2 의 "Identity 4 Eliashberg λ from α²F" 와 **다른 시그니처** (Eliashberg-form Tc, Allen-Dynes 1975 f₁·f₂ correction 포함). 즉 V2 Identity 4 의 `lambda_eliashberg` (spectral integral) 은 여전히 본 chain 에 부재 — 별 PR 필요.
+
+bonus run (h3o 동일 fixture, expected=188 K Allen-Dynes lit value):
+
+```
+DISPATCH: eliashberg_full[1100.0, 1100.0, 2.5, 0.13] = 198.465
+TIER: 🟢 GATE_CLOSED_MEASURED (code=G)
+  value     = 198.465
+  expected  = 188.0
+  rel_err   = 0.0556636
+__VERIFY_HARVEST__ GREEN_MEASURED
+```
+
+### Identity 5-7 — 여전히 🟠 INSUFFICIENT (honest d6)
+
+- `omega_log_moment(N1, N2)`        — α²F 의 log-mean integral; calculator 부재
+- `beenet_grid_bins(N_pillars, σ)`  — divisor count grid invariant; calculator 부재
+- `migdal_ratio(omega_log, E_F)`    — adiabatic ratio dimensionless; calculator 부재
+
+세 식 모두 stdlib/verify/calculators registry 에 부재하므로 dispatch_known = false → CLI 가 ERROR. honest gap (d6).
+
+### V2.2 outcome 매트릭스
+
+| Identity | V2 본문 tier | V2.1 갱신 tier | **V2.2 PR-hx5 tier** | rel_err |
+|---|---|---|---|---|
+| 1 allen_dynes_tc | 🟠 INSUFFICIENT | 🟢 (V2.1 outlined) | **🟢 GATE_CLOSED_MEASURED** | 5.56 % |
+| 2 mcmillan_tc | 🟠 | 🟢 | **🟢 GATE_CLOSED_MEASURED** | 12.6 % |
+| 3 bcs_gap_ratio | 🟠 | 🟢 | **🟢 GATE_CLOSED_MEASURED** | 4·10⁻⁵ |
+| 4 lambda_eliashberg | 🟠 | 🟢 | **🟠 — 시그니처 다름 (bonus eliashberg_full Tc 는 🟢)** | n/a |
+| 5 omega_log_moment | 🟠 | 🟢 (outlined) | **🟠 — calculator 부재 (honest)** | n/a |
+| 6 beenet_grid_bins | 🟠 | 🟢 | **🟠 — calculator 부재** | n/a |
+| 7 migdal_ratio | 🟠 | 🟢 | **🟠 — calculator 부재** | n/a |
+| 8 SPECULATION | ⚪ | ⚪ | ⚪ (unchanged) | n/a |
+
+**3/7 🟢 도달** (verbatim verdict 박힘) · 4/7 still 🟠 (honest gap, d6) · 1 ⚪ unchanged. V2 본문의 main outcome ("calculator gap 의 정량 식별") 은 PR-hx5 chain 으로 3 식 닫힘.
+
+### 아키텍처 변경 — AtomMeta direct-fold
+
+V2 본문은 `hexa atlas register --from-verify <fn> <args> <v>` 로 atlas 등록을 시도 (대부분 🟠 reject). V2.2 부터는 `project.tape` `d_atlas_as_audit_ssot` (PR #510) 에 따라 **atlas 가 단일 audit SSOT** — 새 CLI 의 AtomMeta in-process side-table fold 가 미래 atlas-persistence (별 PR) 의 dry-run.
+
+### Provenance (V2.2)
+
+- hexa-lang chain merged: PR #2023 (atom_meta) · PR #2027 (calculators) · PR #2028 (dispatch) · PR #2029 (harvest) · PR #2032 (CLI capstone)
+- demiurge governance: PR #510 (d_atlas_as_audit_ssot)
+- timestamp: 2026-05-29 (PR-dm2 replay)
+- worktree: `feat/rtsc-v2-verify-harvest-replay` (PR-dm2)
+- governance: @D d1 · @D d6 (honest gap) · g5 (verdict verbatim, 4 atom 모두 직접 CLI 출력 mirror)
