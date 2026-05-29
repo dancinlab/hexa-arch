@@ -1,0 +1,171 @@
+// cli/demiurge_cli.hexa — demiurge 의 hexa-native CLI 진입점 (g1).
+//
+// 스위프트 `cockpit/Sources/DemiurgeCLI/main.swift` 를 대체하는 hexa-native
+// 코어. `demiurge cli <verb>` 사용자 표면을 그대로 보존하며, `bin/demiurge`
+// 가 (parity 도달 후) 이 바이너리로 라우팅한다. 그 전까지 스위프트가 라이브.
+//
+// 정규 패턴 (tool/*_cli.hexa → bin/hexa-* 와 동일):
+//   - args() 로 argv 를 읽고, _slice_args() 가 verb 부터의 슬라이스를 만든다
+//     (직접 실행 `demiurge_cli <verb>` · `hexa run cli/demiurge_cli.hexa <verb>`
+//      두 경우 모두 처리 — env.hexa 의 .hexa-경로 토큰 감지 관용구를 따른다).
+//   - VERB 레지스트리(데이터 테이블)가 SSOT — 추가/이름변경/삭제는 manifest-only.
+//     generic 층은 verb 이름으로 분기하지 않고, 레지스트리를 순회해 검증한
+//     뒤 단일 dispatch 지점으로 넘긴다 (@D d4 — 단일 generic dispatch).
+//
+// 이식 상태: PR1 = 스캐폴드 + generic dispatcher + `version` verb 만.
+//   discover/synth/action/analyze/llm/atlas/… 는 후속 스택 PR 에서 verb-그룹별.
+//   parity 도달 전까지 bin/demiurge 는 스위프트 CLI 로 라우팅 (절반-전환 금지).
+
+// 스위프트 코어와 동일한 버전 단일출처 (#516 — 래퍼/코어 표면 일치 보존).
+let DEMIURGE_CLI_VERSION = "0.0.2 (phase α-3 + β, read-only — rfc_011 §10)"
+
+// ── VERB 레지스트리 (데이터 테이블 · d4 SSOT) ──────────────────────────────
+//
+// 각 행 = { name, summary }. generic 층은 이 테이블만 보고 검증/usage 를
+// 렌더한다. 새 verb 이식 = 이 테이블에 한 줄 추가 + dispatch 한 줄
+// (per-verb 하드코딩을 generic 층에 두지 않는다).
+type VerbSpec := {
+  name:    string,
+  summary: string,
+  ported:  bool      // true = hexa-native 구현 완료, false = 아직 스위프트
+}
+
+fn _verb_registry() -> [VerbSpec] {
+  return [
+    VerbSpec { name: "version",         summary: "버전 배너 출력",                         ported: true },
+    // ── 후속 스택 PR 에서 ported:true 로 전환 ──
+    VerbSpec { name: "list-all",        summary: "모든 종류 아티팩트 나열",                ported: false },
+    VerbSpec { name: "list-records",    summary: "exports/ F1F2 레코드 나열",              ported: false },
+    VerbSpec { name: "list-decisions",  summary: "design.md 결정 나열",                    ported: false },
+    VerbSpec { name: "list-rfcs",       summary: "proposals/rfc_*.md 나열",                ported: false },
+    VerbSpec { name: "list-domains",    summary: "domains/*.md 나열",                      ported: false },
+    VerbSpec { name: "show",            summary: "F1F2 레코드 1건 + provenance",           ported: false },
+    VerbSpec { name: "list-projects",   summary: "워크벤치 프로젝트 나열",                 ported: false },
+    VerbSpec { name: "show-project",    summary: "프로젝트 1건 + 7-verb 진행도",           ported: false },
+    VerbSpec { name: "project",         summary: "프로젝트 new|advance|retreat",           ported: false },
+    VerbSpec { name: "list-shelf",      summary: "도메인 §6 ingredient shelf",             ported: false },
+    VerbSpec { name: "action",          summary: "θ-2 액션 dispatch (verb · domain)",      ported: false },
+    VerbSpec { name: "discover",        summary: "8-verb head — phanes-bridged 발견",      ported: false },
+    VerbSpec { name: "list-gates",      summary: "gate 별 F1F2 레코드",                    ported: false },
+    VerbSpec { name: "gate-summary",    summary: "gate + absorbed 합계",                   ported: false },
+    VerbSpec { name: "operate",         summary: "operation manifest list|audit",          ported: false },
+    VerbSpec { name: "backend",         summary: "compute backend list|current",           ported: false },
+    VerbSpec { name: "compose",         summary: "도메인 → 구성 스택 해소",                ported: false },
+    VerbSpec { name: "verify",          summary: "provenance/claim-gate · hexa verify",    ported: false },
+    VerbSpec { name: "atlas",           summary: "hexa atlas SSOT 읽기/owner-write",       ported: false },
+    VerbSpec { name: "owner",           summary: "owner-mode (사장실) 상태",               ported: false },
+    VerbSpec { name: "llm",             summary: "AI 연결 (Claude/Codex/Gemini)",          ported: false },
+    VerbSpec { name: "emit-component",  summary: "BIPV 컴포넌트 아티팩트 emit",            ported: false },
+    VerbSpec { name: "export-component",summary: "번들 geometry export (usda|stl)",        ported: false }
+  ]
+}
+
+// ── argv 슬라이싱 — verb 부터의 슬라이스 (직접 실행 + hexa run 양쪽) ──────────
+fn _slice_args() -> array {
+  let av = args()
+  let n = len(av)
+  let mut i = 1
+  while i < n {
+    let a = to_string(av[i])
+    // `hexa run cli/demiurge_cli.hexa <verb> ...` 경우: 스크립트 경로 토큰
+    // 다음부터가 사용자 인자.
+    if a.ends_with("/demiurge_cli.hexa") || a.ends_with("demiurge_cli.hexa") {
+      let mut out = []
+      let mut j = i + 1
+      while j < n { out.push(to_string(av[j])); j = j + 1 }
+      return out
+    }
+    i = i + 1
+  }
+  // 직접 실행 (`demiurge_cli <verb> ...`): argv[0]=binary, argv[1..]=사용자 인자.
+  let mut out = []
+  let mut j = 1
+  while j < n { out.push(to_string(av[j])); j = j + 1 }
+  return out
+}
+
+// ── usage — VERB 레지스트리(데이터)에서 직접 렌더 ────────────────────────────
+fn _usage() {
+  println("demiurge — Demiurge hexa-native CLI")
+  println("")
+  println("USAGE: demiurge cli <verb> [args]")
+  println("")
+  let reg = _verb_registry()
+  let mut i = 0
+  while i < len(reg) {
+    let v = reg[i]
+    let mark = if v.ported { "  " } else { "· " }   // ·  = 스위프트 폴백 (미이식)
+    let pad_n = 18 - len(v.name)
+    let mut pad = ""
+    let mut k = 0
+    while k < pad_n { pad = pad + " "; k = k + 1 }
+    println("  " + mark + v.name + pad + v.summary)
+    i = i + 1
+  }
+  println("")
+  println("  ·  = 아직 스위프트 폴백 (hexa-native 이식 진행 중)")
+}
+
+// ── verb 핸들러 (PR1: version 만) ────────────────────────────────────────────
+fn _cmd_version() -> int {
+  println("demiurge " + DEMIURGE_CLI_VERSION)
+  return 0
+}
+
+// ── generic dispatch ─────────────────────────────────────────────────────────
+//
+// verb 이름으로 직접 분기하지 않는다: (1) 레지스트리 순회로 verb 존재/이식
+// 여부를 확인하고 (2) 이식된 verb 만 단일 dispatch 지점으로 보낸다. 미이식
+// verb 는 스위프트 폴백을 알리는 종료코드 3 (bin/demiurge 가 이를 보고
+// 스위프트로 위임 — parity 전까지). 미지의 verb → 통일된 종료코드 2.
+fn _lookup(reg: [VerbSpec], name: string) -> int {
+  let mut i = 0
+  while i < len(reg) {
+    if reg[i].name == name { return i }
+    i = i + 1
+  }
+  return -1
+}
+
+fn _dispatch(verb: string, rest: array) -> int {
+  // 단일 dispatch 지점 — 이식된 verb 만. (이식되며 한 줄씩 늘어난다.)
+  if verb == "version" { return _cmd_version() }
+  // 도달 불가 (generic 층이 ported 플래그로 이미 거른다).
+  return 3
+}
+
+fn main() {
+  let a = _slice_args()
+  if len(a) == 0 {
+    _usage()
+    exit(0)
+  }
+  let verb0 = to_string(a[0])
+  // --version / -v / --help / -h 는 스위프트 표면과 동일하게 최상위 처리.
+  if verb0 == "--version" || verb0 == "-v" {
+    exit(_cmd_version())
+  }
+  if verb0 == "--help" || verb0 == "-h" || verb0 == "help" {
+    _usage()
+    exit(0)
+  }
+  let reg = _verb_registry()
+  let idx = _lookup(reg, verb0)
+  if idx < 0 {
+    eprintln("unknown subcommand: " + verb0)
+    _usage()
+    exit(2)
+  }
+  let spec = reg[idx]
+  if !spec.ported {
+    // 미이식 — bin/demiurge 가 스위프트 CLI 로 폴백하도록 종료코드 3.
+    eprintln("demiurge cli: '" + verb0 + "' 아직 hexa-native 미이식 — 스위프트 폴백 (parity 진행 중).")
+    exit(3)
+  }
+  let mut rest = []
+  let mut i = 1
+  while i < len(a) { rest.push(to_string(a[i])); i = i + 1 }
+  exit(_dispatch(verb0, rest))
+}
+
+main()
