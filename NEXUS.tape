@@ -63,6 +63,60 @@
   reused_by = "UFO Stage-3 orbital — γ-rocket I_sp = c/g 광자천장 verify (🟢 |Δ|=0.0 ×3)"
   evidence  = "UFO/verify/stage3-orbital-gamma.md · UFO.log R1 (#237)"
 
+@X e7 := "HEX-N6 lattice anchors -> CLOAK" :: reuse-edge [tier-1 active]
+  provides  = "HEX-N6 (n=6 lattice substrate primitive)"
+  primitive = "sigma·tau·phi·sopfr·mu·is_perfect·aliquot·omega_big·liouville·sigma_2 at n=6 (10/11 🔵)"
+  reused_by = "CLOAK Phase A ⓸ σ-φ=10 cell pitch · ⓺ σ-τ=8 octave bandwidth · Phase B 5-기하 ↔ 5-atom 1:1 lock-in"
+  evidence  = "exports/cloak/verify/V3_phase_a_completion.md + exports/cloak/design/phase_b_metacell.md"
+
+@X e8 := "HEX-N6 -> WARP" :: reuse-edge [tier-1 active]
+  provides  = "HEX-N6"
+  primitive = "sigma=12 + n=6 lattice anchors"
+  reused_by = "WARP Alcubierre δ=1/σ=1/12 + R=n=6 bubble radius (lattice arithmetic only · physics UNPROVEN ⚪)"
+  evidence  = "domains/warp.md Phase A"
+
+@X e9 := "HEX-N6 -> WORMHOLE" :: reuse-edge [tier-1 active]
+  provides  = "HEX-N6"
+  primitive = "sigma=12 anchor"
+  reused_by = "WORMHOLE Morris-Thorne throat b₀=ℓ_Pl·σ (Planck-scale lattice scaling · physics UNPROVEN ⚪)"
+  evidence  = "domains/wormhole.md Phase A"
+
+@X e10 := "HEX-N6 -> DIM-JUMP" :: reuse-edge [tier-1 active]
+  provides  = "HEX-N6"
+  primitive = "n=6 + J_2(6)=24 (Calabi-Yau / bosonic ladder anchors)"
+  reused_by = "DIM-JUMP Kaluza-Klein 4D→6D→10D→11D→24D→26D ladder (lattice arithmetic · physics UNPROVEN ⚪)"
+  evidence  = "domains/dim-jump.md Phase A"
+
+@X e11 := "HEX-N6 -> DIM-USE" :: reuse-edge [tier-1 active]
+  provides  = "HEX-N6"
+  primitive = "tau(6)=4 + sigma·phi=24 composition"
+  reused_by = "DIM-USE τ=4 cycle + (σ-φ)²=100c composite identity (lattice arithmetic · physics UNPROVEN ⚪)"
+  evidence  = "domains/dim-use.md Phase A"
+
+@X e12 := "RTSC plasma_freq + SRR lc_resonance + Veselago carrier -> CLOAK meta" :: reuse-edge [tier-3 active]
+  provides  = "RTSC (Drude ε<0 via plasma_freq_drude PR #1943) + SRR (Lorentz μ<0 via lc_resonance/lorentz_mu_re PR #1934) + Veselago carrier (n=-√(εμ) PR #1936)"
+  primitive = "3-stage composition: ε<0 (PR #1943) · μ<0 (PR #1934) · n<0 (PR #1936)"
+  reused_by = "CLOAK Phase A ⓵⓶⓷ + Phase C verb-3 design dossier (n_eff = -√(εμ) < 0 cloak active)"
+  evidence  = "exports/cloak/verify/V4_final_tier_ledger.md §2"
+
+@X e13 := "stdlib/math exp + boltzmann_absorption_floor -> CLOAK" :: reuse-edge [tier-2 active]
+  provides  = "stdlib/math (PR #1949)"
+  primitive = "exp_neg_one + boltzmann_absorption_floor (1 - 1/e = 0.6321205588285577)"
+  reused_by = "CLOAK Phase A ⓹ Boltzmann transmission floor (Lambert-Beer 1-1/e absorption per MFP)"
+  evidence  = "PR #1949 (hexa-lang) + exports/cloak/verify/V4 §3.5"
+
+@X e14 := "CLOAK veselago_n_eff -> UFO Stage-cloak" :: reuse-edge [tier-2 active]
+  provides  = "CLOAK (Phase A ⓷ + carrier composition)"
+  primitive = "veselago_n_eff(eps_re, mu_re) — sign-aware n=±√(εμ) cloak switch"
+  reused_by = "UFO Stage-cloak — EM 가시성 차단 (RCS 10⁻⁶ m² target · Mk.II)"
+  evidence  = "UFO Phase B HEXA-CLOAK 흡수 + PR #1936"
+
+@X e15 := "RTSC mining lens machinery -> NUCLEAR 298-120 campaign" :: reuse-edge [tier-1 active]
+  provides  = "RTSC (mining lens · ouroboros lens · 5D survival map · edge graph · combinatorial lens · island_weight rank)"
+  primitive = "mining lens machinery (same-formula · ouroboros · dimensional · tension · combinatorial) + 5D map template + edge graph aggregation"
+  reused_by = "NUCLEAR 298-120 — transmutation campaign (cross-domain edge first node via combinatorial lens + island_weight rank)"
+  evidence  = "domains/rtsc.mining.md cycle 17 E40 + NUCLEAR cross-domain edge documented"
+
 # ── 2. provides[] registry (per-domain offered primitives · atlas fn) ──
 
 @X p1 := "NOVEL-TOOL provides" :: provides [active]
@@ -90,6 +144,21 @@
   primitives = "ufo_isp_fuel_ratio · ufo_rocket_beta · ufo_gl_derating · ufo_mli_shield (R1 실물리) · ufo_lattice_sigma_pow · ufo_warp_composite · ufo_lattice_master (R2 n6-lattice formal · 물리 ⚪-fenced)"
   note       = "folded to hexa-lang atlas (@F verified-ufo_*-num · substrate hub g68) — recompute-resolvable · PR #1222 (R1) #1244 (R2)"
 
+@X p7 := "HEX-N6 provides" :: provides [active]
+  domain     = "HEX-N6 (n=6 lattice substrate primitive)"
+  primitives = "sigma · sigma_2 · tau · phi · mu · sopfr · is_perfect · aliquot · omega_big · liouville · jordan_totient at n=6 (10/11 🔵 LANDED · J_2 calc gap closing via separate PR)"
+  note       = "all atoms 🔵 SUPPORTED-FORMAL via hexa verify --expr mini · atlas idempotent skip @D g69 · OEIS A000203/A000005/A000010/A001414/A002819 family"
+
+@X p8 := "SRR provides" :: provides [active]
+  domain     = "SRR (Split-Ring Resonator primitive)"
+  primitives = "lc_resonance(L,C) · srr_filling_factor(r,a) · lorentz_mu_re(F,w,w0,gamma)"
+  note       = "PR #1934 · 7/7 self-test PASS · mu<0 branch supplier for Veselago composition (CLOAK 부품 2)"
+
+@X p9 := "CLOAK provides" :: provides [active]
+  domain     = "CLOAK (meta-carrier · n_eff=-√(εμ)<0)"
+  primitives = "veselago_n_eff (sign-aware) + composition of {RTSC plasma_freq_drude · SRR lc_resonance/lorentz_mu_re · HEX-N6 lattice · stdlib/math exp_neg_one}"
+  note       = "Phase A 6/6 + Phase B 4/4 + Phase C 7/7 LANDED · absorbed=true V4 §6.1 · 5-기하 ↔ HEX-N6 5-atom 1:1 lock-in 발견 candidate"
+
 # ── 3. candidate edges (conceptual · no code reuse yet) ──
 
 @X c1 := "CERN accelerator <-> ANTIMATTER deceleration/generation" :: reuse-candidate [proposed draft]
@@ -97,6 +166,19 @@
 
 @X c2 := "NUCLEAR <-> RTSC+NUCLEAR" :: reuse-candidate [proposed draft]
   note = "meta-domain (+) composition"
+
+@X c3 := "WARP + WORMHOLE <-> ANTIMATTER exotic E_neg" :: reuse-candidate [proposed draft]
+  note = "WARP/WORMHOLE both need exotic matter / WEC-NEC violation source; ANTIMATTER as candidate negative-energy substrate (unverified · physics UNPROVEN ⚪)"
+
+@X c4 := "DIM-JUMP <-> CERN LHC" :: reuse-candidate [proposed draft]
+  note = "DIM-JUMP compactification radius bounded by LHC 1e-19 m (실측 anchor); CERN domain supplies experimental ceiling for F-DIM-1 falsifier"
+
+@X c5 := "DIM-USE <-> DIM-JUMP" :: reuse-candidate [proposed draft]
+  note = "DIM-USE τ=4 cycle requires DIM-JUMP precondition (must enter the extra dimension first before navigating); sequential dependency UFO Stage-6 → Stage-7"
+
+@X c6 := "RTSC <-> RADGUARD" :: reuse-candidate [proposed draft]
+  note  = "방사성 초수소화물(ThH10/AcH10) 후보 → RADGUARD 3축(제어/제거/결박) 안전성 참조"
+  scope = "intra-project (g67); conceptual edge, no code reuse yet"
 
 # ── 4. usage protocol (atlas-first · @D g67 / d19) ──
 
@@ -113,6 +195,16 @@
   ANTIMATTER --ioffe_loop_bz · pair_threshold · rel_kinetic--> UFO (Stage-1 hover · Stage-3 γ-rocket)
   FUSION --triple_product (J·B·V)----------------> UFO (Stage-2 MHD cruise)
   UFO --provides (7 atom)--> hexa-lang atlas (isp/beta/gl/mli · lattice σ^k/(σ−φ)²/σ·φ)
+
+  HEX-N6 (n=6 lattice substrate · 10/11 🔵)
+          --sigma/tau/phi/sopfr/mu/J₂/...--+--> CLOAK (Phase A ⓸⓺ + Phase B 5-기하 1:1 lock-in)
+                                            +--> WARP (Alcubierre δ=1/σ R=n)
+                                            +--> WORMHOLE (Morris-Thorne b₀=ℓ_Pl·σ)
+                                            +--> DIM-JUMP (KK 4D→26D ladder)
+                                            +--> DIM-USE (τ-cycle + (σ-φ)²=100c)
+  RTSC plasma_freq + SRR lc_resonance + Veselago --3-stage compose--> CLOAK (n_eff=-√(εμ)<0)
+  stdlib/math exp_neg_one (PR #1949) -----------> CLOAK Phase A ⓹ (1-1/e=0.6321)
+  CLOAK veselago_n_eff --------------------------> UFO Stage-cloak (RCS 10⁻⁶ m²)
   GRAPH
 
 # ── 5. cross-repo bidirectional peers (g68) — declared 2026-05-28 ──
