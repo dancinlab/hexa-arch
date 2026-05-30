@@ -10,8 +10,8 @@
   !   For an ambient stability test re-run with press=0.0 (1 atm) — see RUNBOOK fallback.
   calculation = 'vc-relax'
   prefix = 'yauh3'
-  outdir = '/root/YAuH3/out'
-  pseudo_dir = '/root/YAuH3/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   forc_conv_thr = 1.0d-4

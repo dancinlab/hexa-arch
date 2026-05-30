@@ -6,8 +6,8 @@
   !   denser than the relax mesh (16x16x12 hexagonal).
   calculation = 'scf'
   prefix = 'sch9'
-  outdir = '/root/ScH9/out'
-  pseudo_dir = '/root/ScH9/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   verbosity = 'low'

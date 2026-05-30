@@ -1,8 +1,8 @@
 &CONTROL
   calculation     = 'vc-relax'
   prefix          = 'kbeh8'
-  outdir          = '/root/KBeH8/out'
-  pseudo_dir      = '/root/KBeH8/pseudo'
+  outdir          = './out'
+  pseudo_dir      = './pseudo'
   forc_conv_thr   = 1.0d-4
   etot_conv_thr   = 1.0d-6
   tstress         = .true.

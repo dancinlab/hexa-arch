@@ -10,8 +10,8 @@
   !   stability test re-run with press=0.0 (1 atm). press_conv_thr loose enough for metal.
   calculation = 'vc-relax'
   prefix = 'srpth3'
-  outdir = '/root/SrPtH3/out'
-  pseudo_dir = '/root/SrPtH3/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   forc_conv_thr = 1.0d-4

@@ -1,8 +1,8 @@
 &control
   calculation = 'scf'
   prefix = 'lay_h10'
-  outdir = '/root/decks/LaY_H10/out'
-  pseudo_dir = '/root/decks/LaY_H10/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   forc_conv_thr = 1.0d-4

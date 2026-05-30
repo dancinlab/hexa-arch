@@ -6,8 +6,8 @@
   !   16x16x16 here (denser than the 12^3 relax mesh).
   calculation = 'scf'
   prefix = 'yauh3'
-  outdir = '/root/YAuH3/out'
-  pseudo_dir = '/root/YAuH3/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   verbosity = 'low'

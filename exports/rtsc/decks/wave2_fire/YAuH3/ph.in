@@ -1,8 +1,8 @@
 YAuH3 phonon + electron-phonon 4x4x4 q (RTSC A15 · SrAuH3 Y-variant · perovskite-hydride · YH10-family)
 &inputph
   prefix = 'yauh3'
-  outdir = '/root/YAuH3/out'
-  fildyn = '/root/YAuH3/yauh3.dyn'
+  outdir = './out'
+  fildyn = 'yauh3.dyn'
   fildvscf = 'yauh3.dvscf'
   ! ldisp + 4x4x4 q-mesh sized to the 5-atom SC perovskite cell.
   ! SC 4^3 with full cubic symmetry -> 8 irreducible q-points (matches SrAuH3 anchor + preflight nq=8).

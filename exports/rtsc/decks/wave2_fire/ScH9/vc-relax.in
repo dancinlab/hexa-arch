@@ -10,8 +10,8 @@
   !   For a lower-P fallback re-run with press=1000.0 (100 GPa) — see RUNBOOK fallback.
   calculation = 'vc-relax'
   prefix = 'sch9'
-  outdir = '/root/ScH9/out'
-  pseudo_dir = '/root/ScH9/pseudo'
+  outdir = './out'
+  pseudo_dir = './pseudo'
   tprnfor = .true.
   tstress = .true.
   forc_conv_thr = 1.0d-4
